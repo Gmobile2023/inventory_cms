@@ -3,11 +3,7 @@
         class="
             d-flex
             flex-column flex-column-fluid
-            bgi-position-y-bottom
-            position-x-center
-            bgi-no-repeat bgi-size-contain bgi-attachment-fixed
         "
-        style="background-image: url(/assets/metronic/assets/media/svg/illustrations/{{ backgroundImageName }}.png)"
     >
         <div
             class="d-flex flex-center flex-column flex-column-fluid p-10"
@@ -44,17 +40,17 @@
             <!--end::Logo-->
             <!--begin::Wrapper-->
             <div *ngIf="isSelectEditionPage()" class="container-xxl mx-auto">
-                <div *ngIf="showTenantChange()" class="tenant-change-box mb-5 tenant-change-box">
+                <!-- <div *ngIf="showTenantChange()" class="tenant-change-box mb-5 tenant-change-box">
                     <tenant-change></tenant-change>
-                </div>
+                </div> -->
                 <!--begin::Form-->
                 <router-outlet></router-outlet>
                 <!--end::Form-->
             </div>
             <div *ngIf="!isSelectEditionPage()" class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
-                <div *ngIf="showTenantChange()" class="tenant-change-box mb-5 tenant-change-box">
+                <!-- <div *ngIf="showTenantChange()" class="tenant-change-box mb-5 tenant-change-box">
                     <tenant-change></tenant-change>
-                </div>
+                </div> -->
                 <!--begin::Form-->
                 <router-outlet></router-outlet>
                 <!--end::Form-->

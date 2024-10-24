@@ -10,7 +10,7 @@
                 #userNameOrEmailAddressInput="ngModel"
                 [(ngModel)]="loginService.authenticateModel.userNameOrEmailAddress"
                 autoFocus
-                class="form-control form-control-solid h-auto py-7 px-6 rounded-lg fs-h6"
+                class="form-control h-auto py-5 px-6 rounded-lg fs-h6"
                 type="text"
                 autocomplete="new-password"
                 placeholder="{{ 'UserNameOrEmail' | localize }} *"
@@ -27,7 +27,7 @@
             <input
                 #passwordInput="ngModel"
                 [(ngModel)]="loginService.authenticateModel.password"
-                class="form-control form-control-solid h-auto py-7 px-6 rounded-lg fs-h6"
+                class="form-control h-auto py-5 px-6 rounded-lg fs-h6"
                 type="password"
                 autocomplete="new-password"
                 placeholder="{{ 'Password' | localize }} *"
@@ -39,7 +39,7 @@
         </div>
 
         <div class="mb-5 d-flex justify-content-between mt-4">
-            <label class="form-check form-check-custom form-check-solid">
+            <label class="form-check form-check-custom">
                 <input type="checkbox" name="rememberMe" class="form-check-input" value="true" [(ngModel)]="loginService.rememberMe">
                 <span class="form-check-label">
                     {{ 'RememberMe' | localize }}
@@ -98,10 +98,10 @@
         <span class="pipe-divider"> | </span>
    </span>
 
-    <span *ngIf="!multiTenancySideIsTeanant && isTenantSelfRegistrationAllowed">
+    <!-- <span *ngIf="!multiTenancySideIsTeanant && isTenantSelfRegistrationAllowed">
         <a routerLink="/account/select-edition">{{ 'NewTenant' | localize }}</a>
         <span class="pipe-divider"> | </span>
-    </span>
+    </span> -->
 
     <a routerLink="/account/email-activation" id="email-activation-btn">{{ 'EmailActivation' | localize }}</a>
 </div>
