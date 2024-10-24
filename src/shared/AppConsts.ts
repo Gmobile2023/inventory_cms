@@ -16,7 +16,7 @@
     };
 
     static readonly localization = {
-        defaultLocalizationSourceName: 'AbpZeroTemplate',
+        defaultLocalizationSourceName: 'Inventory',
     };
 
     static readonly authorization = {

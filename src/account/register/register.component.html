@@ -8,7 +8,7 @@
         <div class="mb-5">
             <input
                 #nameInput="ngModel"
-                class="form-control form-control-solid h-auto py-7 px-6 rounded-lg fs-h6"
+                class="form-control h-auto py-5 px-6 rounded-lg fs-h6"
                 autoFocus
                 type="text"
                 placeholder="{{ 'Name' | localize }} *"
@@ -23,7 +23,7 @@
         <div class="mb-5">
             <input
                 #surnameInput="ngModel"
-                class="form-control form-control-solid h-auto py-7 px-6 rounded-lg fs-h6"
+                class="form-control h-auto py-5 px-6 rounded-lg fs-h6"
                 type="text"
                 placeholder="{{ 'Surname' | localize }} *"
                 [(ngModel)]="model.surname"
@@ -37,7 +37,7 @@
         <div class="mb-5">
             <input
                 #emailAddressInput="ngModel"
-                class="form-control form-control-solid h-auto py-7 px-6 rounded-lg fs-h6"
+                class="form-control h-auto py-5 px-6 rounded-lg fs-h6"
                 type="email"
                 placeholder="{{ 'EmailAddress' | localize }} *"
                 [(ngModel)]="model.emailAddress"
@@ -52,7 +52,7 @@
         <div class="mb-5">
             <input
                 #userNameInput="ngModel"
-                class="form-control form-control-solid h-auto py-7 px-6 rounded-lg fs-h6"
+                class="form-control h-auto py-5 px-6 rounded-lg fs-h6"
                 type="text"
                 autocomplete="new-password"
                 placeholder="{{ 'UserName' | localize }} *"
@@ -68,7 +68,7 @@
             <input
                 type="password"
                 name="Password"
-                class="form-control form-control-solid h-auto py-7 px-6 rounded-lg fs-h6"
+                class="form-control h-auto py-5 px-6 rounded-lg fs-h6"
                 [(ngModel)]="model.password"
                 #Password="ngModel"
                 placeholder="{{ 'Password' | localize }}"
@@ -112,7 +112,7 @@
             <input
                 type="password"
                 name="PasswordRepeat"
-                class="form-control form-control-solid h-auto py-7 px-6 rounded-lg fs-h6"
+                class="form-control h-auto py-5 px-6 rounded-lg fs-h6"
                 [ngModel]="model.passwordRepeat"
                 #PasswordRepeat="ngModel"
                 placeholder="{{ 'PasswordRepeat' | localize }}"
