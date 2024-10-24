@@ -1,8 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
-    --kt-primary: #ffc528 !important;
-    --kt-primary-active: rgba(255, 197, 40, .8) !important;
-    --kt-app-bg-color: #ccc !important;
+    --kt-primary: rgba(255, 127, 17, 1) !important;
+    --kt-primary-active: rgba(255, 127, 17, .8) !important;
+    --kt-app-bg-color: #f1f1f1 !important;
 }
 
 .margin-left-5 {
@@ -187,4 +187,8 @@ html[data-theme=dark] {
 
 [data-kt-app-sidebar-hoverable=true][data-kt-app-sidebar-minimize=on] .app-sidebar:hover:not(.animating) .menuSearchBarInput {
     opacity: 1;
+}
+
+.form-control::placeholder {
+    font-weight: 400;
 }
