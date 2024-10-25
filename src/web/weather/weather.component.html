@@ -1,0 +1,40 @@
+<div class="weather-container">
+    <h1>Thời tiết</h1>
+    <div *ngIf="loading" class="loading-spinner">
+        <p>Đang tải...</p>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+        {{ error }}
+    </div>
+
+    <div *ngIf="weatherData && !loading">
+        <div class="weather-card current-weather">
+            <h2>Current Weather</h2>
+            <div class="weather-details">
+                <p>
+                    <strong>Temperature:</strong> 
+                    {{ weatherData.current.temperature_2m }}{{ weatherData.current_units.temperature_2m }}
+                </p>
+                <p>
+                    <strong>Wind Speed:</strong> 
+                    {{ weatherData.current.wind_speed_10m }}{{ weatherData.current_units.wind_speed_10m }}
+                </p>
+            </div>
+        </div>
+
+        <div class="weather-card hourly-forecast">
+            <h2>Hourly Forecast</h2>
+            <div class="forecast-item" *ngFor="let time of weatherData.hourly.time; let i = index">
+                <p>
+                    <strong>{{ time | date:'short' }}</strong>
+                </p>
+                <div class="forecast-details">
+                    <p>Temperature: {{ weatherData.hourly.temperature_2m[i] }}°C</p>
+                    <p>Humidity: {{ weatherData.hourly.relative_humidity_2m[i] }}%</p>
+                    <p>Wind Speed: {{ weatherData.hourly.wind_speed_10m[i] }} km/h</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

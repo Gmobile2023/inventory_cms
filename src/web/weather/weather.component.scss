@@ -1,0 +1,41 @@
+.weather-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.loading-spinner {
+    text-align: center;
+    padding: 20px;
+}
+
+.error-message {
+    color: #dc3545;
+    padding: 10px;
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+.weather-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.current-weather {
+    margin-bottom: 30px;
+}
+
+.hourly-forecast {
+    .forecast-item {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+}
