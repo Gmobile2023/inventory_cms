@@ -8,6 +8,7 @@
     static appBaseUrlFormat: string;
     static recaptchaSiteKey: string;
     static subscriptionExpireNootifyDayCount: number;
+    static apiGatewayUrl: string;
 
     static localeMappings: any = [];
 

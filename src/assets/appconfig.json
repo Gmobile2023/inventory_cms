@@ -1,6 +1,7 @@
 {
   "remoteServiceBaseUrl": "https://localhost:44301",
   "appBaseUrl": "http://localhost:4200",
+  "apiGatewayUrl": "http://localhost:4200",
   "localeMappings": {
     "angular": [
       {
