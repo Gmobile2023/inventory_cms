@@ -1,0 +1,135 @@
+<div [@routerTransition]>
+    <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
+    <div [class]="containerClass">
+        <div class="row bg-white py-5">
+            <p-tabView>
+                <p-tabPanel header="Thông tin nhập kho">
+                    <div class="section py-5">
+                        <h4>THÔNG TIN NHẬP KHO</h4>
+                        <div class="mb-3">
+                            <label for="" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
+                            <input type="text" class="form-control" id="" value="Nhập hàng lô 10k SIM" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="" class="form-label">Ghi chú</label>
+                            <textarea class="form-control" id="" rows="3"
+                                disabled>Nhập SIM theo hợp đồng sản xuất VP 28/10/2024</textarea>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="section py-5">
+                        <h4>DANH SÁCH HÀNG HOÁ</h4>
+                        <div class="primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
+                            <p-table #dataTable sortMode="multiple" [value]="dataFake"
+                                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false"
+                                [lazy]="true" [tableStyle]="{'min-width': '50rem'}">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>{{ 'STT' | localize }}</th>
+                                        <th>{{ 'LOẠI HÀNG HOÁ' | localize }}</th>
+                                        <th>{{ 'MÃ HÀNG (*)' | localize }}</th>
+                                        <th>{{ 'TÊN HÀNG (*)' | localize }}</th>
+                                        <th>{{ 'ĐƠN VỊ (*)' | localize }}</th>
+                                        <th>{{ 'SỐ LƯỢNG (*)' | localize }} </th>
+                                        <th>{{ 'DẢI SERIAL TỪ (*)' | localize }}</th>
+                                        <th>{{ 'DẢI SERIAL ĐẾN (*)' | localize }}</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr>
+                                        <td>{{record.id}}</td>
+                                        <td>{{record.loai}}</td>
+                                        <td>{{record.ma}}</td>
+                                        <td>{{record.ten}}</td>
+                                        <td>{{record.donvi}}</td>
+                                        <td>{{record.quantity}}</td>
+                                        <td>{{record.to}}</td>
+                                        <td>{{record.from}}</td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="section py-5">
+                        <h4>THÔNG TIN CHỨNG TỪ</h4>
+                        <div class="d-flex justify-content-center" style="margin-top: 100px;">
+                            <button class="btn btn-success" type="button" (click)="openModal(approve)">ĐỒNG Ý</button>
+                            <button class="btn btn-danger" type="button" (click)="openModal(refuse)">TỪ CHỐI</button>
+                        </div>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="Lịch sử tác động">
+                    <div class="section py-5">
+                        <h4>LỊCH SỬ TÁC ĐỘNG</h4>
+                        <div class="primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
+                            <p-table #dataTable sortMode="multiple" [value]="dataHistoryFake"
+                                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false"
+                                [lazy]="true" [tableStyle]="{'min-width': '50rem'}">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>{{ 'STT' | localize }}</th>
+                                        <th>{{ 'HÀNH ĐỘNG' | localize }}</th>
+                                        <th>{{ 'NỘI DUNG' | localize }}</th>
+                                        <th>{{ 'THỜI GIAN' | localize }}</th>
+                                        <th>{{ 'NGƯỜI THỰC HIỆN' | localize }}</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr>
+                                        <td>{{record.id}}</td>
+                                        <td>{{record.action}}</td>
+                                        <td>{{record.noidung}}</td>
+                                        <td>{{record.date}}</td>
+                                        <td>{{record.user}}</td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </div>
+                </p-tabPanel>
+            </p-tabView>
+        </div>
+    </div>
+    <ng-template #approve>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Phê duyệt yêu cầu nhập kho</h3>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p style="font-size: 16px;">Bạn có chắc chắn muốn duyệt yêu cầu nhập kho ABC?</p>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm" (click)="closeModal()">HUỶ</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="closeModal()">XÁC NHẬN</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #refuse>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Từ chối yêu cầu nhập kho</h3>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+                <label for="" class="form-label">
+                    {{ 'Lý do từ chối' | localize }}
+                    <span class="text-danger">(*)</span>
+                </label>
+                <div class="input-group">
+                    <input id="" name="" class="form-control" placeholder="{{ 'Nhập lý do từ chối' | localize }}"
+                        type="text" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm" (click)="closeModal()">HUỶ</button>
+                    <button type="button" class="btn btn-danger btn-sm" (click)="closeModal()">TỪ CHỐI</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>

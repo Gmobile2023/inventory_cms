@@ -1,0 +1,203 @@
+<div [@routerTransition]>
+    <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
+    <div [class]="containerClass">
+        <div class="row bg-white pt-5 ps-3 column-gap-5">
+            <h4 class="mb-4">TÌM KIẾM YÊU CẦU XUẤT/NHẬP KHO</h4>
+            <div class="col-md-5 mb-5">
+                <div class="d-flex align-items-center mb-5">
+                    <label for="" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Tên kho' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <input id="" name="" class="form-control" placeholder="{{ 'Nhập mã kho' | localize }}"
+                            type="text" />
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-5">
+                    <label for="" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Ngày gửi duyệt từ' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <input id="" name="" class="form-control" type="date" />
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-5">
+                    <label for="" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Trạng thái' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <select id="" name="" class="form-select">
+                            <option selected>
+                                Chọn trạng thái
+                            </option>
+                            <option value="1">Tất cả</option>
+                            <option value="2">Chờ duyệt</option>
+                            <option value="3">Đã duyệt</option>
+                            <option value="4">Từ chối</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 offset-md-1 mb-5">
+                <div class="d-flex align-items-center mb-5">
+                    <label for="productType" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Loại yêu cầu' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <select id="productType" name="productType" class="form-select">
+                            <option selected>
+                                Chọn loại yêu cầu
+                            </option>
+                            <option value="1">Nhập kho</option>
+                            <option value="2">Xuất kho</option>
+                            <option value="3">Thu hồi về kho</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <label for="" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Ngày gửi duyệt đến' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <input id="" name="" class="form-control" type="date" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row bg-white pb-5">
+            <div class="col-md-5 mt-5">
+                <div class="d-flex align-items-center justify-content-end">
+                    <button class="btn btn-secondary btn-sm me-3" type="button">CHỌN LẠI</button>
+                    <button class="btn btn-primary btn-sm" type="button">TÌM KIẾM</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div [class]="containerClass" class="mt-5">
+        <div class="row bg-white py-5 ps-3 column-gap-5">
+            <div class="d-flex justify-content-between">
+                <h4 class="mb-4">DANH SÁCH YÊU CẦU XUẤT NHẬP KHO</h4>
+                <div class="d-flex align-items-center justify-content-end">
+                    <button class="btn btn-primary btn-sm" type="button"
+                        routerLink="/app/main/inventory-import-export/create-inventory-import">TẠO YÊU CẦU NHẬP
+                        KHO</button>
+                    <button class="btn btn-success btn-sm ms-3" type="button"
+                        routerLink="/app/main/inventory-import-export/create-inventory-export">TẠO YÊU CẦU XUẤT
+                        KHO</button>
+                    <button class="btn btn-warning btn-sm ms-3" type="button">THU HỒI VỀ KHO CHA</button>
+                </div>
+            </div>
+        </div>
+        <div class="row align-items-center">
+            <!--<Primeng-TurboTable-Start>-->
+            <div class="col primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
+                <p-table #dataTable sortMode="multiple" [value]="dataFake"
+                    rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
+                    [tableStyle]="{'min-width': '50rem'}">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 160px">{{ 'HÀNH ĐỘNG' | localize }}</th>
+                            <th>
+                                {{ 'TIÊU ĐỀ' | localize }}
+                                <!-- <p-sortIcon field="tenancyName"></p-sortIcon> -->
+                            </th>
+                            <th>
+                                {{ 'LOẠI YÊU CẦU' | localize }}
+                                <!-- <p-sortIcon field="name"></p-sortIcon> -->
+                            </th>
+                            <th>{{ 'NGÀY GỬI YÊU CẦU' | localize }}</th>
+                            <th>{{ 'NGÀY DUYỆT' | localize }}</th>
+                            <th>
+                                {{ 'SỐ LƯỢNG DỰ KIẾN' | localize }}
+                                <!-- <p-sortIcon field="subscriptionEndDateUtc"></p-sortIcon> -->
+                            </th>
+                            <th>
+                                {{ 'SỐ LƯỢNG ĐÃ NHẬP/XUẤT THU HỒI' | localize }}
+                                <!-- <p-sortIcon field="isActive"></p-sortIcon> -->
+                            </th>
+                            <th>{{ 'TRẠNG THÁI' | localize }}</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-record="$implicit">
+                        <tr>
+                            <td style="width: 130px">
+                                <div class="btn-group" dropdown placement="bottom left" container="body">
+                                    <button id="dropdownButton" type="button"
+                                        class="btn btn-primary btn-sm dropdown-toggle" dropdownToggle
+                                        aria-controls="dropdownMenu">
+                                        <i class="fa fa-cog"></i>
+                                        <span class="caret"></span>
+                                        {{ 'Hành động' | localize }}
+                                    </button>
+                                    <ul id="dropdownMenu" class="dropdown-menu" role="menu" *dropdownMenu
+                                        aria-labelledby="dropdownButton">
+                                        <li *ngIf="'Pages.Tenants.Impersonation' | permission"
+                                            [class.disabled]="!record.isActive" role="menuitem">
+                                            <a routerLink="/app/main/inventory-import-export/detail-inventory-import"
+                                                class="dropdown-item">
+                                                {{ 'Xem chi tiết' | localize }}
+                                            </a>
+                                        </li>
+                                        <li *ngIf="'Pages.Tenants.Edit' | permission" role="menuitem">
+                                            <a href="javascript:;" class="dropdown-item">
+                                                {{ 'Chỉnh sửa' | localize }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.title }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.requestType }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.sentDate }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.approveDate }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.expectedQuantity }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.realityQuantity }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ 'Status' | localize }}</span>
+                                <span *ngIf="record.status == 0" class="badge badge-warning badge-inline">
+                                    {{ 'Chờ phê duyệt' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
+                                    {{ 'Đã duyệt' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 2" class="badge badge-danger badge-inline">
+                                    {{ 'Từ chối' | localize }}
+                                </span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                <div class="primeng-no-data" *ngIf="dataFake.length == 0">
+                    {{ 'NoData' | localize }}
+                </div>
+                <div class="primeng-paging-container">
+                    <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
+                        [totalRecords]="primengTableHelper.totalRecordsCount"
+                        [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                        [showCurrentPageReport]="true" [currentPageReportTemplate]="
+                            'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount
+                        "></p-paginator>
+                </div>
+            </div>
+            <!--<Primeng-TurboTable-End>-->
+        </div>
+    </div>
+</div>

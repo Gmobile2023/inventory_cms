@@ -1,0 +1,34 @@
+* {
+  font-family: "Inter", sans-serif !important;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+::ng-deep p-table {
+  .p-component {
+    font-family: Inter, "sans-serif" !important;
+    font-size: 13px !important;
+    font-weight: normal;
+  }
+}
+
+::ng-deep .p-progressbar {
+  height: 8px !important;
+  border-radius: 8px !important;
+}
+
+::ng-deep .p-progressbar .p-progressbar-value {
+  background-color: #ff9f43 !important;
+}
+
+::ng-deep .p-fileupload .p-button {
+  background: #009EF7 !important;
+}
+
+::ng-deep .table-custom .p-datatable .p-paginator-bottom {
+  display: none;
+}
+
+::ng-deep .table-custom .p-datatable .p-datatable-wrapper {
+  min-height: 250px;
+}

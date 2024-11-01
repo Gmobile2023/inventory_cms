@@ -160,7 +160,10 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
                     },
                     {
                         path: 'mass-notifications',
-                        loadChildren: () => import('./mass-notifications/mass-notifications.module').then((m) => m.MassNotificationsModule),
+                        loadChildren: () =>
+                            import('./mass-notifications/mass-notifications.module').then(
+                                (m) => m.MassNotificationsModule
+                            ),
                         data: { permission: 'Pages.Administration.MassNotification' },
                     },
                     { path: '', redirectTo: 'hostDashboard', pathMatch: 'full' },

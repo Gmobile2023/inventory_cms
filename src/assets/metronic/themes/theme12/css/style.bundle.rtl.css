@@ -31794,7 +31794,7 @@ html:not([data-theme=dark]) .theme-light-bg-body {
 }
 .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
   border: 0;
-  padding: calc(0.775rem + 1px) calc(1.5rem + 1px);
+  padding: calc(0.775rem ) calc(1.5rem);
 }
 .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon).btn-lg, .btn-group-lg > .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
   padding: calc(0.825rem + 1px) calc(1.75rem + 1px);

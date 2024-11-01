@@ -213,14 +213,13 @@ import { FriendsLookupTableComponent } from './shared/layout/chat/friends-lookup
         NgxSpinnerModule,
         AppBsModalModule,
         SubheaderModule,
-        ChangeProfilePictureModalModule
-    ]
+        ChangeProfilePictureModalModule,
+    ],
 })
 export class AppModule {}
 
 function appInitializerFactory() {
     return () => {
-
         const url = new URL(location.href);
         const params = url.searchParams;
 

@@ -1,0 +1,80 @@
+<div [@routerTransition]>
+    <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
+    <div [class]="containerClass">
+        <div class="row bg-white py-5">
+            <h4>THÔNG TIN NHẬP KHO</h4>
+            <p>Vui lòng nhập đầy đủ thông tin nhập kho</p>
+
+            <div class="mb-3">
+                <label for="" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
+                <input type="text" class="form-control" id="" placeholder="Nhập tiêu đề">
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label">Ghi chú</label>
+                <textarea class="form-control" id="" rows="3" placeholder="Nhập nội dung ghi chú"></textarea>
+            </div>
+        </div>
+    </div>
+    <div [class]="containerClass" class="mt-5">
+        <div class="row bg-white py-5">
+            <h4>DANH SÁCH HÀNG HOÁ</h4>
+            <div class="primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
+                <p-table #dataTable sortMode="multiple" [value]="dataFake"
+                    rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
+                    [tableStyle]="{'min-width': '50rem'}">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>{{ 'STT' | localize }}</th>
+                            <th>{{ 'LOẠI HÀNG HOÁ' | localize }}</th>
+                            <th>{{ 'MÃ HÀNG (*)' | localize }}</th>
+                            <th>{{ 'TÊN HÀNG (*)' | localize }}</th>
+                            <th>{{ 'ĐƠN VỊ (*)' | localize }}</th>
+                            <th>{{ 'SỐ LƯỢNG (*)' | localize }} </th>
+                            <th>{{ 'DẢI SERIAL TỪ (*)' | localize }}</th>
+                            <th>{{ 'DẢI SERIAL ĐẾN (*)' | localize }}</th>
+                            <th>{{ 'XOÁ' | localize }}</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-record="$implicit">
+                        <tr>
+                            <td>{{record.id}}</td>
+                            <td><select id="" name="" class="form-select">
+                                    <option value="1" selected>SIM</option>
+                                    <option value="2">SỐ</option>
+                                </select></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><button class="btn btn-danger">Xóa</button></td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+            <div class="d-flex align-items-center">
+                <button class="btn btn-primary btn-sm mt-3" type="button" (click)="addRow()">THÊM HÀNG HOÁ</button>
+                <div class="ms-5 pt-4" style="cursor: pointer;">
+                    <i class="pi pi-download me-2" style="color: #009EF7; font-size: 18px;"></i>
+                    <span style="font-size: 15px;">Tải xuống file mẫu</span>
+                </div>
+            </div>
+            <!-- <div class="card flex justify-content-center mt-3">
+                <p-fileUpload mode="basic" name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php"
+                    maxFileSize="1000000" (onUpload)="onBasicUploadAuto($event)" [auto]="true"
+                    chooseLabel="Browse"></p-fileUpload>
+            </div> -->
+            <span class="fs-5 mt-5">Tải lên file Excel</span>
+            <div class="d-flex justify-content-start align-items-center mt-1 custom-progress">
+                <div class="me-5">
+                    <p-fileUpload mode="basic" chooseLabel="Chọn file" name="demo[]"
+                        url="https://www.primefaces.org/cdn/api/upload.php" maxFileSize="1000000"
+                        (onUpload)="onUpload($event)"></p-fileUpload>
+                </div>
+                <div style="width: 15%;" class="me-2"><p-progressBar [value]="value"></p-progressBar></div>
+                <span>{{value}}%</span>
+            </div>
+        </div>
+    </div>
+</div>
