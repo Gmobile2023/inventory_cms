@@ -18,7 +18,7 @@ export class InventoryReportComponent extends AppComponentBase {
 
     ngOnInit() {
         this.items = [
-            { label: 'Quản lý kho', routerLink: '/app/main/warehouse-manager' },
+            { label: 'Quản lý kho', routerLink: '/app/main/inventory-manager' },
             { label: 'Báo cáo tồn kho' },
         ];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };

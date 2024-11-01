@@ -13,18 +13,18 @@ import { RouterModule } from '@angular/router';
                         data: { permission: 'Pages.Tenant.Dashboard' },
                     },
                     {
-                        path: 'warehouse-manager',
-                        loadChildren: () => import('./warehouse/warehouse.module').then((m) => m.WarehouseModule),
+                        path: 'inventory-manager',
+                        loadChildren: () => import('./inventory/inventory.module').then((m) => m.InventoryModule),
                         data: { permission: '' },
                     },
                     {
-                        path: 'warehouse-manager/detail-warehouse',
+                        path: 'inventory-manager/detail-inventory',
                         loadChildren: () =>
-                            import('./detail-warehouse/detail-warehouse.module').then((m) => m.DetailWarehouseModule),
+                            import('./detail-inventory/detail-inventory.module').then((m) => m.DetailInventoryModule),
                         data: { permission: '' },
                     },
                     {
-                        path: 'warehouse-manager/action-history',
+                        path: 'inventory-manager/action-history',
                         loadChildren: () =>
                             import('./action-history/action-history.module').then((m) => m.ActionHistoryModule),
                         data: { permission: '' },

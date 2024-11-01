@@ -23,7 +23,6 @@ export class AppNavigationService {
             new AppMenuItem('Dashboard', 'Pages.Tenant.Dashboard', 'flaticon-line-graph', '/app/main/dashboard'),
             new AppMenuItem('Tenants', 'Pages.Tenants', 'flaticon-list-3', '/app/admin/tenants'),
             new AppMenuItem('Editions', 'Pages.Editions', 'flaticon-app', '/app/admin/editions'),
-            // new AppMenuItem('Quản lý kho', '', 'flaticon-app', '/app/main/warehouse-manager'),
             new AppMenuItem(
                 'Quản lý kho',
                 '',
@@ -31,7 +30,7 @@ export class AppNavigationService {
                 '',
                 [],
                 [
-                    new AppMenuItem('Danh sách kho', '', 'flaticon-app', '/app/main/warehouse-manager'),
+                    new AppMenuItem('Danh sách kho', '', 'flaticon-app', '/app/main/inventory-manager'),
                     new AppMenuItem('Xuất nhập kho', '', 'flaticon-app', '/app/main/inventory-import-export'),
                     new AppMenuItem('Báo cáo tồn kho', '', 'flaticon-app', '/app/main/inventory-report'),
                 ]

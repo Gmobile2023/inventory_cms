@@ -131,14 +131,12 @@
                                     </button>
                                     <ul id="dropdownMenu" class="dropdown-menu" role="menu" *dropdownMenu
                                         aria-labelledby="dropdownButton">
-                                        <li *ngIf="'Pages.Tenants.Impersonation' | permission"
-                                            [class.disabled]="!record.isActive" role="menuitem">
-                                            <a routerLink="/app/main/inventory-import-export/detail-inventory-import"
-                                                class="dropdown-item">
+                                        <li role="menuitem">
+                                            <a [routerLink]="record.path" class="dropdown-item">
                                                 {{ 'Xem chi tiết' | localize }}
                                             </a>
                                         </li>
-                                        <li *ngIf="'Pages.Tenants.Edit' | permission" role="menuitem">
+                                        <li role="menuitem">
                                             <a href="javascript:;" class="dropdown-item">
                                                 {{ 'Chỉnh sửa' | localize }}
                                             </a>

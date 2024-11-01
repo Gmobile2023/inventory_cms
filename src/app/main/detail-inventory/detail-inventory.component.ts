@@ -3,15 +3,15 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { SimDetailModalComponent } from './sim-detail-modal.component';
 import { MenuItem } from 'primeng/api';
-import { CreateWarehouseModalComponent } from '@app/shared/common/create-warehouse-modal/create-warehouse-modal.component';
+import { CreateInventoryModalComponent } from '@app/shared/common/create-inventory-modal/create-inventory-modal.component';
 
 @Component({
-    templateUrl: './detail-warehouse.component.html',
+    templateUrl: './detail-inventory.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [appModuleAnimation()],
 })
-export class DetailWarehouseComponent extends AppComponentBase {
-    @ViewChild('createWarehouseModal', { static: true }) createWarehouseModal: CreateWarehouseModalComponent;
+export class DetailInventoryComponent extends AppComponentBase {
+    @ViewChild('createInventoryModal', { static: true }) createInventoryModal: CreateInventoryModalComponent;
     @ViewChild('simDetailModal', { static: true }) simDetailModal: SimDetailModalComponent;
 
     constructor(injector: Injector) {
@@ -23,15 +23,15 @@ export class DetailWarehouseComponent extends AppComponentBase {
 
     ngOnInit() {
         this.items = [
-            { label: 'Quản lý kho', routerLink: '/app/main/warehouse-manager' },
-            { label: 'Danh sách kho', routerLink: '/app/main/warehouse-manager' },
+            { label: 'Quản lý kho', routerLink: '/app/main/inventory-manager' },
+            { label: 'Danh sách kho', routerLink: '/app/main/inventory-manager' },
             { label: 'Chi tiết kho' },
         ];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
     }
 
     createWarehouse(): void {
-        this.createWarehouseModal.show();
+        this.createInventoryModal.show();
     }
 
     getSimDetail(): void {

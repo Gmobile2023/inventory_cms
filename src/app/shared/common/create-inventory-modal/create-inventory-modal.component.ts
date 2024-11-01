@@ -8,15 +8,20 @@ interface City {
 }
 
 @Component({
-    selector: 'editWarehouseModal',
-    templateUrl: './edit-warehouse-modal.component.html',
+    selector: 'createInventoryModal',
+    templateUrl: './create-inventory-modal.component.html',
 })
-export class EditWarehouseModalComponent extends AppComponentBase implements OnInit {
+export class CreateInventoryModalComponent extends AppComponentBase implements OnInit {
     @ViewChild('createModal', { static: true }) modal: ModalDirective;
 
     constructor(injector: Injector) {
         super(injector);
     }
+
+    active = false;
+    saving = false;
+    cities: City[];
+    selectedCities: City[];
 
     ngOnInit() {
         this.cities = [
@@ -27,11 +32,6 @@ export class EditWarehouseModalComponent extends AppComponentBase implements OnI
             { name: 'Paris', code: 'PRS' },
         ];
     }
-
-    cities: City[];
-    selectedCities: City[];
-    active = false;
-    saving = false;
 
     show() {
         this.active = true;

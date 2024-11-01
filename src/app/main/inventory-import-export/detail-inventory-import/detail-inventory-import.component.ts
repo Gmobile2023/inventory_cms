@@ -19,7 +19,7 @@ export class DetailInventoryImportComponent extends AppComponentBase implements 
 
     ngOnInit(): void {
         this.items = [
-            { label: 'Quản lý kho', routerLink: '/app/main/warehouse-manager' },
+            { label: 'Quản lý kho', routerLink: '/app/main/inventory-manager' },
             { label: 'Xuất/Nhập kho', routerLink: '/app/main/inventory-import-export' },
             { label: 'Chi tiết yêu cầu nhập kho' },
         ];

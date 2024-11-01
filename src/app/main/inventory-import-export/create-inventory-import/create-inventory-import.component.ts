@@ -21,7 +21,7 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
 
     ngOnInit() {
         this.items = [
-            { label: 'Quản lý kho', routerLink: '/app/main/warehouse-manager' },
+            { label: 'Quản lý kho', routerLink: '/app/main/inventory-manager' },
             { label: 'Xuất/Nhập kho', routerLink: '/app/main/inventory-import-export' },
             { label: 'Tạo mới yêu cầu nhập kho' },
         ];

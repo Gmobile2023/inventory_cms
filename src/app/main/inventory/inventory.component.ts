@@ -1,18 +1,18 @@
 import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { EditWarehouseModalComponent } from './edit-warehouse-modal.component';
-import { CreateWarehouseModalComponent } from '@app/shared/common/create-warehouse-modal/create-warehouse-modal.component';
+import { EditInventoryModalComponent } from './edit-inventory-modal.component';
+import { CreateInventoryModalComponent } from '@app/shared/common/create-inventory-modal/create-inventory-modal.component';
 import { MenuItem } from 'primeng/api';
 
 @Component({
-    templateUrl: './warehouse.component.html',
+    templateUrl: './inventory.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [appModuleAnimation()],
 })
-export class WarehouseComponent extends AppComponentBase implements OnInit {
-    @ViewChild('createWarehouseModal', { static: true }) createWarehouseModal: CreateWarehouseModalComponent;
-    @ViewChild('editWarehouseModal', { static: true }) editWarehouseModal: EditWarehouseModalComponent;
+export class InventoryComponent extends AppComponentBase implements OnInit {
+    @ViewChild('createInventoryModal', { static: true }) createInventoryModal: CreateInventoryModalComponent;
+    @ViewChild('editInventoryModal', { static: true }) editInventoryModal: EditInventoryModalComponent;
 
     constructor(injector: Injector) {
         super(injector);
@@ -27,11 +27,11 @@ export class WarehouseComponent extends AppComponentBase implements OnInit {
     }
 
     createWarehouse(): void {
-        this.createWarehouseModal.show();
+        this.createInventoryModal.show();
     }
 
     editWarehouse(): void {
-        this.editWarehouseModal.show();
+        this.editInventoryModal.show();
     }
 
     dataFake = [

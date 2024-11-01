@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DetailWarehouseComponent } from './detail-warehouse.component';
+import { InventoryComponent } from './inventory.component';
 
 const routes: Routes = [
     {
         path: '',
-        children: [{ path: '', component: DetailWarehouseComponent }],
+        children: [{ path: '', component: InventoryComponent }],
         pathMatch: 'full',
     },
 ];
@@ -14,4 +14,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule],
 })
-export class DetailWarehouseRoutingModule {}
+export class InventoryRoutingModule {}

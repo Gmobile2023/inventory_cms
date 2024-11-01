@@ -1,104 +1,94 @@
 <div [@routerTransition]>
-    <!-- <sub-header [title]="'Chi tiết kho 1' | localize">
+    <!-- <sub-header [title]="'Quản lý kho' | localize">
+        <div role="actions" class="d-flex align-items-center">
+            <button type="button"
+                *ngIf="!loading && userDashboard && userDashboard.filters && userDashboard.filters.length > 0"
+                class="btn btn-light-primary btn-filter" (click)="filterModal.show()">
+                <i class="fa fa-filter"></i>
+                {{ 'Filter' | localize }}
+            </button>
+
+            <label class="form-check form-check-custom form-check-solid form-switch">
+                <input type="checkbox" class="form-check-input" (change)="changeEditMode()"
+                    [checked]="editModeEnabled" />
+                <span class="form-check-label">
+                    {{ 'EditMode' | localize }}
+                </span>
+            </label>
+        </div>
     </sub-header> -->
     <div class="px-6">
         <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
     </div>
     <div [class]="containerClass">
         <div class="row bg-white py-5 ps-3 column-gap-5">
-            <h5 class="mb-5">CHI TIẾT KHO</h5>
-            <div class="col-md-6">
-                <div class="d-flex align-items-center mb-3">
-                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Mã kho:</div>
-                    <div class="description" style="font-size: 14px;">G99_1</div>
-                </div>
-                <div class="d-flex align-items-center mb-3">
-                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Tên kho:</div>
-                    <div class="description" style="font-size: 14px;">Kho sim chiến sĩ G99</div>
-                </div>
-                <div class="d-flex align-items-center mb-3">
-                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Loại sản phẩm:</div>
-                    <div class="description" style="font-size: 14px;">Sim vật lý</div>
-                </div>
-                <div class="d-flex align-items-center mb-3">
-                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Địa điểm kho:</div>
-                    <div class="description" style="font-size: 14px;">105, Nguyễn Tuân, Thanh Xuân Trung, Thanh Xuân, Hà
-                        Nội</div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="d-flex align-items-center mb-3">
-                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Số lượng sản phẩm:</div>
-                    <div class="description" style="font-size: 14px;">1000</div>
-                </div>
-                <div class="d-flex align-items-center mb-3">
-                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Trạng thái:</div>
-                    <div class="description" style="font-size: 14px;">Chờ duyệt</div>
-                </div>
-                <div class="d-flex align-items-center mb-3">
-                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Ngày tạo kho:</div>
-                    <div class="description" style="font-size: 14px;">12/10/2024 16:20</div>
-                </div>
-                <div class="d-flex align-items-center mb-3">
-                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Số lượng kho con:</div>
-                    <div class="description" style="font-size: 14px;">15</div>
-                </div>
-                <button class="btn btn-primary btn-sm" type="button">XEM KHO CON</button>
-            </div>
-        </div>
-    </div>
-    <div [class]="containerClass" class="mt-5">
-        <div class="row bg-white pt-5 ps-3 column-gap-5">
-            <h4 class="mb-4">TÌM KIẾM</h4>
+            <h4 class="mb-4">TÌM KIẾM KHO</h4>
             <div class="col-md-5 mb-5">
                 <div class="d-flex align-items-center mb-5">
                     <label for="nameWarehouse" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Số thuê bao' | localize }}
+                        {{ 'Tên kho' | localize }}
                     </label>
                     <div class="input-group">
                         <input id="nameWarehouse" name="nameWarehouse" class="form-control"
-                            placeholder="{{ 'Nhập số thuê bao' | localize }}" type="text" />
+                            placeholder="{{ 'Nhập tên kho' | localize }}" type="text" />
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-5">
-                    <label for="productType" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Loại sản phẩm' | localize }}
+                    <label for="createdTimeFrom" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Thời gian tạo từ' | localize }}
                     </label>
                     <div class="input-group">
-                        <select id="productType" name="productType" class="form-select">
+                        <input id="createdTimeFrom" name="createdTimeFrom" class="form-control" type="date" />
+                    </div>
+                </div>
+                <div class="d-flex align-items-start">
+                    <label for="addressWarehouse" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Địa điểm kho' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <select id="province" name="province" class="form-select w-100 mb-3">
                             <option selected>
-                                Chọn loại sản phẩm
+                                Chọn Tỉnh/Thành phố
                             </option>
-                            <option value="1">Loại A</option>
-                            <option value="2">Loại B</option>
-                            <option value="3">Loại C</option>
+                            <option value="1">Hà Nội</option>
+                            <option value="2">Thành phố Hồ Chí Minh</option>
+                            <option value="3">Đà Nắng</option>
                         </select>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-5">
-                    <label for="productType" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Loại sản phẩm' | localize }}
-                    </label>
-                    <div class="input-group">
-                        <select id="productType" name="productType" class="form-select">
+                        <select id="district" name="district" class="form-select w-100 mb-3">
                             <option selected>
-                                Chọn trạng thái
+                                Chọn Quận/Huyện
                             </option>
-                            <option value="1">Loại A</option>
-                            <option value="2">Loại B</option>
-                            <option value="3">Loại C</option>
+                            <option value="1">Hà Nội</option>
+                            <option value="2">Thành phố Hồ Chí Minh</option>
+                            <option value="3">Đà Nắng</option>
+                        </select>
+                        <select id="ward" name="ward" class="form-select w-100">
+                            <option selected>
+                                Chọn Phường/Xã
+                            </option>
+                            <option value="1">Hà Nội</option>
+                            <option value="2">Thành phố Hồ Chí Minh</option>
+                            <option value="3">Đà Nắng</option>
                         </select>
                     </div>
                 </div>
             </div>
             <div class="col-md-5 offset-md-1 mb-5">
                 <div class="d-flex align-items-center mb-5">
-                    <label for="nameWarehouse" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Số serial' | localize }}
+                    <label for="CodeWarehouse" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Mã kho' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="nameWarehouse" name="nameWarehouse" class="form-control"
-                            placeholder="{{ 'Nhập số serial' | localize }}" type="text" />
+                        <input id="CodeWarehouse" name="codeWarehouse" class="form-control"
+                            placeholder="{{ 'Nhập mã kho' | localize }}" type="text" />
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-5">
+                    <label for="createdTimeTo" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Thời gian tạo đến' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <input id="createdTimeTo" name="createdTimeTo" class="form-control" type="date" />
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-5">
@@ -116,14 +106,14 @@
                         </select>
                     </div>
                 </div>
-                <div class="d-flex align-items-center mb-5">
-                    <label for="product" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Tình trạng Kitting' | localize }}
+                <div class="d-flex align-items-center">
+                    <label for="productType" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Loại sản phẩm' | localize }}
                     </label>
                     <div class="input-group">
-                        <select id="product" name="product" class="form-select">
+                        <select id="productType" name="productType" class="form-select">
                             <option selected>
-                                Chọn sản phẩm
+                                Chọn loại sản phẩm
                             </option>
                             <option value="1">Loại A</option>
                             <option value="2">Loại B</option>
@@ -131,22 +121,13 @@
                         </select>
                     </div>
                 </div>
-                <div class="d-flex align-items-center">
-                    <label for="nameWarehouse" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Thuộc tính' | localize }}
-                    </label>
-                    <div class="input-group">
-                        <input id="nameWarehouse" name="nameWarehouse" class="form-control"
-                            placeholder="{{ 'Nhập thuộc tính' | localize }}" type="text" />
-                    </div>
-                </div>
             </div>
         </div>
         <div class="row bg-white pb-5">
             <div class="col-md-5 mt-5">
                 <div class="d-flex align-items-center justify-content-end">
-                    <button class="btn btn-secondary btn-sm me-3" type="button">CHỌN LẠI</button>
-                    <button class="btn btn-primary btn-sm" type="button">TÌM KIẾM</button>
+                    <button class="btn btn-secondary btn-sm" type="button">CHỌN LẠI</button>
+                    <button class="btn btn-primary btn-sm ms-3" type="button">TÌM KIẾM</button>
                 </div>
             </div>
         </div>
@@ -155,11 +136,10 @@
     <div [class]="containerClass" class="mt-5">
         <div class="row bg-white py-5 ps-3 column-gap-5">
             <div class="d-flex justify-content-between">
-                <h4 class="mb-4">DANH SÁCH SẢN PHẨM</h4>
+                <h4 class="mb-4">DANH SÁCH KHO</h4>
                 <div class="d-flex align-items-center justify-content-end">
                     <button class="btn btn-secondary btn-sm" type="button" (click)="createWarehouse()">TẠO KHO
                         CON</button>
-                    <button class="btn btn-warning btn-sm ms-3" type="button">THÊM NGƯỜI BÁN HÀNG</button>
                     <button class="btn btn-success btn-sm ms-3" type="button">XUẤT EXCEL</button>
                 </div>
             </div>
@@ -173,30 +153,26 @@
                     <ng-template pTemplate="header">
                         <tr>
                             <th style="width: 130px">{{ 'HÀNH ĐỘNG' | localize }}</th>
-                            <th pSortableColumn="tenancyName">
-                                {{ 'SỐ THUÊ BAO' | localize }}
+                            <th>
+                                {{ 'MÃ KHO' | localize }}
                                 <!-- <p-sortIcon field="tenancyName"></p-sortIcon> -->
                             </th>
                             <th pSortableColumn="name">
-                                {{ 'SỐ SERIAL' | localize }}
+                                {{ 'TÊN KHO' | localize }}
                                 <!-- <p-sortIcon field="name"></p-sortIcon> -->
                             </th>
-                            <th>{{ 'MÃ LÔ' | localize }}</th>
                             <th>{{ 'LOẠI SẢN PHẨM' | localize }}</th>
+                            <th>{{ 'SẢN PHẨM' | localize }}</th>
                             <th>
-                                {{ 'SẢN PHẨM' | localize }}
+                                {{ 'SỐ LƯỢNG SẢN PHẨM' | localize }}
                                 <!-- <p-sortIcon field="subscriptionEndDateUtc"></p-sortIcon> -->
                             </th>
                             <th>
-                                {{ 'NHÀ MẠNG' | localize }}
+                                {{ 'SỐ LƯỢNG KHO CON' | localize }}
                                 <!-- <p-sortIcon field="isActive"></p-sortIcon> -->
                             </th>
                             <th>
-                                {{ 'GIÁ BÁN' | localize }}
-                                <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
-                            </th>
-                            <th>
-                                {{ 'THUỘC TÍNH' | localize }}
+                                {{ 'ĐỊA ĐIỂM KHO' | localize }}
                                 <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
                             </th>
                             <th>
@@ -224,12 +200,13 @@
                                         aria-labelledby="dropdownButton">
                                         <li *ngIf="'Pages.Tenants.Impersonation' | permission"
                                             [class.disabled]="!record.isActive" role="menuitem">
-                                            <a href="javascript:;" class="dropdown-item">
+                                            <a routerLink="/app/main/inventory-manager/detail-inventory"
+                                                class="dropdown-item">
                                                 {{ 'Xem chi tiết' | localize }}
                                             </a>
                                         </li>
                                         <li *ngIf="'Pages.Tenants.Edit' | permission" role="menuitem">
-                                            <a href="javascript:;" class="dropdown-item" (click)="getSimDetail()">
+                                            <a href="javascript:;" class="dropdown-item" (click)="editWarehouse()">
                                                 {{ 'Chỉnh sửa' | localize }}
                                             </a>
                                         </li>
@@ -237,44 +214,43 @@
                                 </div>
                             </td>
                             <td>
-                                <span class="p-column-title">{{ 'phoneNumber' | localize }}</span>
-                                {{ record.phoneNumber }}
+                                <span class="p-column-title">{{ 'WarehouseCode' | localize }}</span>
+                                {{ record.warehouseCode }}
                             </td>
                             <td>
-                                <span class="p-column-title">{{ 'serialNumber' | localize }}</span>
-                                {{ record.serialNumber }}
+                                <span class="p-column-title">{{ 'WarehouseName' | localize }}</span>
+                                {{ record.warehouseName }}
                             </td>
                             <td>
-                                <span class="p-column-title">{{ 'shipment' | localize }}</span>
-                                {{ record.shipment }}
-                            </td>
-                            <td>
-                                <span class="p-column-title">{{ 'productType' | localize }}</span>
+                                <span class="p-column-title">{{ 'ProductType' | localize }}</span>
                                 {{ record.productType }}
                             </td>
                             <td>
-                                <span class="p-column-title">{{ 'product' | localize }}</span>
+                                <span class="p-column-title">{{ 'Product' | localize }}</span>
                                 {{ record.product }}
                             </td>
                             <td>
-                                <span class="p-column-title">{{ 'network' | localize }}</span>
-                                {{ record.network }}
+                                <span class="p-column-title">{{ 'Quantity' | localize }}</span>
+                                {{ record.quantity }}
                             </td>
                             <td>
-                                <span class="p-column-title">{{ 'price' | localize }}</span>
-                                {{ record.price }}
+                                <span class="p-column-title">{{ 'WarehouseChildren' | localize }}</span>
+                                {{ record.warehouseChildren }}
                             </td>
                             <td>
-                                <span class="p-column-title">{{ 'attribute' | localize }}</span>
-                                {{ record.attribute }}
+                                <span class="p-column-title">{{ 'WarehouseAddress' | localize }}</span>
+                                {{ record.warehouseAddress }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ 'Status' | localize }}</span>
                                 <span *ngIf="record.status == 0" class="badge badge-warning badge-inline">
-                                    {{ 'Chưa hoạt động' | localize }}
+                                    {{ 'Chưa phê duyệt' | localize }}
                                 </span>
                                 <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
-                                    {{ 'Đang hoạt động' | localize }}
+                                    {{ 'Đang bán' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 2" class="badge badge-danger badge-inline">
+                                    {{ 'Từ chối' | localize }}
                                 </span>
                             </td>
                             <td>
@@ -299,6 +275,6 @@
             <!--<Primeng-TurboTable-End>-->
         </div>
     </div>
-    <createWarehouseModal #createWarehouseModal></createWarehouseModal>
-    <simDetailModal #simDetailModal></simDetailModal>
+    <createInventoryModal #createInventoryModal></createInventoryModal>
+    <editInventoryModal #editInventoryModal></editInventoryModal>
 </div>

@@ -19,7 +19,7 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
 
     ngOnInit(): void {
         this.items = [
-            { label: 'Quản lý kho', routerLink: '/app/main/warehouse-manager' },
+            { label: 'Quản lý kho', routerLink: '/app/main/inventory-manager' },
             { label: 'Xuất/Nhập kho', routerLink: '/app/main/inventory-import-export' },
             { label: 'Chi tiết yêu cầu xuất kho' },
         ];
@@ -36,23 +36,33 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     dataFake = [
         {
             id: 1,
-            loai: 'SIM',
-            ma: 'MLOAD_64K',
-            ten: 'MLOAD_64K',
-            donvi: 'Cái',
-            quantity: 1000,
-            to: '898407210016823000',
-            from: '898407210016824000',
+            ten: 'Đợt 1 xuất SIM',
+            type: 'SIM',
+            quantity: '1.000',
+            created_at: '20/10/2024 10:12',
+            status: 1,
+            status_ht: 1,
+            approval_date: '25/10/2024 10:12',
         },
         {
             id: 2,
-            loai: 'SIM',
-            ma: 'MLOAD_54K',
-            ten: 'MLOAD_54K',
-            donvi: 'Cái',
-            quantity: 1000,
-            to: '898407210016823000',
-            from: '898407210016824000',
+            ten: 'Đợt 2 xuất SIM',
+            type: 'SIM',
+            quantity: '1.000',
+            created_at: '20/10/2024 10:12',
+            status: 1,
+            status_ht: 1,
+            approval_date: '25/10/2024 10:12',
+        },
+        {
+            id: 3,
+            ten: 'Đợt 3 xuất SIM',
+            type: 'SIM',
+            quantity: '1.000',
+            created_at: '20/10/2024 10:12',
+            status: 0,
+            status_ht: 0,
+            approval_date: '25/10/2024 10:12',
         },
     ];
     dataHistoryFake = [

@@ -17,7 +17,7 @@ export class InventoryImportExportComponent extends AppComponentBase implements 
     home: MenuItem;
 
     ngOnInit() {
-        this.items = [{ label: 'Quản lý kho', routerLink: '/app/main/warehouse-manager' }, { label: 'Xuất/Nhập kho' }];
+        this.items = [{ label: 'Quản lý kho', routerLink: '/app/main/inventory-manager' }, { label: 'Xuất/Nhập kho' }];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
     }
 
@@ -31,26 +31,18 @@ export class InventoryImportExportComponent extends AppComponentBase implements 
             expectedQuantity: '5000',
             realityQuantity: '3000',
             status: 0,
+            path: '/app/main/inventory-import-export/detail-inventory-import',
         },
         {
             id: 2,
-            title: 'Nhập kho Sim lô 10k sim hợp tác Vinaphone',
-            requestType: 'Nhập kho',
+            title: 'Xuất kho Sim lô 10k sim hợp tác Vinaphone',
+            requestType: 'Xuất kho',
             sentDate: '12/10/2024 14:30',
             approveDate: '20/10/2024 14:30',
             expectedQuantity: '5000',
             realityQuantity: '3000',
             status: 1,
-        },
-        {
-            id: 3,
-            title: 'Nhập kho Sim lô 10k sim hợp tác Vinaphone',
-            requestType: 'Nhập kho',
-            sentDate: '12/10/2024 14:30',
-            approveDate: '20/10/2024 14:30',
-            expectedQuantity: '5000',
-            realityQuantity: '3000',
-            status: 2,
+            path: '/app/main/inventory-import-export/detail-inventory-export',
         },
     ];
 }
