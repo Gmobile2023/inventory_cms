@@ -10,7 +10,7 @@
                 #passwordInput="ngModel"
                 autoFocus
                 [(ngModel)]="code"
-                class="form-control form-control-solid h-auto py-7 px-6 rounded-lg fs-h6"
+                class="form-control h-auto py-5 px-6 rounded-lg fs-h6"
                 type="password"
                 autocomplete="new-password"
                 placeholder="{{ 'Code' | localize }} *"
@@ -25,7 +25,7 @@
             class="mb-5 mt-4"
             *ngIf="s('Abp.Zero.UserManagement.TwoFactorLogin.IsRememberBrowserEnabled') === 'true'"
         >
-            <label class="form-check form-check-custom form-check-solid py-1">
+            <label class="form-check form-check-custom py-1">
                 <input
                     type="checkbox"
                     name="rememberClient"

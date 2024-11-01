@@ -1,4 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+    --kt-primary: rgba(255, 127, 17, 1) !important;
+    --kt-primary-active: rgba(255, 127, 17, .8) !important;
+    --kt-app-bg-color: #f1f1f1 !important;
+}
+
 .margin-left-5 {
     margin-left: 5px !important;
 }
@@ -136,7 +142,7 @@ body.swal2-height-auto {
 
 .root-initial-loader i {
     position: absolute;
-    color: rgb(91, 167, 234);
+    color: rgb(255, 197, 40);
     z-index: 100000 !important;
     top: 50%;
     left: 50%;
@@ -181,4 +187,8 @@ html[data-theme=dark] {
 
 [data-kt-app-sidebar-hoverable=true][data-kt-app-sidebar-minimize=on] .app-sidebar:hover:not(.animating) .menuSearchBarInput {
     opacity: 1;
+}
+
+.form-control::placeholder {
+    font-weight: 400;
 }
