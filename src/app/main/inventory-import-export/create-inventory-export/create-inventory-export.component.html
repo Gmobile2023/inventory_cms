@@ -1,0 +1,232 @@
+<div [@routerTransition]>
+    <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
+    <div [class]="containerClass">
+        <div class="row bg-white py-5">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4>THÔNG TIN CHUNG</h4>
+                <button class="btn btn-success btn-sm">GỬI YÊU CẦU</button>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
+                <input type="text" class="form-control" id="" placeholder="Nhập tiêu đề">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="" class="form-label">Số lượng dự kiến <span class="text-danger">(*)</span></label>
+                <input type="text" class="form-control" id="" placeholder="Nhập số lượng dự kiến">
+            </div>
+            <div class="col-md-4">
+                <label for="" class="form-label">Kho xuất đi <span class="text-danger">(*)</span></label>
+                <div class="input-group">
+                    <select id="" name="" class="form-select">
+                        <option selected>
+                            Chọn kho
+                        </option>
+                        <option value="1">Kho 1</option>
+                        <option value="2">Kho 2</option>
+                        <option value="3">Kho 3</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label for="" class="form-label">Kho xuất đến <span class="text-danger">(*)</span></label>
+                <div class="input-group">
+                    <select id="" name="" class="form-select">
+                        <option selected>
+                            Chọn kho
+                        </option>
+                        <option value="1">Kho 1</option>
+                        <option value="2">Kho 2</option>
+                        <option value="3">Kho 3</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label for="" class="form-label">Hình thức xuất <span class="text-danger">(*)</span></label>
+                <div class="input-group">
+                    <select id="" name="" class="form-select">
+                        <option selected>
+                            Chọn hình thức
+                        </option>
+                        <option value="1">Một lần</option>
+                        <option value="2">Theo đợt</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-12 mb-3">
+                <label for="" class="form-label">Ghi chú</label>
+                <textarea class="form-control" id="" rows="2" placeholder="Nhập nội dung ghi chú"></textarea>
+            </div>
+            <div class="col-12">
+                <span class="fs-5 mt-5">Tải lên file chứng từ</span>
+                <div class="d-flex justify-content-start align-items-center mt-1 custom-progress">
+                    <div class="me-5">
+                        <p-fileUpload mode="basic" chooseLabel="Chọn file" name="demo[]"
+                            url="https://www.primefaces.org/cdn/api/upload.php" maxFileSize="1000000"
+                            (onUpload)="onUpload($event)"></p-fileUpload>
+                    </div>
+                    <div style="width: 15%;" class="me-2"><p-progressBar [value]="value"></p-progressBar></div>
+                    <span>{{value}}%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div [class]="containerClass" class="mt-5">
+        <div class="row bg-white py-5">
+            <h4>BỘ LỌC TÌM KIẾM</h4>
+            <div class="col-md-4 mb-4">
+                <label for="" class="form-label">Loại sản phẩm</label>
+                <div class="input-group">
+                    <select id="" name="" class="form-select">
+                        <option selected>
+                            Chọn loại sản phẩm
+                        </option>
+                        <option value="1">SIM</option>
+                        <option value="2">SỐ</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <label for="" class="form-label">Thuộc tính</label>
+                <div class="input-group">
+                    <select id="" name="" class="form-select">
+                        <option selected>
+                            Chọn thuộc tính
+                        </option>
+                        <option value="1">A</option>
+                        <option value="2">B</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <label for="" class="form-label">Lô xuất/nhập kho</label>
+                <div class="input-group">
+                    <select id="" name="" class="form-select">
+                        <option selected>
+                            Chọn lô xuất/nhập kho
+                        </option>
+                        <option value="1">A</option>
+                        <option value="2">B</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label for="" class="form-label">Dải từ</label>
+                <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial">
+            </div>
+            <div class="col-md-4">
+                <label for="" class="form-label">Dải đến</label>
+                <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial">
+            </div>
+            <div class="col-md-4">
+                <div class="d-flex align-items-center">
+                    <div>
+                        <label for="" class="form-label">Tìm kiếm theo file excel</label>
+                        <input type="file" class="form-control" id="">
+                    </div>
+                    <div class="ms-5" style="cursor: pointer; padding-top: 24px;">
+                        <i class="pi pi-download me-2" style="color: #009EF7; font-size: 18px;"></i>
+                        <span style="font-size: 15px;">Tải xuống file mẫu</span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button class="btn btn-primary btn-sm mt-5" type="button">TÌM KIẾM</button>
+            </div>
+            <div class="d-flex justify-content-between gap-5 mt-5">
+                <div class="table1 border">
+                    <p-table #dataTable [value]="currentData" [(selection)]="selectedRecords" [rows]="rowsPerPage"
+                        [paginator]="true" [lazy]="true" [tableStyle]="{'min-width': '50rem'}" class="table-custom">
+                        <ng-template pTemplate="caption">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h4 class="mb-0">Kết quả tìm kiếm</h4>
+                                <span class="p-input-icon-left">
+                                    <input class="form-control form-control-sm" pInputText type="text"
+                                        (input)="dataTable.filterGlobal($event.target.value, 'contains')"
+                                        placeholder="Search..." />
+                                </span>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
+                                <th>{{ 'SDT/SERIAL' | localize }}</th>
+                                <th>{{ 'HẠNG SỐ' | localize }}</th>
+                                <th>{{ 'GIÁ ĐỊNH GIÁ' | localize }}</th>
+                                <th>{{ 'NHÀ MẠNG' | localize }}</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-record="$implicit">
+                            <tr>
+                                <td>
+                                    <p-tableCheckbox [value]="record" />
+                                </td>
+                                <td>{{record.loai}}</td>
+                                <td>{{record.ma}}</td>
+                                <td>{{record.ten}}</td>
+                                <td>{{record.donvi}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <div class="primeng-no-data text-center" *ngIf="dataFakeTo.length == 0">
+                        {{ 'NoData' | localize }}
+                    </div>
+                    <div class="primeng-paging-container">
+                        <p-paginator [rows]="rowsPerPage" #paginator [totalRecords]="dataFakeTo.length"
+                            [showCurrentPageReport]="true" (onPageChange)="onPage($event)" [currentPageReportTemplate]="
+                                'TotalRecordsCount' | localize: dataFakeTo.length
+                            "></p-paginator>
+                    </div>
+                </div>
+                <div class="action d-flex flex-column justify-content-center align-items-center">
+                    <button class="btn btn-primary btn-sm" (click)="moveSelectedRecords()">THÊM</button>
+                    <button class="btn btn-danger btn-sm mt-3 w-100" (click)="moveBackSelectedRecords()">BỎ</button>
+                </div>
+                <div class="table2 border">
+                    <p-table #dataTable [value]="currentDataFrom" [(selection)]="selectedRecords" [rows]="rowsPerPage"
+                        [paginator]="true" [lazy]="true" [tableStyle]="{'min-width': '50rem'}" class="table-custom">
+                        <ng-template pTemplate="caption">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h4 class="mb-0">Danh sách đã chọn</h4>
+                                <span class="p-input-icon-left">
+                                    <input class="form-control form-control-sm" pInputText type="text"
+                                        (input)="dataTable.filterGlobal($event.target.value, 'contains')"
+                                        placeholder="Search..." />
+                                </span>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
+                                <th>{{ 'SDT/SERIAL' | localize }}</th>
+                                <th>{{ 'HẠNG SỐ' | localize }}</th>
+                                <th>{{ 'GIÁ ĐỊNH GIÁ' | localize }}</th>
+                                <th>{{ 'NHÀ MẠNG' | localize }}</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-record="$implicit">
+                            <tr>
+                                <td>
+                                    <p-tableCheckbox [value]="record" />
+                                </td>
+                                <td>{{record.loai}}</td>
+                                <td>{{record.ma}}</td>
+                                <td>{{record.ten}}</td>
+                                <td>{{record.donvi}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <div class="primeng-no-data text-center" *ngIf="dataFakeFrom.length == 0">
+                        {{ 'NoData' | localize }}
+                    </div>
+                    <div class="primeng-paging-container">
+                        <p-paginator [rows]="rowsPerPage" #paginator [totalRecords]="dataFakeFrom.length"
+                            [showCurrentPageReport]="true" (onPageChange)="onPageFrom($event)"
+                            [currentPageReportTemplate]="
+                                'TotalRecordsCount' | localize: dataFakeFrom.length
+                            "></p-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

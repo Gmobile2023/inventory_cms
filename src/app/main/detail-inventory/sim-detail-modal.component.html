@@ -1,0 +1,175 @@
+<div appBsModal #createModal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="createModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <form #tenantCreateForm="ngForm" role="form" novalidate class="form-validation" *ngIf="active"
+                (submit)="save()">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>{{ 'CHI TIẾT SIM/SỐ' | localize }}</span>
+                    </h5>
+                    <button type="button" class="btn-close" (click)="close()" [attr.aria-label]="l('Close')"
+                        [disabled]="saving">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div [class]="containerClass">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-5">
+                                    <label for="" class="form-label ms-5" style="width: 35%;">
+                                        {{ 'Mã kho' | localize }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input id="" name="" class="form-control"
+                                            placeholder="{{ 'Nhập mã kho' | localize }}" type="text"
+                                            value="STOCK_SALE" />
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-5">
+                                    <label for="" class="form-label ms-5" style="width: 35%;">
+                                        {{ 'Tên kho' | localize }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input id="" name="" class="form-control"
+                                            placeholder="{{ 'Nhập tên kho' | localize }}" type="text"
+                                            value="Kho sim chiến sĩ G99" />
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-5">
+                                    <label for="" class="form-label ms-5" style="width: 35%;">
+                                        {{ 'Địa điểm kho' | localize }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input id="" name="" class="form-control" placeholder="{{ '' | localize }}"
+                                            type="text" value="Nguyễn Tuân, Thanh Xuân, Hà Nội" />
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-5">
+                                    <label for="" class="form-label ms-5" style="width: 35%;">
+                                        {{ 'Loại sản phẩm' | localize }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input id="" name="" class="form-control" placeholder="{{ '' | localize }}"
+                                            type="text" value="Sim vật lý" />
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-5">
+                                    <label for="" class="form-label ms-5" style="width: 35%;">
+                                        {{ 'Số thuê bao' | localize }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input id="" name="" class="form-control"
+                                            placeholder="{{ 'Nhập số thuê bao' | localize }}" type="text"
+                                            value="0993 000 1234" />
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-5">
+                                    <label for="" class="form-label ms-5" style="width: 35%;">
+                                        {{ 'Số serial' | localize }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input id="" name="" class="form-control"
+                                            placeholder="{{ 'Nhập số serial' | localize }}" type="text"
+                                            value="298407210016823226" />
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-5">
+                                    <label for="" class="form-label ms-5" style="width: 35%;">
+                                        {{ 'Nhà mạng' | localize }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input id="" name="" class="form-control"
+                                            placeholder="{{ 'Nhập tên kho' | localize }}" type="text"
+                                            value="VINAPHONE" />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-5">
+                                    <label for="" class="form-label ms-5" style="width: 35%;">
+                                        {{ 'Ngày tạo kho' | localize }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input id="" name="" class="form-control" placeholder="{{ '' | localize }}"
+                                            type="text" value="12/10/2024 15:10" />
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-5">
+                                    <label for="" class="form-label ms-5" style="width: 35%;">
+                                        {{ 'Mã lô' | localize }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input id="" name="" class="form-control" placeholder="{{ '' | localize }}"
+                                            type="text" value="G99_100" />
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-5">
+                                    <label for="" class="form-label ms-5" style="width: 35%;">
+                                        {{ 'Thuộc tính' | localize }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input id="" name="" class="form-control" placeholder="{{ '' | localize }}"
+                                            type="text" value="105 Nguyễn Tuân" />
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-5">
+                                    <label for="" class="form-label ms-5" style="width: 35%;">
+                                        {{ 'Sản phẩm' | localize }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input id="" name="" class="form-control" placeholder="{{ '' | localize }}"
+                                            type="text" value="GOLD" />
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-5">
+                                    <label for="" class="form-label ms-5" style="width: 35%;">
+                                        {{ 'Giá nhập' | localize }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input id="" name="" class="form-control" placeholder="{{ '' | localize }}"
+                                            type="text" value="200.000" />
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-5">
+                                    <label for="" class="form-label ms-5" style="width: 35%;">
+                                        {{ 'Giá bán' | localize }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input id="" name="" class="form-control" placeholder="{{ '' | localize }}"
+                                            type="text" value="500.000" />
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-5">
+                                    <label for="" class="form-label ms-5" style="width: 35%;">
+                                        {{ 'Trạng thái số' | localize }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input id="" name="" class="form-control" placeholder="{{ '' | localize }}"
+                                            type="text" value="Đang hoạt động" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" [disabled]="saving" class="btn btn-secondary btn-sm fw-bold"
+                        (click)="close()">
+                        {{ 'HUỶ' | localize }}
+                    </button>
+                    <button class="btn btn-primary btn-sm fw-bold" [disabled]="saving">
+                        <!-- <i class="fa fa-save"></i> -->
+                        <span>{{ 'LỊCH SỬ THAO TÁC' | localize }}</span>
+                    </button>
+                    <button class="btn btn-primary btn-sm fw-bold" [disabled]="saving">
+                        <!-- <i class="fa fa-save"></i> -->
+                        <span>{{ 'CẬP NHẬT GIÁ' | localize }}</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

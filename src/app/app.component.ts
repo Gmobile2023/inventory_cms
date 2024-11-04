@@ -13,6 +13,7 @@ import { MySettingsModalComponent } from '@app/shared/layout/profile/my-settings
 import { NotificationSettingsModalComponent } from '@app/shared/layout/notifications/notification-settings-modal.component';
 import { UserNotificationHelper } from '@app/shared/layout/notifications/UserNotificationHelper';
 import { DateTimeService } from './shared/common/timing/date-time.service';
+import { PrimeNGConfig } from 'primeng/api';
 
 import {
     ToggleComponent,
@@ -25,17 +26,17 @@ import {
 
 @Component({
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.less'],
+    styleUrls: ['./app.component.scss'],
 })
 export class AppComponent extends AppComponentBase implements OnInit {
     @ViewChild('linkedAccountsModal') linkedAccountsModal: LinkedAccountsModalComponent;
     @ViewChild('userDelegationsModal', { static: true }) userDelegationsModal: UserDelegationsModalComponent;
     @ViewChild('changePasswordModal', { static: true }) changePasswordModal: ChangePasswordModalComponent;
     @ViewChild('changeProfilePictureModal', { static: true })
-        changeProfilePictureModal: ChangeProfilePictureModalComponent;
+    changeProfilePictureModal: ChangeProfilePictureModalComponent;
     @ViewChild('mySettingsModal', { static: true }) mySettingsModal: MySettingsModalComponent;
     @ViewChild('notificationSettingsModal', { static: true })
-        notificationSettingsModal: NotificationSettingsModalComponent;
+    notificationSettingsModal: NotificationSettingsModalComponent;
     @ViewChild('chatBarComponent') chatBarComponent;
 
     subscriptionStartType = SubscriptionStartType;
@@ -58,7 +59,6 @@ export class AppComponent extends AppComponentBase implements OnInit {
         this._userNotificationHelper.settingsModal = this.notificationSettingsModal;
         this.theme = abp.setting.get('App.UiManagement.Theme').toLocaleLowerCase();
         this.installationMode = UrlHelper.isInstallUrl(location.href);
-
         this.registerModalOpenEvents();
 
         if (this.appSession.application) {
