@@ -70,6 +70,22 @@ import { RouterModule } from '@angular/router';
                         data: { permission: '' },
                     },
                     {
+                        path: 'inventory-import-export/create-inventory-recall',
+                        loadChildren: () =>
+                            import(
+                                './inventory-import-export/create-inventory-recall/create-inventory-recall.module'
+                            ).then((m) => m.CreateInventoryRecallModule),
+                        data: { permission: '' },
+                    },
+                    {
+                        path: 'inventory-import-export/detail-inventory-recall',
+                        loadChildren: () =>
+                            import(
+                                './inventory-import-export/detail-inventory-recall/detail-inventory-recall.module'
+                            ).then((m) => m.DetailInventoryRecallModule),
+                        data: { permission: '' },
+                    },
+                    {
                         path: 'inventory-report',
                         loadChildren: () =>
                             import('./inventory-report/inventory-report.module').then((m) => m.InventoryReportModule),

@@ -5,11 +5,11 @@ import { MenuItem } from 'primeng/api';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
-    templateUrl: './detail-inventory-export.component.html',
+    templateUrl: './detail-inventory-recall.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [appModuleAnimation()],
 })
-export class DetailInventoryExportComponent extends AppComponentBase implements OnInit {
+export class DetailInventoryRecallComponent extends AppComponentBase implements OnInit {
     constructor(injector: Injector, private modalService: BsModalService) {
         super(injector);
     }
@@ -21,7 +21,7 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
         this.items = [
             { label: 'Quản lý kho', routerLink: '/app/main/inventory-manager' },
             { label: 'Xuất/Nhập kho', routerLink: '/app/main/inventory-import-export' },
-            { label: 'Chi tiết yêu cầu xuất kho' },
+            { label: 'Chi tiết yêu cầu thu hồi về kho' },
         ];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
     }
