@@ -44,5 +44,16 @@ export class InventoryImportExportComponent extends AppComponentBase implements 
             status: 1,
             path: '/app/main/inventory-import-export/detail-inventory-export',
         },
+        {
+            id: 2,
+            title: 'Thu hồi về kho lô SIM 10k sim hợp tác Vinaphone',
+            requestType: 'Thu hồi về kho',
+            sentDate: '12/10/2024 14:30',
+            approveDate: '20/10/2024 14:30',
+            expectedQuantity: '5000',
+            realityQuantity: '3000',
+            status: 1,
+            path: '/app/main/inventory-import-export/detail-inventory-recall',
+        },
     ];
 }
