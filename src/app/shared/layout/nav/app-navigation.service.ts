@@ -36,6 +36,19 @@ export class AppNavigationService {
                 ]
             ),
             new AppMenuItem(
+                'Quản lý danh mục',
+                '',
+                'flaticon-app',
+                '',
+                [],
+                [
+                    new AppMenuItem('Quản lý Quốc Gia', '', 'flaticon-app', '/app/main/countries'),
+                    new AppMenuItem('Quản lý Tỉnh/Thành Phố', '', 'flaticon-app', '/app/main/cities'),
+                    new AppMenuItem('Quản lý Quận/Huyện', '', 'flaticon-app', '/app/main/districts'),
+                    new AppMenuItem('Quản lý Phường/Xã', '', 'flaticon-app', '/app/main/wards'),
+                ]
+            ),
+            new AppMenuItem(
                 'Administration',
                 '',
                 'flaticon-interface-8',

@@ -1,0 +1,168 @@
+<div [@routerTransition]>
+    <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
+    <div [class]="containerClass" class="pt-5">
+        <div class="row bg-white pt-5 ps-3 column-gap-5">
+            <div class="d-flex justify-content-between mb-5">
+                <h4 class="mb-4">QUẢN LÝ TỈNH/THÀNH PHỐ</h4>
+                <div class="d-flex align-items-center justify-content-end">
+                    <button class="btn btn-primary btn-sm" type="button" (click)="openModal(add)">THÊM MỚI</button>
+                    <button class="btn btn-success btn-sm ms-3" type="button">XUẤT EXCEL</button>
+                </div>
+            </div>
+            <p-table class="py-5" #dataTable sortMode="multiple" [value]="dataSimFake"
+                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
+                [tableStyle]="{'min-width': '50rem'}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 130px">{{ 'HÀNH ĐỘNG' | localize }}</th>
+                        <th>
+                            {{ 'MÃ' | localize }}
+                            <!-- <p-sortIcon field="tenancyName"></p-sortIcon> -->
+                        </th>
+                        <th>
+                            {{ 'TÊN' | localize }}
+                            <!-- <p-sortIcon field="name"></p-sortIcon> -->
+                        </th>
+                        <th>{{ 'TRẠNG THÁI' | localize }}</th>
+                        <th>{{ 'QUỐC GIA' | localize }}</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-record="$implicit">
+                    <tr>
+                        <td style="width: 130px">
+                            <div class="btn-group" dropdown placement="bottom left" container="body">
+                                <button id="dropdownButton" type="button" class="btn btn-primary btn-sm dropdown-toggle"
+                                    dropdownToggle aria-controls="dropdownMenu">
+                                    <i class="fa fa-cog"></i>
+                                    <span class="caret"></span>
+                                    {{ 'Hành động' | localize }}
+                                </button>
+                                <ul id="dropdownMenu" class="dropdown-menu" role="menu" *dropdownMenu
+                                    aria-labelledby="dropdownButton">
+                                    <li>
+                                        <a class="dropdown-item">
+                                            {{ 'Xem chi tiết' | localize }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;" class="dropdown-item" (click)="openModal(edit)">
+                                            {{ 'Chỉnh sửa' | localize }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;" class="dropdown-item">
+                                            {{ 'Xoá' | localize }}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="p-column-title">{{ '' | localize }}</span>
+                            {{ record.ma }}
+                        </td>
+                        <td>
+                            <span class="p-column-title">{{ '' | localize }}</span>
+                            {{ record.name }}
+                        </td>
+                        <td>
+                            <span class="p-column-title">{{ 'Status' | localize }}</span>
+                            <span *ngIf="record.status">
+                                {{ 'Hoạt động' | localize }}
+                            </span>
+                            <span *ngIf="!record.status">
+                                {{ 'Khoá' | localize }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="p-column-title">{{ '' | localize }}</span>
+                            {{ record.country }}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <ng-template #add>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Thêm mới</h3>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="" class="form-label">Quốc gia</label>
+                    <div class="input-group">
+                        <select id="" name="" class="form-select">
+                            <option value="VN" selected>Việt Nam</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label">Mã</label>
+                    <input type="text" class="form-control" id="" placeholder="Nhập mã">
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label">Tên</label>
+                    <input type="text" class="form-control" id="" placeholder="Nhập tên">
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label">Trạng thái</label>
+                    <div class="input-group">
+                        <select id="" name="" class="form-select">
+                            <option value="1" selected>Khoá</option>
+                            <option value="2">Hoạt động</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="closeModal()">LƯU THÔNG TIN</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #edit>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Chỉnh sửa</h3>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="" class="form-label">Quốc gia</label>
+                    <div class="input-group">
+                        <select id="" name="" class="form-select">
+                            <option value="VN" selected>Việt Nam</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label">Mã</label>
+                    <input type="text" class="form-control" id="" placeholder="Nhập mã">
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label">Tên</label>
+                    <input type="text" class="form-control" id="" placeholder="Nhập tên">
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label">Trạng thái</label>
+                    <div class="input-group">
+                        <select id="" name="" class="form-select">
+                            <option value="1" selected>Khoá</option>
+                            <option value="2">Hoạt động</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="closeModal()">LƯU THÔNG TIN</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>
