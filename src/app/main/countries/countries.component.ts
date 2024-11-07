@@ -7,7 +7,6 @@ import { CountriesServiceProxy, CreateOrEditCountryDto } from '@shared/service-p
 import { finalize } from 'rxjs/operators';
 import { Paginator } from 'primeng/paginator';
 import { Table } from 'primeng/table';
-import { initial } from 'lodash-es';
 
 @Component({
     templateUrl: './countries.component.html',

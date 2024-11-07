@@ -9,21 +9,15 @@
                     <button class="btn btn-success btn-sm ms-3" type="button">XUẤT EXCEL</button>
                 </div>
             </div>
-            <div class="col-md-4">
-                <input type="text" class="form-control" [(ngModel)]="countryCode" placeholder="Nhập mã">
-            </div>
-            <div class="col-md-4">
-                <input type="text" class="form-control" [(ngModel)]="countryName" placeholder="Nhập tên">
-            </div>
-            <div class="col-md-4">
-                <select [(ngModel)]="statusFilter" class="form-select">
+            <div class="col-md-7 d-flex gap-3">
+                <input type="text" class="form-control" [(ngModel)]="filter" placeholder="Nhập từ khoá">
+                <select [(ngModel)]="statusFilter" class="form-select me-5">
                     <option [ngValue]="undefined">Tất cả</option>
                     <option [ngValue]="0">Khoá</option>
                     <option [ngValue]="1">Hoạt động</option>
                 </select>
-            </div>
-            <div class="mt-3">
-                <button type="button" class="btn btn-primary" (click)="getCountries($event)">Search</button>
+                <button type="button" class="btn btn-primary" style="width: 25%;" (click)="getCountries($event)">TÌM
+                    KIẾM</button>
             </div>
             <p-table class="pt-2 mb-5" #dataTable sortMode="multiple" [value]="primengTableHelper.records"
                 rows="{{primengTableHelper.defaultRecordsCountPerPage}}" (onLazyLoad)="getCountries($event)"

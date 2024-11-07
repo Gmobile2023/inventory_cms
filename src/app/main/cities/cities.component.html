@@ -9,19 +9,29 @@
                     <button class="btn btn-success btn-sm ms-3" type="button">XUẤT EXCEL</button>
                 </div>
             </div>
-            <p-table class="py-5" #dataTable sortMode="multiple" [value]="dataSimFake"
-                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
-                [tableStyle]="{'min-width': '50rem'}">
+            <div class="col-md-7 d-flex gap-3">
+                <input type="text" class="form-control" [(ngModel)]="filter" placeholder="Nhập từ khoá">
+                <select [(ngModel)]="statusFilter" class="form-select me-5">
+                    <option [ngValue]="undefined">Tất cả</option>
+                    <option [ngValue]="0">Khoá</option>
+                    <option [ngValue]="1">Hoạt động</option>
+                </select>
+                <button type="button" class="btn btn-primary" style="width: 25%;" (click)="getCities($event)">TÌM
+                    KIẾM</button>
+            </div>
+            <p-table class="pt-2 mb-5" #dataTable sortMode="multiple" [value]="primengTableHelper.records"
+                rows="{{primengTableHelper.defaultRecordsCountPerPage}}" (onLazyLoad)="getCities($event)"
+                [paginator]="false" [lazy]="true" [tableStyle]="{'min-width': '50rem'}">
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width: 130px">{{ 'HÀNH ĐỘNG' | localize }}</th>
-                        <th>
+                        <th pSortableColumn="countryCode">
                             {{ 'MÃ' | localize }}
-                            <!-- <p-sortIcon field="tenancyName"></p-sortIcon> -->
+                            <p-sortIcon field="countryCode"></p-sortIcon>
                         </th>
-                        <th>
+                        <th pSortableColumn="countryName">
                             {{ 'TÊN' | localize }}
-                            <!-- <p-sortIcon field="name"></p-sortIcon> -->
+                            <p-sortIcon field="countryName"></p-sortIcon>
                         </th>
                         <th>{{ 'TRẠNG THÁI' | localize }}</th>
                         <th>{{ 'QUỐC GIA' | localize }}</th>
@@ -40,12 +50,12 @@
                                 <ul id="dropdownMenu" class="dropdown-menu" role="menu" *dropdownMenu
                                     aria-labelledby="dropdownButton">
                                     <li>
-                                        <a class="dropdown-item">
+                                        <a href="javascript:;" class="dropdown-item">
                                             {{ 'Xem chi tiết' | localize }}
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="javascript:;" class="dropdown-item" (click)="openModal(edit)">
+                                        <a href="javascript:;" class="dropdown-item">
                                             {{ 'Chỉnh sửa' | localize }}
                                         </a>
                                     </li>
@@ -59,28 +69,38 @@
                         </td>
                         <td>
                             <span class="p-column-title">{{ '' | localize }}</span>
-                            {{ record.ma }}
+                            {{ record.city.cityCode }}
                         </td>
                         <td>
                             <span class="p-column-title">{{ '' | localize }}</span>
-                            {{ record.name }}
+                            {{ record.city.cityName }}
                         </td>
                         <td>
                             <span class="p-column-title">{{ 'Status' | localize }}</span>
-                            <span *ngIf="record.status">
+                            <span *ngIf="record.city.status == 1">
                                 {{ 'Hoạt động' | localize }}
                             </span>
-                            <span *ngIf="!record.status">
+                            <span *ngIf="record.city.status == 0">
                                 {{ 'Khoá' | localize }}
                             </span>
                         </td>
                         <td>
                             <span class="p-column-title">{{ '' | localize }}</span>
-                            {{ record.country }}
+                            {{ record.countryCountryName }}
                         </td>
                     </tr>
                 </ng-template>
             </p-table>
+            <div class="primeng-no-data text-center" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                {{ 'NoData' | localize }}
+            </div>
+            <div class="primeng-paging-container">
+                <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
+                    [totalRecords]="primengTableHelper.totalRecordsCount" [showCurrentPageReport]="true"
+                    (onPageChange)="getCities($event)" [currentPageReportTemplate]="
+                        'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount
+                    "></p-paginator>
+            </div>
         </div>
     </div>
     <ng-template #add>
