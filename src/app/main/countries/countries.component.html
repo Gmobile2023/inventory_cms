@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div class="col-md-7 d-flex gap-3">
-                <input type="text" class="form-control" [(ngModel)]="filter" placeholder="Nhập từ khoá">
+                <input type="text" class="form-control" [(ngModel)]="filter" placeholder="Nhập tên/mã quốc gia">
                 <select [(ngModel)]="statusFilter" class="form-select me-5">
                     <option [ngValue]="undefined">Tất cả</option>
                     <option [ngValue]="0">Khoá</option>
@@ -30,7 +30,7 @@
                             <p-sortIcon field="countryCode"></p-sortIcon>
                         </th>
                         <th pSortableColumn="countryName">
-                            {{ 'TÊN' | localize }}
+                            {{ 'QUỐC GIA' | localize }}
                             <p-sortIcon field="countryName"></p-sortIcon>
                         </th>
                         <th>{{ 'TRẠNG THÁI' | localize }}</th>
@@ -110,21 +110,26 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <label class="form-label">Mã</label>
-                    <input type="text" class="form-control" [(ngModel)]="countryCode" placeholder="Nhập mã">
+                    <input type="text" class="form-control" [(ngModel)]="countryCode" placeholder="Nhập mã" required
+                        maxlength="64" #countryCodeInput="ngModel">
+                    <validation-messages [formCtrl]="countryCodeInput"></validation-messages>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Tên</label>
-                    <input type="text" class="form-control" [(ngModel)]="countryName" placeholder="Nhập tên">
+                    <input type="text" class="form-control" [(ngModel)]="countryName" placeholder="Nhập tên" required
+                        maxlength="64" #countryNameInput="ngModel">
+                    <validation-messages [formCtrl]="countryNameInput"></validation-messages>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Trạng thái</label>
                     <div class="input-group">
-                        <select [(ngModel)]="statusFilter" class="form-select">
+                        <select [(ngModel)]="statusFilter" class="form-select" required #statusFilterInput="ngModel">
                             <option [ngValue]="undefined">Chọn trạng thái</option>
                             <option [ngValue]="0">Khoá</option>
                             <option [ngValue]="1">Hoạt động</option>
                         </select>
                     </div>
+                    <validation-messages [formCtrl]="statusFilterInput"></validation-messages>
                 </div>
             </div>
             <div class="modal-footer">
@@ -146,20 +151,25 @@
                 <input type="hidden" [(ngModel)]="idCountry">
                 <div class="mb-3">
                     <label for="" class="form-label">Mã</label>
-                    <input type="text" class="form-control" [(ngModel)]="countryCode" placeholder="Nhập mã">
+                    <input type="text" class="form-control" [(ngModel)]="countryCode" placeholder="Nhập mã" required
+                        maxlength="64" #countryCodeInput="ngModel">
+                    <validation-messages [formCtrl]="countryCodeInput"></validation-messages>
                 </div>
                 <div class="mb-3">
                     <label for="" class="form-label">Tên</label>
-                    <input type="text" class="form-control" [(ngModel)]="countryName" placeholder="Nhập tên">
+                    <input type="text" class="form-control" [(ngModel)]="countryName" placeholder="Nhập tên" required
+                        maxlength="64" #countryNameInput="ngModel">
+                    <validation-messages [formCtrl]="countryNameInput"></validation-messages>
                 </div>
                 <div class="mb-3">
                     <label for="" class="form-label">Trạng thái</label>
                     <div class="input-group">
-                        <select [(ngModel)]="statusFilter" class="form-select">
+                        <select [(ngModel)]="statusFilter" class="form-select" required #statusFilterInput="ngModel">
                             <option [ngValue]="0">Khoá</option>
                             <option [ngValue]="1">Hoạt động</option>
                         </select>
                     </div>
+                    <validation-messages [formCtrl]="statusFilterInput"></validation-messages>
                 </div>
             </div>
             <div class="modal-footer">
@@ -180,17 +190,17 @@
             </div>
             <div class="modal-body">
                 <div class="d-flex align-items-center mb-3">
-                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Mã:</div>
-                    <div class="description" style="font-size: 14px;">{{dataGetView.countryCode}}</div>
+                    <label class="form-label" style="width: 40%;">Mã</label>
+                    <input type="text" class="form-control" [value]="dataGetView.countryCode" disabled>
                 </div>
                 <div class="d-flex align-items-center mb-3">
-                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Tên:</div>
-                    <div class="description" style="font-size: 14px;">{{dataGetView.countryName}}</div>
+                    <label class="form-label" style="width: 40%;">Quốc gia</label>
+                    <input type="text" class="form-control" [value]="dataGetView.countryName" disabled>
                 </div>
                 <div class="d-flex align-items-center mb-3">
-                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Trạng thái:</div>
-                    <div class="description" style="font-size: 14px;">{{dataGetView.status == 0 ? 'Khoá' : 'Hoạt động'}}
-                    </div>
+                    <label class="form-label" style="width: 40%;">Trạng thái</label>
+                    <input type="text" class="form-control" [value]="dataGetView.status == 0 ? 'Khoá' : 'Hoạt động'"
+                        disabled>
                 </div>
             </div>
             <div class="modal-footer">

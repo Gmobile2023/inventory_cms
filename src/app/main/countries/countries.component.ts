@@ -102,7 +102,7 @@ export class CountriesComponent extends AppComponentBase {
     }
 
     deleteCountry(id: number) {
-        this.message.confirm(this.l('', id), this.l('Bạn có chắc chắn muốn xoá'), (isConfirmed) => {
+        this.message.confirm(this.l('Bạn có chắc chắn muốn xoá?', id), this.l('Xoá Quốc gia'), (isConfirmed) => {
             if (isConfirmed) {
                 this._countriesServiceProxy.delete(id).subscribe(() => {
                     this.notify.info(this.l('DeletedSuccessfully'));

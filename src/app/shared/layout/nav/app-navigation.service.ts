@@ -24,7 +24,7 @@ export class AppNavigationService {
             new AppMenuItem('Tenants', 'Pages.Tenants', 'flaticon-list-3', '/app/admin/tenants'),
             new AppMenuItem('Editions', 'Pages.Editions', 'flaticon-app', '/app/admin/editions'),
             new AppMenuItem(
-                'Quản lý kho',
+                'Quản lý Kho',
                 '',
                 'flaticon-app',
                 '',
@@ -36,7 +36,7 @@ export class AppNavigationService {
                 ]
             ),
             new AppMenuItem(
-                'Quản lý danh mục',
+                'Địa giới hành chính',
                 '',
                 'flaticon-app',
                 '',

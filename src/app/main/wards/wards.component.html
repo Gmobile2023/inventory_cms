@@ -9,22 +9,43 @@
                     <button class="btn btn-success btn-sm ms-3" type="button">XUẤT EXCEL</button>
                 </div>
             </div>
-            <p-table class="py-5" #dataTable sortMode="multiple" [value]="dataSimFake"
-                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
-                [tableStyle]="{'min-width': '50rem'}">
+            <div class="col-md-10 d-flex gap-3">
+                <input type="text" class="form-control me-1" [(ngModel)]="filter" placeholder="Nhập tên/mã phường/xã">
+                <select [(ngModel)]="status" class="form-select me-1">
+                    <option [ngValue]="null">Chọn trạng thái</option>
+                    <option [ngValue]="undefined">Tất cả</option>
+                    <option [ngValue]="0">Khoá</option>
+                    <option [ngValue]="1">Hoạt động</option>
+                </select>
+                <select [(ngModel)]="districtName" class="form-select me-5">
+                    <option [ngValue]="null">Chọn Quận/Huyện</option>
+                    <option [ngValue]="undefined">Tất cả</option>
+                    <option [ngValue]="district.displayName" *ngFor="let district of districts">{{district.displayName}}
+                    </option>
+                </select>
+                <button type="button" class="btn btn-primary" style="width: 25%;" (click)="getWards($event)">
+                    TÌM KIẾM
+                </button>
+            </div>
+            <p-table class="pt-2 mb-5" #dataTable sortMode="multiple" [value]="primengTableHelper.records"
+                rows="{{primengTableHelper.defaultRecordsCountPerPage}}" (onLazyLoad)="getWards($event)"
+                [paginator]="false" [lazy]="true" [tableStyle]="{'min-width': '50rem'}">
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width: 130px">{{ 'HÀNH ĐỘNG' | localize }}</th>
-                        <th>
+                        <th pSortableColumn="wardCode">
                             {{ 'MÃ' | localize }}
-                            <!-- <p-sortIcon field="tenancyName"></p-sortIcon> -->
+                            <p-sortIcon field="wardCode"></p-sortIcon>
                         </th>
-                        <th>
-                            {{ 'TÊN' | localize }}
-                            <!-- <p-sortIcon field="name"></p-sortIcon> -->
+                        <th pSortableColumn="wardName">
+                            {{ 'PHƯỜNG/XÃ' | localize }}
+                            <p-sortIcon field="wardName"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="districtDistrictName">
+                            {{ 'QUẬN/HUYỆN' | localize }}
+                            <p-sortIcon field="districtDistrictName"></p-sortIcon>
                         </th>
                         <th>{{ 'TRẠNG THÁI' | localize }}</th>
-                        <th>{{ 'QUẬN/HUYỆN' | localize }}</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-record="$implicit">
@@ -40,17 +61,20 @@
                                 <ul id="dropdownMenu" class="dropdown-menu" role="menu" *dropdownMenu
                                     aria-labelledby="dropdownButton">
                                     <li>
-                                        <a class="dropdown-item">
+                                        <a href="javascript:;" class="dropdown-item"
+                                            (click)="getViewWard(record.ward.id, view)">
                                             {{ 'Xem chi tiết' | localize }}
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="javascript:;" class="dropdown-item" (click)="openModal(edit)">
+                                        <a href="javascript:;" class="dropdown-item"
+                                            (click)="getEditWard(record.ward.id, edit)">
                                             {{ 'Chỉnh sửa' | localize }}
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="javascript:;" class="dropdown-item">
+                                        <a href="javascript:;" class="dropdown-item"
+                                            (click)="deleteWard(record.ward.id)">
                                             {{ 'Xoá' | localize }}
                                         </a>
                                     </li>
@@ -59,28 +83,38 @@
                         </td>
                         <td>
                             <span class="p-column-title">{{ '' | localize }}</span>
-                            {{ record.ma }}
+                            {{ record.ward.wardCode }}
                         </td>
                         <td>
                             <span class="p-column-title">{{ '' | localize }}</span>
-                            {{ record.name }}
+                            {{ record.ward.wardName }}
+                        </td>
+                        <td>
+                            <span class="p-column-title">{{ '' | localize }}</span>
+                            {{ record.districtDistrictName }}
                         </td>
                         <td>
                             <span class="p-column-title">{{ 'Status' | localize }}</span>
-                            <span *ngIf="record.status">
+                            <span *ngIf="record.ward.status == 1">
                                 {{ 'Hoạt động' | localize }}
                             </span>
-                            <span *ngIf="!record.status">
+                            <span *ngIf="record.ward.status == 0">
                                 {{ 'Khoá' | localize }}
                             </span>
-                        </td>
-                        <td>
-                            <span class="p-column-title">{{ '' | localize }}</span>
-                            {{ record.country }}
                         </td>
                     </tr>
                 </ng-template>
             </p-table>
+            <div class="primeng-no-data text-center" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                {{ 'NoData' | localize }}
+            </div>
+            <div class="primeng-paging-container">
+                <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
+                    [totalRecords]="primengTableHelper.totalRecordsCount" [showCurrentPageReport]="true"
+                    (onPageChange)="getWards($event)" [currentPageReportTemplate]="
+                        'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount
+                    "></p-paginator>
+            </div>
         </div>
     </div>
     <ng-template #add>
@@ -93,33 +127,44 @@
                 <div class="mb-3">
                     <label for="" class="form-label">Quận/Huyện</label>
                     <div class="input-group">
-                        <select id="" name="" class="form-select">
-                            <option value="VN" selected>Huyện Lý Nhân</option>
+                        <select [(ngModel)]="districtId" class="form-select" required #districtIdInput="ngModel">
+                            <option [ngValue]="undefined">Chọn Quận/Huyện</option>
+                            <option [ngValue]="district.id" *ngFor="let district of districts">
+                                {{district.displayName}}
+                            </option>
                         </select>
                     </div>
+                    <validation-messages [formCtrl]="districtIdInput"></validation-messages>
                 </div>
                 <div class="mb-3">
-                    <label for="" class="form-label">Mã</label>
-                    <input type="text" class="form-control" id="" placeholder="Nhập mã">
+                    <label class="form-label">Mã</label>
+                    <input type="text" class="form-control" placeholder="Nhập mã" [(ngModel)]="wardCode" required
+                        maxlength="64" #wardCodeInput="ngModel">
+                    <validation-messages [formCtrl]="wardCodeInput"></validation-messages>
                 </div>
                 <div class="mb-3">
-                    <label for="" class="form-label">Tên</label>
-                    <input type="text" class="form-control" id="" placeholder="Nhập tên">
+                    <label class="form-label">Tên</label>
+                    <input type="text" class="form-control" placeholder="Nhập tên" [(ngModel)]="wardName" required
+                        maxlength="64" #wardNameInput="ngModel">
+                    <validation-messages [formCtrl]="wardNameInput"></validation-messages>
                 </div>
                 <div class="mb-3">
-                    <label for="" class="form-label">Trạng thái</label>
+                    <label class="form-label">Trạng thái</label>
                     <div class="input-group">
-                        <select id="" name="" class="form-select">
-                            <option value="1" selected>Khoá</option>
-                            <option value="2">Hoạt động</option>
+                        <select [(ngModel)]="status" class="form-select" required #statusInput="ngModel">
+                            <option [ngValue]="null">Chọn trạng thái</option>
+                            <option [ngValue]="0">Khoá</option>
+                            <option [ngValue]="1">Hoạt động</option>
                         </select>
                     </div>
+                    <validation-messages [formCtrl]="statusInput"></validation-messages>
                 </div>
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-end">
                     <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
-                    <button type="button" class="btn btn-primary btn-sm" (click)="closeModal()">LƯU THÔNG TIN</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="createOrEditWard()">LƯU THÔNG
+                        TIN</button>
                 </div>
             </div>
         </div>
@@ -134,25 +179,31 @@
                 <div class="mb-3">
                     <label for="" class="form-label">Quận/Huyện</label>
                     <div class="input-group">
-                        <select id="" name="" class="form-select">
-                            <option value="VN" selected>Huyện Lý Nhân</option>
+                        <select [(ngModel)]="districtId" class="form-select">
+                            <option [ngValue]="district.id" *ngFor="let district of districts">
+                                {{district.displayName}}
+                            </option>
                         </select>
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="" class="form-label">Mã</label>
-                    <input type="text" class="form-control" id="" placeholder="Nhập mã">
+                    <label class="form-label">Mã</label>
+                    <input type="text" class="form-control" placeholder="Nhập mã" [(ngModel)]="wardCode" required
+                        maxlength="64" #wardCodeInput="ngModel">
+                    <validation-messages [formCtrl]="wardCodeInput"></validation-messages>
                 </div>
                 <div class="mb-3">
-                    <label for="" class="form-label">Tên</label>
-                    <input type="text" class="form-control" id="" placeholder="Nhập tên">
+                    <label class="form-label">Tên</label>
+                    <input type="text" class="form-control" placeholder="Nhập tên" [(ngModel)]="wardName" required
+                        maxlength="64" #wardNameInput="ngModel">
+                    <validation-messages [formCtrl]="wardNameInput"></validation-messages>
                 </div>
                 <div class="mb-3">
-                    <label for="" class="form-label">Trạng thái</label>
+                    <label class="form-label">Trạng thái</label>
                     <div class="input-group">
-                        <select id="" name="" class="form-select">
-                            <option value="1" selected>Khoá</option>
-                            <option value="2">Hoạt động</option>
+                        <select [(ngModel)]="status" class="form-select">
+                            <option [ngValue]="0">Khoá</option>
+                            <option [ngValue]="1">Hoạt động</option>
                         </select>
                     </div>
                 </div>
@@ -160,7 +211,40 @@
             <div class="modal-footer">
                 <div class="d-flex justify-content-end">
                     <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
-                    <button type="button" class="btn btn-primary btn-sm" (click)="closeModal()">LƯU THÔNG TIN</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="createOrEditWard()">LƯU THÔNG
+                        TIN</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #view>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Xem chi tiết</h3>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex align-items-center mb-3">
+                    <label class="form-label" style="width: 40%;">Mã</label>
+                    <input type="text" class="form-control" [value]="dataGetForView.ward.wardCode" disabled>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <label class="form-label" style="width: 40%;">Phường/Xã</label>
+                    <input type="text" class="form-control" [value]="dataGetForView.ward.wardName" disabled>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <label class="form-label" style="width: 40%;">Quận/Huyện</label>
+                    <input type="text" class="form-control" [value]="dataGetForView.districtDistrictName" disabled>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <label class="form-label" style="width: 40%;">Trạng thái</label>
+                    <input type="text" class="form-control"
+                        [value]="dataGetForView.ward.status == 0 ? 'Khoá' : 'Hoạt động'" disabled>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">ĐÓNG</button>
                 </div>
             </div>
         </div>

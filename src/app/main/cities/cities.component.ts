@@ -30,16 +30,20 @@ export class CitiesComponent extends AppComponentBase {
     modalRef?: BsModalRef | null;
     filter: string | undefined;
     cityCode: string | undefined;
+    cityName: string | undefined;
     cityNameFilter: string | undefined;
     countryCountryNameFilter: string | undefined;
     statusFilter: number | undefined = undefined;
     countryId: number | undefined;
     idCity: number | undefined;
+    countries: any[] = [];
+    dataGetForView: any = {};
 
     ngOnInit() {
         this.items = [{ label: 'Quản lý Tỉnh/Thành Phố' }];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.primengTableHelper.defaultRecordsCountPerPage = 5;
+        this.getCountriesForTableDropdown();
     }
 
     getCities(event?: LazyLoadEvent) {
@@ -56,19 +60,24 @@ export class CitiesComponent extends AppComponentBase {
             )
             .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
             .subscribe((result) => {
-                console.log(result);
                 this.primengTableHelper.records = result.items;
                 this.primengTableHelper.totalRecordsCount = result.totalCount;
                 this.primengTableHelper.hideLoadingIndicator();
             });
     }
 
+    getCountriesForTableDropdown() {
+        this._citiesServiceProxy.getAllCountryForTableDropdown().subscribe((result) => {
+            this.countries = result;
+        });
+    }
+
     createOrEditCity() {
         let body = new CreateOrEditCityDto();
         body.cityCode = this.cityCode;
-        body.cityName = this.cityNameFilter;
+        body.cityName = this.cityName;
         body.status = this.statusFilter;
-        body.countryId = this.statusFilter;
+        body.countryId = this.countryId;
         // this.saving = true;
         if (this.idCity) {
             body.id = this.idCity;
@@ -84,11 +93,41 @@ export class CitiesComponent extends AppComponentBase {
                 this.notify.info(this.l('SavedSuccessfully'));
                 this.idCity = undefined;
                 this.cityCode = undefined;
-                this.cityNameFilter = undefined;
+                this.cityName = undefined;
                 this.statusFilter = undefined;
+                this.countryId = undefined;
                 this.closeModal();
                 this.getCities();
             });
+    }
+
+    getEditCity(id: number, template: TemplateRef<any>) {
+        this._citiesServiceProxy.getCityForEdit(id).subscribe((result) => {
+            this.idCity = result.city.id;
+            this.cityCode = result.city.cityCode;
+            this.cityName = result.city.cityName;
+            this.statusFilter = result.city.status;
+            this.countryId = result.city.countryId;
+        });
+        this.modalRef = this.modalService.show(template, { id: 1, class: 'modal-md' });
+    }
+
+    getViewCity(id: number, template: TemplateRef<any>) {
+        this._citiesServiceProxy.getCityForView(id).subscribe((result) => {
+            this.dataGetForView = result;
+        });
+        this.modalRef = this.modalService.show(template, { id: 1, class: 'modal-md' });
+    }
+
+    deleteCity(id: number) {
+        this.message.confirm(this.l('Bạn có chắc chắn muốn xoá?', id), this.l('Xoá Tỉnh/Thành phố'), (isConfirmed) => {
+            if (isConfirmed) {
+                this._citiesServiceProxy.delete(id).subscribe(() => {
+                    this.notify.info(this.l('DeletedSuccessfully'));
+                    this.getCities();
+                });
+            }
+        });
     }
 
     openModal(template: TemplateRef<any>) {
@@ -98,25 +137,4 @@ export class CitiesComponent extends AppComponentBase {
     closeModal(modalId?: number) {
         this.modalService.hide(modalId);
     }
-
-    dataSimFake = [
-        {
-            ma: '99',
-            name: 'Tỉnh Bắc Ninh',
-            status: true,
-            country: 'Việt Nam',
-        },
-        {
-            ma: '98',
-            name: 'Tỉnh Bắc Giang',
-            status: true,
-            country: 'Việt Nam',
-        },
-        {
-            ma: '90',
-            name: 'Tỉnh Hà Nam',
-            status: false,
-            country: 'Việt Nam',
-        },
-    ];
 }
