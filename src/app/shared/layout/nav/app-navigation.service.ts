@@ -24,7 +24,7 @@ export class AppNavigationService {
             new AppMenuItem('Tenants', 'Pages.Tenants', 'flaticon-list-3', '/app/admin/tenants'),
             new AppMenuItem('Editions', 'Pages.Editions', 'flaticon-app', '/app/admin/editions'),
             new AppMenuItem(
-                'Quản lý kho',
+                'Quản lý Kho',
                 '',
                 'flaticon-app',
                 '',
@@ -33,6 +33,19 @@ export class AppNavigationService {
                     new AppMenuItem('Danh sách kho', '', 'flaticon-app', '/app/main/inventory-manager'),
                     new AppMenuItem('Xuất nhập kho', '', 'flaticon-app', '/app/main/inventory-import-export'),
                     new AppMenuItem('Báo cáo tồn kho', '', 'flaticon-app', '/app/main/inventory-report'),
+                ]
+            ),
+            new AppMenuItem(
+                'Địa giới hành chính',
+                '',
+                'flaticon-app',
+                '',
+                [],
+                [
+                    new AppMenuItem('Quản lý Quốc Gia', '', 'flaticon-app', '/app/main/countries'),
+                    new AppMenuItem('Quản lý Tỉnh/Thành Phố', '', 'flaticon-app', '/app/main/cities'),
+                    new AppMenuItem('Quản lý Quận/Huyện', '', 'flaticon-app', '/app/main/districts'),
+                    new AppMenuItem('Quản lý Phường/Xã', '', 'flaticon-app', '/app/main/wards'),
                 ]
             ),
             new AppMenuItem(
