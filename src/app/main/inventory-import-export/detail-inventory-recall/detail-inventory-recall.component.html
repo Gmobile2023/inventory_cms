@@ -1,0 +1,213 @@
+<div [@routerTransition]>
+    <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
+    <div [class]="containerClass">
+        <div class="bg-white py-5">
+            <p-tabView>
+                <p-tabPanel header="Thông tin xuất kho">
+                    <div class="row py-5">
+                        <h4>THÔNG TIN CHUNG</h4>
+                        <div class="col-md-6 mb-3">
+                            <label for="" class="form-label">Tiêu đề</label>
+                            <input type="text" class="form-control" id="" value="Xuất Lô SIM 64K" disabled>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="" class="form-label">Số lượng dự kiến</label>
+                            <input type="text" class="form-control" id="" value="10.000" disabled>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="" class="form-label">Kho thu hồi</label>
+                            <input type="text" class="form-control" id="" value="Kho S99" disabled>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="" class="form-label">Kho nhận thu hồi</label>
+                            <input type="text" class="form-control" id="" value="Kho S99_Hà Nội" disabled>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="" class="form-label">Ghi chú</label>
+                            <textarea class="form-control" id="" rows="2"
+                                disabled>Xuất SIM theo hợp đồng sản xuất VP 28/10/2024</textarea>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row py-5">
+                        <h4>THÔNG TIN CHỨNG TỪ</h4>
+                        <div class="d-flex justify-content-center" style="margin-top: 100px;">
+                            <button class="btn btn-success me-3" type="button" (click)="openModal(approve)">ĐỒNG
+                                Ý</button>
+                            <button class="btn btn-danger" type="button" (click)="openModal(refuse)">TỪ CHỐI</button>
+                        </div>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="Danh sách SIM/SỐ">
+                    <div class="border">
+                        <p-table #dataTable sortMode="multiple" [value]="dataSimFake"
+                            rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
+                            [tableStyle]="{'min-width': '50rem'}">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width: 40px">{{ 'STT' | localize }}</th>
+                                    <th>
+                                        {{ 'SỐ THUÊ BAO' | localize }}
+                                        <!-- <p-sortIcon field="tenancyName"></p-sortIcon> -->
+                                    </th>
+                                    <th>
+                                        {{ 'SỐ SERIAL' | localize }}
+                                        <!-- <p-sortIcon field="name"></p-sortIcon> -->
+                                    </th>
+                                    <th>{{ 'MÃ LÔ' | localize }}</th>
+                                    <th>{{ 'LOẠI SẢN PHẨM' | localize }}</th>
+                                    <th>
+                                        {{ 'SẢN PHẨM' | localize }}
+                                        <!-- <p-sortIcon field="subscriptionEndDateUtc"></p-sortIcon> -->
+                                    </th>
+                                    <th>
+                                        {{ 'NHÀ MẠNG' | localize }}
+                                        <!-- <p-sortIcon field="isActive"></p-sortIcon> -->
+                                    </th>
+                                    <th>
+                                        {{ 'GIÁ BÁN' | localize }}
+                                        <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
+                                    </th>
+                                    <th>
+                                        {{ 'THUỘC TÍNH' | localize }}
+                                        <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
+                                    </th>
+                                    <th>
+                                        {{ 'TRẠNG THÁI' | localize }}
+                                        <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
+                                    </th>
+                                    <th>
+                                        {{ 'NGÀY NHẬP' | localize }}
+                                        <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-record="$implicit">
+                                <tr>
+                                    <td style="width: 40px">
+                                        {{ record.id }}
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ 'phoneNumber' | localize }}</span>
+                                        {{ record.phoneNumber }}
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ 'serialNumber' | localize }}</span>
+                                        {{ record.serialNumber }}
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ 'shipment' | localize }}</span>
+                                        {{ record.shipment }}
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ 'productType' | localize }}</span>
+                                        {{ record.productType }}
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ 'product' | localize }}</span>
+                                        {{ record.product }}
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ 'network' | localize }}</span>
+                                        {{ record.network }}
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ 'price' | localize }}</span>
+                                        {{ record.price }}
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ 'attribute' | localize }}</span>
+                                        {{ record.attribute }}
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ 'Status' | localize }}</span>
+                                        <span *ngIf="record.status == 0" class="badge badge-warning badge-inline">
+                                            {{ 'Chưa hoạt động' | localize }}
+                                        </span>
+                                        <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
+                                            {{ 'Đang hoạt động' | localize }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ 'Date' | localize }}</span>
+                                        {{ record.date }}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="Lịch sử tác động">
+                    <div class="row py-5">
+                        <h4>LỊCH SỬ TÁC ĐỘNG</h4>
+                        <div class="primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
+                            <p-table #dataTable sortMode="multiple" [value]="dataHistoryFake"
+                                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false"
+                                [lazy]="true" [tableStyle]="{'min-width': '50rem'}">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>{{ 'STT' | localize }}</th>
+                                        <th>{{ 'HÀNH ĐỘNG' | localize }}</th>
+                                        <th>{{ 'NỘI DUNG' | localize }}</th>
+                                        <th>{{ 'THỜI GIAN' | localize }}</th>
+                                        <th>{{ 'NGƯỜI THỰC HIỆN' | localize }}</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr>
+                                        <td>{{record.id}}</td>
+                                        <td>{{record.action}}</td>
+                                        <td>{{record.noidung}}</td>
+                                        <td>{{record.date}}</td>
+                                        <td>{{record.user}}</td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </div>
+                </p-tabPanel>
+            </p-tabView>
+        </div>
+    </div>
+    <ng-template #approve>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Phê duyệt yêu cầu xuất kho</h3>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p style="font-size: 16px;">Bạn có chắc chắn muốn duyệt yêu cầu xuất kho ABC?</p>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="closeModal()">XÁC NHẬN</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #refuse>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Từ chối yêu cầu xuất kho</h3>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+                <label for="" class="form-label">
+                    {{ 'Lý do từ chối' | localize }}
+                    <span class="text-danger">(*)</span>
+                </label>
+                <div class="input-group">
+                    <input id="" name="" class="form-control" placeholder="{{ 'Nhập lý do từ chối' | localize }}"
+                        type="text" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
+                    <button type="button" class="btn btn-danger btn-sm" (click)="closeModal()">TỪ CHỐI</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>

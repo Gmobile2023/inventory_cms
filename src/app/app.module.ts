@@ -215,14 +215,13 @@ import { ThirdPartyService } from '@shared/third-party-services/third-party-serv
         NgxSpinnerModule,
         AppBsModalModule,
         SubheaderModule,
-        ChangeProfilePictureModalModule
-    ]
+        ChangeProfilePictureModalModule,
+    ],
 })
 export class AppModule {}
 
 function appInitializerFactory() {
     return () => {
-
         const url = new URL(location.href);
         const params = url.searchParams;
 
