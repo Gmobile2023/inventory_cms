@@ -1,4 +1,4 @@
-﻿﻿FROM node:latest as node
+﻿FROM node:latest as node
 WORKDIR /app
 
 RUN npm install -g @angular/cli
