@@ -91,6 +91,26 @@ import { RouterModule } from '@angular/router';
                             import('./inventory-report/inventory-report.module').then((m) => m.InventoryReportModule),
                         data: { permission: '' },
                     },
+                    {
+                        path: 'countries',
+                        loadChildren: () => import('./countries/countries.module').then((m) => m.CountriesModule),
+                        data: { permission: '' },
+                    },
+                    {
+                        path: 'cities',
+                        loadChildren: () => import('./cities/cities.module').then((m) => m.CitiesModule),
+                        data: { permission: '' },
+                    },
+                    {
+                        path: 'districts',
+                        loadChildren: () => import('./districts/districts.module').then((m) => m.DistrictsModule),
+                        data: { permission: '' },
+                    },
+                    {
+                        path: 'wards',
+                        loadChildren: () => import('./wards/wards.module').then((m) => m.WardsModule),
+                        data: { permission: '' },
+                    },
                     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
                     { path: '**', redirectTo: 'dashboard' },
                 ],
