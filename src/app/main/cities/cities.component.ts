@@ -33,14 +33,14 @@ export class CitiesComponent extends AppComponentBase {
     cityName: string | undefined;
     cityNameFilter: string | undefined;
     countryCountryNameFilter: string | undefined;
-    statusFilter: number | undefined = undefined;
+    statusFilter: number | undefined = null;
     countryId: number | undefined;
     idCity: number | undefined;
     countries: any[] = [];
     dataGetForView: any = {};
 
     ngOnInit() {
-        this.items = [{ label: 'Quản lý Tỉnh/Thành Phố' }];
+        this.items = [{ label: 'Địa giới hành chính' }, { label: 'Quản lý Tỉnh/Thành Phố' }];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.primengTableHelper.defaultRecordsCountPerPage = 5;
         this.getCountriesForTableDropdown();
@@ -52,7 +52,7 @@ export class CitiesComponent extends AppComponentBase {
             .getAll(
                 this.filter,
                 this.cityNameFilter,
-                this.statusFilter,
+                this.statusFilter == null ? undefined : this.statusFilter,
                 this.countryCountryNameFilter,
                 this.primengTableHelper.getSorting(this.dataTable),
                 this.primengTableHelper.getSkipCount(this.paginator, event),
