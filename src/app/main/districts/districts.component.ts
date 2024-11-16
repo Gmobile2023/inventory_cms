@@ -41,6 +41,7 @@ export class DistrictsComponent extends AppComponentBase {
         this.items = [{ label: 'Địa giới hành chính' }, { label: 'Quản lý Quận/Huyện' }];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.getCitiesForTableDropdown();
+        this.primengTableHelper.defaultRecordsCountPerPage = 5;
     }
 
     getDistricts(event?: LazyLoadEvent) {

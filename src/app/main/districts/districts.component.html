@@ -109,7 +109,8 @@
             <div class="primeng-paging-container">
                 <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
                     [totalRecords]="primengTableHelper.totalRecordsCount" [showCurrentPageReport]="true"
-                    (onPageChange)="getDistricts($event)" [currentPageReportTemplate]="
+                    (onPageChange)="getDistricts($event)"
+                    [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage" [currentPageReportTemplate]="
                         'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount
                     "></p-paginator>
             </div>

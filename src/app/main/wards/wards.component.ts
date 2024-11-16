@@ -41,6 +41,7 @@ export class WardsComponent extends AppComponentBase {
         this.items = [{ label: 'Địa giới hành chính' }, { label: 'Quản lý Phường/Xã' }];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.getAllDistrictForTableDropdown();
+        this.primengTableHelper.defaultRecordsCountPerPage = 5;
     }
 
     getWards(event?: LazyLoadEvent) {
