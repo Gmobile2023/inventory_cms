@@ -30,7 +30,7 @@ export class CountriesComponent extends AppComponentBase {
     modalRef?: BsModalRef | null;
     countryName: string | undefined;
     countryCode: string | undefined;
-    statusFilter: number | undefined = undefined;
+    statusFilter: number | undefined = null;
     filter: string | undefined;
     idCountry: number | undefined;
     saving = false;
@@ -38,7 +38,7 @@ export class CountriesComponent extends AppComponentBase {
     dataGetView: any = {};
 
     ngOnInit() {
-        this.items = [{ label: 'Quản lý Quốc gia' }];
+        this.items = [{ label: 'Địa giới hành chính' }, { label: 'Quản lý Quốc gia' }];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.primengTableHelper.defaultRecordsCountPerPage = 5;
     }
@@ -50,7 +50,7 @@ export class CountriesComponent extends AppComponentBase {
                 this.filter,
                 this.countryCode,
                 this.countryName,
-                this.statusFilter,
+                this.statusFilter == null ? undefined : this.statusFilter,
                 this.primengTableHelper.getSorting(this.dataTable),
                 this.primengTableHelper.getSkipCount(this.paginator, event),
                 this.primengTableHelper.getMaxResultCount(this.paginator, event)

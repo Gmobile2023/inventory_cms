@@ -92,6 +92,14 @@ import { RouterModule } from '@angular/router';
                         data: { permission: '' },
                     },
                     {
+                        path: 'approval-flow-settings',
+                        loadChildren: () =>
+                            import('./approval-flow-settings/approval-flow-settings.module').then(
+                                (m) => m.ApprovalFlowSettingsModule
+                            ),
+                        data: { permission: '' },
+                    },
+                    {
                         path: 'countries',
                         loadChildren: () => import('./countries/countries.module').then((m) => m.CountriesModule),
                         data: { permission: '' },

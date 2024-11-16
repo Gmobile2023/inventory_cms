@@ -1,0 +1,193 @@
+<div [@routerTransition]>
+    <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
+    <div [class]="containerClass">
+        <div class="row bg-white pt-5 ps-3">
+            <h4 class="mb-4">CÀI ĐẶT LUỒNG DUYỆT</h4>
+            <div class="col-md-6 mb-5">
+                <div class="d-flex align-items-center mb-5">
+                    <label for="" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Cấp độ kho' | localize }}
+                        <span style="color: red;">(*)</span>
+                    </label>
+                    <div class="input-group">
+                        <select id="" name="" class="form-select">
+                            <option selected>
+                                Chọn cấp độ kho
+                            </option>
+                            <option value="1">Loại A</option>
+                            <option value="2">Loại B</option>
+                            <option value="3">Loại C</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-5">
+                    <label for="" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Loại sản phẩm' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <select id="" name="" class="form-select">
+                            <option selected>
+                                Chọn loại sản phẩm
+                            </option>
+                            <option value="1">Loại A</option>
+                            <option value="2">Loại B</option>
+                            <option value="3">Loại C</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-5">
+                    <label for="" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Phòng Ban duyệt 1' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <select id="" name="" class="form-select">
+                            <option selected>
+                                Chọn phòng ban
+                            </option>
+                            <option value="1">Loại A</option>
+                            <option value="2">Loại B</option>
+                            <option value="3">Loại C</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-5">
+                    <label for="" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Phòng Ban duyệt 2' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <select id="" name="" class="form-select">
+                            <option selected>
+                                Chọn phòng ban
+                            </option>
+                            <option value="1">Loại A</option>
+                            <option value="2">Loại B</option>
+                            <option value="3">Loại C</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-5">
+                    <label for="" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Phòng Ban duyệt 3' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <select id="" name="" class="form-select">
+                            <option selected>
+                                Chọn phòng ban
+                            </option>
+                            <option value="1">Loại A</option>
+                            <option value="2">Loại B</option>
+                            <option value="3">Loại C</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-5">
+                <div class="d-flex align-items-center mb-5">
+                    <label for="" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Chọn kho' | localize }}
+                        <br>
+                        <span>(Trường hợp duyệt đặc biệt)</span>
+                    </label>
+                    <div class="input-group">
+                        <select id="" name="" class="form-select">
+                            <option selected>
+                                Chọn kho
+                            </option>
+                            <option value="1">Loại A</option>
+                            <option value="2">Loại B</option>
+                            <option value="3">Loại C</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-5">
+                    <label for="" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Sản phẩm' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <select id="" name="" class="form-select">
+                            <option selected>
+                                Chọn sản phẩm
+                            </option>
+                            <option value="1">Loại A</option>
+                            <option value="2">Loại B</option>
+                            <option value="3">Loại C</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-5">
+                    <label for="" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Tài khoản duyệt 1' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <select id="" name="" class="form-select">
+                            <option selected>
+                                Chọn tài khoản
+                            </option>
+                            <option value="1">Loại A</option>
+                            <option value="2">Loại B</option>
+                            <option value="3">Loại C</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-5">
+                    <label for="" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Tài khoản duyệt 2' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <select id="" name="" class="form-select">
+                            <option selected>
+                                Chọn tài khoản
+                            </option>
+                            <option value="1">Loại A</option>
+                            <option value="2">Loại B</option>
+                            <option value="3">Loại C</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-5">
+                    <label for="" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Tài khoản duyệt 3' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <select id="" name="" class="form-select">
+                            <option selected>
+                                Chọn tài khoản
+                            </option>
+                            <option value="1">Loại A</option>
+                            <option value="2">Loại B</option>
+                            <option value="3">Loại C</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-end">
+                    <button class="btn btn-success btn-sm me-3" type="button">THÊM NGƯỜI DUYỆT</button>
+                </div>
+            </div>
+        </div>
+        <div class="row bg-white pb-5">
+            <div class="col-12 mt-5">
+                <div class="d-flex align-items-center justify-content-center">
+                    <button class="btn btn-secondary btn-sm me-3" type="button">HUỶ</button>
+                    <button class="btn btn-primary btn-sm" type="button">LƯU</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template #approve>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Phê duyệt yêu cầu xuất kho</h3>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p style="font-size: 16px;">Bạn có chắc chắn muốn duyệt yêu cầu xuất kho ABC?</p>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="closeModal()">XÁC NHẬN</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>

@@ -1,9 +1,9 @@
 <div [@routerTransition]>
     <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
     <div [class]="containerClass">
-        <div class="row bg-white pt-5 ps-3 column-gap-5">
+        <div class="row bg-white pt-5 ps-3">
             <h4 class="mb-4">TÌM KIẾM</h4>
-            <div class="col-md-5 mb-5">
+            <div class="col-md-6 mb-5">
                 <div class="d-flex align-items-center mb-5">
                     <label for="" class="form-label ms-5" style="width: 35%;">
                         {{ 'Mã kho' | localize }}
@@ -22,7 +22,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-5 offset-md-1 mb-5">
+            <div class="col-md-6 mb-5">
                 <div class="d-flex align-items-center mb-5">
                     <label for="" class="form-label ms-5" style="width: 35%;">
                         {{ 'Tên kho' | localize }}
@@ -43,7 +43,7 @@
             </div>
         </div>
         <div class="row bg-white pb-5">
-            <div class="col-md-5 mt-5">
+            <div class="col-12 mt-5">
                 <div class="d-flex align-items-center justify-content-end">
                     <button class="btn btn-secondary btn-sm me-3" type="button">CHỌN LẠI</button>
                     <button class="btn btn-primary btn-sm" type="button">TÌM KIẾM</button>
@@ -102,14 +102,12 @@
                                     </button>
                                     <ul id="dropdownMenu" class="dropdown-menu" role="menu" *dropdownMenu
                                         aria-labelledby="dropdownButton">
-                                        <li *ngIf="'Pages.Tenants.Impersonation' | permission"
-                                            [class.disabled]="!record.isActive" role="menuitem">
-                                            <a routerLink="/app/main/inventory-manager/detail-inventory"
-                                                class="dropdown-item">
+                                        <li>
+                                            <a class="dropdown-item">
                                                 {{ 'Xem chi tiết' | localize }}
                                             </a>
                                         </li>
-                                        <li *ngIf="'Pages.Tenants.Edit' | permission" role="menuitem">
+                                        <li>
                                             <a href="javascript:;" class="dropdown-item">
                                                 {{ 'Chỉnh sửa' | localize }}
                                             </a>
@@ -125,19 +123,20 @@
                                 <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.productName }}
                             </td>
-                            <td>
+                            <td class="text-decoration-underline" style="cursor: pointer;">
                                 <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.quantityBefore }}
                             </td>
-                            <td>
+                            <td class="text-decoration-underline" style="cursor: pointer;">
                                 <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.quantityImport }}
                             </td>
-                            <td>
+                            <td class="text-decoration-underline" style="cursor: pointer;">
                                 <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.quantityExport }}
                             </td>
-                            <td>
+                            <td class="text-decoration-underline" style="cursor: pointer;"
+                                (click)="openModal(products)">
                                 <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.quantityAfter }}
                             </td>
@@ -159,4 +158,21 @@
             <!--<Primeng-TurboTable-End>-->
         </div>
     </div>
+    <ng-template #products>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Phê duyệt yêu cầu xuất kho</h3>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p style="font-size: 16px;">Bạn có chắc chắn muốn duyệt yêu cầu xuất kho ABC?</p>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="closeModal()">XÁC NHẬN</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
 </div>

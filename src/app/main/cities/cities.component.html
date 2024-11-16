@@ -12,6 +12,7 @@
             <div class="col-md-7 d-flex gap-3">
                 <input type="text" class="form-control" [(ngModel)]="filter" placeholder="Nhập tên/mã tỉnh/thành phố">
                 <select [(ngModel)]="statusFilter" class="form-select me-5">
+                    <option [ngValue]="null">Chọn trạng thái</option>
                     <option [ngValue]="undefined">Tất cả</option>
                     <option [ngValue]="0">Khoá</option>
                     <option [ngValue]="1">Hoạt động</option>
@@ -103,8 +104,9 @@
             </div>
             <div class="primeng-paging-container">
                 <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
-                    [totalRecords]="primengTableHelper.totalRecordsCount" [showCurrentPageReport]="true"
-                    (onPageChange)="getCities($event)" [currentPageReportTemplate]="
+                    [totalRecords]="primengTableHelper.totalRecordsCount"
+                    [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                    [showCurrentPageReport]="true" (onPageChange)="getCities($event)" [currentPageReportTemplate]="
                         'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount
                     "></p-paginator>
             </div>

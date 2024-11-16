@@ -38,9 +38,10 @@ export class WardsComponent extends AppComponentBase {
     dataGetForView: any = {};
 
     ngOnInit() {
-        this.items = [{ label: 'Quản lý Phường/Xã' }];
+        this.items = [{ label: 'Địa giới hành chính' }, { label: 'Quản lý Phường/Xã' }];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.getAllDistrictForTableDropdown();
+        this.primengTableHelper.defaultRecordsCountPerPage = 5;
     }
 
     getWards(event?: LazyLoadEvent) {
@@ -98,6 +99,8 @@ export class WardsComponent extends AppComponentBase {
                 this.getWards();
             });
     }
+
+    text = '';
 
     getEditWard(id: number, template: TemplateRef<any>) {
         this._wardsServiceProxy.getWardForEdit(id).subscribe((result) => {

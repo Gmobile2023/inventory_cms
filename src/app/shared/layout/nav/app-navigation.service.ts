@@ -33,6 +33,7 @@ export class AppNavigationService {
                     new AppMenuItem('Danh sách kho', '', 'flaticon-app', '/app/main/inventory-manager'),
                     new AppMenuItem('Xuất nhập kho', '', 'flaticon-app', '/app/main/inventory-import-export'),
                     new AppMenuItem('Báo cáo tồn kho', '', 'flaticon-app', '/app/main/inventory-report'),
+                    new AppMenuItem('Cài đặt luồng duyệt', '', 'flaticon-app', '/app/main/approval-flow-settings'),
                 ]
             ),
             new AppMenuItem(
