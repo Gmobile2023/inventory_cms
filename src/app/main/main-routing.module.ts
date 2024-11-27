@@ -24,7 +24,7 @@ import { RouterModule } from '@angular/router';
                         data: { permission: '' },
                     },
                     {
-                        path: 'inventory-manager/action-history',
+                        path: 'action-history',
                         loadChildren: () =>
                             import('./action-history/action-history.module').then((m) => m.ActionHistoryModule),
                         data: { permission: '' },

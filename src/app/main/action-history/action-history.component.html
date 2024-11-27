@@ -5,84 +5,74 @@
             <h4 class="mb-4">TÌM KIẾM</h4>
             <div class="col-md-6 mb-5">
                 <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
+                    <label for="stockCode" class="form-label ms-5" style="width: 35%;">
                         {{ 'Mã kho' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="" name="" class="form-control" placeholder="{{ 'Nhập mã kho' | localize }}"
-                            type="text" />
+                        <input id="stockCode" name="stockCode" class="form-control"
+                            placeholder="{{ 'Nhập mã kho' | localize }}" type="text" [(ngModel)]="stockCode" />
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Tên lô' | localize }}
-                    </label>
-                    <div class="input-group">
-                        <input id="" name="" class="form-control" placeholder="{{ 'Nhập tên lô' | localize }}"
-                            type="text" />
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
+                    <label for="mobile" class="form-label ms-5" style="width: 35%;">
                         {{ 'Số thuê bao' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="" name="" class="form-control" placeholder="{{ 'Nhập số thuê bao' | localize }}"
-                            type="text" />
+                        <input id="mobile" name="mobile" class="form-control"
+                            placeholder="{{ 'Nhập số thuê bao' | localize }}" type="text" [(ngModel)]="mobile" />
                     </div>
                 </div>
-                <div class="d-flex align-items-center">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
+                <div class="d-flex align-items-center mb-5">
+                    <label for="fromDate" class="form-label ms-5" style="width: 35%;">
                         {{ 'Thời gian từ' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="" name="" class="form-control" type="date" />
+                        <input id="fromDate" name="fromDate" class="form-control" type="date" [(ngModel)]="fromDate" />
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <label for="toDate" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Thời gian tới' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <input id="toDate" name="toDate" class="form-control" type="date" [(ngModel)]="toDate" />
                     </div>
                 </div>
             </div>
             <div class="col-md-6 mb-5">
                 <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
+                    <label for="stockName" class="form-label ms-5" style="width: 35%;">
                         {{ 'Tên kho' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="" name="" class="form-control" placeholder="{{ 'Nhập tên kho' | localize }}"
-                            type="text" />
+                        <input id="stockName" name="stockName" class="form-control"
+                            placeholder="{{ 'Nhập tên kho' | localize }}" type="text" [(ngModel)]="stockName" />
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
+                    <label for="userProcess" class="form-label ms-5" style="width: 35%;">
                         {{ 'Người thực hiện' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="" name="" class="form-control" placeholder="{{ 'Nhập người thực hiện' | localize }}"
-                            type="text" />
+                        <input id="userProcess" name="userProcess" class="form-control"
+                            placeholder="{{ 'Nhập người thực hiện' | localize }}" type="text"
+                            [(ngModel)]="userProcess" />
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
+                    <label for="serial" class="form-label ms-5" style="width: 35%;">
                         {{ 'Số serial' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="" name="" class="form-control" placeholder="{{ 'Nhập số serial' | localize }}"
-                            type="text" />
+                        <input id="serial" name="serial" class="form-control"
+                            placeholder="{{ 'Nhập số serial' | localize }}" type="text" [(ngModel)]="serial" />
                     </div>
                 </div>
-                <div class="d-flex align-items-center">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Thời gian tới' | localize }}
-                    </label>
-                    <div class="input-group">
-                        <input id="" name="" class="form-control" type="date" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row bg-white pb-5">
-            <div class="col-12 mt-5">
                 <div class="d-flex align-items-center justify-content-end">
-                    <button class="btn btn-secondary btn-sm me-3" type="button">CHỌN LẠI</button>
-                    <button class="btn btn-primary btn-sm" type="button">TÌM KIẾM</button>
+                    <button class="btn btn-secondary btn-sm me-3" type="button" (click)="resetSearch()">CHỌN
+                        LẠI</button>
+                    <button class="btn btn-primary btn-sm" type="button" (click)="getActionHistory($event)">TÌM
+                        KIẾM</button>
                 </div>
             </div>
         </div>
@@ -99,40 +89,25 @@
         <div class="row align-items-center">
             <!--<Primeng-TurboTable-Start>-->
             <div class="col primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
-                <p-table #dataTable sortMode="multiple" [value]="dataFake"
-                    rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
-                    [tableStyle]="{'min-width': '50rem'}">
+                <p-table #dataTable sortMode="multiple" [value]="primengTableHelper.records"
+                    (onLazyLoad)="getActionHistory($event)" rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
+                    [paginator]="false" [lazy]="true" [tableStyle]="{'min-width': '50rem'}">
                     <ng-template pTemplate="header">
                         <tr>
                             <th>
-                                {{ 'MÃ KHO' | localize }}
-                                <!-- <p-sortIcon field="tenancyName"></p-sortIcon> -->
-                            </th>
-                            <th pSortableColumn="name">
-                                {{ 'TÊN KHO' | localize }}
-                                <!-- <p-sortIcon field="name"></p-sortIcon> -->
-                            </th>
-                            <th>{{ 'MÃ LÔ' | localize }}</th>
-                            <th>{{ 'TÊN LÔ' | localize }}</th>
-                            <th>
                                 {{ 'SỐ THUÊ BAO' | localize }}
-                                <!-- <p-sortIcon field="subscriptionEndDateUtc"></p-sortIcon> -->
                             </th>
                             <th>
                                 {{ 'SỐ SERIAL' | localize }}
-                                <!-- <p-sortIcon field="isActive"></p-sortIcon> -->
                             </th>
                             <th>
                                 {{ 'NỘI DUNG THAO TÁC' | localize }}
-                                <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
                             </th>
                             <th>
                                 {{ 'NGƯỜI THAO TÁC' | localize }}
-                                <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
                             </th>
                             <th>
                                 {{ 'THỜI GIAN' | localize }}
-                                <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
                             </th>
                         </tr>
                     </ng-template>
@@ -140,48 +115,33 @@
                         <tr>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.warehouseCode }}
+                                {{ record.mobile }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.warehouseName }}
+                                {{ record.serial }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.shipment }}
+                                {{ record.description }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.shipmentName }}
-                            </td>
-                            <td>
-                                <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.phoneNumber }}
-                            </td>
-                            <td>
-                                <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.serialNumber }}
-                            </td>
-                            <td>
-                                <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.content }}
-                            </td>
-                            <td>
-                                <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.operator }}
+                                {{ record.userProcess }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ 'Date' | localize }}</span>
-                                {{ record.date }}
+                                {{ record.createdDate | luxonFormat: 'F' }}
                             </td>
                         </tr>
                     </ng-template>
                 </p-table>
-                <div class="primeng-no-data" *ngIf="dataFake.length == 0">
+                <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
                     {{ 'NoData' | localize }}
                 </div>
                 <div class="primeng-paging-container">
-                    <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
+                    <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                        (onPageChange)="getActionHistory($event)" #paginator
                         [totalRecords]="primengTableHelper.totalRecordsCount"
                         [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
                         [showCurrentPageReport]="true" [currentPageReportTemplate]="

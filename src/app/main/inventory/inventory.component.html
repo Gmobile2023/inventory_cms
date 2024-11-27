@@ -7,105 +7,78 @@
             <h4 class="mb-4">TÌM KIẾM KHO</h4>
             <div class="col-md-6 mb-5">
                 <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
+                    <label for="stockName" class="form-label text-start ms-5" style="width: 38%;">
                         {{ 'Tên kho' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="" name="" class="form-control" placeholder="{{ 'Nhập tên kho' | localize }}"
-                            type="text" />
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Thời gian tạo từ' | localize }}
-                    </label>
-                    <div class="input-group">
-                        <input id="" name="" class="form-control" type="date" />
+                        <input id="stockName" name="stockName" class="form-control"
+                            placeholder="{{ 'Nhập tên kho' | localize }}" type="text" [(ngModel)]="stockName" />
                     </div>
                 </div>
                 <div class="d-flex align-items-start">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
+                    <label for="" class="form-label text-start ms-5" style="width: 38%;">
                         {{ 'Địa điểm kho' | localize }}
                     </label>
                     <div class="input-group">
-                        <select id="province" name="province" class="form-select w-100 mb-3">
-                            <option selected>
+                        <select id="city" name="city" class="form-select w-100 mb-3" (change)="onCityChange($event)"
+                            [(ngModel)]="cityId">
+                            <option [ngValue]="undefined">
                                 Chọn Tỉnh/Thành phố
                             </option>
-                            <option value="1">Hà Nội</option>
-                            <option value="2">Thành phố Hồ Chí Minh</option>
-                            <option value="3">Đà Nắng</option>
+                            <option [value]="city.id" *ngFor="let city of cities">
+                                {{city.cityName}}
+                            </option>
                         </select>
-                        <select id="district" name="district" class="form-select w-100 mb-3">
-                            <option selected>
+                        <select id="district" name="district" class="form-select w-100 mb-3"
+                            (change)="onDistrictChange($event)" [(ngModel)]="districtId">
+                            <option [ngValue]="undefined">
                                 Chọn Quận/Huyện
                             </option>
-                            <option value="1">Hà Nội</option>
-                            <option value="2">Thành phố Hồ Chí Minh</option>
-                            <option value="3">Đà Nắng</option>
+                            <option [value]="district.id" *ngFor="let district of districts">
+                                {{district.displayName}}
+                            </option>
                         </select>
-                        <select id="ward" name="ward" class="form-select w-100">
-                            <option selected>
+                        <select id="ward" name="ward" class="form-select w-100" [(ngModel)]="wardId">
+                            <option [ngValue]="undefined">
                                 Chọn Phường/Xã
                             </option>
-                            <option value="1">Hà Nội</option>
-                            <option value="2">Thành phố Hồ Chí Minh</option>
-                            <option value="3">Đà Nắng</option>
+                            <option [value]="ward.id" *ngFor="let ward of wards">
+                                {{ward.displayName}}
+                            </option>
                         </select>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 mb-5">
                 <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
+                    <label for="stockCode" class="form-label text-start ms-5" style="width: 38%;">
                         {{ 'Mã kho' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="" name="" class="form-control" placeholder="{{ 'Nhập mã kho' | localize }}"
-                            type="text" />
+                        <input id="stockCode" name="stockCode" class="form-control"
+                            placeholder="{{ 'Nhập mã kho' | localize }}" type="text" [(ngModel)]="stockCode" />
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
+                    <label for="fromDate" class="form-label text-start ms-5" style="width: 38%;">
+                        {{ 'Thời gian tạo từ' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <input id="fromDate" name="fromDate" class="form-control" type="date" [(ngModel)]="fromDate" />
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-5">
+                    <label for="toDate" class="form-label text-start ms-5" style="width: 38%;">
                         {{ 'Thời gian tạo đến' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="" name="" class="form-control" type="date" />
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Sản phẩm' | localize }}
-                    </label>
-                    <div class="input-group">
-                        <select id="" name="" class="form-select">
-                            <option selected>
-                                Chọn sản phẩm
-                            </option>
-                            <option value="1">Loại A</option>
-                            <option value="2">Loại B</option>
-                            <option value="3">Loại C</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Loại sản phẩm' | localize }}
-                    </label>
-                    <div class="input-group">
-                        <select id="" name="" class="form-select">
-                            <option selected>
-                                Chọn loại sản phẩm
-                            </option>
-                            <option value="1">Loại A</option>
-                            <option value="2">Loại B</option>
-                            <option value="3">Loại C</option>
-                        </select>
+                        <input id="toDate" name="toDate" class="form-control" type="date" [(ngModel)]="toDate" />
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-end">
-                    <button class="btn btn-secondary btn-sm" type="button">CHỌN LẠI</button>
-                    <button class="btn btn-primary btn-sm ms-3" type="button">TÌM KIẾM</button>
+                    <button class="btn btn-secondary btn-sm" type="button" (click)="resetSearch()">CHỌN LẠI</button>
+                    <button class="btn btn-primary btn-sm ms-3" type="button" (click)="getListStock($event)">TÌM
+                        KIẾM</button>
                 </div>
             </div>
         </div>
@@ -116,8 +89,8 @@
             <div class="d-flex justify-content-between">
                 <h4 class="mb-4">DANH SÁCH KHO</h4>
                 <div class="d-flex align-items-center justify-content-end">
-                    <button class="btn btn-secondary btn-sm" type="button" (click)="createWarehouse()">TẠO KHO
-                        CON</button>
+                    <button class="btn btn-secondary btn-sm" type="button"
+                        (click)="openModal(addOrEdit, 'modal-xl')">TẠO KHO</button>
                     <button class="btn btn-success btn-sm ms-3" type="button">XUẤT EXCEL</button>
                 </div>
             </div>
@@ -125,41 +98,45 @@
         <div class="row align-items-center">
             <!--<Primeng-TurboTable-Start>-->
             <div class="col primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
-                <p-table #dataTable sortMode="multiple" [value]="dataFake"
-                    rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
-                    [tableStyle]="{'min-width': '50rem'}">
+                <p-table #dataTable sortMode="multiple" [value]="primengTableHelper.records"
+                    rows="{{primengTableHelper.defaultRecordsCountPerPage}}" (onLazyLoad)="getListStock($event)"
+                    [paginator]="false" [lazy]="true" [tableStyle]="{'min-width': '50rem'}">
                     <ng-template pTemplate="header">
                         <tr>
                             <th style="width: 130px">{{ 'HÀNH ĐỘNG' | localize }}</th>
-                            <th>
+                            <th pSortableColumn="stockCode">
                                 {{ 'MÃ KHO' | localize }}
-                                <!-- <p-sortIcon field="tenancyName"></p-sortIcon> -->
+                                <p-sortIcon field="stockCode"></p-sortIcon>
                             </th>
-                            <th pSortableColumn="name">
+                            <th pSortableColumn="stockName">
                                 {{ 'TÊN KHO' | localize }}
-                                <!-- <p-sortIcon field="name"></p-sortIcon> -->
+                                <p-sortIcon field="stockName"></p-sortIcon>
                             </th>
-                            <th>{{ 'LOẠI SẢN PHẨM' | localize }}</th>
-                            <th>{{ 'SẢN PHẨM' | localize }}</th>
-                            <th>
+                            <th pSortableColumn="stockLevel">
+                                {{ 'CẤP ĐỘ KHO' | localize }}
+                            </th>
+                            <!-- <th>
+                                {{ 'SẢN PHẨM' | localize }}
+                            </th> -->
+                            <th pSortableColumn="quantity">
                                 {{ 'SỐ LƯỢNG SẢN PHẨM' | localize }}
-                                <!-- <p-sortIcon field="subscriptionEndDateUtc"></p-sortIcon> -->
+                                <p-sortIcon field="quantity"></p-sortIcon>
                             </th>
                             <th>
                                 {{ 'SỐ LƯỢNG KHO CON' | localize }}
-                                <!-- <p-sortIcon field="isActive"></p-sortIcon> -->
+                                <!-- <p-sortIcon field="quantity"></p-sortIcon> -->
                             </th>
-                            <th>
+                            <th pSortableColumn="location">
                                 {{ 'ĐỊA ĐIỂM KHO' | localize }}
-                                <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
+                                <p-sortIcon field="location"></p-sortIcon>
                             </th>
                             <th>
                                 {{ 'TRẠNG THÁI' | localize }}
                                 <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
                             </th>
-                            <th>
+                            <th pSortableColumn="createdDate">
                                 {{ 'NGÀY NHẬP' | localize }}
-                                <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
+                                <p-sortIcon field="createdDate"></p-sortIcon>
                             </th>
                         </tr>
                     </ng-template>
@@ -177,71 +154,88 @@
                                     <ul id="dropdownMenu" class="dropdown-menu" role="menu" *dropdownMenu
                                         aria-labelledby="dropdownButton">
                                         <li>
-                                            <a routerLink="/app/main/inventory-manager/detail-inventory"
-                                                class="dropdown-item">
+                                            <a [routerLink]="'/app/main/inventory-manager/detail-inventory'"
+                                                [queryParams]="{ id: record.id }" class="dropdown-item">
                                                 {{ 'Xem chi tiết' | localize }}
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:;" class="dropdown-item" (click)="editWarehouse()">
+                                            <a href="javascript:;" class="dropdown-item"
+                                                (click)="openModal(addOrEdit, 'modal-xl', record.id)">
                                                 {{ 'Chỉnh sửa' | localize }}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;" class="dropdown-item"
+                                                (click)="openModal(active, 'modal-md', record.id)">
+                                                {{ 'Kích hoạt kho' | localize }}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;" class="dropdown-item"
+                                                (click)="openModal(lockOrUnlock, 'modal-md', record.id)">
+                                                {{ 'Khoá/Mở kho' | localize }}
                                             </a>
                                         </li>
                                     </ul>
                                 </div>
                             </td>
                             <td>
-                                <span class="p-column-title">{{ 'WarehouseCode' | localize }}</span>
-                                {{ record.warehouseCode }}
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.stockCode }}
                             </td>
                             <td>
-                                <span class="p-column-title">{{ 'WarehouseName' | localize }}</span>
-                                {{ record.warehouseName }}
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.stockName }}
                             </td>
                             <td>
-                                <span class="p-column-title">{{ 'ProductType' | localize }}</span>
-                                {{ record.productType }}
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.stockLevel }}
                             </td>
-                            <td>
+                            <!-- <td>
                                 <span class="p-column-title">{{ 'Product' | localize }}</span>
                                 {{ record.product }}
-                            </td>
+                            </td> -->
                             <td>
-                                <span class="p-column-title">{{ 'Quantity' | localize }}</span>
+                                <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.quantity }}
                             </td>
                             <td>
-                                <span class="p-column-title">{{ 'WarehouseChildren' | localize }}</span>
-                                {{ record.warehouseChildren }}
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.numberChild }}
                             </td>
                             <td>
-                                <span class="p-column-title">{{ 'WarehouseAddress' | localize }}</span>
-                                {{ record.warehouseAddress }}
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.address }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ 'Status' | localize }}</span>
-                                <span *ngIf="record.status == 0" class="badge badge-warning badge-inline">
-                                    {{ 'Chưa phê duyệt' | localize }}
+                                <span *ngIf="record.status == 0" class="badge badge-secondary badge-inline">
+                                    {{ 'Khởi tạo' | localize }}
                                 </span>
                                 <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
                                     {{ 'Đang bán' | localize }}
                                 </span>
-                                <span *ngIf="record.status == 2" class="badge badge-danger badge-inline">
+                                <span *ngIf="record.status == 2" class="badge badge-info badge-inline">
                                     {{ 'Từ chối' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 3" class="badge badge-danger badge-inline">
+                                    {{ 'Đã khoá' | localize }}
                                 </span>
                             </td>
                             <td>
                                 <span class="p-column-title">{{ 'Date' | localize }}</span>
-                                {{ record.date }}
+                                {{ record.createdDate | luxonFormat: 'F' }}
                             </td>
                         </tr>
                     </ng-template>
                 </p-table>
-                <div class="primeng-no-data" *ngIf="dataFake.length == 0">
+                <div class="primeng-no-data text-center mt-5" *ngIf="primengTableHelper.totalRecordsCount == 0">
                     {{ 'NoData' | localize }}
                 </div>
                 <div class="primeng-paging-container">
-                    <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
+                    <p-paginator (onPageChange)="getListStock($event)"
+                        [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
                         [totalRecords]="primengTableHelper.totalRecordsCount"
                         [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
                         [showCurrentPageReport]="true" [currentPageReportTemplate]="
@@ -252,6 +246,214 @@
             <!--<Primeng-TurboTable-End>-->
         </div>
     </div>
-    <createInventoryModal #createInventoryModal></createInventoryModal>
-    <editInventoryModal #editInventoryModal></editInventoryModal>
+    <ng-template #addOrEdit>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">{{ isEdit ? 'Chỉnh sửa kho' : 'Tạo mới kho'}}</h3>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div [class]="containerClass">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-5">
+                                <label for="stockName" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Tên kho' | localize }}
+                                    <span class="text-danger">(*)</span>
+                                </label>
+                                <div class="input-group">
+                                    <input id="stockName" name="stockName" class="form-control"
+                                        placeholder="{{ 'Nhập tên kho' | localize }}" type="text"
+                                        [(ngModel)]="inventoryData.stockName" />
+                                    <!-- <validation-messages [formCtrl]="stockNameInput"></validation-messages> -->
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-start mb-5">
+                                <label for="addressWarehouse" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Địa điểm kho' | localize }}
+                                </label>
+                                <div class="input-group">
+                                    <select id="city" name="city" class="form-select w-100 mb-3"
+                                        (change)="onCityChange($event)" [(ngModel)]="inventoryData.cityId">
+                                        <option [ngValue]="isEdit ? null : undefined">
+                                            Chọn Tỉnh/Thành phố
+                                        </option>
+                                        <option [value]="city.id" *ngFor="let city of cities">
+                                            {{city.cityName}}
+                                        </option>
+                                    </select>
+                                    <select id="district" name="district" class="form-select w-100 mb-3"
+                                        (change)="onDistrictChange($event)" [(ngModel)]="inventoryData.districtId">
+                                        <option [ngValue]="isEdit ? null : undefined">
+                                            Chọn Quận/Huyện
+                                        </option>
+                                        <option [value]="district.id" *ngFor="let district of districts">
+                                            {{district.displayName}}
+                                        </option>
+                                    </select>
+                                    <select id="ward" name="ward" class="form-select w-100 mb-3"
+                                        [(ngModel)]="inventoryData.wardId">
+                                        <option [ngValue]="isEdit ? null : undefined">
+                                            Chọn Phường/Xã
+                                        </option>
+                                        <option [value]="ward.id" *ngFor="let ward of wards">
+                                            {{ward.displayName}}
+                                        </option>
+                                    </select>
+                                    <input id="address" name="address" class="form-control"
+                                        placeholder="{{ 'Địa chỉ chi tiết' | localize }}" type="text"
+                                        [(ngModel)]="inventoryData.address" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-5">
+                                <label for="stockCode" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Mã kho' | localize }}
+                                    <span class="text-danger">(*)</span>
+                                </label>
+                                <div class="input-group">
+                                    <input id="stockCode" name="stockCode" class="form-control"
+                                        placeholder="{{ 'Nhập mã kho' | localize }}" type="text"
+                                        [(ngModel)]="inventoryData.stockCode" [disabled]="isEdit" />
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-5">
+                                <label for="stockLevel" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Cấp độ kho' | localize }}
+                                    <span class="text-danger">(*)</span>
+                                </label>
+                                <div class="input-group">
+                                    <select id="stockLevel" name="stockLevel" class="form-select"
+                                        [(ngModel)]="inventoryData.stockLevel" [disabled]="isEdit">
+                                        <option [ngValue]="isEdit ? null : undefined">
+                                            Chọn cấp độ kho
+                                        </option>
+                                        <option [ngValue]="1">1</option>
+                                        <option [ngValue]="2">2</option>
+                                        <option [ngValue]="3">3</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-5">
+                                <label for="parentStockId" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Kho cha' | localize }}
+                                    <span class="text-danger">(*)</span>
+                                </label>
+                                <div class="input-group">
+                                    <select id="parentStockId" name="parentStockId" class="form-select"
+                                        [(ngModel)]="inventoryData.parentStockId">
+                                        <option [ngValue]="isEdit ? null : undefined">
+                                            Chọn kho cha
+                                        </option>
+                                        <option [ngValue]="stock.id"
+                                            *ngFor="let stock of this.primengTableHelper.records">
+                                            {{stock.stockName}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-5" *ngIf="isEdit">
+                                <label for="userManager" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Người quản lý kho' | localize }}
+                                </label>
+                                <div class="input-group">
+                                    <select id="userManager" name="userManager" class="form-select"
+                                        [(ngModel)]="inventoryData.userManager">
+                                        <option [ngValue]="isEdit ? undefined : null">
+                                            Vui lòng chọn
+                                        </option>
+                                        <option value="1">Nguyễn Văn A</option>
+                                        <option value="2">Nguyễn Văn B</option>
+                                        <option value="3">Nguyễn Văn C</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-5" *ngIf="isEdit">
+                                <label for="userCreateOrder" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Người tạo xuất/thu hồi' | localize }}
+                                </label>
+                                <div class="input-group">
+                                    <select id="userCreateOrder" name="userCreateOrder" class="form-select"
+                                        [(ngModel)]="inventoryData.userCreateOrder">
+                                        <option [ngValue]="isEdit ? undefined : null">
+                                            Vui lòng chọn
+                                        </option>
+                                        <option value="1">Nguyễn Văn A</option>
+                                        <option value="2">Nguyễn Văn B</option>
+                                        <option value="3">Nguyễn Văn C</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-5" *ngIf="isEdit">
+                                <label for="userApprove" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Người duyệt xuất/thu hồi' | localize }}
+                                </label>
+                                <div class="input-group">
+                                    <select id="userApprove" name="userApprove" class="form-select"
+                                        [(ngModel)]="inventoryData.userApprove">
+                                        <option [ngValue]="isEdit ? undefined : null">
+                                            Vui lòng chọn
+                                        </option>
+                                        <option value="1">Nguyễn Văn A</option>
+                                        <option value="2">Nguyễn Văn B</option>
+                                        <option value="3">Nguyễn Văn C</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-5" *ngIf="isEdit">
+                                <label for="userAccounting" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Kế toán' | localize }}
+                                </label>
+                                <div class="input-group">
+                                    <select id="userAccounting" name="userAccounting" class="form-select"
+                                        [(ngModel)]="inventoryData.userAccounting">
+                                        <option [ngValue]="isEdit ? undefined : null">
+                                            Vui lòng chọn
+                                        </option>
+                                        <option value="1">Nguyễn Văn A</option>
+                                        <option value="2">Nguyễn Văn B</option>
+                                        <option value="3">Nguyễn Văn C</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="float-end">
+                                <button class="btn btn-success btn-sm" type="button">IMPORT LÔ SỐ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="createOrEditStock()">XÁC NHẬN</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #active>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Xác nhận yêu cầu kích hoạt kho</h3>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
+                <button type="button" class="btn btn-primary btn-sm" (click)="activateStock()">GỬI DUYỆT</button>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #lockOrUnlock>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Xác nhận yêu cầu khoá/mở kho</h3>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
+                <button type="button" class="btn btn-primary btn-sm" (click)="closeModal()">XÁC NHẬN</button>
+            </div>
+        </div>
+    </ng-template>
 </div>
