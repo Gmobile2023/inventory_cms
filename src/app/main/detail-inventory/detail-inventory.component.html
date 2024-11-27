@@ -10,40 +10,41 @@
             <div class="col-md-6">
                 <div class="d-flex align-items-center mb-3">
                     <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Mã kho:</div>
-                    <div class="description" style="font-size: 14px;">G99_1</div>
+                    <div class="description" style="font-size: 14px;">{{inventoryData.stockCode}}</div>
                 </div>
                 <div class="d-flex align-items-center mb-3">
                     <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Tên kho:</div>
-                    <div class="description" style="font-size: 14px;">Kho sim chiến sĩ G99</div>
-                </div>
-                <div class="d-flex align-items-center mb-3">
-                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Loại sản phẩm:</div>
-                    <div class="description" style="font-size: 14px;">Sim vật lý</div>
+                    <div class="description" style="font-size: 14px;">{{inventoryData.stockName}}</div>
                 </div>
                 <div class="d-flex align-items-center mb-3">
                     <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Địa điểm kho:</div>
-                    <div class="description" style="font-size: 14px;">105, Nguyễn Tuân, Thanh Xuân Trung, Thanh Xuân, Hà
-                        Nội</div>
+                    <div class="description" style="font-size: 14px;">{{inventoryData.address}}</div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Số lượng sản phẩm:</div>
+                    <div class="description" style="font-size: 14px;">{{inventoryData.quantity}}</div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="d-flex align-items-center mb-3">
-                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Số lượng sản phẩm:</div>
-                    <div class="description" style="font-size: 14px;">1000</div>
-                </div>
-                <div class="d-flex align-items-center mb-3">
                     <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Trạng thái:</div>
-                    <div class="description" style="font-size: 14px;">Chờ duyệt</div>
+                    <div class="description" style="font-size: 14px;">{{inventoryData.status == 0 ? 'Chưa phê duyệt' :
+                        inventoryData.status == 1 ? 'Đang bán' : inventoryData.status == 2 ? 'Từ chối' : 'Đã khoá'}}
+                    </div>
                 </div>
                 <div class="d-flex align-items-center mb-3">
                     <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Ngày tạo kho:</div>
-                    <div class="description" style="font-size: 14px;">12/10/2024 16:20</div>
+                    <div class="description" style="font-size: 14px;">{{ inventoryData.createdDate | luxonFormat: 'F' }}
+                    </div>
                 </div>
                 <div class="d-flex align-items-center mb-3">
                     <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Số lượng kho con:</div>
-                    <div class="description" style="font-size: 14px;">15</div>
+                    <div class="description" style="font-size: 14px;">{{ inventoryData.numberChild }}</div>
                 </div>
-                <button class="btn btn-primary btn-sm" type="button">XEM KHO CON</button>
+                <button class="btn btn-primary btn-sm" type="button" *ngIf="inventoryData.numberChild > 0"
+                    [routerLink]="'/app/main/inventory-manager'" [queryParams]="{ id: inventoryData.id }">
+                    XEM KHO CON
+                </button>
             </div>
         </div>
     </div>
@@ -52,97 +53,82 @@
             <h4 class="mb-4">TÌM KIẾM</h4>
             <div class="col-md-6 mb-5">
                 <div class="d-flex align-items-center mb-5">
-                    <label for="nameWarehouse" class="form-label ms-5" style="width: 35%;">
+                    <label for="mobile" class="form-label ms-5" style="width: 35%;">
                         {{ 'Số thuê bao' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="nameWarehouse" name="nameWarehouse" class="form-control"
-                            placeholder="{{ 'Nhập số thuê bao' | localize }}" type="text" />
+                        <input id="mobile" name="mobile" class="form-control"
+                            placeholder="{{ 'Nhập số thuê bao' | localize }}" type="text" [(ngModel)]="mobile" />
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-5">
-                    <label for="productType" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Loại sản phẩm' | localize }}
-                    </label>
-                    <div class="input-group">
-                        <select id="productType" name="productType" class="form-select">
-                            <option selected>
-                                Chọn loại sản phẩm
-                            </option>
-                            <option value="1">Loại A</option>
-                            <option value="2">Loại B</option>
-                            <option value="3">Loại C</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-5">
-                    <label for="productType" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Loại sản phẩm' | localize }}
-                    </label>
-                    <div class="input-group">
-                        <select id="productType" name="productType" class="form-select">
-                            <option selected>
-                                Chọn trạng thái
-                            </option>
-                            <option value="1">Loại A</option>
-                            <option value="2">Loại B</option>
-                            <option value="3">Loại C</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center">
-                    <label for="nameWarehouse" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Thuộc tính' | localize }}
-                    </label>
-                    <div class="input-group">
-                        <input id="nameWarehouse" name="nameWarehouse" class="form-control"
-                            placeholder="{{ 'Nhập thuộc tính' | localize }}" type="text" />
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 mb-5">
-                <div class="d-flex align-items-center mb-5">
-                    <label for="nameWarehouse" class="form-label ms-5" style="width: 35%;">
+                    <label for="serial" class="form-label ms-5" style="width: 35%;">
                         {{ 'Số serial' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="nameWarehouse" name="nameWarehouse" class="form-control"
-                            placeholder="{{ 'Nhập số serial' | localize }}" type="text" />
+                        <input id="serial" name="serial" class="form-control"
+                            placeholder="{{ 'Nhập số serial' | localize }}" type="text" [(ngModel)]="serial" />
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-5">
-                    <label for="product" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Sản phẩm' | localize }}
+                    <label for="attribute" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Hạng số' | localize }}
                     </label>
                     <div class="input-group">
-                        <select id="product" name="product" class="form-select">
-                            <option selected>
-                                Chọn sản phẩm
+                        <select id="attribute" name="attribute" class="form-select" [(ngModel)]="attribute">
+                            <option [ngValue]="undefined">
+                                Chọn hạng số
                             </option>
-                            <option value="1">Loại A</option>
-                            <option value="2">Loại B</option>
-                            <option value="3">Loại C</option>
+                            <option [ngValue]="pdAtt.attributeType" *ngFor="let pdAtt of productAttribute">
+                                {{pdAtt.attributeName}}</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6 mb-5">
+                <div class="d-flex align-items-center mb-5">
+                    <label for="product" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Loại sản phẩm' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <select id="productType" name="productType" class="form-select" [(ngModel)]="productType">
+                            <option value="mobile">SỐ</option>
+                            <option value="serial">SERIAL</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-5">
+                    <label for="kitingStatus" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Tình trạng Kitting' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <select id="kitingStatus" name="kitingStatus" class="form-select" [(ngModel)]="kitingStatus">
+                            <option [ngValue]="undefined">
+                                Chọn tình trạng
+                            </option>
+                            <option [ngValue]="0">Chưa Kitting</option>
+                            <option [ngValue]="1">Đã Kitting</option>
                         </select>
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-5">
                     <label for="product" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Tình trạng Kitting' | localize }}
+                        {{ 'Trạng thái' | localize }}
                     </label>
                     <div class="input-group">
-                        <select id="product" name="product" class="form-select">
-                            <option selected>
-                                Chọn sản phẩm
+                        <select id="product" name="product" class="form-select" [(ngModel)]="status">
+                            <option [ngValue]="undefined">
+                                Chọn trạng thái
                             </option>
-                            <option value="1">Loại A</option>
-                            <option value="2">Loại B</option>
-                            <option value="3">Loại C</option>
+                            <option [ngValue]="0">Chưa bán</option>
+                            <option [ngValue]="1">Đang bán</option>
                         </select>
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-end">
                     <button class="btn btn-secondary btn-sm me-3" type="button">CHỌN LẠI</button>
-                    <button class="btn btn-primary btn-sm" type="button">TÌM KIẾM</button>
+                    <button class="btn btn-primary btn-sm" type="button" (click)="onLazyLoad($event)">TÌM KIẾM</button>
                 </div>
             </div>
         </div>
@@ -153,9 +139,15 @@
             <div class="d-flex justify-content-between">
                 <h4 class="mb-4">DANH SÁCH SẢN PHẨM</h4>
                 <div class="d-flex align-items-center justify-content-end">
-                    <button class="btn btn-secondary btn-sm" type="button" (click)="createWarehouse()">TẠO KHO
+                    <button class="btn btn-secondary btn-sm" type="button"
+                        (click)="openModal(createStock, 'modal-xl')">TẠO KHO
                         CON</button>
-                    <button class="btn btn-warning btn-sm ms-3" type="button">THÊM NGƯỜI BÁN HÀNG</button>
+                    <button class="btn btn-primary btn-sm ms-3" type="button"
+                        (click)="openModal(kitting, 'modal-md')">KITTING</button>
+                    <button class="btn btn-primary btn-sm ms-3" type="button"
+                        (click)="openModal(addSaleStock, 'modal-md')">THÊM NGƯỜI BÁN HÀNG</button>
+                    <button class="btn btn-primary btn-sm ms-3" type="button"
+                        (click)="openModal(updatePrice, 'modal-md')">CẬP NHẬT GIÁ</button>
                     <button class="btn btn-success btn-sm ms-3" type="button">XUẤT EXCEL</button>
                 </div>
             </div>
@@ -163,27 +155,26 @@
         <div class="row align-items-center">
             <!--<Primeng-TurboTable-Start>-->
             <div class="col primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
-                <p-table #dataTable sortMode="multiple" [value]="dataFake"
-                    rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
-                    [tableStyle]="{'min-width': '50rem'}">
+                <p-table #dataTable sortMode="multiple" [value]="listSim"
+                    rows="{{primengTableHelper.defaultRecordsCountPerPage}}" (onLazyLoad)="onLazyLoad($event)"
+                    [paginator]="false" [lazy]="true" [tableStyle]="{'min-width': '50rem'}">
                     <ng-template pTemplate="header">
                         <tr>
                             <th style="width: 130px">{{ 'HÀNH ĐỘNG' | localize }}</th>
-                            <th pSortableColumn="tenancyName">
+                            <th *ngIf="!isSerial">
                                 {{ 'SỐ THUÊ BAO' | localize }}
                                 <!-- <p-sortIcon field="tenancyName"></p-sortIcon> -->
                             </th>
-                            <th pSortableColumn="name">
+                            <th>
                                 {{ 'SỐ SERIAL' | localize }}
                                 <!-- <p-sortIcon field="name"></p-sortIcon> -->
                             </th>
-                            <th>{{ 'MÃ LÔ' | localize }}</th>
-                            <th>{{ 'LOẠI SẢN PHẨM' | localize }}</th>
-                            <th>
+                            <!-- <th>{{ 'MÃ LÔ' | localize }}</th> -->
+                            <th *ngIf="!isSerial">{{ 'HẠNG SỐ' | localize }}</th>
+                            <!-- <th>
                                 {{ 'SẢN PHẨM' | localize }}
-                                <!-- <p-sortIcon field="subscriptionEndDateUtc"></p-sortIcon> -->
-                            </th>
-                            <th>
+                            </th> -->
+                            <th *ngIf="!isSerial">
                                 {{ 'NHÀ MẠNG' | localize }}
                                 <!-- <p-sortIcon field="isActive"></p-sortIcon> -->
                             </th>
@@ -191,7 +182,7 @@
                                 {{ 'GIÁ BÁN' | localize }}
                                 <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
                             </th>
-                            <th>
+                            <th *ngIf="!isSerial">
                                 {{ 'THUỘC TÍNH' | localize }}
                                 <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
                             </th>
@@ -219,81 +210,476 @@
                                     <ul id="dropdownMenu" class="dropdown-menu" role="menu" *dropdownMenu
                                         aria-labelledby="dropdownButton">
                                         <li>
-                                            <a href="javascript:;" class="dropdown-item">
+                                            <a href="javascript:;" class="dropdown-item"
+                                                (click)="getSimDetail(!isSerial ? record.mobile : record.serial, detailSim)">
                                                 {{ 'Xem chi tiết' | localize }}
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;" class="dropdown-item" (click)="getSimDetail()">
-                                                {{ 'Chỉnh sửa' | localize }}
                                             </a>
                                         </li>
                                     </ul>
                                 </div>
                             </td>
-                            <td>
-                                <span class="p-column-title">{{ 'phoneNumber' | localize }}</span>
-                                {{ record.phoneNumber }}
+                            <td *ngIf="!isSerial">
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.mobile }}
                             </td>
                             <td>
-                                <span class="p-column-title">{{ 'serialNumber' | localize }}</span>
-                                {{ record.serialNumber }}
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.serial }}
+                            </td>
+                            <td *ngIf="!isSerial">
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.attribute }}
+                            </td>
+
+                            <td *ngIf="!isSerial">
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.telCo }}
                             </td>
                             <td>
-                                <span class="p-column-title">{{ 'shipment' | localize }}</span>
-                                {{ record.shipment }}
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.salePrice }}
                             </td>
-                            <td>
-                                <span class="p-column-title">{{ 'productType' | localize }}</span>
-                                {{ record.productType }}
-                            </td>
-                            <td>
-                                <span class="p-column-title">{{ 'product' | localize }}</span>
-                                {{ record.product }}
-                            </td>
-                            <td>
-                                <span class="p-column-title">{{ 'network' | localize }}</span>
-                                {{ record.network }}
-                            </td>
-                            <td>
-                                <span class="p-column-title">{{ 'price' | localize }}</span>
-                                {{ record.price }}
-                            </td>
-                            <td>
-                                <span class="p-column-title">{{ 'attribute' | localize }}</span>
+                            <td *ngIf="!isSerial">
+                                <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.attribute }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ 'Status' | localize }}</span>
                                 <span *ngIf="record.status == 0" class="badge badge-warning badge-inline">
-                                    {{ 'Chưa hoạt động' | localize }}
+                                    {{ 'Chưa bán' | localize }}
                                 </span>
                                 <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
-                                    {{ 'Đang hoạt động' | localize }}
+                                    {{ 'Đang bán' | localize }}
                                 </span>
                             </td>
                             <td>
                                 <span class="p-column-title">{{ 'Date' | localize }}</span>
-                                {{ record.date }}
+                                {{ record.createdDate | luxonFormat: 'F'}}
                             </td>
                         </tr>
                     </ng-template>
                 </p-table>
-                <div class="primeng-no-data" *ngIf="dataFake.length == 0">
+                <div class="primeng-no-data text-center mt-5" *ngIf="listSim.length == 0">
                     {{ 'NoData' | localize }}
                 </div>
                 <div class="primeng-paging-container">
-                    <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
-                        [totalRecords]="primengTableHelper.totalRecordsCount"
+                    <p-paginator (onPageChange)="onLazyLoad($event)"
+                        [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
+                        [totalRecords]="listSim.length"
                         [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
                         [showCurrentPageReport]="true" [currentPageReportTemplate]="
-                            'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount
+                            'TotalRecordsCount' | localize: listSim.length
                         "></p-paginator>
                 </div>
             </div>
-            <!--<Primeng-TurboTable-End>-->
+        </div>
+        <!--<Primeng-TurboTable-End>-->
+    </div>
+</div>
+<ng-template #addSaleStock>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Thêm người bán hàng</h3>
+            <button type="button" class="btn-close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body">
+            <label for="userSale" class="form-label">
+                {{ 'Tài khoản' | localize }}
+                <span class="text-danger">(*)</span>
+            </label>
+            <div class="input-group">
+                <input id="userSale" name="userSale" class="form-control" placeholder="{{ '' | localize }}" type="text"
+                    [(ngModel)]="userSale" />
+            </div>
+        </div>
+        <div class="modal-footer justify-content-end">
+            <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
+            <button type="button" class="btn btn-primary btn-sm" (click)="handleAddSaleStock()">XÁC NHẬN</button>
         </div>
     </div>
-    <createInventoryModal #createInventoryModal></createInventoryModal>
-    <simDetailModal #simDetailModal></simDetailModal>
-</div>
+</ng-template>
+<ng-template #updatePrice>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Cập nhật giá bán</h3>
+            <button type="button" class="btn-close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body">
+            <!-- <p class="text-center fst-italic">Vui lòng chọn một số cách sau đây để thay đổi giá bán của sản phẩm</p> -->
+            <div class="mb-5">
+                <label for="priceType" class="form-label">
+                    {{ 'Thay đổi theo' | localize }}
+                    <span class="text-danger">(*)</span>
+                </label>
+                <select id="priceType" name="priceType" class="form-select" [(ngModel)]="priceType">
+                    <option [ngValue]="undefined">
+                        Vui lòng chọn
+                    </option>
+                    <option [ngValue]="0">Thay đổi giá bán</option>
+                    <option [ngValue]="1">Cộng thêm % giá bán</option>
+                    <option [ngValue]="2">Cộng thêm vào giá bán</option>
+                </select>
+            </div>
+            <div class="mb-5">
+                <label for="value" class="form-label">
+                    {{ 'Nhập giá' | localize }}
+                    <span class="text-danger">(*)</span>
+                </label>
+                <div class="input-group">
+                    <input id="value" name="value" class="form-control" placeholder="{{ '' | localize }}" type="number"
+                        [(ngModel)]="valuePrice" />
+                </div>
+            </div>
+            <div class="mb-5">
+                <p-fileUpload customUpload="true" name="ExcelFileUpload" #ExcelFileUpload maxFileSize="10000000"
+                    auto="auto" accept=".csv,.xls,.xlsx" (uploadHandler)="uploadExcel($event)"
+                    (onError)="onUploadExcelError()" chooseLabel="Tải danh sách lên"></p-fileUpload>
+            </div>
+            <p class="text-center fst-italic">Lưu ý: Hành động sẽ được áp dụng cho toàn bộ sản phẩm trong danh sách bạn
+                đã chọn</p>
+        </div>
+        <div class="modal-footer justify-content-end">
+            <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
+            <button type="button" class="btn btn-primary btn-sm" (click)="handleUpdatePrice()">XÁC NHẬN</button>
+        </div>
+    </div>
+</ng-template>
+<ng-template #kitting>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Kitting</h3>
+            <button type="button" class="btn-close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body">
+            <label for="" class="form-label">
+                {{ 'Chọn loại KIT' | localize }}
+            </label>
+            <div class="input-group mb-4">
+                <div class="form-check me-4">
+                    <input class="form-check-input" type="radio" name="kitting" id="kitting" checked>
+                    <label class="form-check-label" for="kitting">
+                        Kitting
+                    </label>
+                </div>
+                <div class="form-check me-4">
+                    <input class="form-check-input" type="radio" name="kitting" id="unKitting">
+                    <label class="form-check-label" for="unKitting">
+                        UnKitting
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="kitting" id="salePrice">
+                    <label class="form-check-label" for="salePrice">
+                        Sale Price
+                    </label>
+                </div>
+            </div>
+            <span class="">Tải lên file Excel</span>
+            <div class="d-flex justify-content-start align-items-center mt-1 custom-progress">
+                <div class="me-5">
+                    <p-fileUpload mode="basic" chooseLabel="Chọn file" name="demo[]"
+                        url="https://www.primefaces.org/cdn/api/upload.php" maxFileSize="1000000"
+                        (onUpload)="onUpload($event)"></p-fileUpload>
+                </div>
+                <div style="width: 50%;" class="me-2"><p-progressBar [value]="value"></p-progressBar></div>
+                <span>{{value}}%</span>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-end">
+            <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
+            <button type="button" class="btn btn-primary btn-sm" (click)="closeModal()">XÁC NHẬN</button>
+        </div>
+    </div>
+</ng-template>
+<ng-template #detailSim>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">CHI TIẾT SIM/SỐ</h3>
+            <button type="button" class="btn-close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body text-center">
+            <div [class]="containerClass">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-5">
+                            <label for="" class="form-label ms-5" style="width: 35%;">
+                                {{ 'Mã kho' | localize }}
+                            </label>
+                            <div class="input-group">
+                                <input class="form-control" [value]="inventoryData.stockCode" disabled />
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-5">
+                            <label for="" class="form-label ms-5" style="width: 35%;">
+                                {{ 'Tên kho' | localize }}
+                            </label>
+                            <div class="input-group">
+                                <input class="form-control" [value]="inventoryData.stockName" disabled />
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-5">
+                            <label for="" class="form-label ms-5" style="width: 35%;">
+                                {{ 'Địa điểm kho' | localize }}
+                            </label>
+                            <div class="input-group">
+                                <input class="form-control" [value]="inventoryData.address" disabled />
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-5" *ngIf="productType == 'mobile'">
+                            <label for="" class="form-label ms-5" style="width: 35%;">
+                                {{ 'Số thuê bao' | localize }}
+                            </label>
+                            <div class="input-group">
+                                <input class="form-control" [value]="simData.mobile" disabled />
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-5">
+                            <label for="" class="form-label ms-5" style="width: 35%;">
+                                {{ 'Số serial' | localize }}
+                            </label>
+                            <div class="input-group">
+                                <input class="form-control" [value]="simData.serial" disabled />
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-5" *ngIf="productType == 'mobile'">
+                            <label for="" class="form-label ms-5" style="width: 35%;">
+                                {{ 'Nhà mạng' | localize }}
+                            </label>
+                            <div class="input-group">
+                                <input class="form-control" [value]="simData.telCo" disabled />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-5">
+                            <label for="" class="form-label ms-5" style="width: 35%;">
+                                {{ 'Ngày tạo kho' | localize }}
+                            </label>
+                            <div class="input-group">
+                                <input class="form-control" [value]="simData.createdDate | luxonFormat: 'F'" disabled />
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-5" *ngIf="productType == 'mobile'">
+                            <label for="" class="form-label ms-5" style="width: 35%;">
+                                {{ 'Thuộc tính' | localize }}
+                            </label>
+                            <div class="input-group">
+                                <input class="form-control" [value]="simData.attribute" disabled />
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-5">
+                            <label for="" class="form-label ms-5" style="width: 35%;">
+                                {{ 'Giá nhập' | localize }}
+                            </label>
+                            <div class="input-group">
+                                <input class="form-control" [value]="simData.costPrice" disabled />
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-5">
+                            <label for="" class="form-label ms-5" style="width: 35%;">
+                                {{ 'Giá bán' | localize }}
+                            </label>
+                            <div class="input-group">
+                                <input class="form-control" [value]="simData.salePrice" disabled />
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-5">
+                            <label for="" class="form-label ms-5" style="width: 35%;">
+                                {{ 'Trạng thái' | localize }}
+                            </label>
+                            <div class="input-group">
+                                <input class="form-control" [value]="simData.status == 0 ? 'Chưa bán' : 'Đang bán'"
+                                    disabled />
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="col-12">
+                        <h4 class="text-center mt-3 mb-5">LỊCH SỬ TÁC ĐỘNG</h4>
+                        <p-table #dataTable sortMode="multiple" [value]="listAction"
+                            (onLazyLoad)="getActionHistory($event)"
+                            rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="false" [lazy]="true"
+                            [tableStyle]="{'min-width': '50rem'}">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>
+                                        {{ 'SỐ THUÊ BAO' | localize }}
+                                    </th>
+                                    <th>
+                                        {{ 'SỐ SERIAL' | localize }}
+                                    </th>
+                                    <th>
+                                        {{ 'NỘI DUNG THAO TÁC' | localize }}
+                                    </th>
+                                    <th>
+                                        {{ 'NGƯỜI THAO TÁC' | localize }}
+                                    </th>
+                                    <th>
+                                        {{ 'THỜI GIAN' | localize }}
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-record="$implicit">
+                                <tr>
+                                    <td>
+                                        <span class="p-column-title">{{ '' | localize }}</span>
+                                        {{ record.mobile }}
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ '' | localize }}</span>
+                                        {{ record.serial }}
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ '' | localize }}</span>
+                                        {{ record.description }}
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ '' | localize }}</span>
+                                        {{ record.userProcess }}
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ 'Date' | localize }}</span>
+                                        {{ record.createdDate | luxonFormat: 'F' }}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div class="primeng-no-data text-center mt-5" *ngIf="listAction.length == 0">
+                            {{ 'NoData' | localize }}
+                        </div>
+                        <div class="primeng-paging-container">
+                            <p-paginator (onPageChange)="getActionHistory($event)"
+                                [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
+                                [totalRecords]="listAction.length"
+                                [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                                [showCurrentPageReport]="true" [currentPageReportTemplate]="
+                                    'TotalRecordsCount' | localize: listAction.length
+                                "></p-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">ĐÓNG</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #createStock>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Tạo kho con</h3>
+            <button type="button" class="btn-close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body text-center">
+            <div [class]="containerClass">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-5">
+                            <label for="stockName" class="form-label text-start ms-5" style="width: 38%;">
+                                {{ 'Tên kho' | localize }}
+                                <span class="text-danger">(*)</span>
+                            </label>
+                            <div class="input-group">
+                                <input id="stockName" name="stockName" class="form-control"
+                                    placeholder="{{ 'Nhập tên kho' | localize }}" type="text"
+                                    [(ngModel)]="createData.stockName" />
+                                <!-- <validation-messages [formCtrl]="stockNameInput"></validation-messages> -->
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-start mb-5">
+                            <label for="addressWarehouse" class="form-label text-start ms-5" style="width: 38%;">
+                                {{ 'Địa điểm kho' | localize }}
+                            </label>
+                            <div class="input-group">
+                                <select id="city" name="city" class="form-select w-100 mb-3"
+                                    (change)="onCityChange($event)" [(ngModel)]="createData.cityId">
+                                    <option [ngValue]="undefined">
+                                        Chọn Tỉnh/Thành phố
+                                    </option>
+                                    <option [value]="city.id" *ngFor="let city of cities">
+                                        {{city.cityName}}
+                                    </option>
+                                </select>
+                                <select id="district" name="district" class="form-select w-100 mb-3"
+                                    (change)="onDistrictChange($event)" [(ngModel)]="createData.districtId">
+                                    <option [ngValue]="undefined">
+                                        Chọn Quận/Huyện
+                                    </option>
+                                    <option [value]="district.id" *ngFor="let district of districts">
+                                        {{district.displayName}}
+                                    </option>
+                                </select>
+                                <select id="ward" name="ward" class="form-select w-100 mb-3"
+                                    [(ngModel)]="createData.wardId">
+                                    <option [ngValue]="undefined">
+                                        Chọn Phường/Xã
+                                    </option>
+                                    <option [value]="ward.id" *ngFor="let ward of wards">
+                                        {{ward.displayName}}
+                                    </option>
+                                </select>
+                                <input id="address" name="address" class="form-control"
+                                    placeholder="{{ 'Địa chỉ chi tiết' | localize }}" type="text"
+                                    [(ngModel)]="createData.address" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-5">
+                            <label for="stockCode" class="form-label text-start ms-5" style="width: 38%;">
+                                {{ 'Mã kho' | localize }}
+                                <span class="text-danger">(*)</span>
+                            </label>
+                            <div class="input-group">
+                                <input id="stockCode" name="stockCode" class="form-control"
+                                    placeholder="{{ 'Nhập mã kho' | localize }}" type="text"
+                                    [(ngModel)]="createData.stockCode" />
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-5">
+                            <label for="stockLevel" class="form-label text-start ms-5" style="width: 38%;">
+                                {{ 'Cấp độ kho' | localize }}
+                                <span class="text-danger">(*)</span>
+                            </label>
+                            <div class="input-group">
+                                <select id="stockLevel" name="stockLevel" class="form-select"
+                                    [(ngModel)]="createData.stockLevel">
+                                    <option [ngValue]="undefined">
+                                        Chọn cấp độ kho
+                                    </option>
+                                    <option [ngValue]="0">1</option>
+                                    <option [ngValue]="1">2</option>
+                                    <option [ngValue]="2">3</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-5">
+                            <label for="parentStockId" class="form-label text-start ms-5" style="width: 38%;">
+                                {{ 'Kho cha' | localize }}
+                                <span class="text-danger">(*)</span>
+                            </label>
+                            <div class="input-group">
+                                <input id="parentStockId" name="parentStockId" class="form-control" type="text"
+                                    [value]="inventoryData.stockName" disabled />
+                            </div>
+                        </div>
+                        <div class="float-end">
+                            <button class="btn btn-success btn-sm" type="button">IMPORT LÔ SỐ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
+                <button type="button" class="btn btn-primary btn-sm" (click)="createChildStock()">XÁC NHẬN</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- <simDetailModal [simData]="simData" [inventoryData]="inventoryData" [productType]="productType" #simDetailModal>
+</simDetailModal> -->

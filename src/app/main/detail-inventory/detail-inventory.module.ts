@@ -3,9 +3,10 @@ import { AppSharedModule } from '@app/shared/app-shared.module';
 import { SubheaderModule } from '@app/shared/common/sub-header/subheader.module';
 import { DetailInventoryRoutingModule } from './detail-inventory-routing.module';
 import { DetailInventoryComponent } from './detail-inventory.component';
-import { CreateInventoryModalModule } from '@app/shared/common/create-inventory-modal/create-inventory-modal.module';
 import { SimDetailModalComponent } from './sim-detail-modal.component';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 @NgModule({
     declarations: [DetailInventoryComponent, SimDetailModalComponent],
@@ -13,8 +14,9 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
         AppSharedModule,
         DetailInventoryRoutingModule,
         SubheaderModule,
-        CreateInventoryModalModule,
         BreadcrumbModule,
+        FileUploadModule,
+        ProgressBarModule,
     ],
 })
 export class DetailInventoryModule {}
