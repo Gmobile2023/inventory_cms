@@ -146,8 +146,9 @@
                         (click)="openModal(kitting, 'modal-md')">KITTING</button>
                     <button class="btn btn-primary btn-sm ms-3" type="button"
                         (click)="openModal(addSaleStock, 'modal-md')">THÊM NGƯỜI BÁN HÀNG</button>
-                    <button class="btn btn-primary btn-sm ms-3" type="button"
-                        (click)="openModal(updatePrice, 'modal-md')">CẬP NHẬT GIÁ</button>
+                    <button class="btn btn-primary btn-sm ms-3" type="button" [routerLink]="'/app/main/price-update'"
+                        [queryParams]="{ stockCode: inventoryData.stockCode, id: inventoryData.id }">CẬP NHẬT
+                        GIÁ</button>
                     <button class="btn btn-success btn-sm ms-3" type="button">XUẤT EXCEL</button>
                 </div>
             </div>
@@ -330,11 +331,11 @@
                         [(ngModel)]="valuePrice" />
                 </div>
             </div>
-            <div class="mb-5">
+            <!-- <div class="mb-5">
                 <p-fileUpload customUpload="true" name="ExcelFileUpload" #ExcelFileUpload maxFileSize="10000000"
                     auto="auto" accept=".csv,.xls,.xlsx" (uploadHandler)="uploadExcel($event)"
                     (onError)="onUploadExcelError()" chooseLabel="Tải danh sách lên"></p-fileUpload>
-            </div>
+            </div> -->
             <p class="text-center fst-italic">Lưu ý: Hành động sẽ được áp dụng cho toàn bộ sản phẩm trong danh sách bạn
                 đã chọn</p>
         </div>

@@ -12,10 +12,10 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         super(injector);
     }
     uploadedFiles: any[] = [];
-    selectedRecords: [];
     items: MenuItem[];
     home: MenuItem;
     value: number = 0;
+    selectedRecords: [];
     dataFakeTo = [
         {
             id: 1,
