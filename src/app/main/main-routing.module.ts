@@ -92,6 +92,12 @@ import { RouterModule } from '@angular/router';
                         data: { permission: '' },
                     },
                     {
+                        path: 'price-update',
+                        loadChildren: () =>
+                            import('./price-update/price-update.module').then((m) => m.PriceUpdateModule),
+                        data: { permission: '' },
+                    },
+                    {
                         path: 'approval-flow-settings',
                         loadChildren: () =>
                             import('./approval-flow-settings/approval-flow-settings.module').then(
