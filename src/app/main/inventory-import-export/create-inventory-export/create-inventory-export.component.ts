@@ -9,12 +9,17 @@ import {
     OrderItem,
     ProductType,
 } from '@shared/service-proxies/service-proxies';
+import { Table } from 'primeng/table';
+import { Paginator } from 'primeng/paginator';
+import { finalize } from 'rxjs';
 @Component({
     templateUrl: './create-inventory-export.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [appModuleAnimation()],
 })
 export class CreateInventoryExportComponent extends AppComponentBase implements OnInit {
+    @ViewChild('dataTable', { static: true }) dataTable: Table;
+    @ViewChild('paginator', { static: true }) paginator: Paginator;
     constructor(injector: Injector, private _inventoryServiceProxy: InventoryServiceProxy) {
         super(injector);
     }
@@ -23,53 +28,9 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     home: MenuItem;
     value: number = 0;
     selectedRecords: [];
-    dataFakeTo = [
-        {
-            id: 1,
-            loai: '898407210016823000',
-            ma: 'GOLD',
-            ten: '1.000.000',
-            donvi: 'VINAPHONE',
-        },
-        {
-            id: 2,
-            loai: '898407210016823000',
-            ma: 'SILVER',
-            ten: '2.000.000',
-            donvi: 'VIETTEL',
-        },
-        {
-            id: 3,
-            loai: '898407210016823000',
-            ma: 'PREMIUM',
-            ten: '3.000.000',
-            donvi: 'MOBIPHONE',
-        },
-        {
-            id: 4,
-            loai: '898407210016823000',
-            ma: 'GOLD',
-            ten: '4.000.000',
-            donvi: 'VINAPHONE',
-        },
-        {
-            id: 5,
-            loai: '898407210016823000',
-            ma: 'SILVER',
-            ten: '5.000.000',
-            donvi: 'VIETTEL',
-        },
-        {
-            id: 6,
-            loai: '898407210016823000',
-            ma: 'PREMIUM',
-            ten: '6.000.000',
-            donvi: 'MOBIPHONE',
-        },
-    ];
     dataFakeFrom: any[] = [];
     currentData: any[] = [];
-    rowsPerPage = 5;
+    rowsPerPage = 10;
     currentPage = 0;
     currentDataFrom: any[] = [];
     listStock: any[] = [];
@@ -81,7 +42,7 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     productType: ProductType = 1;
     objectType: ObjectType = 1;
     // rangeRule: OrderItem;
-    rangeItems: string[] | undefined;
+    rangeItems: string[] | undefined = [];
     isRangeRule: boolean = true;
     rangeRule: any = {
         orderName: '',
@@ -92,6 +53,8 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         toRange: '',
         quantity: 0,
     };
+    listSimSrcStock: any[] = [];
+    stockId: number;
 
     ngOnInit() {
         this.items = [
@@ -106,7 +69,7 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
                 this.value = 0;
             }
         }, 2000);
-        this.currentData = this.dataFakeTo.slice(0, this.rowsPerPage);
+        // this.currentData = this.dataFakeTo.slice(0, this.rowsPerPage);
         this.getListStock();
     }
 
@@ -139,6 +102,35 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         // }
     }
 
+    onChangeStock(event: Event) {
+        const stockId = parseInt((event.target as HTMLSelectElement).value);
+        this.stockId = stockId;
+        this.getListSimSrcStock();
+    }
+
+    getListSimSrcStock(event?: LazyLoadEvent) {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getListSims(
+                this.stockId,
+                this.productType,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                this.primengTableHelper.getSkipCount(this.paginator, event),
+                this.primengTableHelper.getMaxResultCount(this.paginator, event)
+            )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this.listSimSrcStock = result.items;
+                this.primengTableHelper.totalRecordsCount = result.totalCount;
+                this.primengTableHelper.hideLoadingIndicator();
+            });
+    }
+
     calculateQuantity(): void {
         if (this.rangeRule.fromRange && this.rangeRule.toRange) {
             const from = parseInt(this.rangeRule.fromRange, 10);
@@ -169,10 +161,10 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         });
     }
 
-    onPage(event: any) {
-        this.currentPage = event.page;
-        this.updateCurrentData();
-    }
+    // onPage(event: any) {
+    //     this.currentPage = event.page;
+    //     this.updateCurrentData();
+    // }
 
     onPageFrom(event: any) {
         this.currentPage = event.page;
@@ -181,40 +173,35 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
 
     moveSelectedRecords() {
         this.selectedRecords.forEach((record) => {
-            const index = this.dataFakeTo.indexOf(record);
+            const index = this.listSimSrcStock.indexOf(record);
             if (index > -1) {
-                this.dataFakeTo.splice(index, 1); // Xóa phần tử khỏi dataFakeTo
-                this.dataFakeFrom.push(record); // Thêm phần tử vào dataFakeFrom
+                this.rangeItems.push(record);
             }
         });
-        this.selectedRecords = []; // Reset lại selectedRecords
-        this.updateCurrentData(); // Cập nhật lại currentData sau khi di chuyển
-        this.updateCurrentDataFrom();
+        this.selectedRecords = [];
     }
 
     moveBackSelectedRecords() {
         // Di chuyển từng phần tử từ dataFakeFrom về dataFakeTo
         this.selectedRecords.forEach((record) => {
-            const index = this.dataFakeFrom.indexOf(record);
+            const index = this.rangeItems.indexOf(record);
             if (index > -1) {
-                this.dataFakeFrom.splice(index, 1); // Xóa phần tử khỏi dataFakeFrom
-                this.dataFakeTo.push(record); // Thêm phần tử vào dataFakeTo
+                this.rangeItems.splice(index, 1);
             }
         });
         this.selectedRecords = []; // Xóa danh sách các phần tử đã chọn
-        this.updateCurrentData(); // Cập nhật lại currentData cho phân trang
         this.updateCurrentDataFrom();
     }
 
-    updateCurrentData() {
-        const start = this.currentPage * this.rowsPerPage;
-        const end = start + this.rowsPerPage;
-        this.currentData = this.dataFakeTo.slice(start, end); // Cập nhật currentData theo phân trang
-    }
+    // updateCurrentData() {
+    //     const start = this.currentPage * this.rowsPerPage;
+    //     const end = start + this.rowsPerPage;
+    //     this.currentData = this.dataFakeTo.slice(start, end);
+    // }
     updateCurrentDataFrom() {
         const start = this.currentPage * this.rowsPerPage;
         const end = start + this.rowsPerPage;
-        this.currentDataFrom = this.dataFakeFrom.slice(start, end); // Cập nhật dữ liệu của bảng thứ 2 theo phân trang
+        this.rangeItems = this.rangeItems.slice(start, end);
     }
 
     onUpload(event) {}
