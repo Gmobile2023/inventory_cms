@@ -5,7 +5,7 @@ on:
     inputs:
       service:
         options:
-          - api
+          - cms
         required: true
         type: choice
         description: Choose which service to run
