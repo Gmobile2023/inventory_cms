@@ -18,33 +18,38 @@
                         {{ 'Địa điểm kho' | localize }}
                     </label>
                     <div class="input-group">
-                        <select id="city" name="city" class="form-select w-100 mb-3" (change)="onCityChange($event)"
-                            [(ngModel)]="cityId">
-                            <option [ngValue]="undefined">
-                                Chọn Tỉnh/Thành phố
-                            </option>
-                            <option [value]="city.id" *ngFor="let city of cities">
-                                {{city.cityName}}
-                            </option>
-                        </select>
-                        <select id="district" name="district" class="form-select w-100 mb-3"
-                            (change)="onDistrictChange($event)" [(ngModel)]="districtId">
-                            <option [ngValue]="undefined">
-                                Chọn Quận/Huyện
-                            </option>
-                            <option [value]="district.id" *ngFor="let district of districts">
-                                {{district.displayName}}
-                            </option>
-                        </select>
-                        <select id="ward" name="ward" class="form-select w-100" [(ngModel)]="wardId">
-                            <option [ngValue]="undefined">
-                                Chọn Phường/Xã
-                            </option>
-                            <option [value]="ward.id" *ngFor="let ward of wards">
-                                {{ward.displayName}}
-                            </option>
-                        </select>
-                    </div>
+                        <p-dropdown 
+                            [style]="{width: '100%'}"
+                            [options]="cities" 
+                            [(ngModel)]="cityId" 
+                            optionLabel="cityName" 
+                            optionValue="id" 
+                            placeholder="Chọn Tỉnh/Thành phố" 
+                            class="w-100 mb-3" 
+                            (onChange)="onCityChange($event)">
+                        </p-dropdown>
+
+                        <p-dropdown 
+                            [style]="{width: '100%'}"
+                            [options]="districts" 
+                            [(ngModel)]="districtId" 
+                            optionLabel="displayName" 
+                            optionValue="id" 
+                            placeholder="Chọn Quận/Huyện" 
+                            class="w-100 mb-3" 
+                            (onChange)="onDistrictChange($event)">
+                        </p-dropdown>
+
+                        <p-dropdown 
+                            [style]="{width: '100%'}"
+                            [options]="wards" 
+                            [(ngModel)]="wardId" 
+                            optionLabel="displayName" 
+                            optionValue="id" 
+                            placeholder="Chọn Phường/Xã" 
+                            class="w-100">
+                        </p-dropdown>
+                    </div>                    
                 </div>
             </div>
             <div class="col-md-6 mb-5">
@@ -62,7 +67,17 @@
                         {{ 'Thời gian tạo từ' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="fromDate" name="fromDate" class="form-control" type="date" [(ngModel)]="fromDate" />
+                        <input
+                            id="fromDate"
+                            type="text"
+                            name="fromDate"
+                            class="form-control"
+                            bsDatepicker
+                            datePickerLuxonModifier
+                            [(date)]="fromDate"
+                            [bsConfig]="{ adaptivePosition: true }"
+                            placeholder="Thời gian từ"
+                        />
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-5">
@@ -70,7 +85,17 @@
                         {{ 'Thời gian tạo đến' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="toDate" name="toDate" class="form-control" type="date" [(ngModel)]="toDate" />
+                        <input
+                            id="toDate"
+                            type="text"
+                            name="toDate"
+                            class="form-control"
+                            bsDatepicker
+                            datePickerLuxonModifier
+                            [(date)]="toDate"
+                            [bsConfig]="{ adaptivePosition: true }"
+                            placeholder="Thời gian đến"
+                        />
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-end">
@@ -87,9 +112,9 @@
             <div class="d-flex justify-content-between">
                 <h4 class="mb-4">DANH SÁCH KHO</h4>
                 <div class="d-flex align-items-center justify-content-end">
-                    <button class="btn btn-secondary btn-sm" type="button"
+                    <button class="btn btn-primary btn-sm" type="button"
                         (click)="openModal(addOrEdit, 'modal-xl')">TẠO KHO</button>
-                    <button class="btn btn-success btn-sm ms-3" type="button">XUẤT EXCEL</button>
+                    <button class="btn btn-success btn-sm ms-3" type="button" (click)="exportToExcel()">XUẤT EXCEL</button>
                 </div>
             </div>
         </div>
