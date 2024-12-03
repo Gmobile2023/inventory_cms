@@ -1,14 +1,21 @@
 import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { MenuItem } from 'primeng/api';
+import { LazyLoadEvent, MenuItem } from 'primeng/api';
+import {
+    CreateTransferDto,
+    InventoryServiceProxy,
+    ObjectType,
+    OrderItem,
+    ProductType,
+} from '@shared/service-proxies/service-proxies';
 @Component({
     templateUrl: './create-inventory-export.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [appModuleAnimation()],
 })
 export class CreateInventoryExportComponent extends AppComponentBase implements OnInit {
-    constructor(injector: Injector) {
+    constructor(injector: Injector, private _inventoryServiceProxy: InventoryServiceProxy) {
         super(injector);
     }
     uploadedFiles: any[] = [];
@@ -65,6 +72,26 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     rowsPerPage = 5;
     currentPage = 0;
     currentDataFrom: any[] = [];
+    listStock: any[] = [];
+    title: string | undefined;
+    description: string | undefined;
+    srcStockId: number;
+    desStockId: number;
+    userCreated: string | undefined;
+    productType: ProductType = 1;
+    objectType: ObjectType = 1;
+    // rangeRule: OrderItem;
+    rangeItems: string[] | undefined;
+    isRangeRule: boolean = true;
+    rangeRule: any = {
+        orderName: '',
+        unit: '',
+        attribute: '',
+        telCo: '',
+        fromRange: '',
+        toRange: '',
+        quantity: 0,
+    };
 
     ngOnInit() {
         this.items = [
@@ -80,6 +107,66 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
             }
         }, 2000);
         this.currentData = this.dataFakeTo.slice(0, this.rowsPerPage);
+        this.getListStock();
+    }
+
+    getListStock() {
+        this._inventoryServiceProxy
+            .getListStock(
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                0,
+                99
+            )
+            .subscribe((result) => {
+                this.listStock = result.items;
+            });
+    }
+
+    onRangeRuleChange(event: Event) {
+        this.isRangeRule = !this.isRangeRule;
+        // if (this.isRangeRule) {
+        //     this.rangeItems = undefined;
+        //     this.rangeRule = new OrderItem();
+        // }
+    }
+
+    calculateQuantity(): void {
+        if (this.rangeRule.fromRange && this.rangeRule.toRange) {
+            const from = parseInt(this.rangeRule.fromRange, 10);
+            const to = parseInt(this.rangeRule.toRange, 10);
+
+            if (!isNaN(from) && !isNaN(to) && to >= from) {
+                this.rangeRule.quantity = to - from + 1; // Tính số lượng
+            } else {
+                this.rangeRule.quantity = 0; // Nếu giá trị không hợp lệ
+            }
+        } else {
+            this.rangeRule.quantity = 0; // Nếu chưa nhập đủ
+        }
+    }
+
+    createTransfer() {
+        const body = new CreateTransferDto();
+        body.title = this.title;
+        body.description = this.description;
+        body.srcStockId = this.srcStockId;
+        body.desStockId = this.desStockId;
+        body.productType = this.productType;
+        body.objectType = this.objectType;
+        body.rangeRule = this.rangeRule;
+        console.log(body);
+        this._inventoryServiceProxy.createTransfer(body).subscribe(() => {
+            this.notify.info(this.l('SavedSuccessfully'));
+        });
     }
 
     onPage(event: any) {

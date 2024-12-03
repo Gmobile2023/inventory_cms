@@ -3,7 +3,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import { ActivatedRoute } from '@angular/router';
-import { InventoryServiceProxy, UpdatePriceDto } from '@shared/service-proxies/service-proxies';
+import { InventoryServiceProxy, ObjectType, PriceType, ProductType, UpdatePriceDto } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
@@ -31,13 +31,14 @@ export class PriceUpdateComponent extends AppComponentBase implements OnInit {
     home: MenuItem;
     value: number = 0;
     selectedRecords: any[] = [];
-    productType: string = 'mobile';
+    productType: ProductType = ProductType.Mobile;
     stockCode: string;
-    stockId: string;
-    priceType: string = 'Change';
+    stockId: number;
+    priceType: PriceType = PriceType.Change;
     valuePrice: number;
-    objectType: string = 'All';
+    objectType: ObjectType = ObjectType.All;
     isLoading: boolean = false;
+    ProductType = ProductType;
 
     ngOnInit() {
         this.items = [
@@ -46,13 +47,13 @@ export class PriceUpdateComponent extends AppComponentBase implements OnInit {
         ];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.stockCode = this.route.snapshot.queryParamMap.get('stockCode');
-        this.stockId = this.route.snapshot.queryParamMap.get('id');
+        this.stockId = parseInt(this.route.snapshot.queryParamMap.get('id'));
     }
 
     getListSims(event?: LazyLoadEvent) {
         this._inventoryServiceProxy
             .getListSims(
-                this.stockCode,
+                this.stockId,
                 this.productType,
                 undefined,
                 undefined,
@@ -72,13 +73,13 @@ export class PriceUpdateComponent extends AppComponentBase implements OnInit {
     }
 
     onProductTypeChange(event: any) {
-        this.productType = (event.target as HTMLSelectElement).value;
+        this.productType = (event.target as HTMLSelectElement).value as unknown as ProductType;
         this.getListSims();
     }
 
     handleUpdatePrice() {
         const body = new UpdatePriceDto();
-        body.stockId = parseInt(this.stockId);
+        body.stockId = this.stockId;
         body.productType = this.productType;
         body.objectType = this.objectType;
         body.priceType = this.priceType;

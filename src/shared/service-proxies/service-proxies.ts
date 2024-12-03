@@ -8213,7 +8213,7 @@ export class InventoryServiceProxy {
     }
 
     /**
-     * @param stockCode (optional) 
+     * @param stockId (optional) 
      * @param productType (optional) 
      * @param mobile (optional) 
      * @param serial (optional) 
@@ -8225,12 +8225,12 @@ export class InventoryServiceProxy {
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getListSims(stockCode: string | undefined, productType: string | undefined, mobile: string | undefined, serial: string | undefined, attribute: string | undefined, status: number | undefined, kitingStatus: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
+    getListSims(stockId: number | undefined, productType: ProductType | undefined, mobile: string | undefined, serial: string | undefined, attribute: string | undefined, status: ProductStatus | undefined, kitingStatus: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSims?";
-        if (stockCode === null)
-            throw new Error("The parameter 'stockCode' cannot be null.");
-        else if (stockCode !== undefined)
-            url_ += "StockCode=" + encodeURIComponent("" + stockCode) + "&";
+        if (stockId === null)
+            throw new Error("The parameter 'stockId' cannot be null.");
+        else if (stockId !== undefined)
+            url_ += "StockId=" + encodeURIComponent("" + stockId) + "&";
         if (productType === null)
             throw new Error("The parameter 'productType' cannot be null.");
         else if (productType !== undefined)
@@ -8318,7 +8318,7 @@ export class InventoryServiceProxy {
      * @param productType (optional) 
      * @return Success
      */
-    getSimForView(number: string | undefined, productType: string | undefined): Observable<GetSimForViewDto> {
+    getSimForView(number: string | undefined, productType: ProductType | undefined): Observable<GetSimForViewDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetSimForView?";
         if (number === null)
             throw new Error("The parameter 'number' cannot be null.");
@@ -8376,31 +8376,32 @@ export class InventoryServiceProxy {
 
     /**
      * @param stockId (optional) 
-     * @param attribute (optional) 
      * @param productType (optional) 
+     * @param attribute (optional) 
      * @param simType (optional) 
      * @param number (optional) 
      * @param fromRange (optional) 
      * @param toRange (optional) 
+     * @param isRecover (optional) 
      * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getListSimsTransfers(stockId: number | undefined, attribute: string | undefined, productType: string | undefined, simType: string | undefined, number: string | undefined, fromRange: string | undefined, toRange: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
+    getListSimsTransfers(stockId: number | undefined, productType: ProductType | undefined, attribute: string | undefined, simType: string | undefined, number: string | undefined, fromRange: string | undefined, toRange: string | undefined, isRecover: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSimsTransfers?";
         if (stockId === null)
             throw new Error("The parameter 'stockId' cannot be null.");
         else if (stockId !== undefined)
             url_ += "StockId=" + encodeURIComponent("" + stockId) + "&";
-        if (attribute === null)
-            throw new Error("The parameter 'attribute' cannot be null.");
-        else if (attribute !== undefined)
-            url_ += "Attribute=" + encodeURIComponent("" + attribute) + "&";
         if (productType === null)
             throw new Error("The parameter 'productType' cannot be null.");
         else if (productType !== undefined)
             url_ += "ProductType=" + encodeURIComponent("" + productType) + "&";
+        if (attribute === null)
+            throw new Error("The parameter 'attribute' cannot be null.");
+        else if (attribute !== undefined)
+            url_ += "Attribute=" + encodeURIComponent("" + attribute) + "&";
         if (simType === null)
             throw new Error("The parameter 'simType' cannot be null.");
         else if (simType !== undefined)
@@ -8417,6 +8418,10 @@ export class InventoryServiceProxy {
             throw new Error("The parameter 'toRange' cannot be null.");
         else if (toRange !== undefined)
             url_ += "ToRange=" + encodeURIComponent("" + toRange) + "&";
+        if (isRecover === null)
+            throw new Error("The parameter 'isRecover' cannot be null.");
+        else if (isRecover !== undefined)
+            url_ += "IsRecover=" + encodeURIComponent("" + isRecover) + "&";
         if (sorting === null)
             throw new Error("The parameter 'sorting' cannot be null.");
         else if (sorting !== undefined)
@@ -32030,6 +32035,12 @@ export enum PaymentPeriodType {
     Annual = 365,
 }
 
+export enum PriceType {
+    Change = 1,
+    PlusRate = 2,
+    PlusExtra = 3,
+}
+
 export class ProductAttributeDto implements IProductAttributeDto {
     attributeType!: string | undefined;
     attributeName!: string | undefined;
@@ -35697,9 +35708,9 @@ export interface IUpdateOrganizationUnitInput {
 export class UpdatePriceDto implements IUpdatePriceDto {
     stockId!: number;
     userCreated!: string | undefined;
-    productType!: string | undefined;
-    objectType!: string | undefined;
-    priceType!: string | undefined;
+    productType!: ProductType;
+    objectType!: ObjectType;
+    priceType!: PriceType;
     value!: number;
     items!: string[] | undefined;
 
@@ -35755,9 +35766,9 @@ export class UpdatePriceDto implements IUpdatePriceDto {
 export interface IUpdatePriceDto {
     stockId: number;
     userCreated: string | undefined;
-    productType: string | undefined;
-    objectType: string | undefined;
-    priceType: string | undefined;
+    productType: ProductType;
+    objectType: ObjectType;
+    priceType: PriceType;
     value: number;
     items: string[] | undefined;
 }

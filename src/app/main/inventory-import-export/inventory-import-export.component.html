@@ -5,66 +5,68 @@
             <h4 class="mb-4">TÌM KIẾM YÊU CẦU XUẤT/NHẬP KHO</h4>
             <div class="col-md-6 mb-5">
                 <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Tên kho' | localize }}
+                    <label for="orderTitle" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Tiêu đề' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="" name="" class="form-control" placeholder="{{ 'Nhập mã kho' | localize }}"
-                            type="text" />
+                        <input id="orderTitle" name="orderTitle" class="form-control"
+                            placeholder="{{ 'Nhập tiêu đề' | localize }}" type="text" [(ngModel)]="orderTitle" />
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
+                    <label for="fromDate" class="form-label ms-5" style="width: 35%;">
                         {{ 'Ngày gửi duyệt từ' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="" name="" class="form-control" type="date" />
+                        <input id="fromDate" name="fromDate" class="form-control" type="date" [(ngModel)]="fromDate" />
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
+                    <label for="status" class="form-label ms-5" style="width: 35%;">
                         {{ 'Trạng thái' | localize }}
                     </label>
                     <div class="input-group">
-                        <select id="" name="" class="form-select">
-                            <option selected>
-                                Chọn trạng thái
+                        <select id="status" name="status" class="form-select" [(ngModel)]="status">
+                            <option value="99">
+                                Tất cả
                             </option>
-                            <option value="1">Tất cả</option>
-                            <option value="2">Chờ duyệt</option>
-                            <option value="3">Đã duyệt</option>
-                            <option value="4">Từ chối</option>
+                            <option value="0">Chờ duyệt</option>
+                            <option value="1">Đã duyệt</option>
+                            <option value="2">Từ chối</option>
                         </select>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 mb-5">
                 <div class="d-flex align-items-center mb-5">
-                    <label for="productType" class="form-label ms-5" style="width: 35%;">
+                    <label for="orderType" class="form-label ms-5" style="width: 35%;">
                         {{ 'Loại yêu cầu' | localize }}
                     </label>
                     <div class="input-group">
-                        <select id="productType" name="productType" class="form-select">
-                            <option selected>
+                        <select id="orderType" name="orderType" class="form-select" [(ngModel)]="orderType">
+                            <option [ngValue]="undefined">
                                 Chọn loại yêu cầu
                             </option>
                             <option value="1">Nhập kho</option>
                             <option value="2">Xuất kho</option>
-                            <option value="3">Thu hồi về kho</option>
+                            <option value="3">Thu hồi về kho cha</option>
                         </select>
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">
+                    <label for="toDate" class="form-label ms-5" style="width: 35%;">
                         {{ 'Ngày gửi duyệt đến' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="" name="" class="form-control" type="date" />
+                        <input id="toDate" name="toDate" class="form-control" type="date" [(ngModel)]="toDate" />
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-end">
-                    <button class="btn btn-secondary btn-sm me-3" type="button">CHỌN LẠI</button>
-                    <button class="btn btn-primary btn-sm" type="button">TÌM KIẾM</button>
+                    <button class="btn btn-secondary btn-sm me-3" type="button" (click)="resetSearch()">CHỌN
+                        LẠI</button>
+                    <button class="btn btn-primary btn-sm" type="button" (click)="getListOrder($event)">
+                        TÌM KIẾM
+                    </button>
                 </div>
             </div>
         </div>
@@ -89,31 +91,29 @@
         <div class="row align-items-center">
             <!--<Primeng-TurboTable-Start>-->
             <div class="col primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
-                <p-table #dataTable sortMode="multiple" [value]="dataFake"
-                    rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
-                    [tableStyle]="{'min-width': '50rem'}">
+                <p-table #dataTable sortMode="multiple" [value]="primengTableHelper.records"
+                    rows="{{primengTableHelper.defaultRecordsCountPerPage}}" (onLazyLoad)="getListOrder($event)"
+                    [paginator]="false" [lazy]="true" [tableStyle]="{'min-width': '50rem'}">
                     <ng-template pTemplate="header">
                         <tr>
                             <th style="width: 160px">{{ 'HÀNH ĐỘNG' | localize }}</th>
                             <th>
                                 {{ 'TIÊU ĐỀ' | localize }}
-                                <!-- <p-sortIcon field="tenancyName"></p-sortIcon> -->
                             </th>
                             <th>
                                 {{ 'LOẠI YÊU CẦU' | localize }}
                                 <!-- <p-sortIcon field="name"></p-sortIcon> -->
                             </th>
                             <th>{{ 'NGÀY GỬI YÊU CẦU' | localize }}</th>
-                            <th>{{ 'NGÀY DUYỆT' | localize }}</th>
+                            <!-- <th>{{ 'NGÀY DUYỆT' | localize }}</th> -->
                             <th>
                                 {{ 'SỐ LƯỢNG DỰ KIẾN' | localize }}
                                 <!-- <p-sortIcon field="subscriptionEndDateUtc"></p-sortIcon> -->
                             </th>
-                            <th>
-                                {{ 'SỐ LƯỢNG ĐÃ NHẬP/XUẤT THU HỒI' | localize }}
-                                <!-- <p-sortIcon field="isActive"></p-sortIcon> -->
-                            </th>
                             <th>{{ 'TRẠNG THÁI' | localize }}</th>
+                            <th>
+                                {{ 'BƯỚC DUYỆT HIỆN TẠI' | localize }}
+                            </th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-record="$implicit">
@@ -130,15 +130,21 @@
                                     <ul id="dropdownMenu" class="dropdown-menu" role="menu" *dropdownMenu
                                         aria-labelledby="dropdownButton">
                                         <li role="menuitem">
-                                            <a [routerLink]="record.path" class="dropdown-item">
+                                            <a href="javascript:;" class="dropdown-item" [routerLink]="record.orderType == '1' 
+                                            ? '/app/main/inventory-import-export/detail-inventory-import' 
+                                            : record.orderType == '2' 
+                                            ? '/app/main/inventory-import-export/detail-inventory-export' 
+                                            : record.orderType == '3' 
+                                            ? '/app/main/inventory-import-export/detail-inventory-recall' 
+                                            : null" [queryParams]="{ id: record.id }">
                                                 {{ 'Xem chi tiết' | localize }}
                                             </a>
                                         </li>
-                                        <li role="menuitem">
+                                        <!-- <li role="menuitem">
                                             <a href="javascript:;" class="dropdown-item">
                                                 {{ 'Chỉnh sửa' | localize }}
                                             </a>
-                                        </li>
+                                        </li> -->
                                     </ul>
                                 </div>
                             </td>
@@ -148,44 +154,58 @@
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.requestType }}
+                                {{ record.orderType == "1" ? 'Nhập kho' : record.orderType == "2" ? 'Xuất kho' :
+                                record.orderType == "3" ? 'Thu hồi về kho cha' : 'Bán hàng' }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.sentDate }}
+                                {{ record.createdDate | luxonFormat: 'F' }}
                             </td>
-                            <td>
+                            <!-- <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.approveDate }}
-                            </td>
+                            </td> -->
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.expectedQuantity }}
+                                {{ record.quantity }}
                             </td>
                             <td>
+                                <!-- <span class="p-column-title">{{ '' | localize }}</span>
+                                <span *ngIf="record.status == 0 || 1 || 2" class="badge badge-warning badge-inline">
+                                    {{ 'Chờ phê duyệt' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 5" class="badge badge-success badge-inline">
+                                    {{ 'Đã duyệt' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 7" class="badge badge-danger badge-inline">
+                                    {{ 'Từ chối' | localize }}
+                                </span> -->
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.realityQuantity }}
+                                <span class="badge badge-success badge-inline">{{ record.statusName }}</span>
                             </td>
                             <td>
-                                <span class="p-column-title">{{ 'Status' | localize }}</span>
+                                <!-- <span class="p-column-title">{{ 'Status' | localize }}</span>
                                 <span *ngIf="record.status == 0" class="badge badge-warning badge-inline">
                                     {{ 'Chờ phê duyệt' | localize }}
                                 </span>
-                                <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
+                                <span *ngIf="record.status == 5" class="badge badge-success badge-inline">
                                     {{ 'Đã duyệt' | localize }}
                                 </span>
-                                <span *ngIf="record.status == 2" class="badge badge-danger badge-inline">
+                                <span *ngIf="record.status == 7" class="badge badge-danger badge-inline">
                                     {{ 'Từ chối' | localize }}
-                                </span>
+                                </span> -->
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                <span class="badge badge-success badge-inline">{{ record.statusCurrentName }}</span>
                             </td>
                         </tr>
                     </ng-template>
                 </p-table>
-                <div class="primeng-no-data" *ngIf="dataFake.length == 0">
+                <div class="primeng-no-data text-center mt-5" *ngIf="primengTableHelper.totalRecordsCount == 0">
                     {{ 'NoData' | localize }}
                 </div>
                 <div class="primeng-paging-container">
-                    <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
+                    <p-paginator (onPageChange)="getListOrder($event)"
+                        [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
                         [totalRecords]="primengTableHelper.totalRecordsCount"
                         [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
                         [showCurrentPageReport]="true" [currentPageReportTemplate]="

@@ -4,59 +4,85 @@
         <div class="row bg-white py-5">
             <div class="d-flex justify-content-between align-items-center">
                 <h4>THÔNG TIN CHUNG</h4>
-                <button class="btn btn-success btn-sm">GỬI YÊU CẦU</button>
+                <button class="btn btn-success btn-sm" (click)="createTransfer()">GỬI YÊU CẦU</button>
             </div>
             <div class="col-md-6 mb-3">
-                <label for="" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
-                <input type="text" class="form-control" id="" placeholder="Nhập tiêu đề">
+                <label for="title" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
+                <input type="text" class="form-control" id="title" placeholder="Nhập tiêu đề" [(ngModel)]="title">
             </div>
-            <div class="col-md-6 mb-3">
+            <!-- <div class="col-md-4 mb-3">
                 <label for="" class="form-label">Số lượng dự kiến <span class="text-danger">(*)</span></label>
                 <input type="text" class="form-control" id="" placeholder="Nhập số lượng dự kiến">
-            </div>
-            <div class="col-md-4">
-                <label for="" class="form-label">Kho xuất đi <span class="text-danger">(*)</span></label>
+            </div> -->
+            <div class="col-md-6 mb-3">
+                <label for="" class="form-label">Cách thức xuất <span class="text-danger">(*)</span></label>
                 <div class="input-group">
-                    <select id="" name="" class="form-select">
-                        <option selected>
+                    <select id="" name="" class="form-select" (change)="onRangeRuleChange($event)">
+                        <option [ngValue]="true">Xuất theo dải</option>
+                        <option [ngValue]="false">Xuất theo tuỳ chọn</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="srcStockId" class="form-label">Kho xuất đi <span class="text-danger">(*)</span></label>
+                <div class="input-group">
+                    <select id="srcStockId" name="srcStockId" class="form-select" [(ngModel)]="srcStockId">
+                        <option [ngValue]="undefined">
                             Chọn kho
                         </option>
-                        <option value="1">Kho 1</option>
-                        <option value="2">Kho 2</option>
-                        <option value="3">Kho 3</option>
+                        <option [ngValue]="item.id" *ngFor="let item of listStock">{{item.stockName}}</option>
                     </select>
                 </div>
             </div>
-            <div class="col-md-4">
-                <label for="" class="form-label">Kho xuất đến <span class="text-danger">(*)</span></label>
+            <div class="col-md-6 mb-3">
+                <label for="desStockId" class="form-label">Kho xuất đến <span class="text-danger">(*)</span></label>
                 <div class="input-group">
-                    <select id="" name="" class="form-select">
-                        <option selected>
+                    <select id="desStockId" name="desStockId" class="form-select" [(ngModel)]="desStockId">
+                        <option [ngValue]="undefined">
                             Chọn kho
                         </option>
-                        <option value="1">Kho 1</option>
-                        <option value="2">Kho 2</option>
-                        <option value="3">Kho 3</option>
+                        <option [ngValue]="item.id" *ngFor="let item of listStock">{{item.stockName}}</option>
                     </select>
                 </div>
             </div>
-            <div class="col-md-4">
-                <label for="" class="form-label">Hình thức xuất <span class="text-danger">(*)</span></label>
+            <div class="col-md-6 mb-3">
+                <label for="productType" class="form-label">Loại sản phẩm</label>
                 <div class="input-group">
-                    <select id="" name="" class="form-select">
-                        <option selected>
-                            Chọn hình thức
-                        </option>
-                        <option value="1">Một lần</option>
-                        <option value="2">Theo đợt</option>
+                    <select id="productType" name="productType" class="form-select" [(ngModel)]="productType">
+                        <option [ngValue]="1">Số</option>
+                        <option [ngValue]="2">Serial</option>
                     </select>
                 </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="objectType" class="form-label">Xuất theo</label>
+                <div class="input-group">
+                    <select id="objectType" name="objectType" class="form-select" [(ngModel)]="objectType">
+                        <option [ngValue]="1">Tất cả</option>
+                        <option [ngValue]="2">Danh sách chọn</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3" *ngIf="isRangeRule">
+                <label for="fromRange" class="form-label">Dải số/serial từ<span class="text-danger">(*)</span></label>
+                <input type="text" class="form-control" id="fromRange" name="fromRange"
+                    [(ngModel)]="rangeRule.fromRange" (input)="calculateQuantity()">
+            </div>
+            <div class="col-md-4 mb-3" *ngIf="isRangeRule">
+                <label for="toRange" class="form-label">Dải số/serial đến<span class="text-danger">(*)</span></label>
+                <input type="text" class="form-control" id="toRange" name="toRange" [(ngModel)]="rangeRule.toRange"
+                    (input)="calculateQuantity()">
+            </div>
+            <div class="col-md-4 mb-3" *ngIf="isRangeRule">
+                <label for="quantity" class="form-label">Số lượng<span class="text-danger">(*)</span></label>
+                <input type="text" class="form-control" id="quantity" name="quantity" [(ngModel)]="rangeRule.quantity">
             </div>
             <div class="col-12 mb-3">
                 <label for="" class="form-label">Ghi chú</label>
-                <textarea class="form-control" id="" rows="2" placeholder="Nhập nội dung ghi chú"></textarea>
+                <textarea class="form-control" id="" rows="2" placeholder="Nhập nội dung ghi chú"
+                    [(ngModel)]="description"></textarea>
             </div>
-            <div class="col-12">
+            <!-- <div class="col-12">
                 <span class="fs-5 mt-5">Tải lên file chứng từ</span>
                 <div class="d-flex justify-content-start align-items-center mt-1 custom-progress">
                     <div class="me-5">
@@ -67,10 +93,10 @@
                     <div style="width: 15%;" class="me-2"><p-progressBar [value]="value"></p-progressBar></div>
                     <span>{{value}}%</span>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
-    <div [class]="containerClass" class="mt-5">
+    <div [class]="containerClass" class="mt-5" *ngIf="!isRangeRule">
         <div class="row bg-white py-5">
             <h4>BỘ LỌC TÌM KIẾM</h4>
             <div class="col-md-4 mb-4">
@@ -151,7 +177,7 @@
                                 <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
                                 <th>{{ 'SDT/SERIAL' | localize }}</th>
                                 <th>{{ 'HẠNG SỐ' | localize }}</th>
-                                <th>{{ 'GIÁ ĐỊNH GIÁ' | localize }}</th>
+                                <th>{{ 'GIÁ BÁN' | localize }}</th>
                                 <th>{{ 'NHÀ MẠNG' | localize }}</th>
                             </tr>
                         </ng-template>
