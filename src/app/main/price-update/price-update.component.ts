@@ -33,7 +33,7 @@ export class PriceUpdateComponent extends AppComponentBase implements OnInit {
     selectedRecords: any[] = [];
     productType: string = 'mobile';
     stockCode: string;
-    stockId: string;
+    stockId: number;
     priceType: string = 'Change';
     valuePrice: number;
     objectType: string = 'All';
@@ -46,13 +46,13 @@ export class PriceUpdateComponent extends AppComponentBase implements OnInit {
         ];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.stockCode = this.route.snapshot.queryParamMap.get('stockCode');
-        this.stockId = this.route.snapshot.queryParamMap.get('id');
+        this.stockId = parseInt(this.route.snapshot.queryParamMap.get('id'));
     }
 
     getListSims(event?: LazyLoadEvent) {
         this._inventoryServiceProxy
             .getListSims(
-                this.stockCode,
+                this.stockId,
                 this.productType,
                 undefined,
                 undefined,
@@ -78,7 +78,7 @@ export class PriceUpdateComponent extends AppComponentBase implements OnInit {
 
     handleUpdatePrice() {
         const body = new UpdatePriceDto();
-        body.stockId = parseInt(this.stockId);
+        body.stockId = this.stockId;
         body.productType = this.productType;
         body.objectType = this.objectType;
         body.priceType = this.priceType;

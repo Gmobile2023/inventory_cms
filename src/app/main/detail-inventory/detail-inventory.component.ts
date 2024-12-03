@@ -48,7 +48,7 @@ export class DetailInventoryComponent extends AppComponentBase {
     modalRef?: BsModalRef | null;
     items: MenuItem[];
     home: MenuItem;
-    inventoryId!: number;
+    stockId!: number;
     inventoryData: any = {};
     stockCode: string | undefined;
     productType: string = 'mobile';
@@ -92,8 +92,8 @@ export class DetailInventoryComponent extends AppComponentBase {
             }
         }, 2000);
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
-        this.inventoryId = parseInt(this.route.snapshot.queryParamMap.get('id')!);
-        this.getStockForView(this.inventoryId);
+        this.stockId = parseInt(this.route.snapshot.queryParamMap.get('id')!);
+        this.getStockForView(this.stockId);
         this.getProvinces();
         this.getProductAttributes();
     }
@@ -107,7 +107,7 @@ export class DetailInventoryComponent extends AppComponentBase {
     getStockForView(id: number) {
         this._inventoryServiceProxy.getStockForView(id).subscribe((result) => {
             this.inventoryData = result.inventory;
-            this.stockCode = result.inventory.stockCode;
+            // this.stockCode = result.inventory.stockCode;
         });
     }
 
@@ -158,7 +158,7 @@ export class DetailInventoryComponent extends AppComponentBase {
         }
         this._inventoryServiceProxy
             .getListSims(
-                this.stockCode,
+                this.stockId,
                 this.productType,
                 this.mobile,
                 this.serial,
@@ -185,7 +185,7 @@ export class DetailInventoryComponent extends AppComponentBase {
 
     handleAddSaleStock() {
         let body = new AddSaleStockDto();
-        body.id = this.inventoryId;
+        body.id = this.stockId;
         body.userSale = this.userSale;
         this._inventoryServiceProxy.addSaleStock(body).subscribe(() => {
             this.notify.info(this.l('SavedSuccessfully'));
@@ -212,7 +212,7 @@ export class DetailInventoryComponent extends AppComponentBase {
     getActionHistory(event?: LazyLoadEvent) {
         this.primengTableHelper.showLoadingIndicator();
         this._inventoryServiceProxy
-            .getHistorys(
+            .getHistories(
                 undefined,
                 undefined,
                 undefined,

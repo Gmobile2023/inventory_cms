@@ -41,7 +41,7 @@ export class ActionHistoryComponent extends AppComponentBase {
     getActionHistory(event?: LazyLoadEvent) {
         this.primengTableHelper.showLoadingIndicator();
         this._inventoryServiceProxy
-            .getHistorys(
+            .getHistories(
                 this.stockCode,
                 this.stockName,
                 this.orderCode,
