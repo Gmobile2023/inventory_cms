@@ -13,6 +13,9 @@ import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ActivatedRoute } from '@angular/router';
+import { FileDownloadService } from '@shared/utils/file-download.service';
+import { DateTimeService } from '@app/shared/common/timing/date-time.service';
+import { DateTime } from '@node_modules/@types/luxon';
 
 @Component({
     templateUrl: './inventory.component.html',
@@ -28,10 +31,14 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
         private route: ActivatedRoute,
         private _commonLookupServiceProxy: CommonLookupServiceProxy,
         private _inventoryServiceProxy: InventoryServiceProxy,
-        private modalService: BsModalService
+        private _fileDownloadService: FileDownloadService,
+        private modalService: BsModalService,
+        private _dateTimeService: DateTimeService
     ) {
         super(injector);
     }
+
+    public dateRange: DateTime[] = [this._dateTimeService.getStartOfMonth(), this._dateTimeService.getEndOfMonth()];
 
     modalRef?: BsModalRef | null;
     items: MenuItem[];
@@ -73,8 +80,8 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
                 this.cityId,
                 this.districtId,
                 this.wardId,
-                this.fromDate,
-                this.toDate,
+                this._dateTimeService.getStartOfDayForDate(this.fromDate),
+                this._dateTimeService.getEndOfDayForDate(this.toDate),
                 this.inventoryId ? this.inventoryId : this.parentId,
                 this.status == null ? undefined : this.status,
                 this.primengTableHelper.getSorting(this.dataTable),
@@ -86,6 +93,26 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
                 this.primengTableHelper.records = result.items;
                 this.primengTableHelper.totalRecordsCount = result.totalCount;
                 this.primengTableHelper.hideLoadingIndicator();
+            });
+    }
+
+    exportToExcel(): void {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getListStockToExcel(
+                this.stockCode,
+                this.stockName,
+                this.cityId,
+                this.districtId,
+                this.wardId,
+                this.fromDate,
+                this.toDate,
+                this.inventoryId ? this.inventoryId : this.parentId,
+                this.status == null ? undefined : this.status,
+            )
+            .subscribe((result) => {
+                this.primengTableHelper.hideLoadingIndicator();
+                this._fileDownloadService.downloadTempFile(result);
             });
     }
 
@@ -103,8 +130,8 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
         this.cityId = undefined;
         this.districtId = undefined;
         this.wardId = undefined;
-        this.fromDate = undefined;
-        this.toDate = undefined;
+        this.fromDate = null;
+        this.toDate = null;
         this.address = undefined;
         this.stockLevel = undefined;
         this.parentStockId = undefined;
@@ -116,8 +143,8 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
         });
     }
 
-    onCityChange(event: Event): void {
-        const selectedCity = parseInt((event.target as HTMLSelectElement).value);
+    onCityChange(event: { value: any }): void {
+        const selectedCity = event.value;
         this.getDistrictByCity(selectedCity);
     }
 
@@ -127,8 +154,8 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
         });
     }
 
-    onDistrictChange(event: Event): void {
-        const selectedDistrict = parseInt((event.target as HTMLSelectElement).value);
+    onDistrictChange(event: { value: any }): void {
+        const selectedDistrict = event.value;
         this.getWardByDistrict(selectedDistrict);
     }
 

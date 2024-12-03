@@ -1,5 +1,5 @@
 {
-  "remoteServiceBaseUrl": "https://localhost:44301",
+  "remoteServiceBaseUrl": "https://sandbox-api-inventory.gmobile.vn",
   "appBaseUrl": "http://localhost:4200",
   "apiGatewayUrl": "http://localhost:4200",
   "localeMappings": {
