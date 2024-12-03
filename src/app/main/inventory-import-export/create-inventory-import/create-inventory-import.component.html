@@ -5,13 +5,24 @@
             <h4>THÔNG TIN NHẬP KHO</h4>
             <p>Vui lòng nhập đầy đủ thông tin nhập kho</p>
 
-            <div class="mb-3">
-                <label for="" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
-                <input type="text" class="form-control" id="" placeholder="Nhập tiêu đề">
+            <div class="mb-3 col-md-6">
+                <label for="title" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="Nhập tiêu đề"
+                    [(ngModel)]="title">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label for="stockId" class="form-label">Chọn kho nhập hàng<span class="text-danger">(*)</span></label>
+                <select id="stockId" name="stockId" class="form-select" [(ngModel)]="stockId">
+                    <option [ngValue]="undefined">
+                        Chọn kho
+                    </option>
+                    <option value="38">Kho Đại Lý 1</option>
+                </select>
             </div>
             <div class="mb-3">
-                <label for="" class="form-label">Ghi chú</label>
-                <textarea class="form-control" id="" rows="3" placeholder="Nhập nội dung ghi chú"></textarea>
+                <label for="description" class="form-label">Ghi chú</label>
+                <textarea class="form-control" id="description" name="description" rows="3"
+                    placeholder="Nhập nội dung ghi chú" [(ngModel)]="description"></textarea>
             </div>
         </div>
     </div>
@@ -19,14 +30,13 @@
         <div class="row bg-white py-5">
             <h4>DANH SÁCH HÀNG HOÁ</h4>
             <div class="primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
-                <p-table #dataTable sortMode="multiple" [value]="dataFake"
+                <p-table #dataTable sortMode="multiple" [value]="orderItems"
                     rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
                     [tableStyle]="{'min-width': '50rem'}">
                     <ng-template pTemplate="header">
                         <tr>
                             <th>{{ 'STT' | localize }}</th>
                             <th>{{ 'LOẠI HÀNG HOÁ' | localize }}</th>
-                            <th>{{ 'MÃ HÀNG (*)' | localize }}</th>
                             <th>{{ 'TÊN HÀNG (*)' | localize }}</th>
                             <th>{{ 'ĐƠN VỊ (*)' | localize }}</th>
                             <th>{{ 'SỐ LƯỢNG (*)' | localize }} </th>
@@ -35,20 +45,21 @@
                             <th>{{ 'XOÁ' | localize }}</th>
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="body" let-record="$implicit">
+                    <ng-template pTemplate="body" let-record="$implicit" let-rowIndex="rowIndex">
                         <tr>
-                            <td>{{record.id}}</td>
-                            <td><select id="" name="" class="form-select">
-                                    <option value="1" selected>SIM</option>
-                                    <option value="2">SỐ</option>
-                                </select></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><input type="text" class="form-control" /></td>
-                            <td><button class="btn btn-danger">Xóa</button></td>
+                            <td>{{ rowIndex + 1 }}</td>
+                            <td>
+                                <select class="form-select" [(ngModel)]="productType" disabled>
+                                    <!-- <option [ngValue]="1" selected>SỐ</option> -->
+                                    <option [ngValue]="2">SERIAL</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" [(ngModel)]="record.orderName" /></td>
+                            <td><input type="text" class="form-control" [(ngModel)]="record.telCo" /></td>
+                            <td><input type="text" class="form-control" [(ngModel)]="record.quantity" /></td>
+                            <td><input type="text" class="form-control" [(ngModel)]="record.fromRange" /></td>
+                            <td><input type="text" class="form-control" [(ngModel)]="record.toRange" /></td>
+                            <td><button class="btn btn-danger" (click)="removeRow(rowIndex)">Xóa</button></td>
                         </tr>
                     </ng-template>
                 </p-table>
@@ -60,11 +71,11 @@
                     <span style="font-size: 15px;">Tải xuống file mẫu</span>
                 </div>
             </div>
-            <!-- <div class="card flex justify-content-center mt-3">
-                <p-fileUpload mode="basic" name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php"
-                    maxFileSize="1000000" (onUpload)="onBasicUploadAuto($event)" [auto]="true"
-                    chooseLabel="Browse"></p-fileUpload>
-            </div> -->
+            <div class="card flex justify-content-center mt-3">
+                <!-- <p-fileUpload customUpload="true" name="ExcelFileUpload" #ExcelFileUpload maxFileSize="10000000"
+                    auto="auto" accept=".csv,.xls,.xlsx" (uploadHandler)="uploadExcel($event)"
+                    (onError)="onUploadExcelError()" chooseLabel="Tải danh sách lên"></p-fileUpload> -->
+            </div>
             <span class="fs-5 mt-5">Tải lên file Excel</span>
             <div class="d-flex justify-content-start align-items-center mt-1 custom-progress">
                 <div class="me-5">
@@ -74,6 +85,9 @@
                 </div>
                 <div style="width: 15%;" class="me-2"><p-progressBar [value]="value"></p-progressBar></div>
                 <span>{{value}}%</span>
+            </div>
+            <div class="d-flex justify-content-center mt-5 pt-5">
+                <button class="btn btn-success" type="button" (click)="createOrder()">GỬI YÊU CẦU</button>
             </div>
         </div>
     </div>

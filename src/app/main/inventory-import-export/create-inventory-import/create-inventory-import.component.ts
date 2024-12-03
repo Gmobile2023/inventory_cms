@@ -2,13 +2,14 @@ import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angu
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { MenuItem } from 'primeng/api';
+import { CreateOrderDto, InventoryServiceProxy, IOrderItem } from '@shared/service-proxies/service-proxies';
 @Component({
     templateUrl: './create-inventory-import.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [appModuleAnimation()],
 })
 export class CreateInventoryImportComponent extends AppComponentBase implements OnInit {
-    constructor(injector: Injector) {
+    constructor(injector: Injector, private _inventoryServiceProxy: InventoryServiceProxy) {
         super(injector);
     }
 
@@ -18,6 +19,21 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
     dataFake = [{ id: 1 }];
     indexData: number = 1;
     value: number = 0;
+    title: string | undefined;
+    description: string | undefined;
+    stockId: number = 38;
+    productType: number = 2;
+    orderItems: any[] = [
+        {
+            orderName: '',
+            unit: '',
+            attribute: '',
+            telCo: '',
+            fromRange: '',
+            toRange: '',
+            quantity: 0,
+        },
+    ];
 
     ngOnInit() {
         this.items = [
@@ -34,11 +50,34 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
         }, 2000);
     }
 
+    createOrder() {
+        const body = new CreateOrderDto();
+        body.title = this.title;
+        body.description = this.description;
+        body.stockId = this.stockId;
+        body.productType = this.productType;
+        // body.userCreated = 'tienbv';
+        body.items = this.orderItems;
+        // console.log(body);
+        this._inventoryServiceProxy.createOrder(body).subscribe(() => {
+            this.notify.info(this.l('SavedSuccessfully'));
+        });
+    }
+
     addRow() {
-        this.indexData++;
-        console.log(this.indexData);
-        const item = { id: this.indexData };
-        this.dataFake.push(item);
+        this.orderItems.push({
+            orderName: '',
+            unit: '',
+            attribute: '',
+            telCo: '',
+            fromRange: '',
+            toRange: '',
+            quantity: 0,
+        });
+    }
+
+    removeRow(index: number): void {
+        this.orderItems.splice(index, 1);
     }
 
     onBasicUploadAuto(event) {

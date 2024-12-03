@@ -53,3 +53,5 @@ src/assets/primeng/datatable/css/*.min.css
 src/assets/fonts/*min.css
 
 src/assets/metronic/themes/default/css/skins/**/*.min.css
+
+src/Inventory.Web.Mvc/node_modules

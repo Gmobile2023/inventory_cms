@@ -1,8 +1,13 @@
 import { Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { MenuItem } from 'primeng/api';
+import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ActivatedRoute } from '@angular/router';
+import { ConfirmOrderDto, InventoryServiceProxy } from '@shared/service-proxies/service-proxies';
+import { finalize } from 'rxjs';
+import { Table } from 'primeng/table';
+import { Paginator } from 'primeng/paginator';
 
 @Component({
     templateUrl: './detail-inventory-import.component.html',
@@ -10,12 +15,25 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
     animations: [appModuleAnimation()],
 })
 export class DetailInventoryImportComponent extends AppComponentBase implements OnInit {
-    constructor(injector: Injector, private modalService: BsModalService) {
+    @ViewChild('dataTable', { static: true }) dataTable: Table;
+    @ViewChild('paginator', { static: true }) paginator: Paginator;
+    constructor(
+        injector: Injector,
+        private modalService: BsModalService,
+        private route: ActivatedRoute,
+        private _inventoryServiceProxy: InventoryServiceProxy
+    ) {
         super(injector);
     }
     modalRef?: BsModalRef | null;
     items: MenuItem[];
     home: MenuItem;
+    orderId: number;
+    orderData: any = {};
+    orderCode: string;
+    listAction: any[] = [];
+    listItem: any[] = [];
+    description: string;
 
     ngOnInit(): void {
         this.items = [
@@ -24,6 +42,63 @@ export class DetailInventoryImportComponent extends AppComponentBase implements 
             { label: 'Chi tiết yêu cầu nhập kho' },
         ];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
+        this.orderId = parseInt(this.route.snapshot.queryParamMap.get('id')!);
+        this.getStockForView();
+    }
+
+    getStockForView() {
+        this._inventoryServiceProxy.getOrderForView(this.orderId).subscribe((result) => {
+            this.orderData = result.order;
+            if (this.orderData.orderCode) {
+                this.orderCode = this.orderData.orderCode;
+                this.getActionHistory();
+            }
+        });
+    }
+
+    getActionHistory(event?: LazyLoadEvent) {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getHistories(
+                undefined,
+                undefined,
+                this.orderCode,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                this.primengTableHelper.getSorting(this.dataTable),
+                this.primengTableHelper.getSkipCount(this.paginator, event),
+                this.primengTableHelper.getMaxResultCount(this.paginator, event)
+            )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this.listAction = result.items;
+                this.primengTableHelper.totalRecordsCount = result.totalCount;
+                this.primengTableHelper.hideLoadingIndicator();
+            });
+    }
+
+    confirmOrder() {
+        const body = new ConfirmOrderDto();
+        body.orderCode = this.orderCode;
+        body.status = 5;
+        this._inventoryServiceProxy.confirmOrder(body).subscribe(() => {
+            this.notify.info(this.l('SavedSuccessfully'));
+            this.closeModal();
+        });
+    }
+
+    refuseOrder() {
+        const body = new ConfirmOrderDto();
+        body.orderCode = this.orderCode;
+        body.description = this.description;
+        body.status = 7;
+        this._inventoryServiceProxy.confirmOrder(body).subscribe(() => {
+            this.notify.info(this.l('SavedSuccessfully'));
+            this.closeModal();
+        });
     }
 
     openModal(template: TemplateRef<any>) {
@@ -53,22 +128,6 @@ export class DetailInventoryImportComponent extends AppComponentBase implements 
             quantity: 1000,
             to: '898407210016823000',
             from: '898407210016824000',
-        },
-    ];
-    dataHistoryFake = [
-        {
-            id: 1,
-            action: 'Tạo yêu cầu',
-            noidung: 'Tạo yêu cầu nhập kho',
-            date: '12/10/2024 08:23',
-            user: 'Nguyễn Văn Chung',
-        },
-        {
-            id: 2,
-            action: 'Tạo yêu cầu',
-            noidung: 'Tạo yêu cầu nhập kho',
-            date: '12/10/2024 08:23',
-            user: 'Nguyễn Văn Chung',
         },
     ];
 }

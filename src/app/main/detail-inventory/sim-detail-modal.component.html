@@ -41,7 +41,7 @@
                                         <input class="form-control" [value]="inventoryData.address" disabled />
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-center mb-5" *ngIf="productType == 'mobile'">
+                                <div class="d-flex align-items-center mb-5" *ngIf="productType == 1">
                                     <label for="" class="form-label ms-5" style="width: 35%;">
                                         {{ 'Số thuê bao' | localize }}
                                     </label>
@@ -57,7 +57,7 @@
                                         <input class="form-control" [value]="simData.serial" disabled />
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-center mb-5" *ngIf="productType == 'mobile'">
+                                <div class="d-flex align-items-center mb-5" *ngIf="productType == 1">
                                     <label for="" class="form-label ms-5" style="width: 35%;">
                                         {{ 'Nhà mạng' | localize }}
                                     </label>
