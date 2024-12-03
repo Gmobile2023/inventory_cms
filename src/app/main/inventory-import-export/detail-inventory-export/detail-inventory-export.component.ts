@@ -117,23 +117,6 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
             approval_date: '25/10/2024 10:12',
         },
     ];
-    dataHistoryFake = [
-        {
-            id: 1,
-            action: 'Tạo yêu cầu',
-            noidung: 'Tạo yêu cầu nhập kho',
-            date: '12/10/2024 08:23',
-            user: 'Nguyễn Văn Chung',
-        },
-        {
-            id: 2,
-            action: 'Tạo yêu cầu',
-            noidung: 'Tạo yêu cầu nhập kho',
-            date: '12/10/2024 08:23',
-            user: 'Nguyễn Văn Chung',
-        },
-    ];
-
     dataSimFake = [
         {
             id: 1,
