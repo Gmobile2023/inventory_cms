@@ -104,6 +104,7 @@ import { ViewRecoveryCodesModalComponent } from './shared/layout/profile/view-re
 import { AddFriendModalComponent } from './shared/layout/chat/add-friend-modal.component';
 import { AddFromDifferentTenantModalComponent } from './shared/layout/chat/add-from-different-tenant-modal.component';
 import { FriendsLookupTableComponent } from './shared/layout/chat/friends-lookup-table.component';
+import { ThirdPartyService } from '@shared/third-party-services/third-party-services.service';
 
 @NgModule({
     declarations: [
@@ -185,6 +186,7 @@ import { FriendsLookupTableComponent } from './shared/layout/chat/friends-lookup
             useFactory: appInitializerFactory,
             multi: true,
         },
+        ThirdPartyService
     ],
     imports: [
         CommonModule,

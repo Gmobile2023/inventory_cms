@@ -2184,6 +2184,69 @@ export class CommonLookupServiceProxy {
     }
 
     /**
+     * @param search (optional) 
+     * @return Success
+     */
+    getListUserSearch(search: string | undefined): Observable<UserInfoDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/CommonLookup/GetListUserSearch?";
+        if (search === null)
+            throw new Error("The parameter 'search' cannot be null.");
+        else if (search !== undefined)
+            url_ += "Search=" + encodeURIComponent("" + search) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListUserSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListUserSearch(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<UserInfoDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<UserInfoDto[]>;
+        }));
+    }
+
+    protected processGetListUserSearch(response: HttpResponseBase): Observable<UserInfoDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(UserInfoDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @return Success
      */
     getDefaultEditionName(): Observable<GetDefaultEditionNameOutput> {
@@ -8162,7 +8225,7 @@ export class InventoryServiceProxy {
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getListSims(stockId: number | undefined, productType: string | undefined, mobile: string | undefined, serial: string | undefined, attribute: string | undefined, status: number | undefined, kitingStatus: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
+    getListSims(stockId: number | undefined, productType: ProductType | undefined, mobile: string | undefined, serial: string | undefined, attribute: string | undefined, status: ProductStatus | undefined, kitingStatus: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSims?";
         if (stockId === null)
             throw new Error("The parameter 'stockId' cannot be null.");
@@ -8255,7 +8318,7 @@ export class InventoryServiceProxy {
      * @param productType (optional) 
      * @return Success
      */
-    getSimForView(number: string | undefined, productType: string | undefined): Observable<GetSimForViewDto> {
+    getSimForView(number: string | undefined, productType: ProductType | undefined): Observable<GetSimForViewDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetSimForView?";
         if (number === null)
             throw new Error("The parameter 'number' cannot be null.");
@@ -8313,31 +8376,32 @@ export class InventoryServiceProxy {
 
     /**
      * @param stockId (optional) 
-     * @param attribute (optional) 
      * @param productType (optional) 
+     * @param attribute (optional) 
      * @param simType (optional) 
      * @param number (optional) 
      * @param fromRange (optional) 
      * @param toRange (optional) 
+     * @param isRecover (optional) 
      * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getListSimsTransfers(stockId: number | undefined, attribute: string | undefined, productType: string | undefined, simType: string | undefined, number: string | undefined, fromRange: string | undefined, toRange: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
+    getListSimsTransfers(stockId: number | undefined, productType: ProductType | undefined, attribute: string | undefined, simType: string | undefined, number: string | undefined, fromRange: string | undefined, toRange: string | undefined, isRecover: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSimsTransfers?";
         if (stockId === null)
             throw new Error("The parameter 'stockId' cannot be null.");
         else if (stockId !== undefined)
             url_ += "StockId=" + encodeURIComponent("" + stockId) + "&";
-        if (attribute === null)
-            throw new Error("The parameter 'attribute' cannot be null.");
-        else if (attribute !== undefined)
-            url_ += "Attribute=" + encodeURIComponent("" + attribute) + "&";
         if (productType === null)
             throw new Error("The parameter 'productType' cannot be null.");
         else if (productType !== undefined)
             url_ += "ProductType=" + encodeURIComponent("" + productType) + "&";
+        if (attribute === null)
+            throw new Error("The parameter 'attribute' cannot be null.");
+        else if (attribute !== undefined)
+            url_ += "Attribute=" + encodeURIComponent("" + attribute) + "&";
         if (simType === null)
             throw new Error("The parameter 'simType' cannot be null.");
         else if (simType !== undefined)
@@ -8354,6 +8418,10 @@ export class InventoryServiceProxy {
             throw new Error("The parameter 'toRange' cannot be null.");
         else if (toRange !== undefined)
             url_ += "ToRange=" + encodeURIComponent("" + toRange) + "&";
+        if (isRecover === null)
+            throw new Error("The parameter 'isRecover' cannot be null.");
+        else if (isRecover !== undefined)
+            url_ += "IsRecover=" + encodeURIComponent("" + isRecover) + "&";
         if (sorting === null)
             throw new Error("The parameter 'sorting' cannot be null.");
         else if (sorting !== undefined)
@@ -31967,6 +32035,12 @@ export enum PaymentPeriodType {
     Annual = 365,
 }
 
+export enum PriceType {
+    Change = 1,
+    PlusRate = 2,
+    PlusExtra = 3,
+}
+
 export class ProductAttributeDto implements IProductAttributeDto {
     attributeType!: string | undefined;
     attributeName!: string | undefined;
@@ -35634,9 +35708,9 @@ export interface IUpdateOrganizationUnitInput {
 export class UpdatePriceDto implements IUpdatePriceDto {
     stockId!: number;
     userCreated!: string | undefined;
-    productType!: string | undefined;
-    objectType!: string | undefined;
-    priceType!: string | undefined;
+    productType!: ProductType;
+    objectType!: ObjectType;
+    priceType!: PriceType;
     value!: number;
     items!: string[] | undefined;
 
@@ -35692,9 +35766,9 @@ export class UpdatePriceDto implements IUpdatePriceDto {
 export interface IUpdatePriceDto {
     stockId: number;
     userCreated: string | undefined;
-    productType: string | undefined;
-    objectType: string | undefined;
-    priceType: string | undefined;
+    productType: ProductType;
+    objectType: ObjectType;
+    priceType: PriceType;
     value: number;
     items: string[] | undefined;
 }
@@ -36011,6 +36085,62 @@ export interface IUserEditDto {
     shouldChangePasswordOnNextLogin: boolean;
     isTwoFactorEnabled: boolean;
     isLockoutEnabled: boolean;
+}
+
+export class UserInfoDto implements IUserInfoDto {
+    id!: number;
+    userName!: string | undefined;
+    fullName!: string | undefined;
+    surname!: string | undefined;
+    name!: string | undefined;
+    emailAddress!: string | undefined;
+
+    constructor(data?: IUserInfoDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.userName = _data["userName"];
+            this.fullName = _data["fullName"];
+            this.surname = _data["surname"];
+            this.name = _data["name"];
+            this.emailAddress = _data["emailAddress"];
+        }
+    }
+
+    static fromJS(data: any): UserInfoDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserInfoDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["userName"] = this.userName;
+        data["fullName"] = this.fullName;
+        data["surname"] = this.surname;
+        data["name"] = this.name;
+        data["emailAddress"] = this.emailAddress;
+        return data;
+    }
+}
+
+export interface IUserInfoDto {
+    id: number;
+    userName: string | undefined;
+    fullName: string | undefined;
+    surname: string | undefined;
+    name: string | undefined;
+    emailAddress: string | undefined;
 }
 
 export class UserListDto implements IUserListDto {

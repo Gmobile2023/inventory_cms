@@ -127,16 +127,16 @@ export class LoginService {
             new ScriptLoaderService()
                 .load(
                     'https://apis.google.com/js/api.js',
-                    'https://accounts.google.com/gsi/client'                    
+                    'https://accounts.google.com/gsi/client'
                 )
                 .then(() => {
                     gapi.load('client', () => {
                         gapi.client
                             .init({})
-                            .then(() => {       
+                            .then(() => {
                                 gapi.client.load('oauth2', 'v2', ()=>{
-                                    callback();                                
-                                });                                               
+                                    callback();
+                                });
                             });
                     });
                 });
@@ -294,12 +294,12 @@ export class LoginService {
                         if (resp.error !== undefined) {
                           throw(resp);
                         }
-                        
+
                         // GIS has automatically updated gapi.client with the newly issued access token
                         this.googleLoginStatusChangeCallback(resp);
                       }
                 });
-                  
+
                 // Conditionally ask users to select the Google Account they'd like to use,
                 // and explicitly obtain their consent to fetch their Calendar.
                 // NOTE: To request an access token a user gesture is necessary.
@@ -485,7 +485,7 @@ export class LoginService {
         authConfig.responseType = loginProvider.additionalParams['ResponseType'];
         authConfig.strictDiscoveryDocumentValidation = false;
         authConfig.redirectUri = window.location.origin + '/account/login';
-        authConfig.scope = 'openid profile';
+        authConfig.scope = 'openid profile email';
         authConfig.requestAccessToken = false;
         return authConfig;
     }
@@ -563,8 +563,8 @@ export class LoginService {
                     '',
                     result.returnUrl
                 );
-            });          
-          })      
+            });
+          })
     }
 
     private microsoftLoginCallback(response: AuthenticationResult) {

@@ -3,7 +3,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import { ActivatedRoute } from '@angular/router';
-import { InventoryServiceProxy, UpdatePriceDto } from '@shared/service-proxies/service-proxies';
+import { InventoryServiceProxy, ObjectType, PriceType, ProductType, UpdatePriceDto } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
@@ -31,13 +31,14 @@ export class PriceUpdateComponent extends AppComponentBase implements OnInit {
     home: MenuItem;
     value: number = 0;
     selectedRecords: any[] = [];
-    productType: string = 'mobile';
+    productType: ProductType = ProductType.Mobile;
     stockCode: string;
     stockId: number;
-    priceType: string = 'Change';
+    priceType: PriceType = PriceType.Change;
     valuePrice: number;
-    objectType: string = 'All';
+    objectType: ObjectType = ObjectType.All;
     isLoading: boolean = false;
+    ProductType = ProductType;
 
     ngOnInit() {
         this.items = [
@@ -72,7 +73,7 @@ export class PriceUpdateComponent extends AppComponentBase implements OnInit {
     }
 
     onProductTypeChange(event: any) {
-        this.productType = (event.target as HTMLSelectElement).value;
+        this.productType = (event.target as HTMLSelectElement).value as unknown as ProductType;
         this.getListSims();
     }
 

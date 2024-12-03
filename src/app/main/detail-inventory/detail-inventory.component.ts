@@ -9,6 +9,7 @@ import {
     CommonLookupServiceProxy,
     CreateOrEditStockDto,
     InventoryServiceProxy,
+    ProductType,
 } from '@shared/service-proxies/service-proxies';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Table } from 'primeng/table';
@@ -51,7 +52,7 @@ export class DetailInventoryComponent extends AppComponentBase {
     stockId!: number;
     inventoryData: any = {};
     stockCode: string | undefined;
-    productType: string = 'mobile';
+    productType: ProductType = 1;
     mobile: string | undefined;
     serial: string | undefined;
     categoryCode: string | undefined;
@@ -151,7 +152,7 @@ export class DetailInventoryComponent extends AppComponentBase {
     }
 
     getListSims(event?: LazyLoadEvent) {
-        if (this.productType == 'serial') {
+        if (this.productType == ProductType.Serial) {
             this.isSerial = true;
         } else {
             this.isSerial = false;
