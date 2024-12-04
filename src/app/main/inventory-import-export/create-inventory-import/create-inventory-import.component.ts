@@ -2,7 +2,7 @@ import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angu
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { MenuItem } from 'primeng/api';
-import { CreateOrderDto, InventoryServiceProxy, IOrderItem } from '@shared/service-proxies/service-proxies';
+import { CreateOrderDto, InventoryServiceProxy, IOrderItem, OrderItem } from '@shared/service-proxies/service-proxies';
 @Component({
     templateUrl: './create-inventory-import.component.html',
     encapsulation: ViewEncapsulation.None,
@@ -23,7 +23,8 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
     description: string | undefined;
     stockId: number = 38;
     productType: number = 2;
-    orderItems: any[] = [
+    orderItems: IOrderItem[] = [];
+    tempOrderItems: IOrderItem[] = [
         {
             orderName: '',
             unit: '',
@@ -57,7 +58,12 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
         body.stockId = this.stockId;
         body.productType = this.productType;
         // body.userCreated = 'tienbv';
-        body.items = this.orderItems;
+        // Convert IOrderItem[] to OrderItem[]
+        if (this.orderItems) {
+            body.items = this.orderItems.map(item => {
+                return OrderItem.fromJS(item); // Convert each IOrderItem to OrderItem
+            });
+        }
         // console.log(body);
         this._inventoryServiceProxy.createOrder(body).subscribe(() => {
             this.notify.info(this.l('SavedSuccessfully'));
