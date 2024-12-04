@@ -396,7 +396,7 @@
                                     <span class="text-danger">(*)</span>
                                 </label>
                                 <div class="input-group">
-                                    <select id="parentStockId" name="parentStockId" class="form-select"
+                                    <!-- <select id="parentStockId" name="parentStockId" class="form-select"
                                         [(ngModel)]="inventoryData.parentStockId">
                                         <option [ngValue]="isEdit ? null : undefined">
                                             Chọn kho cha
@@ -405,7 +405,16 @@
                                             *ngFor="let stock of this.primengTableHelper.records">
                                             {{stock.stockName}}
                                         </option>
-                                    </select>
+                                    </select> -->
+                                    <p-dropdown 
+                                        [style]="{'text-align': 'left', width: '100%'}"
+                                        [options]="primengTableHelper.records" 
+                                        [(ngModel)]="inventoryData.parentStockId" 
+                                        [placeholder]="isEdit ? null : 'Chọn kho cha'" 
+                                        optionLabel="stockName" 
+                                        optionValue="id" 
+                                        class="w-100">
+                                    </p-dropdown>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center mb-5" *ngIf="isEdit">
@@ -413,7 +422,7 @@
                                     {{ 'Người quản lý kho' | localize }}
                                 </label>
                                 <div class="input-group">
-                                    <select id="userManager" name="userManager" class="form-select"
+                                    <!-- <select id="userManager" name="userManager" class="form-select"
                                         [(ngModel)]="inventoryData.userManager">
                                         <option [ngValue]="isEdit ? undefined : null">
                                             Vui lòng chọn
@@ -421,7 +430,21 @@
                                         <option value="1">Nguyễn Văn A</option>
                                         <option value="2">Nguyễn Văn B</option>
                                         <option value="3">Nguyễn Văn C</option>
-                                    </select>
+                                    </select> -->
+                                    <p-autoComplete
+                                        [style]="{'text-align': 'left', width: '100%'}"
+                                        [(ngModel)]="inventoryData.userManager"
+                                        [suggestions]="filteredUsers"
+                                        (completeMethod)="filterUsers($event)"
+                                        field="fullName"
+                                        value="userName"
+                                        placeholder="Tìm kiếm và chọn"
+                                        [minLength]="1"
+                                        name="userManager"
+                                        id="userManager"
+                                        [multiple]="true"
+                                        styleClass="w-100"
+                                    ></p-autoComplete>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center mb-5" *ngIf="isEdit">
@@ -429,7 +452,7 @@
                                     {{ 'Người tạo xuất/thu hồi' | localize }}
                                 </label>
                                 <div class="input-group">
-                                    <select id="userCreateOrder" name="userCreateOrder" class="form-select"
+                                    <!-- <select id="userCreateOrder" name="userCreateOrder" class="form-select"
                                         [(ngModel)]="inventoryData.userCreateOrder">
                                         <option [ngValue]="isEdit ? undefined : null">
                                             Vui lòng chọn
@@ -437,7 +460,21 @@
                                         <option value="1">Nguyễn Văn A</option>
                                         <option value="2">Nguyễn Văn B</option>
                                         <option value="3">Nguyễn Văn C</option>
-                                    </select>
+                                    </select> -->
+                                    <p-autoComplete
+                                        [style]="{'text-align': 'left', width: '100%'}"
+                                        [(ngModel)]="inventoryData.userCreateOrder"
+                                        [suggestions]="filteredUsers"
+                                        (completeMethod)="filterUsers($event)"
+                                        field="fullName"
+                                        value="userName"
+                                        placeholder="Tìm kiếm và chọn"
+                                        [minLength]="1"
+                                        name="userCreateOrder"
+                                        id="userCreateOrder"
+                                        [multiple]="true"
+                                        styleClass="w-100"
+                                    ></p-autoComplete>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center mb-5" *ngIf="isEdit">
@@ -445,7 +482,7 @@
                                     {{ 'Người duyệt xuất/thu hồi' | localize }}
                                 </label>
                                 <div class="input-group">
-                                    <select id="userApprove" name="userApprove" class="form-select"
+                                    <!-- <select id="userApprove" name="userApprove" class="form-select"
                                         [(ngModel)]="inventoryData.userApprove">
                                         <option [ngValue]="isEdit ? undefined : null">
                                             Vui lòng chọn
@@ -453,7 +490,21 @@
                                         <option value="1">Nguyễn Văn A</option>
                                         <option value="2">Nguyễn Văn B</option>
                                         <option value="3">Nguyễn Văn C</option>
-                                    </select>
+                                    </select> -->
+                                    <p-autoComplete
+                                        [style]="{'text-align': 'left', width: '100%'}"
+                                        [(ngModel)]="inventoryData.userApprove"
+                                        [suggestions]="filteredUsers"
+                                        (completeMethod)="filterUsers($event)"
+                                        field="fullName"
+                                        value="userName"
+                                        placeholder="Tìm kiếm và chọn"
+                                        [minLength]="1"
+                                        name="userApprove"
+                                        id="userApprove"
+                                        [multiple]="true"
+                                        styleClass="w-100"
+                                    ></p-autoComplete>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center mb-5" *ngIf="isEdit">
@@ -461,7 +512,7 @@
                                     {{ 'Kế toán' | localize }}
                                 </label>
                                 <div class="input-group">
-                                    <select id="userAccounting" name="userAccounting" class="form-select"
+                                    <!-- <select id="userAccounting" name="userAccounting" class="form-select"
                                         [(ngModel)]="inventoryData.userAccounting">
                                         <option [ngValue]="isEdit ? undefined : null">
                                             Vui lòng chọn
@@ -469,7 +520,21 @@
                                         <option value="1">Nguyễn Văn A</option>
                                         <option value="2">Nguyễn Văn B</option>
                                         <option value="3">Nguyễn Văn C</option>
-                                    </select>
+                                    </select> -->
+                                    <p-autoComplete
+                                        [style]="{'text-align': 'left', width: '100%'}"
+                                        [(ngModel)]="inventoryData.userAccounting"
+                                        [suggestions]="filteredUsers"
+                                        (completeMethod)="filterUsers($event)"
+                                        field="fullName"
+                                        value="userName"
+                                        placeholder="Tìm kiếm và chọn"
+                                        [minLength]="1"
+                                        name="userAccounting"
+                                        id="userAccounting"
+                                        [multiple]="true"
+                                        styleClass="w-100"
+                                    ></p-autoComplete>
                                 </div>
                             </div>
                             <div class="float-end">

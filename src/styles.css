@@ -192,3 +192,11 @@ html[data-theme=dark] {
 .form-control::placeholder {
     font-weight: 400;
 }
+
+.p-dropdown {
+    border: 1px solid var(--kt-input-border-color) !important;
+}
+
+p-autocomplete {
+    width: 100%;
+}
