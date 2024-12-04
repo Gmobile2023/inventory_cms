@@ -7816,6 +7816,102 @@ export class InventoryServiceProxy {
     }
 
     /**
+     * @param stockCode (optional) 
+     * @param stockName (optional) 
+     * @param cityId (optional) 
+     * @param districtId (optional) 
+     * @param wardId (optional) 
+     * @param fromDate (optional) 
+     * @param toDate (optional) 
+     * @param parentId (optional) 
+     * @param status (optional) 
+     * @return Success
+     */
+    getListStockToExcel(stockCode: string | undefined, stockName: string | undefined, cityId: number | undefined, districtId: number | undefined, wardId: number | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, parentId: number | undefined, status: number | undefined): Observable<FileDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListStockToExcel?";
+        if (stockCode === null)
+            throw new Error("The parameter 'stockCode' cannot be null.");
+        else if (stockCode !== undefined)
+            url_ += "StockCode=" + encodeURIComponent("" + stockCode) + "&";
+        if (stockName === null)
+            throw new Error("The parameter 'stockName' cannot be null.");
+        else if (stockName !== undefined)
+            url_ += "StockName=" + encodeURIComponent("" + stockName) + "&";
+        if (cityId === null)
+            throw new Error("The parameter 'cityId' cannot be null.");
+        else if (cityId !== undefined)
+            url_ += "CityId=" + encodeURIComponent("" + cityId) + "&";
+        if (districtId === null)
+            throw new Error("The parameter 'districtId' cannot be null.");
+        else if (districtId !== undefined)
+            url_ += "DistrictId=" + encodeURIComponent("" + districtId) + "&";
+        if (wardId === null)
+            throw new Error("The parameter 'wardId' cannot be null.");
+        else if (wardId !== undefined)
+            url_ += "WardId=" + encodeURIComponent("" + wardId) + "&";
+        if (fromDate === null)
+            throw new Error("The parameter 'fromDate' cannot be null.");
+        else if (fromDate !== undefined)
+            url_ += "FromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toString() : "") + "&";
+        if (toDate === null)
+            throw new Error("The parameter 'toDate' cannot be null.");
+        else if (toDate !== undefined)
+            url_ += "ToDate=" + encodeURIComponent(toDate ? "" + toDate.toString() : "") + "&";
+        if (parentId === null)
+            throw new Error("The parameter 'parentId' cannot be null.");
+        else if (parentId !== undefined)
+            url_ += "ParentId=" + encodeURIComponent("" + parentId) + "&";
+        if (status === null)
+            throw new Error("The parameter 'status' cannot be null.");
+        else if (status !== undefined)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListStockToExcel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListStockToExcel(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileDto>;
+        }));
+    }
+
+    protected processGetListStockToExcel(response: HttpResponseBase): Observable<FileDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FileDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param id (optional) 
      * @return Success
      */

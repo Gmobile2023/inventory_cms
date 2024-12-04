@@ -5,6 +5,7 @@ import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import {
     CreateTransferDto,
     InventoryServiceProxy,
+    IOrderItem,
     ObjectType,
     OrderItem,
     ProductType,
@@ -27,9 +28,8 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     items: MenuItem[];
     home: MenuItem;
     value: number = 0;
-    selectedRecords: [];
-    dataFakeFrom: any[] = [];
-    currentData: any[] = [];
+    selectedRecordsTo: any[] = [];
+    selectedRecordsFrom: any[] = [];
     rowsPerPage = 10;
     currentPage = 0;
     currentDataFrom: any[] = [];
@@ -41,10 +41,11 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     userCreated: string | undefined;
     productType: ProductType = 1;
     objectType: ObjectType = 1;
-    // rangeRule: OrderItem;
+    rangeRule: OrderItem;
     rangeItems: string[] | undefined = [];
     isRangeRule: boolean = true;
-    rangeRule: any = {
+    orderName: string = '';
+    dataRangeRule = {
         orderName: '',
         unit: '',
         attribute: '',
@@ -154,7 +155,12 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         body.desStockId = this.desStockId;
         body.productType = this.productType;
         body.objectType = this.objectType;
-        body.rangeRule = this.rangeRule;
+        if (this.isRangeRule) {
+            body.rangeRule = this.rangeRule;
+        } else {
+            body.rangeItems = this.currentDataFrom;
+        }
+
         console.log(body);
         this._inventoryServiceProxy.createTransfer(body).subscribe(() => {
             this.notify.info(this.l('SavedSuccessfully'));
@@ -172,36 +178,32 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     }
 
     moveSelectedRecords() {
-        this.selectedRecords.forEach((record) => {
+        this.selectedRecordsTo.forEach((record) => {
             const index = this.listSimSrcStock.indexOf(record);
             if (index > -1) {
                 this.rangeItems.push(record);
             }
         });
-        this.selectedRecords = [];
+        this.selectedRecordsTo = [];
+        this.updateCurrentDataFrom();
     }
 
     moveBackSelectedRecords() {
         // Di chuyển từng phần tử từ dataFakeFrom về dataFakeTo
-        this.selectedRecords.forEach((record) => {
+        this.selectedRecordsFrom.forEach((record) => {
             const index = this.rangeItems.indexOf(record);
             if (index > -1) {
                 this.rangeItems.splice(index, 1);
             }
         });
-        this.selectedRecords = []; // Xóa danh sách các phần tử đã chọn
+        this.selectedRecordsFrom = []; // Xóa danh sách các phần tử đã chọn
         this.updateCurrentDataFrom();
     }
 
-    // updateCurrentData() {
-    //     const start = this.currentPage * this.rowsPerPage;
-    //     const end = start + this.rowsPerPage;
-    //     this.currentData = this.dataFakeTo.slice(start, end);
-    // }
     updateCurrentDataFrom() {
         const start = this.currentPage * this.rowsPerPage;
         const end = start + this.rowsPerPage;
-        this.rangeItems = this.rangeItems.slice(start, end);
+        this.currentDataFrom = this.rangeItems.slice(start, end);
     }
 
     onUpload(event) {}
