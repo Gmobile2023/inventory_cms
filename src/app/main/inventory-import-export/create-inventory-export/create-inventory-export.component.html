@@ -15,11 +15,12 @@
                 <input type="text" class="form-control" id="" placeholder="Nhập số lượng dự kiến">
             </div> -->
             <div class="col-md-6 mb-3">
-                <label for="" class="form-label">Cách thức xuất <span class="text-danger">(*)</span></label>
+                <label for="productType" class="form-label">Loại sản phẩm</label>
                 <div class="input-group">
-                    <select id="" name="" class="form-select" (change)="onRangeRuleChange($event)">
-                        <option [ngValue]="true">Xuất theo dải</option>
-                        <option [ngValue]="false">Xuất theo tuỳ chọn</option>
+                    <select id="productType" name="productType" class="form-select" [(ngModel)]="productType"
+                        (change)="onChangeProductType($event)">
+                        <option [ngValue]="1">Số</option>
+                        <option [ngValue]="2">Serial</option>
                     </select>
                 </div>
             </div>
@@ -46,12 +47,13 @@
                     </select>
                 </div>
             </div>
+
             <div class="col-md-6 mb-3">
-                <label for="productType" class="form-label">Loại sản phẩm</label>
+                <label for="" class="form-label">Cách thức xuất <span class="text-danger">(*)</span></label>
                 <div class="input-group">
-                    <select id="productType" name="productType" class="form-select" [(ngModel)]="productType">
-                        <option [ngValue]="1">Số</option>
-                        <option [ngValue]="2">Serial</option>
+                    <select id="" name="" class="form-select" (change)="onRangeRuleChange($event)">
+                        <option [ngValue]="true">Xuất theo dải</option>
+                        <option [ngValue]="false">Xuất theo tuỳ chọn</option>
                     </select>
                 </div>
             </div>
@@ -64,20 +66,20 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-4 mb-3" *ngIf="isRangeRule">
+            <div class="col-md-4 mb-3">
                 <label for="fromRange" class="form-label">Dải số/serial từ<span class="text-danger">(*)</span></label>
                 <input type="text" class="form-control" id="fromRange" name="fromRange"
-                    [(ngModel)]="dataRangeRule.fromRange" (input)="calculateQuantity()">
+                    [(ngModel)]="tempOrderItems.fromRange" (input)="calculateQuantity()">
             </div>
-            <div class="col-md-4 mb-3" *ngIf="isRangeRule">
+            <div class="col-md-4 mb-3">
                 <label for="toRange" class="form-label">Dải số/serial đến<span class="text-danger">(*)</span></label>
-                <input type="text" class="form-control" id="toRange" name="toRange" [(ngModel)]="dataRangeRule.toRange"
+                <input type="text" class="form-control" id="toRange" name="toRange" [(ngModel)]="tempOrderItems.toRange"
                     (input)="calculateQuantity()">
             </div>
-            <div class="col-md-4 mb-3" *ngIf="isRangeRule">
+            <div class="col-md-4 mb-3">
                 <label for="quantity" class="form-label">Số lượng<span class="text-danger">(*)</span></label>
                 <input type="text" class="form-control" id="quantity" name="quantity"
-                    [(ngModel)]="dataRangeRule.quantity">
+                    [(ngModel)]="tempOrderItems.quantity">
             </div>
             <div class="col-12 mb-3">
                 <label for="" class="form-label">Ghi chú</label>
@@ -101,7 +103,7 @@
     <div [class]="containerClass" class="mt-5">
         <div class="row bg-white py-5">
             <h4>BỘ LỌC TÌM KIẾM</h4>
-            <div class="col-md-4 mb-4">
+            <!-- <div class="col-md-4 mb-4">
                 <label for="" class="form-label">Loại sản phẩm</label>
                 <div class="input-group">
                     <select id="" name="" class="form-select">
@@ -112,8 +114,8 @@
                         <option value="2">SỐ</option>
                     </select>
                 </div>
-            </div>
-            <div class="col-md-4 mb-4">
+            </div> -->
+            <!-- <div class="col-md-4 mb-4">
                 <label for="" class="form-label">Thuộc tính</label>
                 <div class="input-group">
                     <select id="" name="" class="form-select">
@@ -124,8 +126,8 @@
                         <option value="2">B</option>
                     </select>
                 </div>
-            </div>
-            <div class="col-md-4 mb-4">
+            </div> -->
+            <!-- <div class="col-md-4 mb-4">
                 <label for="" class="form-label">Lô xuất/nhập kho</label>
                 <div class="input-group">
                     <select id="" name="" class="form-select">
@@ -136,7 +138,7 @@
                         <option value="2">B</option>
                     </select>
                 </div>
-            </div>
+            </div> -->
             <div class="col-md-4">
                 <label for="" class="form-label">Dải từ</label>
                 <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial">
@@ -179,8 +181,8 @@
                         <ng-template pTemplate="header">
                             <tr>
                                 <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
-                                <th>{{ 'SỐ THUÊ BAO' | localize }}</th>
-                                <th>{{ 'SERIAL' | localize }}</th>
+                                <th>{{ 'SĐT/SERIAL' | localize }}</th>
+                                <th>{{ 'HẠNG SỐ' | localize }}</th>
                                 <!-- <th>{{ 'HẠNG SỐ' | localize }}</th> -->
                                 <th>{{ 'GIÁ BÁN' | localize }}</th>
                                 <th>{{ 'NGÀY TẠO' | localize }}</th>
@@ -191,8 +193,8 @@
                                 <td>
                                     <p-tableCheckbox [value]="record" />
                                 </td>
-                                <td>{{record.mobile}}</td>
-                                <td>{{record.serial}}</td>
+                                <td>{{productType == 1 ? record.mobile : record.serial}}</td>
+                                <td>{{record.attribute}}</td>
                                 <td>{{record.salePrice}}</td>
                                 <td>{{record.createdDate | luxonFormat: 'F' }}</td>
                             </tr>
@@ -229,8 +231,8 @@
                         <ng-template pTemplate="header">
                             <tr>
                                 <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
-                                <th>{{ 'SỐ THUÊ BAO' | localize }}</th>
-                                <th>{{ 'SERIAL' | localize }}</th>
+                                <th>{{ 'SĐT/SERIAL' | localize }}</th>
+                                <th>{{ 'HẠNG SỐ' | localize }}</th>
                                 <!-- <th>{{ 'HẠNG SỐ' | localize }}</th> -->
                                 <th>{{ 'GIÁ BÁN' | localize }}</th>
                                 <th>{{ 'NGÀY TẠO' | localize }}</th>
@@ -241,8 +243,8 @@
                                 <td>
                                     <p-tableCheckbox [value]="record" />
                                 </td>
-                                <td>{{record.mobile}}</td>
-                                <td>{{record.serial}}</td>
+                                <td>{{productType == 1 ? record.mobile : record.serial}}</td>
+                                <td>{{record.attribute}}</td>
                                 <td>{{record.salePrice}}</td>
                                 <td>{{record.createdDate | luxonFormat: 'F' }}</td>
                             </tr>

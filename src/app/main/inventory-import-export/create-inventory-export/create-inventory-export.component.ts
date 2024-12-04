@@ -13,6 +13,7 @@ import {
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { finalize } from 'rxjs';
+import { Router } from '@angular/router';
 @Component({
     templateUrl: './create-inventory-export.component.html',
     encapsulation: ViewEncapsulation.None,
@@ -21,7 +22,7 @@ import { finalize } from 'rxjs';
 export class CreateInventoryExportComponent extends AppComponentBase implements OnInit {
     @ViewChild('dataTable', { static: true }) dataTable: Table;
     @ViewChild('paginator', { static: true }) paginator: Paginator;
-    constructor(injector: Injector, private _inventoryServiceProxy: InventoryServiceProxy) {
+    constructor(injector: Injector, private _inventoryServiceProxy: InventoryServiceProxy, private router: Router) {
         super(injector);
     }
     uploadedFiles: any[] = [];
@@ -45,7 +46,7 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     rangeItems: string[] | undefined = [];
     isRangeRule: boolean = true;
     orderName: string = '';
-    dataRangeRule = {
+    tempOrderItems: IOrderItem = {
         orderName: '',
         unit: '',
         attribute: '',
@@ -54,6 +55,7 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         toRange: '',
         quantity: 0,
     };
+
     listSimSrcStock: any[] = [];
     stockId: number;
 
@@ -97,10 +99,12 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
 
     onRangeRuleChange(event: Event) {
         this.isRangeRule = !this.isRangeRule;
-        // if (this.isRangeRule) {
-        //     this.rangeItems = undefined;
-        //     this.rangeRule = new OrderItem();
-        // }
+    }
+
+    onChangeProductType(event: Event) {
+        const data = parseInt((event.target as HTMLSelectElement).value);
+        this.productType = data;
+        console.log(this.productType);
     }
 
     onChangeStock(event: Event) {
@@ -133,17 +137,17 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     }
 
     calculateQuantity(): void {
-        if (this.rangeRule.fromRange && this.rangeRule.toRange) {
-            const from = parseInt(this.rangeRule.fromRange, 10);
-            const to = parseInt(this.rangeRule.toRange, 10);
+        if (this.tempOrderItems.fromRange && this.tempOrderItems.toRange) {
+            const from = parseInt(this.tempOrderItems.fromRange, 10);
+            const to = parseInt(this.tempOrderItems.toRange, 10);
 
             if (!isNaN(from) && !isNaN(to) && to >= from) {
-                this.rangeRule.quantity = to - from + 1; // Tính số lượng
+                this.tempOrderItems.quantity = to - from + 1; // Tính số lượng
             } else {
-                this.rangeRule.quantity = 0; // Nếu giá trị không hợp lệ
+                this.tempOrderItems.quantity = 0; // Nếu giá trị không hợp lệ
             }
         } else {
-            this.rangeRule.quantity = 0; // Nếu chưa nhập đủ
+            this.tempOrderItems.quantity = 0; // Nếu chưa nhập đủ
         }
     }
 
@@ -156,15 +160,25 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         body.productType = this.productType;
         body.objectType = this.objectType;
         if (this.isRangeRule) {
-            body.rangeRule = this.rangeRule;
-        } else {
-            body.rangeItems = this.currentDataFrom;
+            body.rangeRule = OrderItem.fromJS(this.tempOrderItems);
+        }
+        if (this.currentDataFrom.length > 0) {
+            const data = [];
+            this.currentDataFrom.forEach((item) => {
+                if (this.productType == 1) {
+                    data.push(item.mobile);
+                } else {
+                    data.push(item.serial);
+                }
+            });
+            body.rangeItems = data;
         }
 
         console.log(body);
-        this._inventoryServiceProxy.createTransfer(body).subscribe(() => {
-            this.notify.info(this.l('SavedSuccessfully'));
-        });
+        // this._inventoryServiceProxy.createTransfer(body).subscribe(() => {
+        //     this.router.navigate(['/app/main/inventory-import-export']);
+        //     this.notify.info(this.l('SavedSuccessfully'));
+        // });
     }
 
     // onPage(event: any) {

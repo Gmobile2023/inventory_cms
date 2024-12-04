@@ -48,8 +48,8 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     cityId: number | undefined;
     districtId: number | undefined;
     wardId: number | undefined;
-    fromDate: any | undefined;
-    toDate: any | undefined;
+    fromDate: DateTime | undefined;
+    toDate: DateTime | undefined;
     parentId: number | undefined;
     status: number | undefined;
     stockLevel: number;
@@ -63,6 +63,11 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     isEdit = false;
     listStock: any[] = [];
     inventoryId!: number;
+    stockLevels = [
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+    ];
 
     ngOnInit() {
         this.items = [{ label: 'Quản lý kho' }, { label: 'Danh sách kho' }];
@@ -80,8 +85,8 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
                 this.cityId,
                 this.districtId,
                 this.wardId,
-                this._dateTimeService.getStartOfDayForDate(this.fromDate),
-                this._dateTimeService.getEndOfDayForDate(this.toDate),
+                this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
+                this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
                 this.inventoryId ? this.inventoryId : this.parentId,
                 this.status == null ? undefined : this.status,
                 this.primengTableHelper.getSorting(this.dataTable),
@@ -130,8 +135,8 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
         this.cityId = undefined;
         this.districtId = undefined;
         this.wardId = undefined;
-        this.fromDate = null;
-        this.toDate = null;
+        this.fromDate = undefined;
+        this.toDate = undefined;
         this.address = undefined;
         this.stockLevel = undefined;
         this.parentStockId = undefined;

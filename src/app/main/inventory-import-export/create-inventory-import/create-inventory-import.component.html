@@ -30,7 +30,7 @@
         <div class="row bg-white py-5">
             <h4>DANH SÁCH HÀNG HOÁ</h4>
             <div class="primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
-                <p-table #dataTable sortMode="multiple" [value]="orderItems"
+                <p-table #dataTable sortMode="multiple" [value]="tempOrderItems"
                     rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
                     [tableStyle]="{'min-width': '50rem'}">
                     <ng-template pTemplate="header">
