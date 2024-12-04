@@ -40,8 +40,8 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     srcStockId: number;
     desStockId: number;
     userCreated: string | undefined;
-    productType: ProductType = 1;
-    objectType: ObjectType = 1;
+    productType: ProductType = ProductType.Mobile;
+    objectType: ObjectType = ObjectType.All;
     rangeRule: OrderItem;
     rangeItems: string[] | undefined = [];
     isRangeRule: boolean = true;
@@ -55,7 +55,8 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         toRange: '',
         quantity: 0,
     };
-
+    ProductType = ProductType;
+    ObjectType = ObjectType;
     listSimSrcStock: any[] = [];
     stockId: number;
 
@@ -72,7 +73,6 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
                 this.value = 0;
             }
         }, 2000);
-        // this.currentData = this.dataFakeTo.slice(0, this.rowsPerPage);
         this.getListStock();
     }
 
@@ -102,8 +102,7 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     }
 
     onChangeProductType(event: Event) {
-        const data = parseInt((event.target as HTMLSelectElement).value);
-        this.productType = data;
+        this.productType = (event.target as HTMLSelectElement).value as unknown as ProductType;
         console.log(this.productType);
     }
 
@@ -173,12 +172,11 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
             });
             body.rangeItems = data;
         }
-
-        console.log(body);
-        // this._inventoryServiceProxy.createTransfer(body).subscribe(() => {
-        //     this.router.navigate(['/app/main/inventory-import-export']);
-        //     this.notify.info(this.l('SavedSuccessfully'));
-        // });
+        // console.log(body);
+        this._inventoryServiceProxy.createTransfer(body).subscribe(() => {
+            this.router.navigate(['/app/main/inventory-import-export']);
+            this.notify.info(this.l('SavedSuccessfully'));
+        });
     }
 
     // onPage(event: any) {

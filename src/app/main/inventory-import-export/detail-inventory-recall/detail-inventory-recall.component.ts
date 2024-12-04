@@ -1,8 +1,13 @@
 import { Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { MenuItem } from 'primeng/api';
+import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ActivatedRoute } from '@angular/router';
+import { InventoryServiceProxy } from '@shared/service-proxies/service-proxies';
+import { Table } from 'primeng/table';
+import { Paginator } from 'primeng/paginator';
+import { finalize } from 'rxjs';
 
 @Component({
     templateUrl: './detail-inventory-recall.component.html',
@@ -10,12 +15,26 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
     animations: [appModuleAnimation()],
 })
 export class DetailInventoryRecallComponent extends AppComponentBase implements OnInit {
-    constructor(injector: Injector, private modalService: BsModalService) {
+    @ViewChild('dataTable', { static: true }) dataTable: Table;
+    @ViewChild('paginator', { static: true }) paginator: Paginator;
+    @ViewChild('dataTable2', { static: true }) dataTable2: Table;
+    @ViewChild('paginator2', { static: true }) paginator2: Paginator;
+    constructor(
+        injector: Injector,
+        private modalService: BsModalService,
+        private route: ActivatedRoute,
+        private _inventoryServiceProxy: InventoryServiceProxy
+    ) {
         super(injector);
     }
     modalRef?: BsModalRef | null;
     items: MenuItem[];
     home: MenuItem;
+    orderId: number;
+    data: any = {};
+    listAction: any[] = [];
+    listSim: any[] = [];
+    orderCode: string;
 
     ngOnInit(): void {
         this.items = [
@@ -24,6 +43,59 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
             { label: 'Chi tiết yêu cầu thu hồi về kho' },
         ];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
+        this.orderId = parseInt(this.route.snapshot.queryParamMap.get('id')!);
+        this.getStockForView();
+    }
+
+    getStockForView() {
+        this._inventoryServiceProxy.getOrderForView(this.orderId).subscribe((result) => {
+            this.data = result.order;
+            if (this.data.orderCode) {
+                this.orderCode = this.data.orderCode;
+                this.getActionHistory();
+                this.getListSimOrderDetail();
+            }
+        });
+    }
+
+    getActionHistory(event?: LazyLoadEvent) {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getHistories(
+                undefined,
+                undefined,
+                this.orderCode,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                this.primengTableHelper.getSorting(this.dataTable),
+                this.primengTableHelper.getSkipCount(this.paginator, event),
+                this.primengTableHelper.getMaxResultCount(this.paginator, event)
+            )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this.listAction = result.items;
+                this.primengTableHelper.totalRecordsCount = result.totalCount;
+                this.primengTableHelper.hideLoadingIndicator();
+            });
+    }
+
+    getListSimOrderDetail(event?: LazyLoadEvent) {
+        this._inventoryServiceProxy
+            .getListSimOrderDetail(
+                this.orderId,
+                this.primengTableHelper.getSorting(this.dataTable2),
+                this.primengTableHelper.getSkipCount(this.paginator2, event),
+                this.primengTableHelper.getMaxResultCount(this.paginator2, event)
+            )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this.listSim = result.items;
+                this.primengTableHelper.totalRecordsCount = result.totalCount;
+                this.primengTableHelper.hideLoadingIndicator();
+            });
     }
 
     openModal(template: TemplateRef<any>) {

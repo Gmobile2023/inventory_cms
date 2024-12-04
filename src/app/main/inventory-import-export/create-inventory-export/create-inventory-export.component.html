@@ -10,17 +10,13 @@
                 <label for="title" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
                 <input type="text" class="form-control" id="title" placeholder="Nhập tiêu đề" [(ngModel)]="title">
             </div>
-            <!-- <div class="col-md-4 mb-3">
-                <label for="" class="form-label">Số lượng dự kiến <span class="text-danger">(*)</span></label>
-                <input type="text" class="form-control" id="" placeholder="Nhập số lượng dự kiến">
-            </div> -->
             <div class="col-md-6 mb-3">
                 <label for="productType" class="form-label">Loại sản phẩm</label>
                 <div class="input-group">
                     <select id="productType" name="productType" class="form-select" [(ngModel)]="productType"
                         (change)="onChangeProductType($event)">
-                        <option [ngValue]="1">Số</option>
-                        <option [ngValue]="2">Serial</option>
+                        <option [value]="ProductType.Mobile">Số</option>
+                        <option [value]="ProductType.Serial">Serial</option>
                     </select>
                 </div>
             </div>
@@ -61,8 +57,8 @@
                 <label for="objectType" class="form-label">Xuất theo</label>
                 <div class="input-group">
                     <select id="objectType" name="objectType" class="form-select" [(ngModel)]="objectType">
-                        <option [ngValue]="1">Tất cả</option>
-                        <option [ngValue]="2">Danh sách chọn</option>
+                        <option [value]="ObjectType.All">Tất cả</option>
+                        <option [value]="ObjectType.List">Danh sách chọn</option>
                     </select>
                 </div>
             </div>
@@ -103,42 +99,6 @@
     <div [class]="containerClass" class="mt-5">
         <div class="row bg-white py-5">
             <h4>BỘ LỌC TÌM KIẾM</h4>
-            <!-- <div class="col-md-4 mb-4">
-                <label for="" class="form-label">Loại sản phẩm</label>
-                <div class="input-group">
-                    <select id="" name="" class="form-select">
-                        <option selected>
-                            Chọn loại sản phẩm
-                        </option>
-                        <option value="1">SIM</option>
-                        <option value="2">SỐ</option>
-                    </select>
-                </div>
-            </div> -->
-            <!-- <div class="col-md-4 mb-4">
-                <label for="" class="form-label">Thuộc tính</label>
-                <div class="input-group">
-                    <select id="" name="" class="form-select">
-                        <option selected>
-                            Chọn thuộc tính
-                        </option>
-                        <option value="1">A</option>
-                        <option value="2">B</option>
-                    </select>
-                </div>
-            </div> -->
-            <!-- <div class="col-md-4 mb-4">
-                <label for="" class="form-label">Lô xuất/nhập kho</label>
-                <div class="input-group">
-                    <select id="" name="" class="form-select">
-                        <option selected>
-                            Chọn lô xuất/nhập kho
-                        </option>
-                        <option value="1">A</option>
-                        <option value="2">B</option>
-                    </select>
-                </div>
-            </div> -->
             <div class="col-md-4">
                 <label for="" class="form-label">Dải từ</label>
                 <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial">
@@ -183,7 +143,6 @@
                                 <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
                                 <th>{{ 'SĐT/SERIAL' | localize }}</th>
                                 <th>{{ 'HẠNG SỐ' | localize }}</th>
-                                <!-- <th>{{ 'HẠNG SỐ' | localize }}</th> -->
                                 <th>{{ 'GIÁ BÁN' | localize }}</th>
                                 <th>{{ 'NGÀY TẠO' | localize }}</th>
                             </tr>
@@ -233,7 +192,6 @@
                                 <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
                                 <th>{{ 'SĐT/SERIAL' | localize }}</th>
                                 <th>{{ 'HẠNG SỐ' | localize }}</th>
-                                <!-- <th>{{ 'HẠNG SỐ' | localize }}</th> -->
                                 <th>{{ 'GIÁ BÁN' | localize }}</th>
                                 <th>{{ 'NGÀY TẠO' | localize }}</th>
                             </tr>

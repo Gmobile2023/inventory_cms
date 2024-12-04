@@ -50,6 +50,7 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     getStockForView() {
         this._inventoryServiceProxy.getOrderForView(this.orderId).subscribe((result) => {
             this.orderData = result.order;
+            console.log(this.orderData);
             if (this.orderData.orderCode) {
                 this.orderCode = this.orderData.orderCode;
                 this.getActionHistory();

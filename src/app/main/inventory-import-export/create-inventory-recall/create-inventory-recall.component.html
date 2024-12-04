@@ -4,99 +4,89 @@
         <div class="row bg-white py-5">
             <div class="d-flex justify-content-between align-items-center">
                 <h4>THÔNG TIN CHUNG</h4>
-                <button class="btn btn-success btn-sm">GỬI YÊU CẦU</button>
+                <button class="btn btn-success btn-sm" (click)="createRecovery()">GỬI YÊU CẦU</button>
             </div>
             <div class="col-md-6 mb-3">
-                <label for="" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
-                <input type="text" class="form-control" id="" placeholder="Nhập tiêu đề">
+                <label for="title" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
+                <input type="text" class="form-control" id="title" placeholder="Nhập tiêu đề" [(ngModel)]="title">
             </div>
             <div class="col-md-6 mb-3">
-                <label for="" class="form-label">Số lượng dự kiến <span class="text-danger">(*)</span></label>
-                <input type="text" class="form-control" id="" placeholder="Nhập số lượng dự kiến">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="" class="form-label">Kho thu hồi <span class="text-danger">(*)</span></label>
+                <label for="productType" class="form-label">Loại sản phẩm</label>
                 <div class="input-group">
-                    <select id="" name="" class="form-select">
-                        <option selected>
-                            Chọn kho
-                        </option>
-                        <option value="1">Kho 1</option>
-                        <option value="2">Kho 2</option>
-                        <option value="3">Kho 3</option>
+                    <select id="productType" name="productType" class="form-select" [(ngModel)]="productType"
+                        (change)="onChangeProductType($event)">
+                        <option [value]="ProductType.Mobile">Số</option>
+                        <option [value]="ProductType.Serial">Serial</option>
                     </select>
                 </div>
             </div>
             <div class="col-md-6 mb-3">
-                <label for="" class="form-label">Kho nhận thu hồi <span class="text-danger">(*)</span></label>
+                <label for="srcStockId" class="form-label">Kho thu hồi <span class="text-danger">(*)</span></label>
                 <div class="input-group">
-                    <select id="" name="" class="form-select">
-                        <option selected>
+                    <select id="srcStockId" name="srcStockId" class="form-select" [(ngModel)]="srcStockId"
+                        (change)="onChangeStock($event)">
+                        <option [ngValue]="undefined">
                             Chọn kho
                         </option>
-                        <option value="1">Kho 1</option>
-                        <option value="2">Kho 2</option>
-                        <option value="3">Kho 3</option>
+                        <option value={{item.id}} *ngFor="let item of listStock">{{item.stockName}}</option>
                     </select>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mb-3">
+                <label for="desStockId" class="form-label">Kho nhận thu hồi <span class="text-danger">(*)</span></label>
+                <div class="input-group">
+                    <select id="desStockId" name="desStockId" class="form-select" [(ngModel)]="desStockId">
+                        <option [ngValue]="undefined">
+                            Chọn kho
+                        </option>
+                        <option [ngValue]="item.id" *ngFor="let item of listStock">{{item.stockName}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="" class="form-label">Cách thức thu hồi<span class="text-danger">(*)</span></label>
+                <div class="input-group">
+                    <select id="" name="" class="form-select" (change)="onRangeRuleChange($event)">
+                        <option [ngValue]="true">Thu hồi theo dải</option>
+                        <option [ngValue]="false">Thu hồi theo tuỳ chọn</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="objectType" class="form-label">Thu hồi theo</label>
+                <div class="input-group">
+                    <select id="objectType" name="objectType" class="form-select" [(ngModel)]="objectType">
+                        <option [value]="ObjectType.All">Tất cả</option>
+                        <option [value]="ObjectType.List">Danh sách chọn</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="fromRange" class="form-label">Dải số/serial từ<span class="text-danger">(*)</span></label>
+                <input type="text" class="form-control" id="fromRange" name="fromRange"
+                    [(ngModel)]="tempOrderItems.fromRange" (input)="calculateQuantity()">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="toRange" class="form-label">Dải số/serial đến<span class="text-danger">(*)</span></label>
+                <input type="text" class="form-control" id="toRange" name="toRange" [(ngModel)]="tempOrderItems.toRange"
+                    (input)="calculateQuantity()">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="quantity" class="form-label">Số lượng<span class="text-danger">(*)</span></label>
+                <input type="text" class="form-control" id="quantity" name="quantity"
+                    [(ngModel)]="tempOrderItems.quantity">
+            </div>
+            <div class="col-12 mb-3">
                 <label for="" class="form-label">Ghi chú</label>
-                <textarea class="form-control" id="" rows="2" placeholder="Nhập nội dung ghi chú"></textarea>
-            </div>
-            <div class="col-md-6">
-                <span class="fs-5 mt-5">Tải lên file chứng từ</span>
-                <div class="d-flex justify-content-start align-items-center mt-5 custom-progress">
-                    <div class="me-5">
-                        <p-fileUpload mode="basic" chooseLabel="Chọn file" name="demo[]"
-                            url="https://www.primefaces.org/cdn/api/upload.php" maxFileSize="1000000"
-                            (onUpload)="onUpload($event)"></p-fileUpload>
-                    </div>
-                    <div style="width: 30%;" class="me-2"><p-progressBar [value]="value"></p-progressBar></div>
-                    <span>{{value}}%</span>
-                </div>
+                <textarea class="form-control" id="" rows="2" placeholder="Nhập nội dung ghi chú"
+                    [(ngModel)]="description"></textarea>
             </div>
         </div>
     </div>
     <div [class]="containerClass" class="mt-5">
         <div class="row bg-white py-5">
             <h4>BỘ LỌC TÌM KIẾM</h4>
-            <div class="col-md-4 mb-4">
-                <label for="" class="form-label">Loại sản phẩm</label>
-                <div class="input-group">
-                    <select id="" name="" class="form-select">
-                        <option selected>
-                            Chọn loại sản phẩm
-                        </option>
-                        <option value="1">SIM</option>
-                        <option value="2">SỐ</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <label for="" class="form-label">Thuộc tính</label>
-                <div class="input-group">
-                    <select id="" name="" class="form-select">
-                        <option selected>
-                            Chọn thuộc tính
-                        </option>
-                        <option value="1">A</option>
-                        <option value="2">B</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <label for="" class="form-label">Lô xuất/nhập kho</label>
-                <div class="input-group">
-                    <select id="" name="" class="form-select">
-                        <option selected>
-                            Chọn lô xuất/nhập kho
-                        </option>
-                        <option value="1">A</option>
-                        <option value="2">B</option>
-                    </select>
-                </div>
-            </div>
             <div class="col-md-4">
                 <label for="" class="form-label">Dải từ</label>
                 <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial">
@@ -118,12 +108,14 @@
                 </div>
             </div>
             <div>
-                <button class="btn btn-primary btn-sm mt-5" type="button">TÌM KIẾM</button>
+                <button class="btn btn-primary btn-sm mt-5" type="button" (click)="getListSimsTransfers($event)">TÌM
+                    KIẾM</button>
             </div>
             <div class="d-flex justify-content-between gap-5 mt-5">
                 <div class="table1 border">
-                    <p-table #dataTable [value]="currentData" [(selection)]="selectedRecords" [rows]="rowsPerPage"
-                        [paginator]="true" [lazy]="true" [tableStyle]="{'min-width': '50rem'}" class="table-custom">
+                    <p-table #dataTable [value]="listSimSrcStock" [(selection)]="selectedRecordsTo"
+                        [rows]="primengTableHelper.defaultRecordsCountPerPage" [paginator]="false" [lazy]="true"
+                        [tableStyle]="{'min-width': '50rem'}" class="table-custom">
                         <ng-template pTemplate="caption">
                             <div class="d-flex align-items-center justify-content-between">
                                 <h4 class="mb-0">Kết quả tìm kiếm</h4>
@@ -137,10 +129,10 @@
                         <ng-template pTemplate="header">
                             <tr>
                                 <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
-                                <th>{{ 'SDT/SERIAL' | localize }}</th>
+                                <th>{{ 'SĐT/SERIAL' | localize }}</th>
                                 <th>{{ 'HẠNG SỐ' | localize }}</th>
-                                <th>{{ 'GIÁ ĐỊNH GIÁ' | localize }}</th>
-                                <th>{{ 'NHÀ MẠNG' | localize }}</th>
+                                <th>{{ 'GIÁ BÁN' | localize }}</th>
+                                <th>{{ 'NGÀY TẠO' | localize }}</th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-record="$implicit">
@@ -148,47 +140,48 @@
                                 <td>
                                     <p-tableCheckbox [value]="record" />
                                 </td>
-                                <td>{{record.loai}}</td>
-                                <td>{{record.ma}}</td>
-                                <td>{{record.ten}}</td>
-                                <td>{{record.donvi}}</td>
+                                <td>{{productType == 1 ? record.mobile : record.serial}}</td>
+                                <td>{{record.attribute}}</td>
+                                <td>{{record.salePrice}}</td>
+                                <td>{{record.createdDate | luxonFormat: 'F' }}</td>
                             </tr>
                         </ng-template>
                     </p-table>
-                    <div class="primeng-no-data text-center" *ngIf="dataFakeTo.length == 0">
+                    <div class="primeng-no-data text-center" *ngIf="primengTableHelper.totalRecordsCount == 0">
                         {{ 'NoData' | localize }}
                     </div>
                     <div class="primeng-paging-container">
-                        <p-paginator [rows]="rowsPerPage" #paginator [totalRecords]="dataFakeTo.length"
-                            [showCurrentPageReport]="true" (onPageChange)="onPage($event)" [currentPageReportTemplate]="
-                                'TotalRecordsCount' | localize: dataFakeTo.length
+                        <p-paginator (onPageChange)="getListSimsTransfers($event)"
+                            [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
+                            [totalRecords]="primengTableHelper.totalRecordsCount"
+                            [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                            [showCurrentPageReport]="true" [currentPageReportTemplate]="
+                                'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount
                             "></p-paginator>
                     </div>
                 </div>
                 <div class="action d-flex flex-column justify-content-center align-items-center">
-                    <button class="btn btn-primary btn-sm" (click)="moveSelectedRecords()">THÊM</button>
-                    <button class="btn btn-danger btn-sm mt-3 w-100" (click)="moveBackSelectedRecords()">BỎ</button>
+                    <button class="btn btn-primary btn-sm" (click)="moveSelectedRecords()"
+                        [disabled]="selectedRecordsFrom.length > 0 || selectedRecordsTo.length == 0">THÊM</button>
+                    <button class="btn btn-danger btn-sm mt-3 w-100" (click)="moveBackSelectedRecords()"
+                        [disabled]="selectedRecordsTo.length > 0 || selectedRecordsFrom.length == 0">BỎ</button>
                 </div>
                 <div class="table2 border">
-                    <p-table #dataTable [value]="currentDataFrom" [(selection)]="selectedRecords" [rows]="rowsPerPage"
-                        [paginator]="true" [lazy]="true" [tableStyle]="{'min-width': '50rem'}" class="table-custom">
+                    <p-table #dataTable2 [value]="currentDataFrom" [(selection)]="selectedRecordsFrom"
+                        [rows]="rowsPerPage" [paginator]="true" [lazy]="true" [tableStyle]="{'min-width': '50rem'}"
+                        class="table-custom">
                         <ng-template pTemplate="caption">
                             <div class="d-flex align-items-center justify-content-between">
                                 <h4 class="mb-0">Danh sách đã chọn</h4>
-                                <span class="p-input-icon-left">
-                                    <input class="form-control form-control-sm" pInputText type="text"
-                                        (input)="dataTable.filterGlobal($event.target.value, 'contains')"
-                                        placeholder="Search..." />
-                                </span>
                             </div>
                         </ng-template>
                         <ng-template pTemplate="header">
                             <tr>
                                 <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
-                                <th>{{ 'SDT/SERIAL' | localize }}</th>
+                                <th>{{ 'SĐT/SERIAL' | localize }}</th>
                                 <th>{{ 'HẠNG SỐ' | localize }}</th>
-                                <th>{{ 'GIÁ ĐỊNH GIÁ' | localize }}</th>
-                                <th>{{ 'NHÀ MẠNG' | localize }}</th>
+                                <th>{{ 'GIÁ BÁN' | localize }}</th>
+                                <th>{{ 'NGÀY TẠO' | localize }}</th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-record="$implicit">
@@ -196,21 +189,21 @@
                                 <td>
                                     <p-tableCheckbox [value]="record" />
                                 </td>
-                                <td>{{record.loai}}</td>
-                                <td>{{record.ma}}</td>
-                                <td>{{record.ten}}</td>
-                                <td>{{record.donvi}}</td>
+                                <td>{{productType == 1 ? record.mobile : record.serial}}</td>
+                                <td>{{record.attribute}}</td>
+                                <td>{{record.salePrice}}</td>
+                                <td>{{record.createdDate | luxonFormat: 'F' }}</td>
                             </tr>
                         </ng-template>
                     </p-table>
-                    <div class="primeng-no-data text-center" *ngIf="dataFakeFrom.length == 0">
+                    <div class="primeng-no-data text-center" *ngIf="rangeItems.length == 0">
                         {{ 'NoData' | localize }}
                     </div>
                     <div class="primeng-paging-container">
-                        <p-paginator [rows]="rowsPerPage" #paginator [totalRecords]="dataFakeFrom.length"
+                        <p-paginator [rows]="rowsPerPage" #paginator2 [totalRecords]="rangeItems.length"
                             [showCurrentPageReport]="true" (onPageChange)="onPageFrom($event)"
                             [currentPageReportTemplate]="
-                                'TotalRecordsCount' | localize: dataFakeFrom.length
+                                'TotalRecordsCount' | localize: rangeItems.length
                             "></p-paginator>
                     </div>
                 </div>
