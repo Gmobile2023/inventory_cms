@@ -208,16 +208,16 @@
     <ng-template #approve>
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Phê duyệt yêu cầu xuất kho</h3>
+                <h3 class="modal-title">Phê duyệt yêu cầu thu hồi</h3>
                 <button type="button" class="btn-close" (click)="closeModal()"></button>
             </div>
             <div class="modal-body text-center">
-                <p style="font-size: 16px;">Bạn có chắc chắn muốn duyệt yêu cầu xuất kho ABC?</p>
+                <p style="font-size: 16px;">Bạn có chắc chắn muốn duyệt yêu cầu thu hồi?</p>
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-center">
                     <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
-                    <button type="button" class="btn btn-primary btn-sm" (click)="closeModal()">XÁC NHẬN</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="confirmOrder()">XÁC NHẬN</button>
                 </div>
             </div>
         </div>
@@ -225,7 +225,7 @@
     <ng-template #refuse>
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Từ chối yêu cầu xuất kho</h3>
+                <h3 class="modal-title">Từ chối yêu cầu thu hồi</h3>
                 <button type="button" class="btn-close" (click)="closeModal()"></button>
             </div>
             <div class="modal-body">
@@ -235,13 +235,13 @@
                 </label>
                 <div class="input-group">
                     <input id="" name="" class="form-control" placeholder="{{ 'Nhập lý do từ chối' | localize }}"
-                        type="text" />
+                        type="text" [(ngModel)]="description" />
                 </div>
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-center">
                     <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
-                    <button type="button" class="btn btn-danger btn-sm" (click)="closeModal()">TỪ CHỐI</button>
+                    <button type="button" class="btn btn-danger btn-sm" (click)="refuseOrder()">TỪ CHỐI</button>
                 </div>
             </div>
         </div>

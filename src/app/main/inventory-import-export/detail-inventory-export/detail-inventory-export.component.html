@@ -361,12 +361,12 @@
                 <button type="button" class="btn-close" (click)="closeModal()"></button>
             </div>
             <div class="modal-body text-center">
-                <p style="font-size: 16px;">Bạn có chắc chắn muốn duyệt yêu cầu xuất kho ABC?</p>
+                <p style="font-size: 16px;">Bạn có chắc chắn muốn duyệt yêu cầu xuất kho?</p>
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-center">
                     <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
-                    <button type="button" class="btn btn-primary btn-sm" (click)="closeModal()">XÁC NHẬN</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="confirmOrder()">XÁC NHẬN</button>
                 </div>
             </div>
         </div>
@@ -384,13 +384,13 @@
                 </label>
                 <div class="input-group">
                     <input id="" name="" class="form-control" placeholder="{{ 'Nhập lý do từ chối' | localize }}"
-                        type="text" />
+                        type="text" [(ngModel)]="description" />
                 </div>
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-center">
                     <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
-                    <button type="button" class="btn btn-danger btn-sm" (click)="closeModal()">TỪ CHỐI</button>
+                    <button type="button" class="btn btn-danger btn-sm" (click)="refuseOrder()">TỪ CHỐI</button>
                 </div>
             </div>
         </div>

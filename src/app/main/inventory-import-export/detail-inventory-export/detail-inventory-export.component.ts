@@ -3,8 +3,8 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { ActivatedRoute } from '@angular/router';
-import { InventoryServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ConfirmOrderDto, InventoryServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs';
 import { Paginator } from 'primeng/paginator';
 import { Table } from 'primeng/table';
@@ -23,7 +23,8 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
         injector: Injector,
         private modalService: BsModalService,
         private route: ActivatedRoute,
-        private _inventoryServiceProxy: InventoryServiceProxy
+        private _inventoryServiceProxy: InventoryServiceProxy,
+        private router: Router
     ) {
         super(injector);
     }
@@ -35,6 +36,7 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     orderCode: string;
     listAction: any[] = [];
     listSim: any[] = [];
+    description: string;
 
     ngOnInit(): void {
         this.items = [
@@ -97,6 +99,29 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
                 this.primengTableHelper.totalRecordsCount = result.totalCount;
                 this.primengTableHelper.hideLoadingIndicator();
             });
+    }
+
+    confirmOrder() {
+        const body = new ConfirmOrderDto();
+        body.orderCode = this.orderCode;
+        body.status = 5;
+        this._inventoryServiceProxy.confirmOrder(body).subscribe(() => {
+            this.router.navigate(['/app/main/inventory-import-export']);
+            this.notify.info(this.l('SavedSuccessfully'));
+            this.closeModal();
+        });
+    }
+
+    refuseOrder() {
+        const body = new ConfirmOrderDto();
+        body.orderCode = this.orderCode;
+        body.description = this.description;
+        body.status = 7;
+        this._inventoryServiceProxy.confirmOrder(body).subscribe(() => {
+            this.router.navigate(['/app/main/inventory-import-export']);
+            this.notify.info(this.l('SavedSuccessfully'));
+            this.closeModal();
+        });
     }
 
     openModal(template: TemplateRef<any>) {
