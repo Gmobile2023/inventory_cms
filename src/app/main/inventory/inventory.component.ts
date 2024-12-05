@@ -129,7 +129,7 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
                 this.fromDate,
                 this.toDate,
                 this.inventoryId ? this.inventoryId : this.parentId,
-                this.status == null ? undefined : this.status,
+                this.status == null ? undefined : this.status
             )
             .subscribe((result) => {
                 this.primengTableHelper.hideLoadingIndicator();
@@ -193,15 +193,15 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
         } else {
             // Gộp dữ liệu vào body rồi mới thực hiện xử lý bên dưới
             body = { ...this.inventoryData };
-            
-            // Không set kiểu this.inventoryData.userManager = 
+
+            // Không set kiểu this.inventoryData.userManager =
             // vì sẽ mất dữ liệu trên UI
-            body.userManager = this.inventoryData.userManager?.map(user => user.userName) || [];
-            body.userCreateOrder = this.inventoryData.userCreateOrder?.map(user => user.userName) || [];
-            body.userApprove = this.inventoryData.userApprove?.map(user => user.userName) || [];
-            body.userAccounting = this.inventoryData.userAccounting?.map(user => user.userName) || [];
+            body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
+            body.userCreateOrder = this.inventoryData.userCreateOrder?.map((user) => user.userName) || [];
+            body.userApprove = this.inventoryData.userApprove?.map((user) => user.userName) || [];
+            body.userAccounting = this.inventoryData.userAccounting?.map((user) => user.userName) || [];
         }
-    
+
         this._inventoryServiceProxy.createOrEditStock(body).subscribe(() => {
             this.notify.info(this.l('SavedSuccessfully'));
             this.resetSearch();

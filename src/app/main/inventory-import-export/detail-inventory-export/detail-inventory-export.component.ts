@@ -3,8 +3,8 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { ActivatedRoute } from '@angular/router';
-import { InventoryServiceProxy } from '@shared/service-proxies/service-proxies';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ConfirmOrderDto, InventoryServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs';
 import { Paginator } from 'primeng/paginator';
 import { Table } from 'primeng/table';
@@ -17,11 +17,14 @@ import { Table } from 'primeng/table';
 export class DetailInventoryExportComponent extends AppComponentBase implements OnInit {
     @ViewChild('dataTable', { static: true }) dataTable: Table;
     @ViewChild('paginator', { static: true }) paginator: Paginator;
+    @ViewChild('dataTable2', { static: true }) dataTable2: Table;
+    @ViewChild('paginator2', { static: true }) paginator2: Paginator;
     constructor(
         injector: Injector,
         private modalService: BsModalService,
         private route: ActivatedRoute,
-        private _inventoryServiceProxy: InventoryServiceProxy
+        private _inventoryServiceProxy: InventoryServiceProxy,
+        private router: Router
     ) {
         super(injector);
     }
@@ -32,6 +35,8 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     orderData: any = {};
     orderCode: string;
     listAction: any[] = [];
+    listSim: any[] = [];
+    description: string;
 
     ngOnInit(): void {
         this.items = [
@@ -47,9 +52,11 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     getStockForView() {
         this._inventoryServiceProxy.getOrderForView(this.orderId).subscribe((result) => {
             this.orderData = result.order;
+            console.log(this.orderData);
             if (this.orderData.orderCode) {
                 this.orderCode = this.orderData.orderCode;
                 this.getActionHistory();
+                this.getListSimOrderDetail();
             }
         });
     }
@@ -78,6 +85,45 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
             });
     }
 
+    getListSimOrderDetail(event?: LazyLoadEvent) {
+        this._inventoryServiceProxy
+            .getListSimOrderDetail(
+                this.orderId,
+                this.primengTableHelper.getSorting(this.dataTable2),
+                this.primengTableHelper.getSkipCount(this.paginator2, event),
+                this.primengTableHelper.getMaxResultCount(this.paginator2, event)
+            )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this.listSim = result.items;
+                this.primengTableHelper.totalRecordsCount = result.totalCount;
+                this.primengTableHelper.hideLoadingIndicator();
+            });
+    }
+
+    confirmOrder() {
+        const body = new ConfirmOrderDto();
+        body.orderCode = this.orderCode;
+        body.status = 5;
+        this._inventoryServiceProxy.confirmOrder(body).subscribe(() => {
+            this.router.navigate(['/app/main/inventory-import-export']);
+            this.notify.info(this.l('SavedSuccessfully'));
+            this.closeModal();
+        });
+    }
+
+    refuseOrder() {
+        const body = new ConfirmOrderDto();
+        body.orderCode = this.orderCode;
+        body.description = this.description;
+        body.status = 7;
+        this._inventoryServiceProxy.confirmOrder(body).subscribe(() => {
+            this.router.navigate(['/app/main/inventory-import-export']);
+            this.notify.info(this.l('SavedSuccessfully'));
+            this.closeModal();
+        });
+    }
+
     openModal(template: TemplateRef<any>) {
         this.modalRef = this.modalService.show(template, { id: 1, class: 'modal-md' });
     }
@@ -85,107 +131,5 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     closeModal(modalId?: number) {
         this.modalService.hide(modalId);
     }
-    dataFake = [
-        {
-            id: 1,
-            ten: 'Đợt 1 xuất SIM',
-            type: 'SIM',
-            quantity: '1.000',
-            created_at: '20/10/2024 10:12',
-            status: 1,
-            status_ht: 1,
-            approval_date: '25/10/2024 10:12',
-        },
-        {
-            id: 2,
-            ten: 'Đợt 2 xuất SIM',
-            type: 'SIM',
-            quantity: '1.000',
-            created_at: '20/10/2024 10:12',
-            status: 1,
-            status_ht: 1,
-            approval_date: '25/10/2024 10:12',
-        },
-        {
-            id: 3,
-            ten: 'Đợt 3 xuất SIM',
-            type: 'SIM',
-            quantity: '1.000',
-            created_at: '20/10/2024 10:12',
-            status: 0,
-            status_ht: 0,
-            approval_date: '25/10/2024 10:12',
-        },
-    ];
-    dataHistoryFake = [
-        {
-            id: 1,
-            action: 'Tạo yêu cầu',
-            noidung: 'Tạo yêu cầu nhập kho',
-            date: '12/10/2024 08:23',
-            user: 'Nguyễn Văn Chung',
-        },
-        {
-            id: 2,
-            action: 'Tạo yêu cầu',
-            noidung: 'Tạo yêu cầu nhập kho',
-            date: '12/10/2024 08:23',
-            user: 'Nguyễn Văn Chung',
-        },
-    ];
-
-    dataSimFake = [
-        {
-            id: 1,
-            phoneNumber: '0987654321',
-            serialNumber: '298407210016823226',
-            shipment: '0122AA3',
-            productType: 'Sim vật lý',
-            product: 'SILVER',
-            network: 'VINAPHONE',
-            price: '300.000',
-            attribute: '105 Nguyễn Tuân',
-            status: 0,
-            date: '26/10/2024 09:30',
-        },
-        {
-            id: 2,
-            phoneNumber: '0987654321',
-            serialNumber: '298407210016823226',
-            shipment: '0122AA3',
-            productType: 'Sim vật lý',
-            product: 'SILVER',
-            network: 'MOBIPHONE',
-            price: '300.000',
-            attribute: '105 Nguyễn Tuân',
-            status: 1,
-            date: '26/10/2024 09:30',
-        },
-        {
-            id: 3,
-            phoneNumber: '0987654321',
-            serialNumber: '298407210016823226',
-            shipment: '0122AA3',
-            productType: 'Sim vật lý',
-            product: 'SILVER',
-            network: 'VINAPHONE',
-            price: '300.000',
-            attribute: '105 Nguyễn Tuân',
-            status: 0,
-            date: '26/10/2024 09:30',
-        },
-        {
-            id: 4,
-            phoneNumber: '0987654321',
-            serialNumber: '298407210016823226',
-            shipment: '0122AA3',
-            productType: 'Sim vật lý',
-            product: 'SILVER',
-            network: 'MOBIPHONE',
-            price: '300.000',
-            attribute: '105 Nguyễn Tuân',
-            status: 1,
-            date: '26/10/2024 09:30',
-        },
-    ];
+    dataFake = [];
 }

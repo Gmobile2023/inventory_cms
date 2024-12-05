@@ -8,24 +8,23 @@
                         <h4>THÔNG TIN CHUNG</h4>
                         <div class="col-md-6 mb-3">
                             <label for="" class="form-label">Tiêu đề</label>
-                            <input type="text" class="form-control" id="" value="Xuất Lô SIM 64K" disabled>
+                            <input type="text" class="form-control" id="" value={{data.orderTitle}} disabled>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="" class="form-label">Số lượng dự kiến</label>
-                            <input type="text" class="form-control" id="" value="10.000" disabled>
+                            <input type="text" class="form-control" id="" value={{data.quantity}} disabled>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="" class="form-label">Kho thu hồi</label>
-                            <input type="text" class="form-control" id="" value="Kho S99" disabled>
+                            <input type="text" class="form-control" id="" value={{data.srcStockName}} disabled>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="" class="form-label">Kho nhận thu hồi</label>
-                            <input type="text" class="form-control" id="" value="Kho S99_Hà Nội" disabled>
+                            <input type="text" class="form-control" id="" value={{data.desStockName}} disabled>
                         </div>
                         <div class="col-12 mb-3">
                             <label for="" class="form-label">Ghi chú</label>
-                            <textarea class="form-control" id="" rows="2"
-                                disabled>Xuất SIM theo hợp đồng sản xuất VP 28/10/2024</textarea>
+                            <textarea class="form-control" id="" rows="2" disabled>{{data.description}}</textarea>
                         </div>
                     </div>
                     <hr>
@@ -40,85 +39,74 @@
                 </p-tabPanel>
                 <p-tabPanel header="Danh sách SIM/SỐ">
                     <div class="border">
-                        <p-table #dataTable sortMode="multiple" [value]="dataSimFake"
+                        <p-table #dataTable2 sortMode="multiple" [value]="listSim"
                             rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
                             [tableStyle]="{'min-width': '50rem'}">
                             <ng-template pTemplate="header">
                                 <tr>
-                                    <th style="width: 40px">{{ 'STT' | localize }}</th>
                                     <th>
                                         {{ 'SỐ THUÊ BAO' | localize }}
-                                        <!-- <p-sortIcon field="tenancyName"></p-sortIcon> -->
                                     </th>
                                     <th>
                                         {{ 'SỐ SERIAL' | localize }}
-                                        <!-- <p-sortIcon field="name"></p-sortIcon> -->
-                                    </th>
-                                    <th>{{ 'MÃ LÔ' | localize }}</th>
-                                    <th>{{ 'LOẠI SẢN PHẨM' | localize }}</th>
-                                    <th>
-                                        {{ 'SẢN PHẨM' | localize }}
-                                        <!-- <p-sortIcon field="subscriptionEndDateUtc"></p-sortIcon> -->
-                                    </th>
-                                    <th>
-                                        {{ 'NHÀ MẠNG' | localize }}
-                                        <!-- <p-sortIcon field="isActive"></p-sortIcon> -->
                                     </th>
                                     <th>
                                         {{ 'GIÁ BÁN' | localize }}
-                                        <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
-                                    </th>
-                                    <th>
-                                        {{ 'THUỘC TÍNH' | localize }}
-                                        <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
                                     </th>
                                     <th>
                                         {{ 'TRẠNG THÁI' | localize }}
-                                        <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
                                     </th>
                                     <th>
                                         {{ 'NGÀY NHẬP' | localize }}
-                                        <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
                                     </th>
+                                    <!-- <th>{{ 'MÃ LÔ' | localize }}</th>
+                                    <th>{{ 'LOẠI SẢN PHẨM' | localize }}</th>
+                                    <th>
+                                        {{ 'SẢN PHẨM' | localize }}
+                                    </th>
+                                    <th>
+                                        {{ 'NHÀ MẠNG' | localize }}
+                                    </th>
+                                    
+                                    <th>
+                                        {{ 'THUỘC TÍNH' | localize }}
+                                    </th> -->
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-record="$implicit">
                                 <tr>
-                                    <td style="width: 40px">
-                                        {{ record.id }}
+                                    <td>
+                                        <span class="p-column-title">{{ '' | localize }}</span>
+                                        {{ record.mobile }}
                                     </td>
                                     <td>
-                                        <span class="p-column-title">{{ 'phoneNumber' | localize }}</span>
-                                        {{ record.phoneNumber }}
+                                        <span class="p-column-title">{{ '' | localize }}</span>
+                                        {{ record.serial }}
                                     </td>
                                     <td>
-                                        <span class="p-column-title">{{ 'serialNumber' | localize }}</span>
-                                        {{ record.serialNumber }}
+                                        <span class="p-column-title">{{ '' | localize }}</span>
+                                        {{ record.salePrice }}
                                     </td>
-                                    <td>
-                                        <span class="p-column-title">{{ 'shipment' | localize }}</span>
-                                        {{ record.shipment }}
-                                    </td>
-                                    <td>
-                                        <span class="p-column-title">{{ 'productType' | localize }}</span>
+                                    <!-- <td>
+                                        <span class="p-column-title">{{ '' | localize }}</span>
                                         {{ record.productType }}
                                     </td>
                                     <td>
-                                        <span class="p-column-title">{{ 'product' | localize }}</span>
+                                        <span class="p-column-title">{{ '' | localize }}</span>
                                         {{ record.product }}
                                     </td>
                                     <td>
-                                        <span class="p-column-title">{{ 'network' | localize }}</span>
+                                        <span class="p-column-title">{{ '' | localize }}</span>
                                         {{ record.network }}
                                     </td>
                                     <td>
-                                        <span class="p-column-title">{{ 'price' | localize }}</span>
+                                        <span class="p-column-title">{{ '' | localize }}</span>
                                         {{ record.price }}
                                     </td>
                                     <td>
-                                        <span class="p-column-title">{{ 'attribute' | localize }}</span>
+                                        <span class="p-column-title">{{ '' | localize }}</span>
                                         {{ record.attribute }}
-                                    </td>
+                                    </td> -->
                                     <td>
                                         <span class="p-column-title">{{ 'Status' | localize }}</span>
                                         <span *ngIf="record.status == 0" class="badge badge-warning badge-inline">
@@ -130,39 +118,87 @@
                                     </td>
                                     <td>
                                         <span class="p-column-title">{{ 'Date' | localize }}</span>
-                                        {{ record.date }}
+                                        {{ record.createdDate | luxonFormat: 'F' }}
                                     </td>
                                 </tr>
                             </ng-template>
                         </p-table>
+                        <div class="primeng-no-data text-center mt-5" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                            {{ 'NoData' | localize }}
+                        </div>
+                        <div class="primeng-paging-container">
+                            <p-paginator (onPageChange)="getListSimOrderDetail($event)"
+                                [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator2
+                                [totalRecords]="primengTableHelper.totalRecordsCount"
+                                [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                                [showCurrentPageReport]="true" [currentPageReportTemplate]="
+                                    'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount
+                                "></p-paginator>
+                        </div>
                     </div>
                 </p-tabPanel>
                 <p-tabPanel header="Lịch sử tác động">
                     <div class="row py-5">
                         <h4>LỊCH SỬ TÁC ĐỘNG</h4>
-                        <div class="primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
-                            <p-table #dataTable sortMode="multiple" [value]="dataHistoryFake"
-                                rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false"
-                                [lazy]="true" [tableStyle]="{'min-width': '50rem'}">
-                                <ng-template pTemplate="header">
-                                    <tr>
-                                        <th>{{ 'STT' | localize }}</th>
-                                        <th>{{ 'HÀNH ĐỘNG' | localize }}</th>
-                                        <th>{{ 'NỘI DUNG' | localize }}</th>
-                                        <th>{{ 'THỜI GIAN' | localize }}</th>
-                                        <th>{{ 'NGƯỜI THỰC HIỆN' | localize }}</th>
-                                    </tr>
-                                </ng-template>
-                                <ng-template pTemplate="body" let-record="$implicit">
-                                    <tr>
-                                        <td>{{record.id}}</td>
-                                        <td>{{record.action}}</td>
-                                        <td>{{record.noidung}}</td>
-                                        <td>{{record.date}}</td>
-                                        <td>{{record.user}}</td>
-                                    </tr>
-                                </ng-template>
-                            </p-table>
+                        <p-table #dataTable sortMode="multiple" [value]="listAction"
+                            rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
+                            [tableStyle]="{'min-width': '50rem'}">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>
+                                        {{ 'SỐ THUÊ BAO' | localize }}
+                                    </th>
+                                    <th>
+                                        {{ 'SỐ SERIAL' | localize }}
+                                    </th>
+                                    <th>
+                                        {{ 'NỘI DUNG THAO TÁC' | localize }}
+                                    </th>
+                                    <th>
+                                        {{ 'NGƯỜI THAO TÁC' | localize }}
+                                    </th>
+                                    <th>
+                                        {{ 'THỜI GIAN' | localize }}
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-record="$implicit">
+                                <tr>
+                                    <td>
+                                        <span class="p-column-title">{{ '' | localize }}</span>
+                                        {{ record.mobile }}
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ '' | localize }}</span>
+                                        {{ record.serial }}
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ '' | localize }}</span>
+                                        {{ record.description }}
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ '' | localize }}</span>
+                                        {{ record.userProcess }}
+                                    </td>
+                                    <td>
+                                        <span class="p-column-title">{{ 'Date' | localize }}</span>
+                                        {{ record.createdDate | luxonFormat: 'F' }}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div class="primeng-no-data text-center mt-5"
+                            *ngIf="this.primengTableHelper.totalRecordsCount == 0">
+                            {{ 'NoData' | localize }}
+                        </div>
+                        <div class="primeng-paging-container">
+                            <p-paginator (onPageChange)="getActionHistory($event)"
+                                [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
+                                [totalRecords]="this.primengTableHelper.totalRecordsCount"
+                                [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                                [showCurrentPageReport]="true" [currentPageReportTemplate]="
+                                        'TotalRecordsCount' | localize: this.primengTableHelper.totalRecordsCount
+                                    "></p-paginator>
                         </div>
                     </div>
                 </p-tabPanel>
@@ -172,16 +208,16 @@
     <ng-template #approve>
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Phê duyệt yêu cầu xuất kho</h3>
+                <h3 class="modal-title">Phê duyệt yêu cầu thu hồi</h3>
                 <button type="button" class="btn-close" (click)="closeModal()"></button>
             </div>
             <div class="modal-body text-center">
-                <p style="font-size: 16px;">Bạn có chắc chắn muốn duyệt yêu cầu xuất kho ABC?</p>
+                <p style="font-size: 16px;">Bạn có chắc chắn muốn duyệt yêu cầu thu hồi?</p>
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-center">
                     <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
-                    <button type="button" class="btn btn-primary btn-sm" (click)="closeModal()">XÁC NHẬN</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="confirmOrder()">XÁC NHẬN</button>
                 </div>
             </div>
         </div>
@@ -189,7 +225,7 @@
     <ng-template #refuse>
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Từ chối yêu cầu xuất kho</h3>
+                <h3 class="modal-title">Từ chối yêu cầu thu hồi</h3>
                 <button type="button" class="btn-close" (click)="closeModal()"></button>
             </div>
             <div class="modal-body">
@@ -199,13 +235,13 @@
                 </label>
                 <div class="input-group">
                     <input id="" name="" class="form-control" placeholder="{{ 'Nhập lý do từ chối' | localize }}"
-                        type="text" />
+                        type="text" [(ngModel)]="description" />
                 </div>
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-center">
                     <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
-                    <button type="button" class="btn btn-danger btn-sm" (click)="closeModal()">TỪ CHỐI</button>
+                    <button type="button" class="btn btn-danger btn-sm" (click)="refuseOrder()">TỪ CHỐI</button>
                 </div>
             </div>
         </div>

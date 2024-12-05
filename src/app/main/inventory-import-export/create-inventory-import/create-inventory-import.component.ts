@@ -3,13 +3,14 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { MenuItem } from 'primeng/api';
 import { CreateOrderDto, InventoryServiceProxy, IOrderItem, OrderItem } from '@shared/service-proxies/service-proxies';
+import { Router } from '@angular/router';
 @Component({
     templateUrl: './create-inventory-import.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [appModuleAnimation()],
 })
 export class CreateInventoryImportComponent extends AppComponentBase implements OnInit {
-    constructor(injector: Injector, private _inventoryServiceProxy: InventoryServiceProxy) {
+    constructor(injector: Injector, private _inventoryServiceProxy: InventoryServiceProxy, private router: Router) {
         super(injector);
     }
 
@@ -21,9 +22,9 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
     value: number = 0;
     title: string | undefined;
     description: string | undefined;
-    stockId: number = 38;
+    stockId: number;
     productType: number = 2;
-    orderItems: IOrderItem[] = [];
+    listStock = [];
     tempOrderItems: IOrderItem[] = [
         {
             orderName: '',
@@ -49,6 +50,33 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
                 this.value = 0;
             }
         }, 2000);
+        this.getListStock();
+    }
+
+    getListStock() {
+        this._inventoryServiceProxy
+            .getListStock(
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                0,
+                99
+            )
+            .subscribe((result) => {
+                this.listStock = result.items;
+            });
+    }
+
+    onChangeStock(event: Event) {
+        const stockId = parseInt((event.target as HTMLSelectElement).value);
+        this.stockId = stockId;
     }
 
     createOrder() {
@@ -57,21 +85,21 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
         body.description = this.description;
         body.stockId = this.stockId;
         body.productType = this.productType;
-        // body.userCreated = 'tienbv';
         // Convert IOrderItem[] to OrderItem[]
-        if (this.orderItems) {
-            body.items = this.orderItems.map(item => {
+        if (this.tempOrderItems) {
+            body.items = this.tempOrderItems.map((item) => {
                 return OrderItem.fromJS(item); // Convert each IOrderItem to OrderItem
             });
         }
         // console.log(body);
         this._inventoryServiceProxy.createOrder(body).subscribe(() => {
+            this.router.navigate(['/app/main/inventory-import-export']);
             this.notify.info(this.l('SavedSuccessfully'));
         });
     }
 
     addRow() {
-        this.orderItems.push({
+        this.tempOrderItems.push({
             orderName: '',
             unit: '',
             attribute: '',
@@ -83,7 +111,7 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
     }
 
     removeRow(index: number): void {
-        this.orderItems.splice(index, 1);
+        this.tempOrderItems.splice(index, 1);
     }
 
     onBasicUploadAuto(event) {
