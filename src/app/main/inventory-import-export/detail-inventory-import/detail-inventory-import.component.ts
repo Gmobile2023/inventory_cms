@@ -3,7 +3,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmOrderDto, InventoryServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs';
 import { Table } from 'primeng/table';
@@ -21,7 +21,8 @@ export class DetailInventoryImportComponent extends AppComponentBase implements 
         injector: Injector,
         private modalService: BsModalService,
         private route: ActivatedRoute,
-        private _inventoryServiceProxy: InventoryServiceProxy
+        private _inventoryServiceProxy: InventoryServiceProxy,
+        private router: Router
     ) {
         super(injector);
     }
@@ -85,6 +86,7 @@ export class DetailInventoryImportComponent extends AppComponentBase implements 
         body.orderCode = this.orderCode;
         body.status = 5;
         this._inventoryServiceProxy.confirmOrder(body).subscribe(() => {
+            this.router.navigate(['/app/main/inventory-import-export']);
             this.notify.info(this.l('SavedSuccessfully'));
             this.closeModal();
         });
@@ -96,6 +98,7 @@ export class DetailInventoryImportComponent extends AppComponentBase implements 
         body.description = this.description;
         body.status = 7;
         this._inventoryServiceProxy.confirmOrder(body).subscribe(() => {
+            this.router.navigate(['/app/main/inventory-import-export']);
             this.notify.info(this.l('SavedSuccessfully'));
             this.closeModal();
         });

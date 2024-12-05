@@ -12,11 +12,12 @@
             </div>
             <div class="mb-3 col-md-6">
                 <label for="stockId" class="form-label">Chọn kho nhập hàng<span class="text-danger">(*)</span></label>
-                <select id="stockId" name="stockId" class="form-select" [(ngModel)]="stockId">
+                <select id="srcStockId" name="srcStockId" class="form-select" [(ngModel)]="stockId"
+                    (change)="onChangeStock($event)">
                     <option [ngValue]="undefined">
                         Chọn kho
                     </option>
-                    <option value="38">Kho Đại Lý 1</option>
+                    <option value={{item.id}} *ngFor="let item of listStock">{{item.stockName}}</option>
                 </select>
             </div>
             <div class="mb-3">
@@ -30,7 +31,7 @@
         <div class="row bg-white py-5">
             <h4>DANH SÁCH HÀNG HOÁ</h4>
             <div class="primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
-                <p-table #dataTable sortMode="multiple" [value]="orderItems"
+                <p-table #dataTable sortMode="multiple" [value]="tempOrderItems"
                     rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
                     [tableStyle]="{'min-width': '50rem'}">
                     <ng-template pTemplate="header">

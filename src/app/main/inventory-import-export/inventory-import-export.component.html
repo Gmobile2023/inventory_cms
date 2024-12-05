@@ -102,13 +102,10 @@
                             </th>
                             <th>
                                 {{ 'LOẠI YÊU CẦU' | localize }}
-                                <!-- <p-sortIcon field="name"></p-sortIcon> -->
                             </th>
                             <th>{{ 'NGÀY GỬI YÊU CẦU' | localize }}</th>
-                            <!-- <th>{{ 'NGÀY DUYỆT' | localize }}</th> -->
                             <th>
                                 {{ 'SỐ LƯỢNG DỰ KIẾN' | localize }}
-                                <!-- <p-sortIcon field="subscriptionEndDateUtc"></p-sortIcon> -->
                             </th>
                             <th>{{ 'TRẠNG THÁI' | localize }}</th>
                             <th>
@@ -140,17 +137,12 @@
                                                 {{ 'Xem chi tiết' | localize }}
                                             </a>
                                         </li>
-                                        <!-- <li role="menuitem">
-                                            <a href="javascript:;" class="dropdown-item">
-                                                {{ 'Chỉnh sửa' | localize }}
-                                            </a>
-                                        </li> -->
                                     </ul>
                                 </div>
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.title }}
+                                {{ record.orderTitle }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
@@ -161,39 +153,15 @@
                                 <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.createdDate | luxonFormat: 'F' }}
                             </td>
-                            <!-- <td>
-                                <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.approveDate }}
-                            </td> -->
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.quantity }}
                             </td>
                             <td>
-                                <!-- <span class="p-column-title">{{ '' | localize }}</span>
-                                <span *ngIf="record.status == 0 || 1 || 2" class="badge badge-warning badge-inline">
-                                    {{ 'Chờ phê duyệt' | localize }}
-                                </span>
-                                <span *ngIf="record.status == 5" class="badge badge-success badge-inline">
-                                    {{ 'Đã duyệt' | localize }}
-                                </span>
-                                <span *ngIf="record.status == 7" class="badge badge-danger badge-inline">
-                                    {{ 'Từ chối' | localize }}
-                                </span> -->
                                 <span class="p-column-title">{{ '' | localize }}</span>
                                 <span class="badge badge-success badge-inline">{{ record.statusName }}</span>
                             </td>
                             <td>
-                                <!-- <span class="p-column-title">{{ 'Status' | localize }}</span>
-                                <span *ngIf="record.status == 0" class="badge badge-warning badge-inline">
-                                    {{ 'Chờ phê duyệt' | localize }}
-                                </span>
-                                <span *ngIf="record.status == 5" class="badge badge-success badge-inline">
-                                    {{ 'Đã duyệt' | localize }}
-                                </span>
-                                <span *ngIf="record.status == 7" class="badge badge-danger badge-inline">
-                                    {{ 'Từ chối' | localize }}
-                                </span> -->
                                 <span class="p-column-title">{{ '' | localize }}</span>
                                 <span class="badge badge-success badge-inline">{{ record.statusCurrentName }}</span>
                             </td>

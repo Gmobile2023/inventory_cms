@@ -8,7 +8,7 @@
                         <h4>THÔNG TIN NHẬP KHO</h4>
                         <div class="mb-3">
                             <label for="" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
-                            <input type="text" class="form-control" id="" value={{orderData.title}} disabled>
+                            <input type="text" class="form-control" id="" value={{orderData.orderTitle}} disabled>
                         </div>
                         <div class="mb-3">
                             <label for="" class="form-label">Ghi chú</label>
@@ -19,14 +19,12 @@
                     <div class="section py-5">
                         <h4>DANH SÁCH HÀNG HOÁ</h4>
                         <div class="primeng-datatable-container bg-white" [busyIf]="">
-                            <p-table #dataTable sortMode="multiple" [value]="dataFake"
+                            <p-table #dataTable sortMode="multiple" [value]="orderData.items"
                                 rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false"
                                 [lazy]="true" [tableStyle]="{'min-width': '50rem'}">
                                 <ng-template pTemplate="header">
                                     <tr>
                                         <th>{{ 'STT' | localize }}</th>
-                                        <th>{{ 'LOẠI HÀNG HOÁ' | localize }}</th>
-                                        <th>{{ 'MÃ HÀNG (*)' | localize }}</th>
                                         <th>{{ 'TÊN HÀNG (*)' | localize }}</th>
                                         <th>{{ 'ĐƠN VỊ (*)' | localize }}</th>
                                         <th>{{ 'SỐ LƯỢNG (*)' | localize }} </th>
@@ -34,16 +32,14 @@
                                         <th>{{ 'DẢI SERIAL ĐẾN (*)' | localize }}</th>
                                     </tr>
                                 </ng-template>
-                                <ng-template pTemplate="body" let-record="$implicit">
+                                <ng-template pTemplate="body" let-record="$implicit" let-rowIndex="rowIndex">
                                     <tr>
-                                        <td>{{record.id}}</td>
-                                        <td>{{record.loai}}</td>
-                                        <td>{{record.ma}}</td>
-                                        <td>{{record.ten}}</td>
-                                        <td>{{record.donvi}}</td>
+                                        <td>{{ rowIndex + 1 }}</td>
+                                        <td>{{record.orderName}}</td>
+                                        <td>{{record.telCo}}</td>
                                         <td>{{record.quantity}}</td>
-                                        <td>{{record.to}}</td>
-                                        <td>{{record.from}}</td>
+                                        <td>{{record.fromRange}}</td>
+                                        <td>{{record.toRange}}</td>
                                     </tr>
                                 </ng-template>
                             </p-table>

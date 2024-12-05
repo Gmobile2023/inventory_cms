@@ -30116,12 +30116,16 @@ export interface IOrderDetailDto {
 
 export class OrderDto implements IOrderDto {
     id!: number | undefined;
+    orderTitle!: string | undefined;
+    description!: string | undefined;
     orderCode!: string | undefined;
     orderType!: string | undefined;
     simType!: number;
     simTypeName!: number;
     srcStockCode!: string | undefined;
     desStockCode!: string | undefined;
+    srcStockName!: string | undefined;
+    desStockName!: string | undefined;
     transRef!: string | undefined;
     saleTransCode!: string | undefined;
     providerCode!: string | undefined;
@@ -30156,12 +30160,16 @@ export class OrderDto implements IOrderDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.orderTitle = _data["orderTitle"];
+            this.description = _data["description"];
             this.orderCode = _data["orderCode"];
             this.orderType = _data["orderType"];
             this.simType = _data["simType"];
             this.simTypeName = _data["simTypeName"];
             this.srcStockCode = _data["srcStockCode"];
             this.desStockCode = _data["desStockCode"];
+            this.srcStockName = _data["srcStockName"];
+            this.desStockName = _data["desStockName"];
             this.transRef = _data["transRef"];
             this.saleTransCode = _data["saleTransCode"];
             this.providerCode = _data["providerCode"];
@@ -30200,12 +30208,16 @@ export class OrderDto implements IOrderDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["orderTitle"] = this.orderTitle;
+        data["description"] = this.description;
         data["orderCode"] = this.orderCode;
         data["orderType"] = this.orderType;
         data["simType"] = this.simType;
         data["simTypeName"] = this.simTypeName;
         data["srcStockCode"] = this.srcStockCode;
         data["desStockCode"] = this.desStockCode;
+        data["srcStockName"] = this.srcStockName;
+        data["desStockName"] = this.desStockName;
         data["transRef"] = this.transRef;
         data["saleTransCode"] = this.saleTransCode;
         data["providerCode"] = this.providerCode;
@@ -30237,12 +30249,16 @@ export class OrderDto implements IOrderDto {
 
 export interface IOrderDto {
     id: number | undefined;
+    orderTitle: string | undefined;
+    description: string | undefined;
     orderCode: string | undefined;
     orderType: string | undefined;
     simType: number;
     simTypeName: number;
     srcStockCode: string | undefined;
     desStockCode: string | undefined;
+    srcStockName: string | undefined;
+    desStockName: string | undefined;
     transRef: string | undefined;
     saleTransCode: string | undefined;
     providerCode: string | undefined;
