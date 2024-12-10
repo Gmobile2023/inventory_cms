@@ -8410,6 +8410,92 @@ export class InventoryServiceProxy {
     }
 
     /**
+     * @param stockId (optional) 
+     * @param productType (optional) 
+     * @param mobile (optional) 
+     * @param serial (optional) 
+     * @param attribute (optional) 
+     * @param status (optional) 
+     * @param kitingStatus (optional) 
+     * @return Success
+     */
+    getListSimToExcel(stockId: number | undefined, productType: ProductType | undefined, mobile: string | undefined, serial: string | undefined, attribute: string | undefined, status: ProductStatus | undefined, kitingStatus: number | undefined): Observable<FileDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSimToExcel?";
+        if (stockId === null)
+            throw new Error("The parameter 'stockId' cannot be null.");
+        else if (stockId !== undefined)
+            url_ += "StockId=" + encodeURIComponent("" + stockId) + "&";
+        if (productType === null)
+            throw new Error("The parameter 'productType' cannot be null.");
+        else if (productType !== undefined)
+            url_ += "ProductType=" + encodeURIComponent("" + productType) + "&";
+        if (mobile === null)
+            throw new Error("The parameter 'mobile' cannot be null.");
+        else if (mobile !== undefined)
+            url_ += "Mobile=" + encodeURIComponent("" + mobile) + "&";
+        if (serial === null)
+            throw new Error("The parameter 'serial' cannot be null.");
+        else if (serial !== undefined)
+            url_ += "Serial=" + encodeURIComponent("" + serial) + "&";
+        if (attribute === null)
+            throw new Error("The parameter 'attribute' cannot be null.");
+        else if (attribute !== undefined)
+            url_ += "Attribute=" + encodeURIComponent("" + attribute) + "&";
+        if (status === null)
+            throw new Error("The parameter 'status' cannot be null.");
+        else if (status !== undefined)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        if (kitingStatus === null)
+            throw new Error("The parameter 'kitingStatus' cannot be null.");
+        else if (kitingStatus !== undefined)
+            url_ += "KitingStatus=" + encodeURIComponent("" + kitingStatus) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListSimToExcel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListSimToExcel(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileDto>;
+        }));
+    }
+
+    protected processGetListSimToExcel(response: HttpResponseBase): Observable<FileDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FileDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param number (optional) 
      * @param productType (optional) 
      * @return Success
@@ -8936,6 +9022,97 @@ export class InventoryServiceProxy {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PagedResultDtoOfHistorysDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param stockCode (optional) 
+     * @param stockName (optional) 
+     * @param orderCode (optional) 
+     * @param mobile (optional) 
+     * @param serial (optional) 
+     * @param fromDate (optional) 
+     * @param toDate (optional) 
+     * @param userProcess (optional) 
+     * @return Success
+     */
+    getHistoriesToExcel(stockCode: string | undefined, stockName: string | undefined, orderCode: string | undefined, mobile: string | undefined, serial: string | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, userProcess: string | undefined): Observable<FileDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetHistoriesToExcel?";
+        if (stockCode === null)
+            throw new Error("The parameter 'stockCode' cannot be null.");
+        else if (stockCode !== undefined)
+            url_ += "StockCode=" + encodeURIComponent("" + stockCode) + "&";
+        if (stockName === null)
+            throw new Error("The parameter 'stockName' cannot be null.");
+        else if (stockName !== undefined)
+            url_ += "StockName=" + encodeURIComponent("" + stockName) + "&";
+        if (orderCode === null)
+            throw new Error("The parameter 'orderCode' cannot be null.");
+        else if (orderCode !== undefined)
+            url_ += "OrderCode=" + encodeURIComponent("" + orderCode) + "&";
+        if (mobile === null)
+            throw new Error("The parameter 'mobile' cannot be null.");
+        else if (mobile !== undefined)
+            url_ += "Mobile=" + encodeURIComponent("" + mobile) + "&";
+        if (serial === null)
+            throw new Error("The parameter 'serial' cannot be null.");
+        else if (serial !== undefined)
+            url_ += "Serial=" + encodeURIComponent("" + serial) + "&";
+        if (fromDate === null)
+            throw new Error("The parameter 'fromDate' cannot be null.");
+        else if (fromDate !== undefined)
+            url_ += "FromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toString() : "") + "&";
+        if (toDate === null)
+            throw new Error("The parameter 'toDate' cannot be null.");
+        else if (toDate !== undefined)
+            url_ += "ToDate=" + encodeURIComponent(toDate ? "" + toDate.toString() : "") + "&";
+        if (userProcess === null)
+            throw new Error("The parameter 'userProcess' cannot be null.");
+        else if (userProcess !== undefined)
+            url_ += "UserProcess=" + encodeURIComponent("" + userProcess) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetHistoriesToExcel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetHistoriesToExcel(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileDto>;
+        }));
+    }
+
+    protected processGetHistoriesToExcel(response: HttpResponseBase): Observable<FileDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FileDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -9488,6 +9665,296 @@ export class InventoryServiceProxy {
     }
 
     protected processCreateKitting(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param productType (optional) 
+     * @param stockCode (optional) 
+     * @param fromDate (optional) 
+     * @param toDate (optional) 
+     * @param parentId (optional) 
+     * @param stockId (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getListInventoryReport(productType: ProductType | undefined, stockCode: string | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, parentId: number | undefined, stockId: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfInventoryReportDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListInventoryReport?";
+        if (productType === null)
+            throw new Error("The parameter 'productType' cannot be null.");
+        else if (productType !== undefined)
+            url_ += "ProductType=" + encodeURIComponent("" + productType) + "&";
+        if (stockCode === null)
+            throw new Error("The parameter 'stockCode' cannot be null.");
+        else if (stockCode !== undefined)
+            url_ += "StockCode=" + encodeURIComponent("" + stockCode) + "&";
+        if (fromDate === null)
+            throw new Error("The parameter 'fromDate' cannot be null.");
+        else if (fromDate !== undefined)
+            url_ += "FromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toString() : "") + "&";
+        if (toDate === null)
+            throw new Error("The parameter 'toDate' cannot be null.");
+        else if (toDate !== undefined)
+            url_ += "ToDate=" + encodeURIComponent(toDate ? "" + toDate.toString() : "") + "&";
+        if (parentId === null)
+            throw new Error("The parameter 'parentId' cannot be null.");
+        else if (parentId !== undefined)
+            url_ += "ParentId=" + encodeURIComponent("" + parentId) + "&";
+        if (stockId === null)
+            throw new Error("The parameter 'stockId' cannot be null.");
+        else if (stockId !== undefined)
+            url_ += "StockId=" + encodeURIComponent("" + stockId) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListInventoryReport(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListInventoryReport(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagedResultDtoOfInventoryReportDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagedResultDtoOfInventoryReportDto>;
+        }));
+    }
+
+    protected processGetListInventoryReport(response: HttpResponseBase): Observable<PagedResultDtoOfInventoryReportDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfInventoryReportDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param stockId (optional) 
+     * @param fromDate (optional) 
+     * @param toDate (optional) 
+     * @param status (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getListApprovalFlow(stockId: number | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, status: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfInventoryApprovalFlowDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListApprovalFlow?";
+        if (stockId === null)
+            throw new Error("The parameter 'stockId' cannot be null.");
+        else if (stockId !== undefined)
+            url_ += "StockId=" + encodeURIComponent("" + stockId) + "&";
+        if (fromDate === null)
+            throw new Error("The parameter 'fromDate' cannot be null.");
+        else if (fromDate !== undefined)
+            url_ += "FromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toString() : "") + "&";
+        if (toDate === null)
+            throw new Error("The parameter 'toDate' cannot be null.");
+        else if (toDate !== undefined)
+            url_ += "ToDate=" + encodeURIComponent(toDate ? "" + toDate.toString() : "") + "&";
+        if (status === null)
+            throw new Error("The parameter 'status' cannot be null.");
+        else if (status !== undefined)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListApprovalFlow(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListApprovalFlow(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagedResultDtoOfInventoryApprovalFlowDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagedResultDtoOfInventoryApprovalFlowDto>;
+        }));
+    }
+
+    protected processGetListApprovalFlow(response: HttpResponseBase): Observable<PagedResultDtoOfInventoryApprovalFlowDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfInventoryApprovalFlowDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getApprovalFlowForView(id: number | undefined): Observable<GetApprovalFlowForViewDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetApprovalFlowForView?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetApprovalFlowForView(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetApprovalFlowForView(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GetApprovalFlowForViewDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GetApprovalFlowForViewDto>;
+        }));
+    }
+
+    protected processGetApprovalFlowForView(response: HttpResponseBase): Observable<GetApprovalFlowForViewDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetApprovalFlowForViewDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createOrEditApprovalFlow(body: CreateOrEditApprovalFlowDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/CreateOrEditApprovalFlow";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateOrEditApprovalFlow(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateOrEditApprovalFlow(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processCreateOrEditApprovalFlow(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -20163,6 +20630,59 @@ export interface IApplicationLanguageListDto {
     id: number;
 }
 
+export class ApprovalFlowDetailDto implements IApprovalFlowDetailDto {
+    officeCode!: string | undefined;
+    officeName!: string | undefined;
+    userName!: string | undefined;
+    order!: number;
+
+    constructor(data?: IApprovalFlowDetailDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.officeCode = _data["officeCode"];
+            this.officeName = _data["officeName"];
+            this.userName = _data["userName"];
+            this.order = _data["order"];
+        }
+    }
+
+    static fromJS(data: any): ApprovalFlowDetailDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApprovalFlowDetailDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["officeCode"] = this.officeCode;
+        data["officeName"] = this.officeName;
+        data["userName"] = this.userName;
+        data["order"] = this.order;
+        return data;
+    }
+}
+
+export interface IApprovalFlowDetailDto {
+    officeCode: string | undefined;
+    officeName: string | undefined;
+    userName: string | undefined;
+    order: number;
+}
+
+export enum ApprovalFlowStatus {
+    Success = 1,
+    Lock = 2,
+}
+
 export class AuditLogListDto implements IAuditLogListDto {
     userId!: number | undefined;
     userName!: string | undefined;
@@ -21335,6 +21855,90 @@ export interface ICreateMassNotificationInput {
     userIds: number[] | undefined;
     organizationUnitIds: number[] | undefined;
     targetNotifiers: string[] | undefined;
+}
+
+export class CreateOrEditApprovalFlowDto implements ICreateOrEditApprovalFlowDto {
+    id!: number | undefined;
+    stockLevel!: number;
+    productType!: ProductType;
+    stockId!: number | undefined;
+    stockName!: string | undefined;
+    numberLevel!: number;
+    status!: ApprovalFlowStatus;
+    createdDate!: DateTime;
+    userCreated!: string | undefined;
+    description!: string | undefined;
+    items!: ApprovalFlowDetailDto[] | undefined;
+
+    constructor(data?: ICreateOrEditApprovalFlowDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.stockLevel = _data["stockLevel"];
+            this.productType = _data["productType"];
+            this.stockId = _data["stockId"];
+            this.stockName = _data["stockName"];
+            this.numberLevel = _data["numberLevel"];
+            this.status = _data["status"];
+            this.createdDate = _data["createdDate"] ? DateTime.fromISO(_data["createdDate"].toString()) : <any>undefined;
+            this.userCreated = _data["userCreated"];
+            this.description = _data["description"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(ApprovalFlowDetailDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateOrEditApprovalFlowDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateOrEditApprovalFlowDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["stockLevel"] = this.stockLevel;
+        data["productType"] = this.productType;
+        data["stockId"] = this.stockId;
+        data["stockName"] = this.stockName;
+        data["numberLevel"] = this.numberLevel;
+        data["status"] = this.status;
+        data["createdDate"] = this.createdDate ? this.createdDate.toString() : <any>undefined;
+        data["userCreated"] = this.userCreated;
+        data["description"] = this.description;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ICreateOrEditApprovalFlowDto {
+    id: number | undefined;
+    stockLevel: number;
+    productType: ProductType;
+    stockId: number | undefined;
+    stockName: string | undefined;
+    numberLevel: number;
+    status: ApprovalFlowStatus;
+    createdDate: DateTime;
+    userCreated: string | undefined;
+    description: string | undefined;
+    items: ApprovalFlowDetailDto[] | undefined;
 }
 
 export class CreateOrEditCityDto implements ICreateOrEditCityDto {
@@ -25099,6 +25703,46 @@ export interface IGetAllSubscriptionsOutput {
     id: string;
 }
 
+export class GetApprovalFlowForViewDto implements IGetApprovalFlowForViewDto {
+    approvalFlow!: InventoryApprovalFlowDto;
+    id!: number;
+
+    constructor(data?: IGetApprovalFlowForViewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.approvalFlow = _data["approvalFlow"] ? InventoryApprovalFlowDto.fromJS(_data["approvalFlow"]) : <any>undefined;
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): GetApprovalFlowForViewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetApprovalFlowForViewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["approvalFlow"] = this.approvalFlow ? this.approvalFlow.toJSON() : <any>undefined;
+        data["id"] = this.id;
+        return data;
+    }
+}
+
+export interface IGetApprovalFlowForViewDto {
+    approvalFlow: InventoryApprovalFlowDto;
+    id: number;
+}
+
 export class GetCityForEditOutput implements IGetCityForEditOutput {
     city!: CreateOrEditCityDto;
     countryCountryName!: string | undefined;
@@ -27206,7 +27850,7 @@ export interface IGoogleExternalLoginProviderSettings {
 export class HistorysDto implements IHistorysDto {
     description!: string | undefined;
     userProcess!: string | undefined;
-    createdDate!: string | undefined;
+    createdDate!: DateTime | undefined;
     serial!: string | undefined;
     mobile!: string | undefined;
     orderCode!: string | undefined;
@@ -27225,7 +27869,7 @@ export class HistorysDto implements IHistorysDto {
         if (_data) {
             this.description = _data["description"];
             this.userProcess = _data["userProcess"];
-            this.createdDate = _data["createdDate"];
+            this.createdDate = _data["createdDate"] ? DateTime.fromISO(_data["createdDate"].toString()) : <any>undefined;
             this.serial = _data["serial"];
             this.mobile = _data["mobile"];
             this.orderCode = _data["orderCode"];
@@ -27244,7 +27888,7 @@ export class HistorysDto implements IHistorysDto {
         data = typeof data === 'object' ? data : {};
         data["description"] = this.description;
         data["userProcess"] = this.userProcess;
-        data["createdDate"] = this.createdDate;
+        data["createdDate"] = this.createdDate ? this.createdDate.toString() : <any>undefined;
         data["serial"] = this.serial;
         data["mobile"] = this.mobile;
         data["orderCode"] = this.orderCode;
@@ -27256,7 +27900,7 @@ export class HistorysDto implements IHistorysDto {
 export interface IHistorysDto {
     description: string | undefined;
     userProcess: string | undefined;
-    createdDate: string | undefined;
+    createdDate: DateTime | undefined;
     serial: string | undefined;
     mobile: string | undefined;
     orderCode: string | undefined;
@@ -27974,6 +28618,90 @@ export interface IInstallDto {
     billInfo: HostBillingSettingsEditDto;
 }
 
+export class InventoryApprovalFlowDto implements IInventoryApprovalFlowDto {
+    id!: number | undefined;
+    stockLevel!: number;
+    productType!: ProductType;
+    stockId!: number | undefined;
+    stockName!: string | undefined;
+    numberLevel!: number;
+    status!: ApprovalFlowStatus;
+    createdDate!: DateTime;
+    userCreated!: string | undefined;
+    description!: string | undefined;
+    items!: ApprovalFlowDetailDto[] | undefined;
+
+    constructor(data?: IInventoryApprovalFlowDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.stockLevel = _data["stockLevel"];
+            this.productType = _data["productType"];
+            this.stockId = _data["stockId"];
+            this.stockName = _data["stockName"];
+            this.numberLevel = _data["numberLevel"];
+            this.status = _data["status"];
+            this.createdDate = _data["createdDate"] ? DateTime.fromISO(_data["createdDate"].toString()) : <any>undefined;
+            this.userCreated = _data["userCreated"];
+            this.description = _data["description"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(ApprovalFlowDetailDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): InventoryApprovalFlowDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new InventoryApprovalFlowDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["stockLevel"] = this.stockLevel;
+        data["productType"] = this.productType;
+        data["stockId"] = this.stockId;
+        data["stockName"] = this.stockName;
+        data["numberLevel"] = this.numberLevel;
+        data["status"] = this.status;
+        data["createdDate"] = this.createdDate ? this.createdDate.toString() : <any>undefined;
+        data["userCreated"] = this.userCreated;
+        data["description"] = this.description;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IInventoryApprovalFlowDto {
+    id: number | undefined;
+    stockLevel: number;
+    productType: ProductType;
+    stockId: number | undefined;
+    stockName: string | undefined;
+    numberLevel: number;
+    status: ApprovalFlowStatus;
+    createdDate: DateTime;
+    userCreated: string | undefined;
+    description: string | undefined;
+    items: ApprovalFlowDetailDto[] | undefined;
+}
+
 export class InventoryDto implements IInventoryDto {
     id!: number | undefined;
     stockCode!: string | undefined;
@@ -28096,6 +28824,66 @@ export interface IInventoryDto {
     quantity: number;
     numberChild: number;
     location: string | undefined;
+}
+
+export class InventoryReportDto implements IInventoryReportDto {
+    stockId!: number;
+    stockCode!: string | undefined;
+    stockName!: string | undefined;
+    before!: number;
+    import!: number;
+    export!: number;
+    after!: number;
+
+    constructor(data?: IInventoryReportDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.stockId = _data["stockId"];
+            this.stockCode = _data["stockCode"];
+            this.stockName = _data["stockName"];
+            this.before = _data["before"];
+            this.import = _data["import"];
+            this.export = _data["export"];
+            this.after = _data["after"];
+        }
+    }
+
+    static fromJS(data: any): InventoryReportDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new InventoryReportDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["stockId"] = this.stockId;
+        data["stockCode"] = this.stockCode;
+        data["stockName"] = this.stockName;
+        data["before"] = this.before;
+        data["import"] = this.import;
+        data["export"] = this.export;
+        data["after"] = this.after;
+        return data;
+    }
+}
+
+export interface IInventoryReportDto {
+    stockId: number;
+    stockCode: string | undefined;
+    stockName: string | undefined;
+    before: number;
+    import: number;
+    export: number;
+    after: number;
 }
 
 export enum InventoryStatus {
@@ -31051,6 +31839,54 @@ export interface IPagedResultDtoOfHistorysDto {
     items: HistorysDto[] | undefined;
 }
 
+export class PagedResultDtoOfInventoryApprovalFlowDto implements IPagedResultDtoOfInventoryApprovalFlowDto {
+    totalCount!: number;
+    items!: InventoryApprovalFlowDto[] | undefined;
+
+    constructor(data?: IPagedResultDtoOfInventoryApprovalFlowDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(InventoryApprovalFlowDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfInventoryApprovalFlowDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultDtoOfInventoryApprovalFlowDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IPagedResultDtoOfInventoryApprovalFlowDto {
+    totalCount: number;
+    items: InventoryApprovalFlowDto[] | undefined;
+}
+
 export class PagedResultDtoOfInventoryDto implements IPagedResultDtoOfInventoryDto {
     totalCount!: number;
     items!: InventoryDto[] | undefined;
@@ -31097,6 +31933,54 @@ export class PagedResultDtoOfInventoryDto implements IPagedResultDtoOfInventoryD
 export interface IPagedResultDtoOfInventoryDto {
     totalCount: number;
     items: InventoryDto[] | undefined;
+}
+
+export class PagedResultDtoOfInventoryReportDto implements IPagedResultDtoOfInventoryReportDto {
+    totalCount!: number;
+    items!: InventoryReportDto[] | undefined;
+
+    constructor(data?: IPagedResultDtoOfInventoryReportDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(InventoryReportDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfInventoryReportDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultDtoOfInventoryReportDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IPagedResultDtoOfInventoryReportDto {
+    totalCount: number;
+    items: InventoryReportDto[] | undefined;
 }
 
 export class PagedResultDtoOfLanguageTextListDto implements IPagedResultDtoOfLanguageTextListDto {

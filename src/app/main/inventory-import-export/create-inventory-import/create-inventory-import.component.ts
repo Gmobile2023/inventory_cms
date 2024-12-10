@@ -110,6 +110,18 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
         });
     }
 
+    onKeyPress(event: KeyboardEvent): void {
+        const regex = /^[0-9]*$/; // Chỉ cho phép nhập số
+        if (!regex.test(event.key)) {
+            event.preventDefault(); // Chặn ký tự không hợp lệ
+        }
+    }
+
+    onInput(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        input.value = input.value.replace(/[^0-9]/g, ''); // Loại bỏ ký tự không hợp lệ
+    }
+
     removeRow(index: number): void {
         this.tempOrderItems.splice(index, 1);
     }

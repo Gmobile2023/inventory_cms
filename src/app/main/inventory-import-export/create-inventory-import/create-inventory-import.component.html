@@ -40,9 +40,9 @@
                             <th>{{ 'LOẠI HÀNG HOÁ' | localize }}</th>
                             <th>{{ 'TÊN HÀNG (*)' | localize }}</th>
                             <th>{{ 'ĐƠN VỊ (*)' | localize }}</th>
-                            <th>{{ 'SỐ LƯỢNG (*)' | localize }} </th>
                             <th>{{ 'DẢI SERIAL TỪ (*)' | localize }}</th>
                             <th>{{ 'DẢI SERIAL ĐẾN (*)' | localize }}</th>
+                            <th>{{ 'SỐ LƯỢNG (*)' | localize }} </th>
                             <th>{{ 'XOÁ' | localize }}</th>
                         </tr>
                     </ng-template>
@@ -57,9 +57,13 @@
                             </td>
                             <td><input type="text" class="form-control" [(ngModel)]="record.orderName" /></td>
                             <td><input type="text" class="form-control" [(ngModel)]="record.telCo" /></td>
-                            <td><input type="text" class="form-control" [(ngModel)]="record.quantity" /></td>
-                            <td><input type="text" class="form-control" [(ngModel)]="record.fromRange" /></td>
-                            <td><input type="text" class="form-control" [(ngModel)]="record.toRange" /></td>
+                            <td><input type="text" pattern="^[0-9]*$" maxlength="20" class="form-control"
+                                    (keypress)="onKeyPress($event)" (input)="onInput($event)"
+                                    [(ngModel)]="record.fromRange" /></td>
+                            <td><input type="text" pattern="^[0-9]*$" maxlength="20" class="form-control"
+                                    (keypress)="onKeyPress($event)" (input)="onInput($event)"
+                                    [(ngModel)]="record.toRange" /></td>
+                            <td><input type="number" class="form-control" [(ngModel)]="record.quantity" /></td>
                             <td><button class="btn btn-danger" (click)="removeRow(rowIndex)">Xóa</button></td>
                         </tr>
                     </ng-template>
