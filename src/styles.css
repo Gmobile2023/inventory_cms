@@ -200,3 +200,9 @@ html[data-theme=dark] {
 p-autocomplete {
     width: 100%;
 }
+
+.p-breadcrumb {
+    background: transparent !important;
+    border: none !important;
+    padding: 0.75rem 1rem !important;
+}
