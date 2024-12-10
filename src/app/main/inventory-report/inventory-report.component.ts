@@ -1,22 +1,48 @@
 import { Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { MenuItem } from 'primeng/api';
+import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-
+import { finalize } from 'rxjs';
+import { InventoryServiceProxy, ProductType } from '@shared/service-proxies/service-proxies';
+import { Table } from 'primeng/table';
+import { Paginator } from 'primeng/paginator';
+import { DateTime } from '@node_modules/@types/luxon';
+import { DateTimeService } from '@app/shared/common/timing/date-time.service';
 @Component({
     templateUrl: './inventory-report.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [appModuleAnimation()],
 })
 export class InventoryReportComponent extends AppComponentBase {
-    constructor(injector: Injector, private modalService: BsModalService) {
+    @ViewChild('dataTable', { static: true }) dataTable: Table;
+    @ViewChild('paginator', { static: true }) paginator: Paginator;
+    constructor(
+        injector: Injector,
+        private modalService: BsModalService,
+        private _inventoryServiceProxy: InventoryServiceProxy,
+        private _dateTimeService: DateTimeService
+    ) {
         super(injector);
     }
 
     modalRef?: BsModalRef | null;
     items: MenuItem[];
     home: MenuItem;
+    productType: ProductType = 1;
+    stockCode: string;
+    stockName: string;
+    fromDate: DateTime;
+    toDate: DateTime;
+    parentId: number;
+    stockId: number;
+    sorting: string = '99';
+    status: number = 5;
+    skipCount: number = 0;
+    maxResultCount: number = 99;
+    orderType: number;
+    orderList = [];
+    totalCountOrder: number;
 
     ngOnInit() {
         this.items = [
@@ -26,41 +52,60 @@ export class InventoryReportComponent extends AppComponentBase {
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
     }
 
+    getListInventoryReport(event?: LazyLoadEvent) {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getListInventoryReport(
+                this.productType,
+                this.stockCode,
+                this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
+                this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
+                this.parentId,
+                this.stockId,
+                this.sorting,
+                this.primengTableHelper.getSkipCount(this.paginator, event),
+                this.primengTableHelper.getMaxResultCount(this.paginator, event)
+            )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this.primengTableHelper.records = result.items;
+                this.primengTableHelper.totalRecordsCount = result.totalCount;
+                this.primengTableHelper.hideLoadingIndicator();
+            });
+    }
+
+    openModalOrder(template: TemplateRef<any>, orderType: number, stockCode: string) {
+        this.orderType = orderType;
+        this.stockCode = stockCode;
+        this.getOrdersImport();
+        this.openModal(template);
+    }
+
+    getOrdersImport(event?: LazyLoadEvent) {
+        this._inventoryServiceProxy
+            .getListOrder(
+                this.orderType,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                this.stockCode,
+                this.status,
+                this.primengTableHelper.getSorting(this.dataTable),
+                this.primengTableHelper.getSkipCount(this.paginator, event),
+                this.primengTableHelper.getMaxResultCount(this.paginator, event)
+            )
+            .subscribe((result) => {
+                this.orderList = result.items;
+                this.totalCountOrder = result.totalCount;
+            });
+    }
+
     openModal(template: TemplateRef<any>) {
-        this.modalRef = this.modalService.show(template, { id: 1, class: 'modal-md' });
+        this.modalRef = this.modalService.show(template, { id: 1, class: 'modal-xl' });
     }
 
     closeModal(modalId?: number) {
         this.modalService.hide(modalId);
     }
-
-    dataFake = [
-        {
-            id: 1,
-            productCode: 'XXX',
-            productName: 'XXXXX',
-            quantityBefore: '1000',
-            quantityAfter: '800',
-            quantityImport: '100',
-            quantityExport: '200',
-        },
-        {
-            id: 2,
-            productCode: 'XXX',
-            productName: 'XXXXX',
-            quantityBefore: '1000',
-            quantityAfter: '800',
-            quantityImport: '100',
-            quantityExport: '200',
-        },
-        {
-            id: 3,
-            productCode: 'XXX',
-            productName: 'XXXXX',
-            quantityBefore: '1000',
-            quantityAfter: '800',
-            quantityImport: '100',
-            quantityExport: '200',
-        },
-    ];
 }

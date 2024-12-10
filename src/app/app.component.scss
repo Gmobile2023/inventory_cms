@@ -41,3 +41,15 @@
 ::ng-deep .p-fileupload .p-fileupload-content {
   border: none;
 }
+
+::ng-deep .input-group .p-element.p-inputwrapper .p-autocomplete-multiple .p-autocomplete-multiple-container {
+  padding: 0.375rem 0.75rem !important; 
+}
+
+::ng-deep .p-element.p-inputwrapper .p-inputtext {
+  padding: 0.85rem 0.85rem !important;
+}
+
+::ng-deep .p-element.p-inputwrapper.select-user .p-inputtext {
+  padding: 0.375rem 0.75rem !important;
+}
