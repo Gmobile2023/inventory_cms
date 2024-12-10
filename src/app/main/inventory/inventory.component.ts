@@ -189,11 +189,15 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     createOrEditStock() {
         let body = new CreateOrEditStockDto();
         if (!this.isEdit) {
-            this.inventoryData.stockType = this.inventoryData.stockCode;
+            // console.log('Tạo kho');
+            body = { ...this.inventoryData };
+            body.stockType = this.inventoryData.stockCode;
+            body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
+            body.userCreateOrder = this.inventoryData.userCreateOrder?.map((user) => user.userName) || [];
         } else {
             // Gộp dữ liệu vào body rồi mới thực hiện xử lý bên dưới
             body = { ...this.inventoryData };
-
+            // console.log('Sửa kho');
             // Không set kiểu this.inventoryData.userManager =
             // vì sẽ mất dữ liệu trên UI
             body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
@@ -201,6 +205,7 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
             body.userApprove = this.inventoryData.userApprove?.map((user) => user.userName) || [];
             body.userAccounting = this.inventoryData.userAccounting?.map((user) => user.userName) || [];
         }
+        // console.log(body);
 
         this._inventoryServiceProxy.createOrEditStock(body).subscribe(() => {
             this.notify.info(this.l('SavedSuccessfully'));
@@ -213,6 +218,7 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     activateStock() {
         let body = new ActivateStockDto();
         body.id = this.idAction;
+        console.log(this.idAction);
         this._inventoryServiceProxy.activateStock(body).subscribe(() => {
             this.notify.info(this.l('SavedSuccessfully'));
             this.closeModal();
@@ -220,8 +226,14 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
         });
     }
 
+    viewAllStock() {
+        this.inventoryId = undefined;
+        this.getListStock();
+    }
+
     openModal(template: TemplateRef<any>, typeModal: string, id?: number) {
         if (id) {
+            this.idAction = id;
             this.isEdit = true;
             this.getStockForEdit(id);
         } else {
