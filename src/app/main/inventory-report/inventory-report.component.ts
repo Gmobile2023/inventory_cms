@@ -9,12 +9,14 @@ import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { DateTime } from '@node_modules/@types/luxon';
 import { DateTimeService } from '@app/shared/common/timing/date-time.service';
+import { SimDetailModalComponent } from './sim-detail-modal.component';
 @Component({
     templateUrl: './inventory-report.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [appModuleAnimation()],
 })
 export class InventoryReportComponent extends AppComponentBase {
+    @ViewChild('simDetailModal', { static: true }) simDetailModal: SimDetailModalComponent;
     @ViewChild('dataTable', { static: true }) dataTable: Table;
     @ViewChild('paginator', { static: true }) paginator: Paginator;
     constructor(
@@ -74,31 +76,8 @@ export class InventoryReportComponent extends AppComponentBase {
             });
     }
 
-    openModalOrder(template: TemplateRef<any>, orderType: number, stockCode: string) {
-        this.orderType = orderType;
-        this.stockCode = stockCode;
-        this.getOrdersImport();
-        this.openModal(template);
-    }
-
-    getOrdersImport(event?: LazyLoadEvent) {
-        this._inventoryServiceProxy
-            .getListOrder(
-                this.orderType,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                this.stockCode,
-                this.status,
-                this.primengTableHelper.getSorting(this.dataTable),
-                this.primengTableHelper.getSkipCount(this.paginator, event),
-                this.primengTableHelper.getMaxResultCount(this.paginator, event)
-            )
-            .subscribe((result) => {
-                this.orderList = result.items;
-                this.totalCountOrder = result.totalCount;
-            });
+    openModalOrders(orderType: number, stockCode: string, stockId: number): void {
+        this.simDetailModal.show(orderType, stockCode, stockId);
     }
 
     openModal(template: TemplateRef<any>) {

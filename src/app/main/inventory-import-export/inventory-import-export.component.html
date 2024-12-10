@@ -159,11 +159,15 @@
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                <span class="badge badge-success badge-inline">{{ record.statusName }}</span>
+                                <span class="badge badge-inline"
+                                    [class]="record.status == 5 ? 'badge-success' : 'badge-warning'">{{
+                                    record.statusName }}</span>
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                <span class="badge badge-success badge-inline">{{ record.statusCurrentName }}</span>
+                                <span class="badge badge-inline"
+                                    [class]="record.status == 5 ? 'badge-success' : 'badge-warning'">{{
+                                    record.statusCurrentName }}</span>
                             </td>
                         </tr>
                     </ng-template>

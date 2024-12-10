@@ -9632,21 +9632,29 @@ export class InventoryServiceProxy {
     }
 
     /**
-     * @param body (optional) 
+     * @param stockId (optional) 
+     * @param type (optional) 
      * @return Success
      */
-    createKitting(body: CreateKittingDto | undefined): Observable<void> {
+    createKitting(stockId: number | undefined, type: SettingType | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/CreateKitting";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
+        const content_ = new FormData();
+        if (stockId === null || stockId === undefined)
+            throw new Error("The parameter 'stockId' cannot be null.");
+        else
+            content_.append("stockId", stockId.toString());
+        if (type === null || type === undefined)
+            throw new Error("The parameter 'type' cannot be null.");
+        else
+            content_.append("type", type.toString());
 
         let options_ : any = {
             body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Content-Type": "application/json-patch+json",
             })
         };
 
@@ -9964,6 +9972,163 @@ export class InventoryServiceProxy {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param orderCode (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getListOrderActionLog(orderCode: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfOrderActionLogDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListOrderActionLog?";
+        if (orderCode === null)
+            throw new Error("The parameter 'orderCode' cannot be null.");
+        else if (orderCode !== undefined)
+            url_ += "OrderCode=" + encodeURIComponent("" + orderCode) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListOrderActionLog(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListOrderActionLog(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagedResultDtoOfOrderActionLogDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagedResultDtoOfOrderActionLogDto>;
+        }));
+    }
+
+    protected processGetListOrderActionLog(response: HttpResponseBase): Observable<PagedResultDtoOfOrderActionLogDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfOrderActionLogDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param stockId (optional) 
+     * @param type (optional) 
+     * @param fromDate (optional) 
+     * @param toDate (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getListOrderInventory(stockId: number | undefined, type: OrderStockType | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfOrderInventoryDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListOrderInventory?";
+        if (stockId === null)
+            throw new Error("The parameter 'stockId' cannot be null.");
+        else if (stockId !== undefined)
+            url_ += "StockId=" + encodeURIComponent("" + stockId) + "&";
+        if (type === null)
+            throw new Error("The parameter 'type' cannot be null.");
+        else if (type !== undefined)
+            url_ += "Type=" + encodeURIComponent("" + type) + "&";
+        if (fromDate === null)
+            throw new Error("The parameter 'fromDate' cannot be null.");
+        else if (fromDate !== undefined)
+            url_ += "FromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toString() : "") + "&";
+        if (toDate === null)
+            throw new Error("The parameter 'toDate' cannot be null.");
+        else if (toDate !== undefined)
+            url_ += "ToDate=" + encodeURIComponent(toDate ? "" + toDate.toString() : "") + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListOrderInventory(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListOrderInventory(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagedResultDtoOfOrderInventoryDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagedResultDtoOfOrderInventoryDto>;
+        }));
+    }
+
+    protected processGetListOrderInventory(response: HttpResponseBase): Observable<PagedResultDtoOfOrderInventoryDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfOrderInventoryDto.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -20678,11 +20843,6 @@ export interface IApprovalFlowDetailDto {
     order: number;
 }
 
-export enum ApprovalFlowStatus {
-    Success = 1,
-    Lock = 2,
-}
-
 export class AuditLogListDto implements IAuditLogListDto {
     userId!: number | undefined;
     userName!: string | undefined;
@@ -21737,50 +21897,6 @@ export interface ICreateInvoiceDto {
     subscriptionPaymentId: number;
 }
 
-export class CreateKittingDto implements ICreateKittingDto {
-    stockId!: number;
-    userCreated!: string | undefined;
-    type!: SettingType;
-
-    constructor(data?: ICreateKittingDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.stockId = _data["stockId"];
-            this.userCreated = _data["userCreated"];
-            this.type = _data["type"];
-        }
-    }
-
-    static fromJS(data: any): CreateKittingDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateKittingDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["stockId"] = this.stockId;
-        data["userCreated"] = this.userCreated;
-        data["type"] = this.type;
-        return data;
-    }
-}
-
-export interface ICreateKittingDto {
-    stockId: number;
-    userCreated: string | undefined;
-    type: SettingType;
-}
-
 export class CreateMassNotificationInput implements ICreateMassNotificationInput {
     message!: string | undefined;
     severity!: NotificationSeverity;
@@ -21864,7 +21980,7 @@ export class CreateOrEditApprovalFlowDto implements ICreateOrEditApprovalFlowDto
     stockId!: number | undefined;
     stockName!: string | undefined;
     numberLevel!: number;
-    status!: ApprovalFlowStatus;
+    status!: number;
     createdDate!: DateTime;
     userCreated!: string | undefined;
     description!: string | undefined;
@@ -21934,7 +22050,7 @@ export interface ICreateOrEditApprovalFlowDto {
     stockId: number | undefined;
     stockName: string | undefined;
     numberLevel: number;
-    status: ApprovalFlowStatus;
+    status: number;
     createdDate: DateTime;
     userCreated: string | undefined;
     description: string | undefined;
@@ -28625,7 +28741,7 @@ export class InventoryApprovalFlowDto implements IInventoryApprovalFlowDto {
     stockId!: number | undefined;
     stockName!: string | undefined;
     numberLevel!: number;
-    status!: ApprovalFlowStatus;
+    status!: number;
     createdDate!: DateTime;
     userCreated!: string | undefined;
     description!: string | undefined;
@@ -28695,7 +28811,7 @@ export interface IInventoryApprovalFlowDto {
     stockId: number | undefined;
     stockName: string | undefined;
     numberLevel: number;
-    status: ApprovalFlowStatus;
+    status: number;
     createdDate: DateTime;
     userCreated: string | undefined;
     description: string | undefined;
@@ -30746,6 +30862,54 @@ export interface IOpenIdConnectExternalLoginProviderSettings {
     responseType: string | undefined;
 }
 
+export class OrderActionLogDto implements IOrderActionLogDto {
+    actionName!: string | undefined;
+    description!: string | undefined;
+    userProcess!: string | undefined;
+    createdDate!: DateTime | undefined;
+
+    constructor(data?: IOrderActionLogDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.actionName = _data["actionName"];
+            this.description = _data["description"];
+            this.userProcess = _data["userProcess"];
+            this.createdDate = _data["createdDate"] ? DateTime.fromISO(_data["createdDate"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): OrderActionLogDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new OrderActionLogDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["actionName"] = this.actionName;
+        data["description"] = this.description;
+        data["userProcess"] = this.userProcess;
+        data["createdDate"] = this.createdDate ? this.createdDate.toString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IOrderActionLogDto {
+    actionName: string | undefined;
+    description: string | undefined;
+    userProcess: string | undefined;
+    createdDate: DateTime | undefined;
+}
+
 export class OrderActionResponse implements IOrderActionResponse {
     orderCode!: string | undefined;
     quantity!: number;
@@ -31070,6 +31234,86 @@ export interface IOrderDto {
     items: OrderDetailDto[] | undefined;
 }
 
+export class OrderInventoryDto implements IOrderInventoryDto {
+    id!: number | undefined;
+    orderTitle!: string | undefined;
+    description!: string | undefined;
+    orderCode!: string | undefined;
+    orderType!: OrderTypeValue;
+    userConfirm!: string | undefined;
+    createdDate!: DateTime;
+    confirmDate!: DateTime | undefined;
+    quantity!: number;
+    costPrice!: number;
+    salePrice!: number;
+    status!: OrderStatus;
+
+    constructor(data?: IOrderInventoryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.orderTitle = _data["orderTitle"];
+            this.description = _data["description"];
+            this.orderCode = _data["orderCode"];
+            this.orderType = _data["orderType"];
+            this.userConfirm = _data["userConfirm"];
+            this.createdDate = _data["createdDate"] ? DateTime.fromISO(_data["createdDate"].toString()) : <any>undefined;
+            this.confirmDate = _data["confirmDate"] ? DateTime.fromISO(_data["confirmDate"].toString()) : <any>undefined;
+            this.quantity = _data["quantity"];
+            this.costPrice = _data["costPrice"];
+            this.salePrice = _data["salePrice"];
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): OrderInventoryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new OrderInventoryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["orderTitle"] = this.orderTitle;
+        data["description"] = this.description;
+        data["orderCode"] = this.orderCode;
+        data["orderType"] = this.orderType;
+        data["userConfirm"] = this.userConfirm;
+        data["createdDate"] = this.createdDate ? this.createdDate.toString() : <any>undefined;
+        data["confirmDate"] = this.confirmDate ? this.confirmDate.toString() : <any>undefined;
+        data["quantity"] = this.quantity;
+        data["costPrice"] = this.costPrice;
+        data["salePrice"] = this.salePrice;
+        data["status"] = this.status;
+        return data;
+    }
+}
+
+export interface IOrderInventoryDto {
+    id: number | undefined;
+    orderTitle: string | undefined;
+    description: string | undefined;
+    orderCode: string | undefined;
+    orderType: OrderTypeValue;
+    userConfirm: string | undefined;
+    createdDate: DateTime;
+    confirmDate: DateTime | undefined;
+    quantity: number;
+    costPrice: number;
+    salePrice: number;
+    status: OrderStatus;
+}
+
 export class OrderItem implements IOrderItem {
     orderName!: string | undefined;
     unit!: string | undefined;
@@ -31138,6 +31382,11 @@ export enum OrderStatus {
     UserAccounting = 4,
     Confirm = 5,
     Cancel = 7,
+}
+
+export enum OrderStockType {
+    Import = 1,
+    Export = 2,
 }
 
 export class OrderTypeDto implements IOrderTypeDto {
@@ -32223,6 +32472,54 @@ export interface IPagedResultDtoOfNameValueDto {
     items: NameValueDto[] | undefined;
 }
 
+export class PagedResultDtoOfOrderActionLogDto implements IPagedResultDtoOfOrderActionLogDto {
+    totalCount!: number;
+    items!: OrderActionLogDto[] | undefined;
+
+    constructor(data?: IPagedResultDtoOfOrderActionLogDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(OrderActionLogDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfOrderActionLogDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultDtoOfOrderActionLogDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IPagedResultDtoOfOrderActionLogDto {
+    totalCount: number;
+    items: OrderActionLogDto[] | undefined;
+}
+
 export class PagedResultDtoOfOrderDto implements IPagedResultDtoOfOrderDto {
     totalCount!: number;
     items!: OrderDto[] | undefined;
@@ -32269,6 +32566,54 @@ export class PagedResultDtoOfOrderDto implements IPagedResultDtoOfOrderDto {
 export interface IPagedResultDtoOfOrderDto {
     totalCount: number;
     items: OrderDto[] | undefined;
+}
+
+export class PagedResultDtoOfOrderInventoryDto implements IPagedResultDtoOfOrderInventoryDto {
+    totalCount!: number;
+    items!: OrderInventoryDto[] | undefined;
+
+    constructor(data?: IPagedResultDtoOfOrderInventoryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(OrderInventoryDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfOrderInventoryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultDtoOfOrderInventoryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IPagedResultDtoOfOrderInventoryDto {
+    totalCount: number;
+    items: OrderInventoryDto[] | undefined;
 }
 
 export class PagedResultDtoOfOrderTypeDto implements IPagedResultDtoOfOrderTypeDto {
