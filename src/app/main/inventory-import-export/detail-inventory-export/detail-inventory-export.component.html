@@ -35,7 +35,8 @@
                     <hr>
                     <div class="row py-5">
                         <h4>THÔNG TIN CHỨNG TỪ</h4>
-                        <div class="d-flex justify-content-center" style="margin-top: 100px;">
+                        <div class="d-flex justify-content-center" style="margin-top: 100px;"
+                            *ngIf="orderData.status !== 5">
                             <button class="btn btn-success me-3" type="button" (click)="openModal(approve)">ĐỒNG
                                 Ý</button>
                             <button class="btn btn-danger" type="button" (click)="openModal(refuse)">TỪ CHỐI</button>

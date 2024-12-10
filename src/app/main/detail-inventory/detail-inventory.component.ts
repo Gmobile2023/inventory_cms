@@ -1,7 +1,7 @@
 import { Component, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { SimDetailModalComponent } from './sim-detail-modal.component';
+import { SimDetailModalComponent } from '../inventory-report/sim-detail-modal.component';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -25,7 +25,6 @@ import { FileUpload } from 'primeng/fileupload';
     animations: [appModuleAnimation()],
 })
 export class DetailInventoryComponent extends AppComponentBase {
-    @ViewChild('simDetailModal', { static: true }) simDetailModal: SimDetailModalComponent;
     @ViewChild('dataTable', { static: true }) dataTable: Table;
     @ViewChild('paginator', { static: true }) paginator: Paginator;
     @ViewChild('ExcelFileUpload', { static: false }) excelFileUpload: FileUpload;
