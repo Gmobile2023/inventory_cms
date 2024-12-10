@@ -62,6 +62,26 @@ export class ActionHistoryComponent extends AppComponentBase {
             });
     }
 
+    // exportToExcel(): void {
+    //     this.primengTableHelper.showLoadingIndicator();
+    //     this._inventoryServiceProxy
+    //         .getListStockToExcel(
+    //             this.stockCode,
+    //             this.stockName,
+    //             this.cityId,
+    //             this.districtId,
+    //             this.wardId,
+    //             this.fromDate,
+    //             this.toDate,
+    //             this.inventoryId ? this.inventoryId : this.parentId,
+    //             this.status == null ? undefined : this.status,
+    //         )
+    //         .subscribe((result) => {
+    //             this.primengTableHelper.hideLoadingIndicator();
+    //             this._fileDownloadService.downloadTempFile(result);
+    //         });
+    // }
+
     resetSearch() {
         this.stockCode = undefined;
         this.stockName = undefined;
