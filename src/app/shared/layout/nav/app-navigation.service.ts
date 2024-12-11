@@ -25,16 +25,41 @@ export class AppNavigationService {
             new AppMenuItem('Editions', 'Pages.Editions', 'flaticon-app', '/app/admin/editions'),
             new AppMenuItem(
                 'Quản lý Kho',
-                '',
+                'Pages.Inventories',
                 'flaticon-app',
                 '',
                 [],
                 [
-                    new AppMenuItem('Danh sách kho', '', 'flaticon-app', '/app/main/inventory-manager'),
-                    new AppMenuItem('Xuất nhập kho', '', 'flaticon-app', '/app/main/inventory-import-export'),
-                    new AppMenuItem('Báo cáo tồn kho', '', 'flaticon-app', '/app/main/inventory-report'),
-                    new AppMenuItem('Lịch sử thao tác', '', 'flaticon-app', '/app/main/action-history'),
-                    new AppMenuItem('Cài đặt luồng duyệt', '', 'flaticon-app', '/app/main/approval-flow-settings'),
+                    new AppMenuItem(
+                        'Danh sách kho',
+                        'Pages.Inventories.Stock',
+                        'flaticon-app',
+                        '/app/main/inventory-manager'
+                    ),
+                    new AppMenuItem(
+                        'Xuất nhập kho',
+                        'Pages.Inventories.Orders',
+                        'flaticon-app',
+                        '/app/main/inventory-import-export'
+                    ),
+                    new AppMenuItem(
+                        'Báo cáo tồn kho',
+                        'Pages.Inventories.Reports.ImEx',
+                        'flaticon-app',
+                        '/app/main/inventory-report'
+                    ),
+                    new AppMenuItem(
+                        'Lịch sử thao tác',
+                        'Pages.Inventories.Historys',
+                        'flaticon-app',
+                        '/app/main/action-history'
+                    ),
+                    new AppMenuItem(
+                        'Cài đặt luồng duyệt',
+                        'Pages.Inventories.ApprovalFlow',
+                        'flaticon-app',
+                        '/app/main/approval-flow-settings'
+                    ),
                 ]
             ),
             new AppMenuItem(
