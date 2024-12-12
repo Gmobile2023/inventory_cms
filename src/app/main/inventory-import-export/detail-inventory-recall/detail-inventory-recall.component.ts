@@ -103,7 +103,11 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
     confirmOrder() {
         const body = new ConfirmOrderDto();
         body.orderCode = this.orderCode;
-        body.status = 5;
+        if (this.data.status !== 5) {
+            body.status = 2;
+        } else {
+            body.status = 2;
+        }
         this._inventoryServiceProxy.confirmOrder(body).subscribe(() => {
             this.router.navigate(['/app/main/inventory-import-export']);
             this.notify.info(this.l('SavedSuccessfully'));

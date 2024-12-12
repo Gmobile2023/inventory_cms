@@ -36,6 +36,7 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
             quantity: 0,
         },
     ];
+    selectedStock: any;
 
     ngOnInit() {
         this.items = [
@@ -75,15 +76,16 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
     }
 
     onChangeStock(event: Event) {
-        const stockId = parseInt((event.target as HTMLSelectElement).value);
-        this.stockId = stockId;
+        // const stockId = parseInt((event.target as HTMLSelectElement).value);
+        // this.stockId = stockId;
+        // console.log((event.target as HTMLSelectElement).value);
     }
 
     createOrder() {
         const body = new CreateOrderDto();
         body.title = this.title;
         body.description = this.description;
-        body.stockId = this.stockId;
+        body.stockId = this.selectedStock.id;
         body.productType = this.productType;
         // Convert IOrderItem[] to OrderItem[]
         if (this.tempOrderItems) {
@@ -91,7 +93,6 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
                 return OrderItem.fromJS(item); // Convert each IOrderItem to OrderItem
             });
         }
-        // console.log(body);
         this._inventoryServiceProxy.createOrder(body).subscribe(() => {
             this.router.navigate(['/app/main/inventory-import-export']);
             this.notify.info(this.l('SavedSuccessfully'));
@@ -123,7 +124,12 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
     }
 
     removeRow(index: number): void {
-        this.tempOrderItems.splice(index, 1);
+        if (this.tempOrderItems.length > 1) {
+            this.tempOrderItems.splice(index, 1);
+        } else {
+            // Thông báo cho người dùng nếu muốn
+            console.warn('Không thể xóa.');
+        }
     }
 
     onBasicUploadAuto(event) {

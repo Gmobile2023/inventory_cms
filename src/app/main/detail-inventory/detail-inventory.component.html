@@ -91,8 +91,8 @@
                     </label>
                     <div class="input-group">
                         <select id="productType" name="productType" class="form-select" [(ngModel)]="productType">
-                            <option value="mobile">SỐ</option>
-                            <option value="serial">SERIAL</option>
+                            <option [value]="ProductType.Mobile">SỐ</option>
+                            <option [value]="ProductType.Serial">SERIAL</option>
                         </select>
                     </div>
                 </div>
@@ -291,8 +291,10 @@
                 <span class="text-danger">(*)</span>
             </label>
             <div class="input-group">
-                <input id="userSale" name="userSale" class="form-control" placeholder="{{ '' | localize }}" type="text"
-                    [(ngModel)]="userSale" />
+                <p-autoComplete [style]="{'text-align': 'left', width: '100%'}" [(ngModel)]="userSale"
+                    [suggestions]="filteredUsers" (completeMethod)="filterUsers($event)" field="fullName"
+                    value="userName" placeholder="Tìm kiếm và chọn" [minLength]="1" name="userSale" id="userSale"
+                    [multiple]="true" styleClass="w-100"></p-autoComplete>
             </div>
         </div>
         <div class="modal-footer justify-content-end">
@@ -333,11 +335,6 @@
                         [(ngModel)]="valuePrice" />
                 </div>
             </div>
-            <!-- <div class="mb-5">
-                <p-fileUpload customUpload="true" name="ExcelFileUpload" #ExcelFileUpload maxFileSize="10000000"
-                    auto="auto" accept=".csv,.xls,.xlsx" (uploadHandler)="uploadExcel($event)"
-                    (onError)="onUploadExcelError()" chooseLabel="Tải danh sách lên"></p-fileUpload>
-            </div> -->
             <p class="text-center fst-italic">Lưu ý: Hành động sẽ được áp dụng cho toàn bộ sản phẩm trong danh sách bạn
                 đã chọn</p>
         </div>
@@ -593,53 +590,38 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-start mb-5">
-                            <label for="addressWarehouse" class="form-label text-start ms-5" style="width: 38%;">
+                            <label for="" class="form-label text-start ms-5" style="width: 38%;">
                                 {{ 'Địa điểm kho' | localize }}
                             </label>
                             <div class="input-group">
-                                <select id="city" name="city" class="form-select w-100 mb-3"
-                                    (change)="onCityChange($event)" [(ngModel)]="createData.cityId">
-                                    <option [ngValue]="undefined">
-                                        Chọn Tỉnh/Thành phố
-                                    </option>
-                                    <option [value]="city.id" *ngFor="let city of cities">
-                                        {{city.cityName}}
-                                    </option>
-                                </select>
-                                <select id="district" name="district" class="form-select w-100 mb-3"
-                                    (change)="onDistrictChange($event)" [(ngModel)]="createData.districtId">
-                                    <option [ngValue]="undefined">
-                                        Chọn Quận/Huyện
-                                    </option>
-                                    <option [value]="district.id" *ngFor="let district of districts">
-                                        {{district.displayName}}
-                                    </option>
-                                </select>
-                                <select id="ward" name="ward" class="form-select w-100 mb-3"
-                                    [(ngModel)]="createData.wardId">
-                                    <option [ngValue]="undefined">
-                                        Chọn Phường/Xã
-                                    </option>
-                                    <option [value]="ward.id" *ngFor="let ward of wards">
-                                        {{ward.displayName}}
-                                    </option>
-                                </select>
-                                <input id="address" name="address" class="form-control"
-                                    placeholder="{{ 'Địa chỉ chi tiết' | localize }}" type="text"
-                                    [(ngModel)]="createData.address" />
+                                <p-dropdown [style]="{width: '100%'}" [options]="cities" [(ngModel)]="createData.cityId"
+                                    optionLabel="cityName" optionValue="id" placeholder="Chọn Tỉnh/Thành phố"
+                                    class="w-100 mb-3 text-start" (onChange)="onCityChange($event)">
+                                </p-dropdown>
+
+                                <p-dropdown [style]="{width: '100%'}" [options]="districts"
+                                    [(ngModel)]="createData.districtId" optionLabel="displayName" optionValue="id"
+                                    placeholder="Chọn Quận/Huyện" class="w-100 mb-3 text-start"
+                                    (onChange)="onDistrictChange($event)">
+                                </p-dropdown>
+
+                                <p-dropdown [style]="{width: '100%'}" [options]="wards" [(ngModel)]="createData.wardId"
+                                    optionLabel="displayName" optionValue="id" placeholder="Chọn Phường/Xã"
+                                    class="w-100 text-start">
+                                </p-dropdown>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="d-flex align-items-center mb-5">
                             <label for="stockCode" class="form-label text-start ms-5" style="width: 38%;">
-                                {{ 'Mã kho' | localize }}
+                                {{ 'Loại kho' | localize }}
                                 <span class="text-danger">(*)</span>
                             </label>
                             <div class="input-group">
-                                <input id="stockCode" name="stockCode" class="form-control"
-                                    placeholder="{{ 'Nhập mã kho' | localize }}" type="text"
-                                    [(ngModel)]="createData.stockCode" />
+                                <input id="stockType" name="stockType" class="form-control"
+                                    placeholder="{{ 'Nhập loại kho' | localize }}" type="text"
+                                    [(ngModel)]="createData.stockType" />
                             </div>
                         </div>
                         <div class="d-flex align-items-center mb-5">
@@ -648,15 +630,10 @@
                                 <span class="text-danger">(*)</span>
                             </label>
                             <div class="input-group">
-                                <select id="stockLevel" name="stockLevel" class="form-select"
-                                    [(ngModel)]="createData.stockLevel">
-                                    <option [ngValue]="undefined">
-                                        Chọn cấp độ kho
-                                    </option>
-                                    <option [ngValue]="0">1</option>
-                                    <option [ngValue]="1">2</option>
-                                    <option [ngValue]="2">3</option>
-                                </select>
+                                <input id="stockLevel" name="stockLevel" class="form-control" type="number"
+                                    [(ngModel)]="createData.stockLevel" disabled />
+                                <!-- <input type="" [value]="inventoryData.stockLevel + 1"
+                                    [(ngModel)]="createData.stockLevel"> -->
                             </div>
                         </div>
                         <div class="d-flex align-items-center mb-5">
@@ -667,10 +644,56 @@
                             <div class="input-group">
                                 <input id="parentStockId" name="parentStockId" class="form-control" type="text"
                                     [value]="inventoryData.stockName" disabled />
+                                <input type="hidden" [value]="inventoryData.id" [(ngModel)]="createData.parentStockId">
                             </div>
                         </div>
-                        <div class="float-end">
-                            <button class="btn btn-success btn-sm" type="button">IMPORT LÔ SỐ</button>
+                        <div class="d-flex align-items-center mb-5">
+                            <label for="userManager" class="form-label text-start ms-5" style="width: 38%;">
+                                {{ 'Người quản lý kho' | localize }}
+                            </label>
+                            <div class="input-group">
+                                <p-autoComplete [style]="{'text-align': 'left', width: '100%'}"
+                                    [(ngModel)]="createData.userManager" [suggestions]="filteredUsers"
+                                    (completeMethod)="filterUsers($event)" field="fullName" value="userName"
+                                    placeholder="Tìm kiếm và chọn" [minLength]="1" name="userManager" id="userManager"
+                                    [multiple]="true" styleClass="w-100"></p-autoComplete>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-5">
+                            <label for="userCreateOrder" class="form-label text-start ms-5" style="width: 38%;">
+                                {{ 'Người tạo xuất/thu hồi' | localize }}
+                            </label>
+                            <div class="input-group">
+                                <p-autoComplete [style]="{'text-align': 'left', width: '100%'}"
+                                    [(ngModel)]="createData.userCreateOrder" [suggestions]="filteredUsers"
+                                    (completeMethod)="filterUsers($event)" field="fullName" value="userName"
+                                    placeholder="Tìm kiếm và chọn" [minLength]="1" name="userCreateOrder"
+                                    id="userCreateOrder" [multiple]="true" styleClass="w-100"></p-autoComplete>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-5">
+                            <label for="userApprove" class="form-label text-start ms-5" style="width: 38%;">
+                                {{ 'Người duyệt xuất/thu hồi' | localize }}
+                            </label>
+                            <div class="input-group">
+                                <p-autoComplete [style]="{'text-align': 'left', width: '100%'}"
+                                    [(ngModel)]="createData.userApprove" [suggestions]="filteredUsers"
+                                    (completeMethod)="filterUsers($event)" field="fullName" value="userName"
+                                    placeholder="Tìm kiếm và chọn" [minLength]="1" name="userApprove" id="userApprove"
+                                    [multiple]="true" styleClass="w-100"></p-autoComplete>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-5">
+                            <label for="userAccounting" class="form-label text-start ms-5" style="width: 38%;">
+                                {{ 'Kế toán' | localize }}
+                            </label>
+                            <div class="input-group">
+                                <p-autoComplete [style]="{'text-align': 'left', width: '100%'}"
+                                    [(ngModel)]="createData.userAccounting" [suggestions]="filteredUsers"
+                                    (completeMethod)="filterUsers($event)" field="fullName" value="userName"
+                                    placeholder="Tìm kiếm và chọn" [minLength]="1" name="userAccounting"
+                                    id="userAccounting" [multiple]="true" styleClass="w-100"></p-autoComplete>
+                            </div>
                         </div>
                     </div>
                 </div>

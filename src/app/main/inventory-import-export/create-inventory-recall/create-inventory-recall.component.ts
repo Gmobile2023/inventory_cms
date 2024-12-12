@@ -63,6 +63,8 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
     listSimSrcStock: any[] = [];
     stockId: number;
     isRecover: boolean | undefined = true;
+    selectedStockFrom: any;
+    selectedStockTo: any;
 
     ngOnInit() {
         this.items = [
@@ -110,13 +112,15 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
         console.log(this.productType);
     }
 
-    onChangeStock(event: Event) {
-        const stockId = parseInt((event.target as HTMLSelectElement).value);
+    onChangeStock(event: { value: any }) {
+        const stockId = event.value.id;
         this.stockId = stockId;
         this.getListSimsTransfers();
     }
 
-    calculateQuantity(): void {
+    calculateQuantity(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        input.value = input.value.replace(/[^0-9]/g, ''); // Loại bỏ ký tự không hợp lệ
         if (this.tempOrderItems.fromRange && this.tempOrderItems.toRange) {
             const from = parseInt(this.tempOrderItems.fromRange, 10);
             const to = parseInt(this.tempOrderItems.toRange, 10);
@@ -129,6 +133,18 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
         } else {
             this.tempOrderItems.quantity = 0; // Nếu chưa nhập đủ
         }
+    }
+
+    onKeyPress(event: KeyboardEvent): void {
+        const regex = /^[0-9]*$/; // Chỉ cho phép nhập số
+        if (!regex.test(event.key)) {
+            event.preventDefault(); // Chặn ký tự không hợp lệ
+        }
+    }
+
+    onInput(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        input.value = input.value.replace(/[^0-9]/g, ''); // Loại bỏ ký tự không hợp lệ
     }
 
     getListSimsTransfers(event?: LazyLoadEvent) {
@@ -192,7 +208,10 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
     moveSelectedRecords() {
         this.selectedRecordsTo.forEach((record) => {
             const index = this.listSimSrcStock.indexOf(record);
-            if (index > -1) {
+            // Kiểm tra xem record đã tồn tại trong rangeItems chưa
+            const existingRecord = this.rangeItems.find((item) => JSON.stringify(item) === JSON.stringify(record));
+
+            if (index > -1 && !existingRecord) {
                 this.rangeItems.push(record);
             }
         });

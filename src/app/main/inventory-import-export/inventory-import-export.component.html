@@ -18,7 +18,9 @@
                         {{ 'Ngày gửi duyệt từ' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="fromDate" name="fromDate" class="form-control" type="date" [(ngModel)]="fromDate" />
+                        <input id="fromDate" type="text" name="fromDate" class="form-control" bsDatepicker
+                            datePickerLuxonModifier [(date)]="fromDate" [bsConfig]="{ adaptivePosition: true }"
+                            placeholder="Thời gian từ" />
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-5">
@@ -31,8 +33,8 @@
                                 Tất cả
                             </option>
                             <option value="0">Chờ duyệt</option>
-                            <option value="1">Đã duyệt</option>
-                            <option value="2">Từ chối</option>
+                            <option value="5">Đã duyệt</option>
+                            <option value="7">Đã huỷ</option>
                         </select>
                     </div>
                 </div>
@@ -45,7 +47,7 @@
                     <div class="input-group">
                         <select id="orderType" name="orderType" class="form-select" [(ngModel)]="orderType">
                             <option [ngValue]="undefined">
-                                Chọn loại yêu cầu
+                                Tất cả
                             </option>
                             <option value="1">Nhập kho</option>
                             <option value="2">Xuất kho</option>
@@ -58,9 +60,12 @@
                         {{ 'Ngày gửi duyệt đến' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="toDate" name="toDate" class="form-control" type="date" [(ngModel)]="toDate" />
+                        <input id="toDate" type="text" name="toDate" class="form-control" bsDatepicker
+                            datePickerLuxonModifier [(date)]="toDate" [bsConfig]="{ adaptivePosition: true }"
+                            placeholder="Thời gian đến" />
                     </div>
                 </div>
+
                 <div class="d-flex align-items-center justify-content-end">
                     <button class="btn btn-secondary btn-sm me-3" type="button" (click)="resetSearch()">CHỌN
                         LẠI</button>
@@ -109,7 +114,6 @@
                             <th>
                                 {{ 'LOẠI YÊU CẦU' | localize }}
                             </th>
-                            <th>{{ 'NGÀY GỬI YÊU CẦU' | localize }}</th>
                             <th>
                                 {{ 'SỐ LƯỢNG DỰ KIẾN' | localize }}
                             </th>
@@ -117,6 +121,7 @@
                             <th>
                                 {{ 'BƯỚC DUYỆT HIỆN TẠI' | localize }}
                             </th>
+                            <th>{{ 'NGÀY GỬI YÊU CẦU' | localize }}</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-record="$implicit">
@@ -161,10 +166,6 @@
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.createdDate | luxonFormat: 'F' }}
-                            </td>
-                            <td>
-                                <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.quantity }}
                             </td>
                             <td>
@@ -178,6 +179,10 @@
                                 <span class="badge badge-inline"
                                     [class]="record.status == 5 ? 'badge-success' : 'badge-warning'">{{
                                     record.statusCurrentName }}</span>
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.createdDate | luxonFormat: 'F' }}
                             </td>
                         </tr>
                     </ng-template>

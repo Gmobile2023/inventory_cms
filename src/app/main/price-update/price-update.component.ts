@@ -3,7 +3,13 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import { ActivatedRoute } from '@angular/router';
-import { InventoryServiceProxy, ObjectType, PriceType, ProductType, UpdatePriceDto } from '@shared/service-proxies/service-proxies';
+import {
+    InventoryServiceProxy,
+    ObjectType,
+    PriceType,
+    ProductType,
+    UpdatePriceDto,
+} from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
@@ -34,11 +40,20 @@ export class PriceUpdateComponent extends AppComponentBase implements OnInit {
     productType: ProductType = ProductType.Mobile;
     stockCode: string;
     stockId: number;
-    priceType: PriceType = PriceType.Change;
+    priceType: PriceType;
     valuePrice: number;
-    objectType: ObjectType = ObjectType.All;
+    objectType: ObjectType;
     isLoading: boolean = false;
     ProductType = ProductType;
+    priceTypes = [
+        { label: 'Thay đổi giá bán', value: PriceType.Change },
+        { label: 'Cộng thêm % giá bán', value: PriceType.PlusRate },
+        { label: 'Cộng thêm vào giá bán', value: PriceType.PlusExtra },
+    ];
+    objectTypes = [
+        { label: 'Tất cả', value: ObjectType.All },
+        { label: 'Theo danh sách chọn', value: ObjectType.List },
+    ];
 
     ngOnInit() {
         this.items = [
@@ -92,6 +107,7 @@ export class PriceUpdateComponent extends AppComponentBase implements OnInit {
         this.isLoading = true;
         this._inventoryServiceProxy.updatePrice(body).subscribe(() => {
             this.notify.info(this.l('SavedSuccessfully'));
+            this.isLoading = false;
             this.closeModal();
             this.getListSims();
             this.selectedRecords = [];

@@ -6,6 +6,8 @@ import { finalize } from 'rxjs';
 import { InventoryServiceProxy } from '@shared/service-proxies/service-proxies';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
+import { DateTime } from '@node_modules/@types/luxon';
+import { DateTimeService } from '@app/shared/common/timing/date-time.service';
 
 @Component({
     templateUrl: './inventory-import-export.component.html',
@@ -15,17 +17,21 @@ import { Paginator } from 'primeng/paginator';
 export class InventoryImportExportComponent extends AppComponentBase implements OnInit {
     @ViewChild('dataTable', { static: true }) dataTable: Table;
     @ViewChild('paginator', { static: true }) paginator: Paginator;
-    constructor(injector: Injector, private _inventoryServiceProxy: InventoryServiceProxy) {
+    constructor(
+        injector: Injector,
+        private _inventoryServiceProxy: InventoryServiceProxy,
+        private _dateTimeService: DateTimeService
+    ) {
         super(injector);
     }
-
+    public dateRange: DateTime[] = [this._dateTimeService.getStartOfMonth(), this._dateTimeService.getEndOfMonth()];
     items: MenuItem[];
     home: MenuItem;
     orderType: number | undefined;
     orderCode: string | undefined;
     orderTitle: string | undefined;
-    fromDate: any | undefined;
-    toDate: any | undefined;
+    fromDate: DateTime | undefined;
+    toDate: DateTime | undefined;
     stockCode: string | undefined;
     status: number = 99;
 
@@ -41,8 +47,8 @@ export class InventoryImportExportComponent extends AppComponentBase implements 
                 this.orderType,
                 this.orderCode,
                 this.orderTitle,
-                this.fromDate,
-                this.toDate,
+                this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
+                this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
                 this.stockCode,
                 this.status == null ? undefined : this.status,
                 this.primengTableHelper.getSorting(this.dataTable),
@@ -64,6 +70,6 @@ export class InventoryImportExportComponent extends AppComponentBase implements 
         this.fromDate = undefined;
         this.toDate = undefined;
         this.stockCode = undefined;
-        this.status = undefined;
+        this.status = 99;
     }
 }
