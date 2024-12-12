@@ -87,21 +87,20 @@
                     {{ 'Phương thức' | localize }}
                     <span class="text-danger">(*)</span>
                 </label>
-                <select id="priceType" name="priceType" class="form-select" [(ngModel)]="priceType">
-                    <option value="Change">Thay đổi giá bán</option>
-                    <option value="PlusRate">Cộng thêm % giá bán</option>
-                    <option value="PlusExtra">Cộng thêm vào giá bán</option>
-                </select>
+                <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="priceTypes"
+                    [(ngModel)]="priceType" optionLabel="label" optionValue="value" placeholder="Vui lòng chọn"
+                    class="w-100">
+                </p-dropdown>
             </div>
             <div class="mb-5">
                 <label for="objectType" class="form-label">
                     {{ 'Thay đổi theo' | localize }}
                     <span class="text-danger">(*)</span>
                 </label>
-                <select id="objectType" name="objectType" class="form-select" [(ngModel)]="objectType">
-                    <option value="All">Tất cả</option>
-                    <option value="List">Theo danh sách chọn</option>
-                </select>
+                <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="objectTypes"
+                    [(ngModel)]="objectType" optionLabel="label" optionValue="value" placeholder="Vui lòng chọn"
+                    class="w-100">
+                </p-dropdown>
             </div>
             <div class="mb-5">
                 <label for="value" class="form-label">

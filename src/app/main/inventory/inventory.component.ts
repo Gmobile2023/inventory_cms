@@ -77,6 +77,7 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
         { label: '10', value: 10 },
     ];
     filteredUsers: UserInfoDto[] = new Array<UserInfoDto>();
+    listStockParent = [];
 
     ngOnInit() {
         this.items = [{ label: 'Quản lý kho' }, { label: 'Danh sách kho' }];
@@ -140,6 +141,9 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     getStockForEdit(id: number) {
         this._inventoryServiceProxy.getStockForView(id).subscribe((result) => {
             this.inventoryData = result.inventory;
+            if (this.inventoryData.stockLevel) {
+                this.getListSuggestStockParent(this.inventoryData.stockLevel);
+            }
             this.getDistrictByCity(this.inventoryData.cityId);
             this.getWardByDistrict(this.inventoryData.districtId);
         });
@@ -186,12 +190,25 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
         });
     }
 
+    getListStockParent(event: { value: any }): void {
+        const stockLevel = event.value;
+        this.getListSuggestStockParent(stockLevel);
+    }
+
+    getListSuggestStockParent(stockLevel: number) {
+        this._inventoryServiceProxy
+            .getListSuggestStockParent(undefined, stockLevel, undefined, undefined, 0, 100)
+            .subscribe((result) => {
+                this.listStockParent = result.items;
+            });
+    }
+
     createOrEditStock() {
         let body = new CreateOrEditStockDto();
         if (!this.isEdit) {
             // console.log('Tạo kho');
             body = { ...this.inventoryData };
-            body.stockType = this.inventoryData.stockCode;
+            // body.stockType = this.stockType;
             body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
             body.userCreateOrder = this.inventoryData.userCreateOrder?.map((user) => user.userName) || [];
         } else {

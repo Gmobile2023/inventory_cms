@@ -12,13 +12,20 @@
             </div>
             <div class="mb-3 col-md-6">
                 <label for="stockId" class="form-label">Chọn kho nhập hàng<span class="text-danger">(*)</span></label>
-                <select id="srcStockId" name="srcStockId" class="form-select" [(ngModel)]="stockId"
-                    (change)="onChangeStock($event)">
-                    <option [ngValue]="undefined">
-                        Chọn kho
-                    </option>
-                    <option value={{item.id}} *ngFor="let item of listStock">{{item.stockName}}</option>
-                </select>
+                <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStock"
+                    optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
+                    placeholder="Chọn kho">
+                    <ng-template pTemplate="selectedStock">
+                        <div class="flex align-items-center gap-2" *ngIf="selectedStock">
+                            <div>{{ selectedStock.stockName }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-stock pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ stock.stockName }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Ghi chú</label>
@@ -71,17 +78,12 @@
             </div>
             <div class="d-flex align-items-center">
                 <button class="btn btn-primary btn-sm mt-3" type="button" (click)="addRow()">THÊM HÀNG HOÁ</button>
-                <div class="ms-5 pt-4" style="cursor: pointer;">
+                <!-- <div class="ms-5 pt-4" style="cursor: pointer;">
                     <i class="pi pi-download me-2" style="color: #009EF7; font-size: 18px;"></i>
                     <span style="font-size: 15px;">Tải xuống file mẫu</span>
-                </div>
+                </div> -->
             </div>
-            <div class="card flex justify-content-center mt-3">
-                <!-- <p-fileUpload customUpload="true" name="ExcelFileUpload" #ExcelFileUpload maxFileSize="10000000"
-                    auto="auto" accept=".csv,.xls,.xlsx" (uploadHandler)="uploadExcel($event)"
-                    (onError)="onUploadExcelError()" chooseLabel="Tải danh sách lên"></p-fileUpload> -->
-            </div>
-            <span class="fs-5 mt-5">Tải lên file Excel</span>
+            <!-- <span class="fs-5 mt-5">Tải lên file Excel</span>
             <div class="d-flex justify-content-start align-items-center mt-1 custom-progress">
                 <div class="me-5">
                     <p-fileUpload mode="basic" chooseLabel="Chọn file" name="demo[]"
@@ -90,7 +92,7 @@
                 </div>
                 <div style="width: 15%;" class="me-2"><p-progressBar [value]="value"></p-progressBar></div>
                 <span>{{value}}%</span>
-            </div>
+            </div> -->
             <div class="d-flex justify-content-center mt-5 pt-5">
                 <button class="btn btn-success" type="button" (click)="createOrder()">GỬI YÊU CẦU</button>
             </div>

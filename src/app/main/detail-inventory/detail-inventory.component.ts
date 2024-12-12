@@ -3,13 +3,14 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { SimDetailModalComponent } from '../inventory-report/sim-detail-modal.component';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
     AddSaleStockDto,
     CommonLookupServiceProxy,
     CreateOrEditStockDto,
     InventoryServiceProxy,
     ProductType,
+    UserInfoDto,
 } from '@shared/service-proxies/service-proxies';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Table } from 'primeng/table';
@@ -37,7 +38,8 @@ export class DetailInventoryComponent extends AppComponentBase {
         private _inventoryServiceProxy: InventoryServiceProxy,
         private modalService: BsModalService,
         private _commonLookupServiceProxy: CommonLookupServiceProxy,
-        private _httpClient: HttpClient
+        private _httpClient: HttpClient,
+        private router: Router
     ) {
         super(injector);
         this.lazyLoadSubject.pipe(debounceTime(500)).subscribe((event) => {
@@ -51,7 +53,8 @@ export class DetailInventoryComponent extends AppComponentBase {
     stockId!: number;
     inventoryData: any = {};
     stockCode: string | undefined;
-    productType: ProductType = 1;
+    productType: ProductType = ProductType.Mobile;
+    ProductType = ProductType;
     mobile: string | undefined;
     serial: string | undefined;
     categoryCode: string | undefined;
@@ -78,6 +81,7 @@ export class DetailInventoryComponent extends AppComponentBase {
     valuePrice: number;
     uploadUrl: string;
     fileUpload: any;
+    filteredUsers: UserInfoDto[] = new Array<UserInfoDto>();
 
     ngOnInit() {
         this.items = [
@@ -98,6 +102,12 @@ export class DetailInventoryComponent extends AppComponentBase {
         this.getProductAttributes();
     }
 
+    filterUsers(event): void {
+        this._commonLookupServiceProxy.getListUserSearch(event.query).subscribe((users) => {
+            this.filteredUsers = users;
+        });
+    }
+
     onLazyLoad(event: any): void {
         // Gửi sự kiện vào Subject
         this.primengTableHelper.showLoadingIndicator();
@@ -107,7 +117,7 @@ export class DetailInventoryComponent extends AppComponentBase {
     getStockForView(id: number) {
         this._inventoryServiceProxy.getStockForView(id).subscribe((result) => {
             this.inventoryData = result.inventory;
-            // this.stockCode = result.inventory.stockCode;
+            this.createData.stockLevel = this.inventoryData.stockLevel + 1;
         });
     }
 
@@ -117,8 +127,8 @@ export class DetailInventoryComponent extends AppComponentBase {
         });
     }
 
-    onCityChange(event: Event): void {
-        const selectedCity = parseInt((event.target as HTMLSelectElement).value);
+    onCityChange(event: { value: any }): void {
+        const selectedCity = event.value;
         this.getDistrictByCity(selectedCity);
     }
 
@@ -128,8 +138,8 @@ export class DetailInventoryComponent extends AppComponentBase {
         });
     }
 
-    onDistrictChange(event: Event): void {
-        const selectedDistrict = parseInt((event.target as HTMLSelectElement).value);
+    onDistrictChange(event: { value: any }): void {
+        const selectedDistrict = event.value;
         this.getWardByDistrict(selectedDistrict);
     }
 
@@ -141,10 +151,15 @@ export class DetailInventoryComponent extends AppComponentBase {
 
     createChildStock() {
         let body = new CreateOrEditStockDto();
-        this.createData.stockType = this.createData.stockCode;
-        this.createData.parentStockId = this.inventoryData.id;
-        body = this.createData;
+        body = { ...this.createData };
+        body.parentStockId = this.inventoryData.id;
+        body.userManager = this.createData.userManager?.map((user) => user.userName) || [];
+        body.userCreateOrder = this.createData.userCreateOrder?.map((user) => user.userName) || [];
+        body.userApprove = this.createData.userApprove?.map((user) => user.userName) || [];
+        body.userAccounting = this.createData.userAccounting?.map((user) => user.userName) || [];
+        // console.log(body);
         this._inventoryServiceProxy.createOrEditStock(body).subscribe(() => {
+            this.router.navigate(['/app/main/inventory-import-export']);
             this.notify.info(this.l('SavedSuccessfully'));
             this.closeModal();
         });

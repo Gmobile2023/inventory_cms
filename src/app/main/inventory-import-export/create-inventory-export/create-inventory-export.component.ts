@@ -59,6 +59,8 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     ObjectType = ObjectType;
     listSimSrcStock: any[] = [];
     stockId: number;
+    selectedStockFrom: any;
+    selectedStockTo: any;
 
     ngOnInit() {
         this.items = [

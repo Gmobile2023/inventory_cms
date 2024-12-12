@@ -22,26 +22,37 @@
             </div>
             <div class="col-md-6 mb-3">
                 <label for="srcStockId" class="form-label">Kho thu hồi <span class="text-danger">(*)</span></label>
-                <div class="input-group">
-                    <select id="srcStockId" name="srcStockId" class="form-select" [(ngModel)]="srcStockId"
-                        (change)="onChangeStock($event)">
-                        <option [ngValue]="undefined">
-                            Chọn kho
-                        </option>
-                        <option value={{item.id}} *ngFor="let item of listStock">{{item.stockName}}</option>
-                    </select>
-                </div>
+                <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStockFrom"
+                    optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
+                    placeholder="Chọn kho" (onChange)="onChangeStock($event)">
+                    <ng-template pTemplate="selectedStockFrom">
+                        <div class="flex align-items-center gap-2" *ngIf="selectedStockFrom">
+                            <div>{{ selectedStockFrom.stockName }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-stock pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ stock.stockName }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
             </div>
             <div class="col-md-6 mb-3">
                 <label for="desStockId" class="form-label">Kho nhận thu hồi <span class="text-danger">(*)</span></label>
-                <div class="input-group">
-                    <select id="desStockId" name="desStockId" class="form-select" [(ngModel)]="desStockId">
-                        <option [ngValue]="undefined">
-                            Chọn kho
-                        </option>
-                        <option [ngValue]="item.id" *ngFor="let item of listStock">{{item.stockName}}</option>
-                    </select>
-                </div>
+                <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStockTo"
+                    optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
+                    placeholder="Chọn kho">
+                    <ng-template pTemplate="selectedStockTo">
+                        <div class="flex align-items-center gap-2" *ngIf="selectedStockTo">
+                            <div>{{ selectedStockTo.stockName }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-stock pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ stock.stockName }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
             </div>
 
             <div class="col-md-6 mb-3">
@@ -65,12 +76,14 @@
             <div class="col-md-4 mb-3">
                 <label for="fromRange" class="form-label">Dải số/serial từ<span class="text-danger">(*)</span></label>
                 <input type="text" class="form-control" id="fromRange" name="fromRange"
-                    [(ngModel)]="tempOrderItems.fromRange" (input)="calculateQuantity()">
+                    [(ngModel)]="tempOrderItems.fromRange" (input)="calculateQuantity($event)" pattern="^[0-9]*$"
+                    maxlength="20" (keypress)="onKeyPress($event)">
             </div>
             <div class="col-md-4 mb-3">
                 <label for="toRange" class="form-label">Dải số/serial đến<span class="text-danger">(*)</span></label>
                 <input type="text" class="form-control" id="toRange" name="toRange" [(ngModel)]="tempOrderItems.toRange"
-                    (input)="calculateQuantity()">
+                    (input)="calculateQuantity($event)" pattern="^[0-9]*$" maxlength="20"
+                    (keypress)="onKeyPress($event)">
             </div>
             <div class="col-md-4 mb-3">
                 <label for="quantity" class="form-label">Số lượng<span class="text-danger">(*)</span></label>
@@ -89,11 +102,13 @@
             <h4>BỘ LỌC TÌM KIẾM</h4>
             <div class="col-md-4">
                 <label for="" class="form-label">Dải từ</label>
-                <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial">
+                <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial" (input)="onInput($event)"
+                    pattern="^[0-9]*$" maxlength="20" (keypress)="onKeyPress($event)">
             </div>
             <div class="col-md-4">
                 <label for="" class="form-label">Dải đến</label>
-                <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial">
+                <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial" (input)="onInput($event)"
+                    pattern="^[0-9]*$" maxlength="20" (keypress)="onKeyPress($event)">
             </div>
             <div class="col-md-4">
                 <div class="d-flex align-items-center">
@@ -128,7 +143,8 @@
                         </ng-template>
                         <ng-template pTemplate="header">
                             <tr>
-                                <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
+                                <th style="width: 4rem"><p-tableHeaderCheckbox
+                                        [disabled]="selectedRecordsFrom.length > 0" /></th>
                                 <th>{{ 'SĐT/SERIAL' | localize }}</th>
                                 <th>{{ 'HẠNG SỐ' | localize }}</th>
                                 <th>{{ 'GIÁ BÁN' | localize }}</th>
@@ -138,7 +154,7 @@
                         <ng-template pTemplate="body" let-record="$implicit">
                             <tr>
                                 <td>
-                                    <p-tableCheckbox [value]="record" />
+                                    <p-tableCheckbox [value]="record" [disabled]="selectedRecordsFrom.length > 0" />
                                 </td>
                                 <td>{{productType == 1 ? record.mobile : record.serial}}</td>
                                 <td>{{record.attribute}}</td>
@@ -177,7 +193,8 @@
                         </ng-template>
                         <ng-template pTemplate="header">
                             <tr>
-                                <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
+                                <th style="width: 4rem"><p-tableHeaderCheckbox
+                                        [disabled]="selectedRecordsTo.length > 0" /></th>
                                 <th>{{ 'SĐT/SERIAL' | localize }}</th>
                                 <th>{{ 'HẠNG SỐ' | localize }}</th>
                                 <th>{{ 'GIÁ BÁN' | localize }}</th>
@@ -187,7 +204,7 @@
                         <ng-template pTemplate="body" let-record="$implicit">
                             <tr>
                                 <td>
-                                    <p-tableCheckbox [value]="record" />
+                                    <p-tableCheckbox [value]="record" [disabled]="selectedRecordsTo.length > 0" />
                                 </td>
                                 <td>{{productType == 1 ? record.mobile : record.serial}}</td>
                                 <td>{{record.attribute}}</td>
