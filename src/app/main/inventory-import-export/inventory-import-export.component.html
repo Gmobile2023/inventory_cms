@@ -76,14 +76,17 @@
             <div class="d-flex justify-content-between">
                 <h4 class="mb-4">DANH SÁCH YÊU CẦU XUẤT NHẬP KHO</h4>
                 <div class="d-flex align-items-center justify-content-end">
-                    <button class="btn btn-primary btn-sm" type="button"
-                        routerLink="/app/main/inventory-import-export/create-inventory-import">TẠO YÊU CẦU NHẬP
+                    <button *ngIf="'Pages.Inventories.Orders.Create' | permission" class="btn btn-primary btn-sm"
+                        type="button" routerLink="/app/main/inventory-import-export/create-inventory-import">TẠO YÊU CẦU
+                        NHẬP
                         KHO</button>
-                    <button class="btn btn-primary btn-sm ms-3" type="button"
-                        routerLink="/app/main/inventory-import-export/create-inventory-export">TẠO YÊU CẦU XUẤT
+                    <button *ngIf="'Pages.Inventories.Transfer.Create' | permission" class="btn btn-primary btn-sm ms-3"
+                        type="button" routerLink="/app/main/inventory-import-export/create-inventory-export">TẠO YÊU CẦU
+                        XUẤT
                         KHO</button>
-                    <button class="btn btn-primary btn-sm ms-3" type="button"
-                        routerLink="/app/main/inventory-import-export/create-inventory-recall">THU HỒI VỀ KHO
+                    <button *ngIf="'Pages.Inventories.Recall.Create' | permission" class="btn btn-primary btn-sm ms-3"
+                        type="button" routerLink="/app/main/inventory-import-export/create-inventory-recall">THU HỒI VỀ
+                        KHO
                         CHA</button>
                 </div>
             </div>
@@ -97,6 +100,9 @@
                     <ng-template pTemplate="header">
                         <tr>
                             <th style="width: 160px">{{ 'HÀNH ĐỘNG' | localize }}</th>
+                            <th>
+                                {{ 'MÃ ĐƠN' | localize }}
+                            </th>
                             <th>
                                 {{ 'TIÊU ĐỀ' | localize }}
                             </th>
@@ -139,6 +145,10 @@
                                         </li>
                                     </ul>
                                 </div>
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.orderCode }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>

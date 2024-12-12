@@ -137,17 +137,19 @@
             <div class="d-flex justify-content-between">
                 <h4 class="mb-4">DANH SÁCH SẢN PHẨM</h4>
                 <div class="d-flex align-items-center justify-content-end">
-                    <button class="btn btn-secondary btn-sm" type="button"
-                        (click)="openModal(createStock, 'modal-xl')">TẠO KHO
+                    <button *ngIf="'Pages.Inventories.Stock.Create' | permission" class="btn btn-secondary btn-sm"
+                        type="button" (click)="openModal(createStock, 'modal-xl')">TẠO KHO
                         CON</button>
-                    <button class="btn btn-primary btn-sm ms-3" type="button"
-                        (click)="openModal(kitting, 'modal-md')">KITTING</button>
-                    <button class="btn btn-primary btn-sm ms-3" type="button"
-                        (click)="openModal(addSaleStock, 'modal-md')">THÊM NGƯỜI BÁN HÀNG</button>
-                    <button class="btn btn-primary btn-sm ms-3" type="button" [routerLink]="'/app/main/price-update'"
+                    <button *ngIf="'Pages.Inventories.Stock.Kitting' | permission" class="btn btn-primary btn-sm ms-3"
+                        type="button" (click)="openModal(kitting, 'modal-md')">KITTING</button>
+                    <button *ngIf="'Pages.Inventories.Stock.AddSale' | permission" class="btn btn-primary btn-sm ms-3"
+                        type="button" (click)="openModal(addSaleStock, 'modal-md')">THÊM NGƯỜI BÁN HÀNG</button>
+                    <button *ngIf="'Pages.Inventories.UpdatePrice' | permission" class="btn btn-primary btn-sm ms-3"
+                        type="button" [routerLink]="'/app/main/price-update'"
                         [queryParams]="{ stockCode: inventoryData.stockCode, id: inventoryData.id }">CẬP NHẬT
                         GIÁ</button>
-                    <button class="btn btn-success btn-sm ms-3" type="button">XUẤT EXCEL</button>
+                    <button *ngIf="'Pages.Inventories.Sims' | permission" class="btn btn-success btn-sm ms-3"
+                        type="button">XUẤT EXCEL</button>
                 </div>
             </div>
         </div>
@@ -209,7 +211,8 @@
                                     <ul id="dropdownMenu" class="dropdown-menu" role="menu" *dropdownMenu
                                         aria-labelledby="dropdownButton">
                                         <li>
-                                            <a href="javascript:;" class="dropdown-item"
+                                            <a *ngIf="'Pages.Inventories.Sims' | permission" href="javascript:;"
+                                                class="dropdown-item"
                                                 (click)="getSimDetail(!isSerial ? record.mobile : record.serial, detailSim)">
                                                 {{ 'Xem chi tiết' | localize }}
                                             </a>
