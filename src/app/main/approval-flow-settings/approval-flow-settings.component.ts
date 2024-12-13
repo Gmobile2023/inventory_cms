@@ -171,7 +171,7 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
     // }
 
     getOrganizationUnitUsers(id: number): Observable<any[]> {
-        return this._organizationUnitService.getOrganizationUnitUsers(id, undefined, 100, 0).pipe(
+        return this._commonLookupServiceProxy.getOrganizationUnitUsers(id, undefined, 100, 0).pipe(
             map((result) => result.items) // Chỉ trả về danh sách items
         );
     }
