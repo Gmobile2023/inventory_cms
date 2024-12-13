@@ -105,11 +105,10 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
 
     onChangeProductType(event: Event) {
         this.productType = (event.target as HTMLSelectElement).value as unknown as ProductType;
-        console.log(this.productType);
     }
 
-    onChangeStock(event: Event) {
-        const stockId = parseInt((event.target as HTMLSelectElement).value);
+    onChangeStock(event: { value: any }) {
+        const stockId = event.value.id;
         this.stockId = stockId;
         this.getListSimSrcStock();
     }
@@ -156,8 +155,8 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         const body = new CreateTransferDto();
         body.title = this.title;
         body.description = this.description;
-        body.srcStockId = this.srcStockId;
-        body.desStockId = this.desStockId;
+        body.srcStockId = this.selectedStockFrom.id;
+        body.desStockId = this.selectedStockTo.id;
         body.productType = this.productType;
         body.objectType = this.objectType;
         if (this.isRangeRule) {

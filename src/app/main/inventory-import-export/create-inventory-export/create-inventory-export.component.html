@@ -24,7 +24,7 @@
                 <label for="srcStockId" class="form-label">Kho xuất đi <span class="text-danger">(*)</span></label>
                 <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStockFrom"
                     optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
-                    placeholder="Chọn kho">
+                    placeholder="Chọn kho" (onChange)="onChangeStock($event)">
                     <ng-template pTemplate="selectedStockFrom">
                         <div class="flex align-items-center gap-2" *ngIf="selectedStockFrom">
                             <div>{{ selectedStockFrom.stockName }}</div>
@@ -151,7 +151,8 @@
                         </ng-template>
                         <ng-template pTemplate="header">
                             <tr>
-                                <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
+                                <th style="width: 4rem"><p-tableHeaderCheckbox
+                                        [disabled]="selectedRecordsFrom.length > 0" /></th>
                                 <th>{{ 'SĐT/SERIAL' | localize }}</th>
                                 <th>{{ 'HẠNG SỐ' | localize }}</th>
                                 <th>{{ 'GIÁ BÁN' | localize }}</th>
@@ -161,7 +162,7 @@
                         <ng-template pTemplate="body" let-record="$implicit">
                             <tr>
                                 <td>
-                                    <p-tableCheckbox [value]="record" />
+                                    <p-tableCheckbox [value]="record" [disabled]="selectedRecordsFrom.length > 0" />
                                 </td>
                                 <td>{{productType == 1 ? record.mobile : record.serial}}</td>
                                 <td>{{record.attribute}}</td>
@@ -200,7 +201,8 @@
                         </ng-template>
                         <ng-template pTemplate="header">
                             <tr>
-                                <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
+                                <th style="width: 4rem"><p-tableHeaderCheckbox
+                                        [disabled]="selectedRecordsTo.length > 0" /></th>
                                 <th>{{ 'SĐT/SERIAL' | localize }}</th>
                                 <th>{{ 'HẠNG SỐ' | localize }}</th>
                                 <th>{{ 'GIÁ BÁN' | localize }}</th>
@@ -210,7 +212,7 @@
                         <ng-template pTemplate="body" let-record="$implicit">
                             <tr>
                                 <td>
-                                    <p-tableCheckbox [value]="record" />
+                                    <p-tableCheckbox [value]="record" [disabled]="selectedRecordsTo.length > 0" />
                                 </td>
                                 <td>{{productType == 1 ? record.mobile : record.serial}}</td>
                                 <td>{{record.attribute}}</td>
