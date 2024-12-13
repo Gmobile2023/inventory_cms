@@ -6,6 +6,8 @@ import { InventoryServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
+import { DateTimeService } from '@app/shared/common/timing/date-time.service';
+import { DateTime } from '@node_modules/@types/luxon';
 
 @Component({
     templateUrl: './action-history.component.html',
@@ -15,7 +17,11 @@ import { Paginator } from 'primeng/paginator';
 export class ActionHistoryComponent extends AppComponentBase {
     @ViewChild('dataTable', { static: true }) dataTable: Table;
     @ViewChild('paginator', { static: true }) paginator: Paginator;
-    constructor(injector: Injector, private _inventoryServiceProxy: InventoryServiceProxy) {
+    constructor(
+        injector: Injector,
+        private _inventoryServiceProxy: InventoryServiceProxy,
+        private _dateTimeService: DateTimeService
+    ) {
         super(injector);
     }
 
@@ -26,8 +32,8 @@ export class ActionHistoryComponent extends AppComponentBase {
     orderCode: string | undefined;
     mobile: string | undefined;
     serial: string | undefined;
-    fromDate: any | undefined;
-    toDate: any | undefined;
+    fromDate: DateTime | undefined;
+    toDate: DateTime | undefined;
     userProcess: string | undefined;
 
     ngOnInit() {
@@ -47,8 +53,8 @@ export class ActionHistoryComponent extends AppComponentBase {
                 this.orderCode,
                 this.mobile,
                 this.serial,
-                this.fromDate,
-                this.toDate,
+                this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
+                this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
                 this.userProcess,
                 this.primengTableHelper.getSorting(this.dataTable),
                 this.primengTableHelper.getSkipCount(this.paginator, event),

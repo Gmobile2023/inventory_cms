@@ -2794,6 +2794,128 @@ export class CommonLookupServiceProxy {
         }
         return _observableOf(null as any);
     }
+
+    /**
+     * @return Success
+     */
+    getOrganizationUnits(): Observable<ListResultDtoOfOrganizationUnitDto> {
+        let url_ = this.baseUrl + "/api/services/app/CommonLookup/GetOrganizationUnits";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetOrganizationUnits(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetOrganizationUnits(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ListResultDtoOfOrganizationUnitDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ListResultDtoOfOrganizationUnitDto>;
+        }));
+    }
+
+    protected processGetOrganizationUnits(response: HttpResponseBase): Observable<ListResultDtoOfOrganizationUnitDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ListResultDtoOfOrganizationUnitDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @param sorting (optional) 
+     * @param maxResultCount (optional) 
+     * @param skipCount (optional) 
+     * @return Success
+     */
+    getOrganizationUnitUsers(id: number | undefined, sorting: string | undefined, maxResultCount: number | undefined, skipCount: number | undefined): Observable<PagedResultDtoOfOrganizationUnitUserListDto> {
+        let url_ = this.baseUrl + "/api/services/app/CommonLookup/GetOrganizationUnitUsers?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetOrganizationUnitUsers(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetOrganizationUnitUsers(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagedResultDtoOfOrganizationUnitUserListDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagedResultDtoOfOrganizationUnitUserListDto>;
+        }));
+    }
+
+    protected processGetOrganizationUnitUsers(response: HttpResponseBase): Observable<PagedResultDtoOfOrganizationUnitUserListDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfOrganizationUnitUserListDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 @Injectable()
@@ -27525,7 +27647,7 @@ export interface IGetSimForViewDto {
 }
 
 export class GetStockForViewDto implements IGetStockForViewDto {
-    inventory!: CreateOrEditStockDto;
+    inventory!: InventoryViewDto;
 
     constructor(data?: IGetStockForViewDto) {
         if (data) {
@@ -27538,7 +27660,7 @@ export class GetStockForViewDto implements IGetStockForViewDto {
 
     init(_data?: any) {
         if (_data) {
-            this.inventory = _data["inventory"] ? CreateOrEditStockDto.fromJS(_data["inventory"]) : <any>undefined;
+            this.inventory = _data["inventory"] ? InventoryViewDto.fromJS(_data["inventory"]) : <any>undefined;
         }
     }
 
@@ -27557,7 +27679,7 @@ export class GetStockForViewDto implements IGetStockForViewDto {
 }
 
 export interface IGetStockForViewDto {
-    inventory: CreateOrEditStockDto;
+    inventory: InventoryViewDto;
 }
 
 export class GetTenantFeaturesEditOutput implements IGetTenantFeaturesEditOutput {
@@ -29088,6 +29210,178 @@ export enum InventoryStatus {
     Success = 1,
     Cancel = 2,
     Lock = 3,
+}
+
+export class InventoryViewDto implements IInventoryViewDto {
+    userManager!: string[] | undefined;
+    userCreate!: string[] | undefined;
+    userApprove!: string[] | undefined;
+    userAccounting!: string[] | undefined;
+    id!: number | undefined;
+    stockCode!: string | undefined;
+    stockName!: string | undefined;
+    stockType!: string | undefined;
+    stockLevel!: number;
+    status!: InventoryStatus;
+    isActive!: boolean;
+    parentStockId!: number | undefined;
+    treePath!: string | undefined;
+    cityId!: number | undefined;
+    cityName!: string | undefined;
+    districtId!: number | undefined;
+    districtName!: string | undefined;
+    wardId!: number | undefined;
+    wardName!: string | undefined;
+    address!: string | undefined;
+    userCreated!: string | undefined;
+    createdDate!: DateTime;
+    userConfirm!: string | undefined;
+    confirmDate!: DateTime | undefined;
+    quantity!: number;
+    numberChild!: number;
+    location!: string | undefined;
+
+    constructor(data?: IInventoryViewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["userManager"])) {
+                this.userManager = [] as any;
+                for (let item of _data["userManager"])
+                    this.userManager!.push(item);
+            }
+            if (Array.isArray(_data["userCreate"])) {
+                this.userCreate = [] as any;
+                for (let item of _data["userCreate"])
+                    this.userCreate!.push(item);
+            }
+            if (Array.isArray(_data["userApprove"])) {
+                this.userApprove = [] as any;
+                for (let item of _data["userApprove"])
+                    this.userApprove!.push(item);
+            }
+            if (Array.isArray(_data["userAccounting"])) {
+                this.userAccounting = [] as any;
+                for (let item of _data["userAccounting"])
+                    this.userAccounting!.push(item);
+            }
+            this.id = _data["id"];
+            this.stockCode = _data["stockCode"];
+            this.stockName = _data["stockName"];
+            this.stockType = _data["stockType"];
+            this.stockLevel = _data["stockLevel"];
+            this.status = _data["status"];
+            this.isActive = _data["isActive"];
+            this.parentStockId = _data["parentStockId"];
+            this.treePath = _data["treePath"];
+            this.cityId = _data["cityId"];
+            this.cityName = _data["cityName"];
+            this.districtId = _data["districtId"];
+            this.districtName = _data["districtName"];
+            this.wardId = _data["wardId"];
+            this.wardName = _data["wardName"];
+            this.address = _data["address"];
+            this.userCreated = _data["userCreated"];
+            this.createdDate = _data["createdDate"] ? DateTime.fromISO(_data["createdDate"].toString()) : <any>undefined;
+            this.userConfirm = _data["userConfirm"];
+            this.confirmDate = _data["confirmDate"] ? DateTime.fromISO(_data["confirmDate"].toString()) : <any>undefined;
+            this.quantity = _data["quantity"];
+            this.numberChild = _data["numberChild"];
+            this.location = _data["location"];
+        }
+    }
+
+    static fromJS(data: any): InventoryViewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new InventoryViewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.userManager)) {
+            data["userManager"] = [];
+            for (let item of this.userManager)
+                data["userManager"].push(item);
+        }
+        if (Array.isArray(this.userCreate)) {
+            data["userCreate"] = [];
+            for (let item of this.userCreate)
+                data["userCreate"].push(item);
+        }
+        if (Array.isArray(this.userApprove)) {
+            data["userApprove"] = [];
+            for (let item of this.userApprove)
+                data["userApprove"].push(item);
+        }
+        if (Array.isArray(this.userAccounting)) {
+            data["userAccounting"] = [];
+            for (let item of this.userAccounting)
+                data["userAccounting"].push(item);
+        }
+        data["id"] = this.id;
+        data["stockCode"] = this.stockCode;
+        data["stockName"] = this.stockName;
+        data["stockType"] = this.stockType;
+        data["stockLevel"] = this.stockLevel;
+        data["status"] = this.status;
+        data["isActive"] = this.isActive;
+        data["parentStockId"] = this.parentStockId;
+        data["treePath"] = this.treePath;
+        data["cityId"] = this.cityId;
+        data["cityName"] = this.cityName;
+        data["districtId"] = this.districtId;
+        data["districtName"] = this.districtName;
+        data["wardId"] = this.wardId;
+        data["wardName"] = this.wardName;
+        data["address"] = this.address;
+        data["userCreated"] = this.userCreated;
+        data["createdDate"] = this.createdDate ? this.createdDate.toString() : <any>undefined;
+        data["userConfirm"] = this.userConfirm;
+        data["confirmDate"] = this.confirmDate ? this.confirmDate.toString() : <any>undefined;
+        data["quantity"] = this.quantity;
+        data["numberChild"] = this.numberChild;
+        data["location"] = this.location;
+        return data;
+    }
+}
+
+export interface IInventoryViewDto {
+    userManager: string[] | undefined;
+    userCreate: string[] | undefined;
+    userApprove: string[] | undefined;
+    userAccounting: string[] | undefined;
+    id: number | undefined;
+    stockCode: string | undefined;
+    stockName: string | undefined;
+    stockType: string | undefined;
+    stockLevel: number;
+    status: InventoryStatus;
+    isActive: boolean;
+    parentStockId: number | undefined;
+    treePath: string | undefined;
+    cityId: number | undefined;
+    cityName: string | undefined;
+    districtId: number | undefined;
+    districtName: string | undefined;
+    wardId: number | undefined;
+    wardName: string | undefined;
+    address: string | undefined;
+    userCreated: string | undefined;
+    createdDate: DateTime;
+    userConfirm: string | undefined;
+    confirmDate: DateTime | undefined;
+    quantity: number;
+    numberChild: number;
+    location: string | undefined;
 }
 
 export class InvoiceDto implements IInvoiceDto {

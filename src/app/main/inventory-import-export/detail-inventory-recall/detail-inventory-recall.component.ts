@@ -106,7 +106,7 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
         if (this.data.status !== 5) {
             body.status = 2;
         } else {
-            body.status = 2;
+            body.status = 1;
         }
         this._inventoryServiceProxy.confirmOrder(body).subscribe(() => {
             this.router.navigate(['/app/main/inventory-import-export']);
