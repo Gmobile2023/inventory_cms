@@ -57,6 +57,7 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
         { label: 'Khoá', value: 2 },
     ];
     stockLevels = [
+        { label: 'Cấp 0', value: 0 },
         { label: 'Cấp 1', value: 1 },
         { label: 'Cấp 2', value: 2 },
         { label: 'Cấp 3', value: 3 },

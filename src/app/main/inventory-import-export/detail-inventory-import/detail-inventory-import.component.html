@@ -7,12 +7,16 @@
                     <div class="section py-5">
                         <h4>THÔNG TIN NHẬP KHO</h4>
                         <div class="mb-3">
-                            <label for="" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
+                            <label for="" class="form-label">Tên kho</label>
+                            <input type="text" class="form-control" id="" value={{orderData.desStockName}} disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="" class="form-label">Tiêu đề</label>
                             <input type="text" class="form-control" id="" value={{orderData.orderTitle}} disabled>
                         </div>
                         <div class="mb-3">
                             <label for="" class="form-label">Ghi chú</label>
-                            <textarea class="form-control" id="" rows="3" disabled>{{orderData.description}}</textarea>
+                            <textarea class="form-control" id="" rows="2" disabled>{{orderData.description}}</textarea>
                         </div>
                     </div>
                     <hr>
@@ -55,7 +59,8 @@
                                 {{ orderData.status == 5 ? 'NHẬP KHO' : 'ĐỒNG Ý'}}
                             </button>
                             <button *ngIf="'Pages.Inventories.Orders.Confirm' | permission" class="btn btn-danger"
-                                type="button" (click)="openModal(refuse)">TỪ CHỐI</button>
+                                type="button" (click)="openModal(refuse)" [disabled]="orderData.status == 5">TỪ
+                                CHỐI</button>
                         </div>
                     </div>
                 </p-tabPanel>

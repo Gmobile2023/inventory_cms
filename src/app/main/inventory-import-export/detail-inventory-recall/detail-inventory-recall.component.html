@@ -36,7 +36,7 @@
                                 {{ data.status == 5 ? 'THU HỒI' : 'ĐỒNG Ý'}}
                             </button>
                             <button *ngIf="'Pages.Inventories.Orders.Confirm' | permission" class="btn btn-danger"
-                                type="button" (click)="openModal(refuse)">TỪ CHỐI</button>
+                                type="button" (click)="openModal(refuse)" [disabled]="data.status == 5">TỪ CHỐI</button>
                         </div>
                     </div>
                 </p-tabPanel>

@@ -175,8 +175,8 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
         const body = new CreateRecoveryDto();
         body.title = this.title;
         body.description = this.description;
-        body.srcStockId = this.srcStockId;
-        body.desStockId = this.desStockId;
+        body.srcStockId = this.selectedStockFrom.id;
+        body.desStockId = this.selectedStockTo.id;
         body.productType = this.productType;
         body.objectType = this.objectType;
         if (this.isRangeRule) {
