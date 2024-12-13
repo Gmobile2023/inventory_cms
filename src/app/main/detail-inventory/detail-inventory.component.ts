@@ -53,7 +53,7 @@ export class DetailInventoryComponent extends AppComponentBase {
     stockId!: number;
     inventoryData: any = {};
     stockCode: string | undefined;
-    productType: ProductType = ProductType.Mobile;
+    productType: ProductType = ProductType.Serial;
     ProductType = ProductType;
     mobile: string | undefined;
     serial: string | undefined;

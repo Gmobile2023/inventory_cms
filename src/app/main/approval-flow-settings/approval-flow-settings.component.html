@@ -9,8 +9,19 @@
                     placeholder="Thời gian" />
             </div>
             <div class="col-md-4 mb-3">
-                <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="stockList" [(ngModel)]="stockId"
-                    optionLabel="stockName" optionValue="id" placeholder="Chọn kho" class="w-100">
+                <p-dropdown [style]="{width: '100%'}" [options]="stockList" [(ngModel)]="selectedStock"
+                    optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
+                    placeholder="Chọn kho">
+                    <ng-template pTemplate="selectedStock">
+                        <div class="flex align-items-center gap-2" *ngIf="selectedStock">
+                            <div>{{ selectedStock.stockName }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-stock pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ stock.stockName }}</div>
+                        </div>
+                    </ng-template>
                 </p-dropdown>
             </div>
             <div class="col-md-4 mb-3">

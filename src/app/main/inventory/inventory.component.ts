@@ -111,6 +111,18 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
             });
     }
 
+    loadInventoryData(data: any): void {
+        this.inventoryData = data;
+        // Gọi API để lấy danh sách người dùng đầy đủ
+        this._commonLookupServiceProxy.getListUserSearch('').subscribe((users: UserInfoDto[]) => {
+            // Gán giá trị cho `userManager`
+            if (this.inventoryData.userManager)
+                this.inventoryData.userManager = users.filter((user) => data.userManager.includes(user.userName));
+            // Gán giá trị cho `userCreateOrder`
+            if (this.inventoryData.userCreate)
+                this.inventoryData.userCreate = users.filter((user) => data.userCreate.includes(user.userName));
+        });
+    }
     // get users
     filterUsers(event): void {
         this._commonLookupServiceProxy.getListUserSearch(event.query).subscribe((users) => {
@@ -141,11 +153,16 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     getStockForEdit(id: number) {
         this._inventoryServiceProxy.getStockForView(id).subscribe((result) => {
             this.inventoryData = result.inventory;
+            this.loadInventoryData(this.inventoryData);
             if (this.inventoryData.stockLevel) {
                 this.getListSuggestStockParent(this.inventoryData.stockLevel);
             }
-            this.getDistrictByCity(this.inventoryData.cityId);
-            this.getWardByDistrict(this.inventoryData.districtId);
+            if (this.inventoryData.cityId) {
+                this.getDistrictByCity(this.inventoryData.cityId);
+            }
+            if (this.inventoryData.districtId) {
+                this.getWardByDistrict(this.inventoryData.districtId);
+            }
         });
     }
 
@@ -206,21 +223,18 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     createOrEditStock() {
         let body = new CreateOrEditStockDto();
         if (!this.isEdit) {
-            // console.log('Tạo kho');
+            // delete this.inventoryData.userCreate;
             body = { ...this.inventoryData };
-            // body.stockType = this.stockType;
             body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
-            body.userCreateOrder = this.inventoryData.userCreateOrder?.map((user) => user.userName) || [];
+            body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.userName) || [];
         } else {
             // Gộp dữ liệu vào body rồi mới thực hiện xử lý bên dưới
+            // delete this.inventoryData.userCreate;
             body = { ...this.inventoryData };
-            // console.log('Sửa kho');
             // Không set kiểu this.inventoryData.userManager =
             // vì sẽ mất dữ liệu trên UI
             body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
-            body.userCreateOrder = this.inventoryData.userCreateOrder?.map((user) => user.userName) || [];
-            body.userApprove = this.inventoryData.userApprove?.map((user) => user.userName) || [];
-            body.userAccounting = this.inventoryData.userAccounting?.map((user) => user.userName) || [];
+            body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.userName) || [];
         }
         // console.log(body);
 

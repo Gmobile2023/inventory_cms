@@ -52,10 +52,6 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
     description: string;
     name: string;
     isEdit: boolean = false;
-    // stockList = [
-    //     { label: 'Tất cả', value: 0 },
-    //     { label: 'Kho Nội Bộ', value: 1 },
-    // ];
     statusOption = [
         { label: 'Hoạt động', value: 1 },
         { label: 'Khoá', value: 2 },
@@ -95,6 +91,7 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
     approvalFlowData: any = {};
     filteredUsers: UserInfoDto[] = new Array<UserInfoDto>();
     public dateRange: DateTime[] = [this._dateTimeService.getStartOfMonth(), this._dateTimeService.getEndOfMonth()];
+    selectedStock: any;
 
     ngOnInit() {
         this.items = [
@@ -110,7 +107,7 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
         this.primengTableHelper.showLoadingIndicator();
         this._inventoryServiceProxy
             .getListApprovalFlow(
-                this.stockId,
+                this.selectedStock ? this.selectedStock.id : undefined,
                 this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
                 this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
                 this.status,
@@ -148,9 +145,11 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
     }
 
     private getTreeDataFromServer(): void {
-        this._organizationUnitService.getOrganizationUnits().subscribe((result: ListResultDtoOfOrganizationUnitDto) => {
-            this.departmentList = result.items.filter((item) => item.parentId !== null);
-        });
+        this._commonLookupServiceProxy
+            .getOrganizationUnits()
+            .subscribe((result: ListResultDtoOfOrganizationUnitDto) => {
+                this.departmentList = result.items.filter((item) => item.parentId !== null);
+            });
     }
 
     onDepartmentChange(event: any, item: any): void {

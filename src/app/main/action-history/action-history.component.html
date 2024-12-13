@@ -27,7 +27,9 @@
                         {{ 'Thời gian từ' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="fromDate" name="fromDate" class="form-control" type="date" [(ngModel)]="fromDate" />
+                        <input id="fromDate" type="text" name="fromDate" class="form-control" bsDatepicker
+                            datePickerLuxonModifier [(date)]="fromDate" [bsConfig]="{ adaptivePosition: true }"
+                            placeholder="Thời gian từ" />
                     </div>
                 </div>
                 <div class="d-flex align-items-center">
@@ -35,7 +37,9 @@
                         {{ 'Thời gian tới' | localize }}
                     </label>
                     <div class="input-group">
-                        <input id="toDate" name="toDate" class="form-control" type="date" [(ngModel)]="toDate" />
+                        <input id="toDate" type="text" name="toDate" class="form-control" bsDatepicker
+                            datePickerLuxonModifier [(date)]="toDate" [bsConfig]="{ adaptivePosition: true }"
+                            placeholder="Thời gian tới" />
                     </div>
                 </div>
             </div>

@@ -36,10 +36,11 @@
                     <div class="row py-5">
                         <h4>THÔNG TIN CHỨNG TỪ</h4>
                         <div class="d-flex justify-content-center" style="margin-top: 100px;"
-                            *ngIf="orderData.status !== 5">
+                            *ngIf="orderData.status !== 1">
                             <button *ngIf="'Pages.Inventories.Orders.Confirm' | permission" class="btn btn-success me-3"
-                                type="button" (click)="openModal(approve)">ĐỒNG
-                                Ý</button>
+                                type="button" (click)="openModal(approve)">
+                                {{ orderData.status == 5 ? 'XUẤT KHO' : 'ĐỒNG Ý'}}
+                            </button>
                             <button *ngIf="'Pages.Inventories.Orders.Confirm' | permission" class="btn btn-danger"
                                 type="button" (click)="openModal(refuse)">TỪ CHỐI</button>
                         </div>
