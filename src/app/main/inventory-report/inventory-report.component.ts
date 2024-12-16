@@ -31,7 +31,7 @@ export class InventoryReportComponent extends AppComponentBase {
     modalRef?: BsModalRef | null;
     items: MenuItem[];
     home: MenuItem;
-    productType: ProductType = 1;
+    productType: ProductType = ProductType.Serial;
     stockCode: string;
     stockName: string;
     fromDate: DateTime;
@@ -45,6 +45,10 @@ export class InventoryReportComponent extends AppComponentBase {
     orderType: number;
     orderList = [];
     totalCountOrder: number;
+    productTypes = [
+        { label: 'Số', value: ProductType.Mobile },
+        { label: 'Serial', value: ProductType.Serial },
+    ];
 
     ngOnInit() {
         this.items = [

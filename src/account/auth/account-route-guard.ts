@@ -33,6 +33,6 @@ export class AccountRouteGuard implements CanActivate {
             return '/app/main/dashboard';
         }
 
-        return '/app/notifications';
+        return '/app/main/inventory-manager';
     }
 }

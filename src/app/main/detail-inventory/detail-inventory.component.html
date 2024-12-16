@@ -15,8 +15,8 @@
                     <div class="description" style="font-size: 14px;">{{inventoryData.stockName}}</div>
                 </div>
                 <div class="d-flex align-items-center mb-3">
-                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Địa điểm kho:</div>
-                    <div class="description" style="font-size: 14px;">{{inventoryData.address}}</div>
+                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Cấp độ kho:</div>
+                    <div class="description" style="font-size: 14px;">{{inventoryData.stockLevel}}</div>
                 </div>
                 <div class="d-flex align-items-center mb-3">
                     <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Số lượng sản phẩm:</div>
@@ -26,8 +26,8 @@
             <div class="col-md-6">
                 <div class="d-flex align-items-center mb-3">
                     <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Trạng thái:</div>
-                    <div class="description" style="font-size: 14px;">{{inventoryData.status == 0 ? 'Chưa phê duyệt' :
-                        inventoryData.status == 1 ? 'Đang bán' : inventoryData.status == 2 ? 'Từ chối' : 'Đã khoá'}}
+                    <div class="description" style="font-size: 14px;">{{inventoryData.status == 0 ? 'Khởi tạo' :
+                        inventoryData.status == 1 ? 'Hoạt động' : inventoryData.status == 2 ? 'Đã huỷ' : 'Đã khoá'}}
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-3">
@@ -38,6 +38,11 @@
                 <div class="d-flex align-items-center mb-3">
                     <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Số lượng kho con:</div>
                     <div class="description" style="font-size: 14px;">{{ inventoryData.numberChild }}</div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Địa điểm kho:</div>
+                    <div class="description" style="font-size: 14px;">{{inventoryData.wardName}} -
+                        {{inventoryData.districtName}} - {{inventoryData.cityName}}</div>
                 </div>
                 <button class="btn btn-primary btn-sm" type="button" *ngIf="inventoryData.numberChild > 0"
                     [routerLink]="'/app/main/inventory-manager'" [queryParams]="{ id: inventoryData.id }">
@@ -303,47 +308,6 @@
         </div>
     </div>
 </ng-template>
-<ng-template #updatePrice>
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="modal-title">Cập nhật giá bán</h3>
-            <button type="button" class="btn-close" (click)="closeModal()"></button>
-        </div>
-        <div class="modal-body">
-            <!-- <p class="text-center fst-italic">Vui lòng chọn một số cách sau đây để thay đổi giá bán của sản phẩm</p> -->
-            <div class="mb-5">
-                <label for="priceType" class="form-label">
-                    {{ 'Thay đổi theo' | localize }}
-                    <span class="text-danger">(*)</span>
-                </label>
-                <select id="priceType" name="priceType" class="form-select" [(ngModel)]="priceType">
-                    <option [ngValue]="undefined">
-                        Vui lòng chọn
-                    </option>
-                    <option [ngValue]="0">Thay đổi giá bán</option>
-                    <option [ngValue]="1">Cộng thêm % giá bán</option>
-                    <option [ngValue]="2">Cộng thêm vào giá bán</option>
-                </select>
-            </div>
-            <div class="mb-5">
-                <label for="value" class="form-label">
-                    {{ 'Nhập giá' | localize }}
-                    <span class="text-danger">(*)</span>
-                </label>
-                <div class="input-group">
-                    <input id="value" name="value" class="form-control" placeholder="{{ '' | localize }}" type="number"
-                        [(ngModel)]="valuePrice" />
-                </div>
-            </div>
-            <p class="text-center fst-italic">Lưu ý: Hành động sẽ được áp dụng cho toàn bộ sản phẩm trong danh sách bạn
-                đã chọn</p>
-        </div>
-        <div class="modal-footer justify-content-end">
-            <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
-            <button type="button" class="btn btn-primary btn-sm" (click)="handleUpdatePrice()">XÁC NHẬN</button>
-        </div>
-    </div>
-</ng-template>
 <ng-template #kitting>
     <div class="modal-content">
         <div class="modal-header">
@@ -356,38 +320,32 @@
             </label>
             <div class="input-group mb-4">
                 <div class="form-check me-4">
-                    <input class="form-check-input" type="radio" name="kitting" id="kitting" checked>
-                    <label class="form-check-label" for="kitting">
-                        Kitting
-                    </label>
+                    <input class="form-check-input" type="radio" name="kitting" id="kitting" [(ngModel)]="type"
+                        [value]="SettingType.Kiting" />
+                    <label class="form-check-label" for="kitting">Kitting</label>
                 </div>
                 <div class="form-check me-4">
-                    <input class="form-check-input" type="radio" name="kitting" id="unKitting">
-                    <label class="form-check-label" for="unKitting">
-                        UnKitting
-                    </label>
+                    <input class="form-check-input" type="radio" name="kitting" id="unKitting" [(ngModel)]="type"
+                        [value]="SettingType.UnKiting" />
+                    <label class="form-check-label" for="unKitting">UnKitting</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="kitting" id="salePrice">
-                    <label class="form-check-label" for="salePrice">
-                        Sale Price
-                    </label>
+                    <input class="form-check-input" type="radio" name="kitting" id="salePrice" [(ngModel)]="type"
+                        [value]="SettingType.SalePrice" />
+                    <label class="form-check-label" for="salePrice">Sale Price</label>
                 </div>
             </div>
-            <span class="">Tải lên file Excel</span>
             <div class="d-flex justify-content-start align-items-center mt-1 custom-progress">
                 <div class="me-5">
-                    <p-fileUpload mode="basic" chooseLabel="Chọn file" name="demo[]"
-                        url="https://www.primefaces.org/cdn/api/upload.php" maxFileSize="1000000"
-                        (onUpload)="onUpload($event)"></p-fileUpload>
+                    <p-fileUpload customUpload="true" name="ExcelFileUploadKitting" #ExcelFileUploadKitting
+                        maxFileSize="10000000" auto="auto" accept=".csv,.xls,.xlsx" chooseLabel="Tải danh sách lên"
+                        (onSelect)="onFileSelect($event)"></p-fileUpload>
                 </div>
-                <div style="width: 50%;" class="me-2"><p-progressBar [value]="value"></p-progressBar></div>
-                <span>{{value}}%</span>
             </div>
         </div>
         <div class="modal-footer justify-content-end">
             <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
-            <button type="button" class="btn btn-primary btn-sm" (click)="closeModal()">XÁC NHẬN</button>
+            <button type="button" class="btn btn-primary btn-sm" (click)="createKitting()">XÁC NHẬN</button>
         </div>
     </div>
 </ng-template>

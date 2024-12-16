@@ -180,11 +180,6 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         });
     }
 
-    // onPage(event: any) {
-    //     this.currentPage = event.page;
-    //     this.updateCurrentData();
-    // }
-
     onPageFrom(event: any) {
         this.currentPage = event.page;
         this.updateCurrentDataFrom();
@@ -193,7 +188,10 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     moveSelectedRecords() {
         this.selectedRecordsTo.forEach((record) => {
             const index = this.listSimSrcStock.indexOf(record);
-            if (index > -1) {
+            // Kiểm tra xem record đã tồn tại trong rangeItems chưa
+            const existingRecord = this.rangeItems.find((item) => JSON.stringify(item) === JSON.stringify(record));
+
+            if (index > -1 && !existingRecord) {
                 this.rangeItems.push(record);
             }
         });

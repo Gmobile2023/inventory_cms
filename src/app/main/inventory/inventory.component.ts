@@ -65,6 +65,7 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     listStock: any[] = [];
     inventoryId!: number;
     stockLevels = [
+        { label: '0', value: 0 },
         { label: '1', value: 1 },
         { label: '2', value: 2 },
         { label: '3', value: 3 },
@@ -139,8 +140,8 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
                 this.cityId,
                 this.districtId,
                 this.wardId,
-                this.fromDate,
-                this.toDate,
+                this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
+                this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
                 this.inventoryId ? this.inventoryId : this.parentId,
                 this.status == null ? undefined : this.status
             )
@@ -186,8 +187,12 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     }
 
     onCityChange(event: { value: any }): void {
-        const selectedCity = event.value;
-        this.getDistrictByCity(selectedCity);
+        const selectedCityId = event.value;
+        const selectedCity = this.cities.find((city) => city.id === selectedCityId);
+        if (selectedCity) {
+            this.inventoryData.cityName = selectedCity.cityName;
+        }
+        this.getDistrictByCity(selectedCityId);
     }
 
     getDistrictByCity(cityId: number) {
@@ -197,14 +202,26 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     }
 
     onDistrictChange(event: { value: any }): void {
-        const selectedDistrict = event.value;
-        this.getWardByDistrict(selectedDistrict);
+        const selectedDistrictId = event.value;
+        const selectedDistrict = this.districts.find((district) => district.id === selectedDistrictId);
+        if (selectedDistrict) {
+            this.inventoryData.districtName = selectedDistrict.displayName;
+        }
+        this.getWardByDistrict(selectedDistrictId);
     }
 
     getWardByDistrict(districtId: number) {
         this._commonLookupServiceProxy.getWardByDistrict(districtId).subscribe((result) => {
             this.wards = result;
         });
+    }
+
+    onWardChange(event: { value: any }): void {
+        const selectedWardId = event.value;
+        const selectedWard = this.wards.find((ward) => ward.id === selectedWardId);
+        if (selectedWard) {
+            this.inventoryData.wardName = selectedWard.displayName;
+        }
     }
 
     getListStockParent(event: { value: any }): void {
