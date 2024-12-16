@@ -140,8 +140,8 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
                 this.cityId,
                 this.districtId,
                 this.wardId,
-                this.fromDate,
-                this.toDate,
+                this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
+                this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
                 this.inventoryId ? this.inventoryId : this.parentId,
                 this.status == null ? undefined : this.status
             )
