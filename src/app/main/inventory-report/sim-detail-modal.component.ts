@@ -32,7 +32,7 @@ export class SimDetailModalComponent extends AppComponentBase {
     active = false;
     saving = false;
     orderType: number;
-    status: number = 5;
+    status: number = 1;
     stockCode: string;
     fromDate: DateTime;
     toDate: DateTime;

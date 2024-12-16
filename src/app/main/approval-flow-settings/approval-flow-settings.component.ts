@@ -180,8 +180,8 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
     createOrEditApprovalFlow() {
         let body = new CreateOrEditApprovalFlowDto();
         body = { ...this.approvalFlowData };
-        if (this.stockId) {
-            body.stockId = this.stockId;
+        if (this.selectedStock) {
+            body.stockId = this.selectedStock.id;
         }
         if (this.tempApprovalItems) {
             body.items = this.tempApprovalItems.map((item) => {
@@ -190,6 +190,7 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
         }
         this._inventoryServiceProxy.createOrEditApprovalFlow(body).subscribe(() => {
             this.isEdit = false;
+            this.selectedStock = undefined;
             this.tempApprovalItems = [];
             this.addUserRow();
             this.approvalFlowData = {};
@@ -213,6 +214,8 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
         this._inventoryServiceProxy.getApprovalFlowForView(id).subscribe((result) => {
             this.approvalFlowData = result.approvalFlow;
             this.tempApprovalItems = result.approvalFlow.items;
+            const stockId = result.approvalFlow.stockId;
+            this.selectedStock = this.stockList.find((stock) => stock.id === stockId) || null;
             if (this.isEdit) {
                 this.tempApprovalItems.forEach((item: any) => {
                     const department = this.departmentList.find((dept) => dept.code === item.officeCode);
@@ -259,6 +262,14 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
 
     openModal(template: TemplateRef<any>) {
         this.modalRef = this.modalService.show(template, { id: 1, class: 'modal-xl' });
+        // Lắng nghe sự kiện `onHidden`
+        const onHiddenSubscription = this.modalService.onHidden.subscribe(() => {
+            // Khi modal đóng, đặt lại selectedStock
+            this.selectedStock = undefined;
+
+            // Hủy đăng ký sự kiện sau khi xử lý
+            onHiddenSubscription.unsubscribe();
+        });
     }
 
     closeModal(modalId?: number) {

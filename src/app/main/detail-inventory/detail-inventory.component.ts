@@ -1,7 +1,6 @@
-import { Component, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, InjectionToken, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { SimDetailModalComponent } from '../inventory-report/sim-detail-modal.component';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -10,15 +9,17 @@ import {
     CreateOrEditStockDto,
     InventoryServiceProxy,
     ProductType,
+    SettingType,
     UserInfoDto,
 } from '@shared/service-proxies/service-proxies';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
-import { finalize, Subject } from 'rxjs';
+import { finalize, Observable, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { FileUpload } from 'primeng/fileupload';
+import { AppConsts } from '@shared/AppConsts';
 
 @Component({
     templateUrl: './detail-inventory.component.html',
@@ -28,7 +29,7 @@ import { FileUpload } from 'primeng/fileupload';
 export class DetailInventoryComponent extends AppComponentBase {
     @ViewChild('dataTable', { static: true }) dataTable: Table;
     @ViewChild('paginator', { static: true }) paginator: Paginator;
-    @ViewChild('ExcelFileUpload', { static: false }) excelFileUpload: FileUpload;
+    @ViewChild('ExcelFileUploadKitting', { static: false }) ExcelFileUploadKitting: FileUpload;
 
     private lazyLoadSubject = new Subject<any>();
 
@@ -66,7 +67,7 @@ export class DetailInventoryComponent extends AppComponentBase {
     cities: any[] = [];
     districts: any[] = [];
     wards: any[] = [];
-    userSale: string | undefined;
+    userSale: any[] = [];
     productAttribute: any[] = [];
     isSerial: boolean = false;
     simData: any = {};
@@ -79,9 +80,11 @@ export class DetailInventoryComponent extends AppComponentBase {
     listAction: any[] = [];
     priceType: string | undefined;
     valuePrice: number;
-    uploadUrl: string;
-    fileUpload: any;
+    uploadedFile: File | null = null;
     filteredUsers: UserInfoDto[] = new Array<UserInfoDto>();
+    type: SettingType = SettingType.Kiting;
+    SettingType = SettingType;
+    remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
 
     ngOnInit() {
         this.items = [
@@ -201,7 +204,7 @@ export class DetailInventoryComponent extends AppComponentBase {
     handleAddSaleStock() {
         let body = new AddSaleStockDto();
         body.id = this.stockId;
-        body.userSale = this.userSale;
+        body.userSale = this.userSale[0].userName;
         this._inventoryServiceProxy.addSaleStock(body).subscribe(() => {
             this.notify.info(this.l('SavedSuccessfully'));
             this.closeModal();
@@ -248,32 +251,35 @@ export class DetailInventoryComponent extends AppComponentBase {
             });
     }
 
-    uploadExcel(data: { files: File }): void {
-        const formData: FormData = new FormData();
-        const file = data.files[0];
-        formData.append('file', file, file.name);
-        formData.forEach((value, key) => {
-            this.fileUpload = value;
+    onFileSelect(event: any): void {
+        const file = event.files && event.files[0];
+        if (file) {
+            this.uploadedFile = file;
+        }
+    }
+
+    uploadFileWithKitting(stockId: number, type: SettingType, file: File): void {
+        const uploadUrl = `${this.remoteServiceBaseUrl}/api/services/app/Inventory/CreateKitting`;
+        const formData = new FormData();
+        formData.append('stockId', stockId.toString());
+        formData.append('type', type.toString());
+        formData.append('file', file);
+
+        this._httpClient.post<any>(uploadUrl, formData).subscribe({
+            next: (response) => {
+                if (response.success) {
+                    this.closeModal();
+                    this.notify.success(this.l('Tạo Kitting thành công'));
+                }
+            },
+            error: (err) => {
+                this.message.error(this.l(err.error.error?.message));
+            },
         });
-        // this._httpClient
-        //     .post<any>(this.uploadUrl, formData)
-        //     .pipe(finalize(() => this.excelFileUpload.clear()))
-        //     .subscribe((response) => {
-        //         if (response.success) {
-        //             this.notify.success(this.l('ImportUsersProcessStart'));
-        //         } else if (response.error != null) {
-        //             this.notify.error(this.l('ImportUsersUploadFailed'));
-        //         }
-        //     });
     }
 
-    handleUpdatePrice() {
-        console.log(this.fileUpload);
-        this.closeModal();
-    }
-
-    onUploadExcelError(): void {
-        this.notify.error(this.l('ImportUsersUploadFailed'));
+    createKitting(): void {
+        this.uploadFileWithKitting(this.stockId, this.type, this.uploadedFile);
     }
 
     openModal(template: TemplateRef<any>, typeModal: string, id?: number) {
@@ -283,5 +289,4 @@ export class DetailInventoryComponent extends AppComponentBase {
     closeModal(modalId?: number) {
         this.modalService.hide(modalId);
     }
-    onUpload(event) {}
 }
