@@ -76,17 +76,17 @@
             <div class="col-md-4 mb-3">
                 <label for="fromRange" class="form-label">Dải số/serial từ<span class="text-danger">(*)</span></label>
                 <input type="text" class="form-control" id="fromRange" name="fromRange"
-                    [(ngModel)]="tempOrderItems.fromRange" (input)="calculateQuantity()">
+                    [(ngModel)]="tempOrderItems.fromRange" (input)="calculateQuantity()" [disabled]="!isRangeRule">
             </div>
             <div class="col-md-4 mb-3">
                 <label for="toRange" class="form-label">Dải số/serial đến<span class="text-danger">(*)</span></label>
                 <input type="text" class="form-control" id="toRange" name="toRange" [(ngModel)]="tempOrderItems.toRange"
-                    (input)="calculateQuantity()">
+                    (input)="calculateQuantity()" [disabled]="!isRangeRule">
             </div>
             <div class="col-md-4 mb-3">
                 <label for="quantity" class="form-label">Số lượng<span class="text-danger">(*)</span></label>
                 <input type="text" class="form-control" id="quantity" name="quantity"
-                    [(ngModel)]="tempOrderItems.quantity">
+                    [(ngModel)]="tempOrderItems.quantity" [disabled]="!isRangeRule">
             </div>
             <div class="col-12 mb-3">
                 <label for="" class="form-label">Ghi chú</label>
@@ -109,16 +109,40 @@
     </div>
     <div [class]="containerClass" class="mt-5">
         <div class="row bg-white py-5">
-            <h4>BỘ LỌC TÌM KIẾM</h4>
+            <h4 class="mb-5">BỘ LỌC TÌM KIẾM</h4>
             <div class="col-md-4">
-                <label for="" class="form-label">Dải từ</label>
-                <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial">
+                <label for="" class="form-label">Số/Serial</label>
+                <input type="text" class="form-control" id="" placeholder="Nhập số/serial" [(ngModel)]="product">
             </div>
             <div class="col-md-4">
-                <label for="" class="form-label">Dải đến</label>
-                <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial">
+                <label for="attribute" class="form-label" style="width: 35%;">
+                    {{ 'Hạng số' | localize }}
+                </label>
+                <div class="input-group">
+                    <select id="attribute" name="attribute" class="form-select" [(ngModel)]="attribute">
+                        <option [ngValue]="undefined">
+                            Tất cả
+                        </option>
+                        <option [ngValue]="pdAtt.attributeType" *ngFor="let pdAtt of productAttribute">
+                            {{pdAtt.attributeName}}</option>
+                    </select>
+                </div>
             </div>
             <div class="col-md-4">
+                <label for="simType" class="form-label" style="width: 35%;">
+                    {{ 'Loại số' | localize }}
+                </label>
+                <div class="input-group">
+                    <select id="simType" name="simType" class="form-select">
+                        <option [ngValue]="undefined">
+                            Tất cả
+                        </option>
+                        <option [ngValue]="simType.simType" *ngFor="let simType of simTypes">
+                            {{simType.simName}}</option>
+                    </select>
+                </div>
+            </div>
+            <!-- <div class="col-md-4">
                 <div class="d-flex align-items-center">
                     <div>
                         <label for="" class="form-label">Tìm kiếm theo file excel</label>
@@ -129,7 +153,7 @@
                         <span style="font-size: 15px;">Tải xuống file mẫu</span>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div>
                 <button class="btn btn-primary btn-sm mt-5" type="button" (click)="getListSimSrcStock($event)">TÌM
                     KIẾM</button>
@@ -142,17 +166,17 @@
                         <ng-template pTemplate="caption">
                             <div class="d-flex align-items-center justify-content-between">
                                 <h4 class="mb-0">Kết quả tìm kiếm</h4>
-                                <span class="p-input-icon-left">
+                                <!-- <span class="p-input-icon-left">
                                     <input class="form-control form-control-sm" pInputText type="text"
                                         (input)="dataTable.filterGlobal($event.target.value, 'contains')"
                                         placeholder="Search..." />
-                                </span>
+                                </span> -->
                             </div>
                         </ng-template>
                         <ng-template pTemplate="header">
                             <tr>
                                 <th style="width: 4rem"><p-tableHeaderCheckbox
-                                        [disabled]="selectedRecordsFrom.length > 0" /></th>
+                                        [disabled]="selectedRecordsFrom.length > 0 || isRangeRule" /></th>
                                 <th>{{ 'SĐT/SERIAL' | localize }}</th>
                                 <th>{{ 'HẠNG SỐ' | localize }}</th>
                                 <th>{{ 'GIÁ BÁN' | localize }}</th>
@@ -162,7 +186,8 @@
                         <ng-template pTemplate="body" let-record="$implicit">
                             <tr>
                                 <td>
-                                    <p-tableCheckbox [value]="record" [disabled]="selectedRecordsFrom.length > 0" />
+                                    <p-tableCheckbox [value]="record"
+                                        [disabled]="selectedRecordsFrom.length > 0 || isRangeRule" />
                                 </td>
                                 <td>{{productType == 1 ? record.mobile : record.serial}}</td>
                                 <td>{{record.attribute}}</td>

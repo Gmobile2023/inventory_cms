@@ -18,18 +18,63 @@
                         {{ 'Địa điểm kho' | localize }}
                     </label>
                     <div class="input-group">
-                        <p-dropdown [style]="{width: '100%'}" [options]="cities" [(ngModel)]="cityId"
+                        <!-- <p-dropdown [style]="{width: '100%'}" [options]="cities" [(ngModel)]="cityId"
                             optionLabel="cityName" optionValue="id" placeholder="Chọn Tỉnh/Thành phố" class="w-100 mb-3"
                             (onChange)="onCityChange($event)">
-                        </p-dropdown>
+                        </p-dropdown> -->
 
-                        <p-dropdown [style]="{width: '100%'}" [options]="districts" [(ngModel)]="districtId"
+
+                        <!-- <p-dropdown [style]="{width: '100%'}" [options]="districts" [(ngModel)]="districtId"
                             optionLabel="displayName" optionValue="id" placeholder="Chọn Quận/Huyện" class="w-100 mb-3"
                             (onChange)="onDistrictChange($event)">
-                        </p-dropdown>
+                        </p-dropdown> -->
 
-                        <p-dropdown [style]="{width: '100%'}" [options]="wards" [(ngModel)]="wardId"
+                        <!-- <p-dropdown [style]="{width: '100%'}" [options]="wards" [(ngModel)]="wardId"
                             optionLabel="displayName" optionValue="id" placeholder="Chọn Phường/Xã" class="w-100">
+                        </p-dropdown> -->
+                        <p-dropdown [style]="{width: '100%'}" [options]="cities" [(ngModel)]="cityId"
+                            optionLabel="cityName" optionValue="id" [filter]="true" filterBy="cityName"
+                            [showClear]="true" placeholder="Chọn Tỉnh/Thành phố" (onChange)="onCityChange($event)"
+                            class="w-100 mb-3">
+                            <ng-template pTemplate="selectedCity">
+                                <div class="flex align-items-center gap-2" *ngIf="selectedCity">
+                                    <div>{{ selectedCity.cityName }}</div>
+                                </div>
+                            </ng-template>
+                            <ng-template let-city pTemplate="item">
+                                <div class="flex align-items-center gap-2">
+                                    <div>{{ city.cityName }}</div>
+                                </div>
+                            </ng-template>
+                        </p-dropdown>
+                        <p-dropdown [style]="{width: '100%'}" [options]="districts" [(ngModel)]="districtId"
+                            optionLabel="displayName" optionValue="id" [filter]="true" filterBy="displayName"
+                            [showClear]="true" placeholder="Chọn Quận/Huyện" (onChange)="onDistrictChange($event)"
+                            class="w-100 mb-3">
+                            <ng-template pTemplate="selectedDistrict">
+                                <div class="flex align-items-center gap-2" *ngIf="selectedDistrict">
+                                    <div>{{ selectedDistrict.displayName }}</div>
+                                </div>
+                            </ng-template>
+                            <ng-template let-district pTemplate="item">
+                                <div class="flex align-items-center gap-2">
+                                    <div>{{ district.displayName }}</div>
+                                </div>
+                            </ng-template>
+                        </p-dropdown>
+                        <p-dropdown [style]="{width: '100%'}" [options]="wards" [(ngModel)]="wardId"
+                            optionLabel="displayName" optionValue="id" [filter]="true" filterBy="displayName"
+                            [showClear]="true" placeholder="Chọn Phường/Xã" class="w-100 mb-3">
+                            <ng-template pTemplate="selectedWard">
+                                <div class="flex align-items-center gap-2" *ngIf="selectedWard">
+                                    <div>{{ selectedWard.displayName }}</div>
+                                </div>
+                            </ng-template>
+                            <ng-template let-ward pTemplate="item">
+                                <div class="flex align-items-center gap-2">
+                                    <div>{{ ward.displayName }}</div>
+                                </div>
+                            </ng-template>
                         </p-dropdown>
                     </div>
                 </div>
@@ -269,21 +314,70 @@
                                 <div class="input-group">
                                     <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="cities"
                                         [(ngModel)]="inventoryData.cityId" optionLabel="cityName" optionValue="id"
+                                        [filter]="true" filterBy="cityName" [showClear]="true"
+                                        placeholder="Chọn Tỉnh/Thành phố" (onChange)="onCityChange($event)"
+                                        class="w-100 mb-3">
+                                        <ng-template pTemplate="selectedCity">
+                                            <div class="flex align-items-center gap-2" *ngIf="selectedCity">
+                                                <div>{{ selectedCity.cityName }}</div>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template let-city pTemplate="item">
+                                            <div class="flex align-items-center gap-2">
+                                                <div>{{ city.cityName }}</div>
+                                            </div>
+                                        </ng-template>
+                                    </p-dropdown>
+                                    <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="districts"
+                                        [(ngModel)]="inventoryData.districtId" optionLabel="displayName"
+                                        optionValue="id" [filter]="true" filterBy="displayName" [showClear]="true"
+                                        placeholder="Chọn Quận/Huyện" (onChange)="onDistrictChange($event)"
+                                        class="w-100 mb-3">
+                                        <ng-template pTemplate="selectedDistrict">
+                                            <div class="flex align-items-center gap-2" *ngIf="selectedDistrict">
+                                                <div>{{ selectedDistrict.displayName }}</div>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template let-district pTemplate="item">
+                                            <div class="flex align-items-center gap-2">
+                                                <div>{{ district.displayName }}</div>
+                                            </div>
+                                        </ng-template>
+                                    </p-dropdown>
+                                    <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="wards"
+                                        [(ngModel)]="inventoryData.wardId" optionLabel="displayName" optionValue="id"
+                                        [filter]="true" filterBy="displayName" [showClear]="true"
+                                        placeholder="Chọn Phường/Xã" (onChange)="onWardChange($event)"
+                                        class="w-100 mb-3">
+                                        <ng-template pTemplate="selectedWard">
+                                            <div class="flex align-items-center gap-2" *ngIf="selectedWard">
+                                                <div>{{ selectedWard.displayName }}</div>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template let-ward pTemplate="item">
+                                            <div class="flex align-items-center gap-2">
+                                                <div>{{ ward.displayName }}</div>
+                                            </div>
+                                        </ng-template>
+                                    </p-dropdown>
+                                    <input type="hidden" [(ngModel)]="inventoryData.cityName">
+                                    <input type="hidden" [(ngModel)]="inventoryData.districtName">
+                                    <input type="hidden" [(ngModel)]="inventoryData.wardName">
+                                    <!-- <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="cities"
+                                        [(ngModel)]="inventoryData.cityId" optionLabel="cityName" optionValue="id"
                                         placeholder="Chọn Tỉnh/Thành phố" class="w-100 mb-3"
                                         (onChange)="onCityChange($event)">
                                     </p-dropdown>
-                                    <input type="hidden" [(ngModel)]="inventoryData.cityName">
+                                    
                                     <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="districts"
                                         [(ngModel)]="inventoryData.districtId" optionLabel="displayName"
                                         optionValue="id" placeholder="Chọn Quận/Huyện" class="w-100 mb-3"
                                         (onChange)="onDistrictChange($event)">
                                     </p-dropdown>
-                                    <input type="hidden" [(ngModel)]="inventoryData.districtName">
                                     <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="wards"
                                         [(ngModel)]="inventoryData.wardId" optionLabel="displayName" optionValue="id"
                                         placeholder="Chọn Phường/Xã" class="w-100" (onChange)="onWardChange($event)">
-                                    </p-dropdown>
-                                    <input type="hidden" [(ngModel)]="inventoryData.wardName">
+                                    </p-dropdown> -->
                                 </div>
                             </div>
                         </div>

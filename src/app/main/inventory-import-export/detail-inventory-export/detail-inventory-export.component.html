@@ -261,11 +261,23 @@
                                     </td> -->
                                     <td>
                                         <span class="p-column-title">{{ 'Status' | localize }}</span>
-                                        <span *ngIf="record.status == 0" class="badge badge-warning badge-inline">
-                                            {{ 'Chưa hoạt động' | localize }}
+                                        <span *ngIf="record.status == 0" class="badge badge-secondary badge-inline">
+                                            {{ 'Khởi tạo' | localize }}
                                         </span>
                                         <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
-                                            {{ 'Đang hoạt động' | localize }}
+                                            {{ 'Hoạt động' | localize }}
+                                        </span>
+                                        <span *ngIf="record.status == 2" class="badge badge-danger badge-inline">
+                                            {{ 'Số block' | localize }}
+                                        </span>
+                                        <span *ngIf="record.status == 3" class="badge badge-danger badge-inline">
+                                            {{ 'Số lỗi' | localize }}
+                                        </span>
+                                        <span *ngIf="record.status == 4" class="badge badge-danger badge-inline">
+                                            {{ 'Số huỷ' | localize }}
+                                        </span>
+                                        <span *ngIf="record.status == 5" class="badge badge-success badge-inline">
+                                            {{ 'Số đã bán' | localize }}
                                         </span>
                                     </td>
                                     <td>

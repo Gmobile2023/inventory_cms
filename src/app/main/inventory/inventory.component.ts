@@ -79,6 +79,9 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     ];
     filteredUsers: UserInfoDto[] = new Array<UserInfoDto>();
     listStockParent = [];
+    selectedCity: any;
+    selectedDistrict: any;
+    selectedWard: any;
 
     ngOnInit() {
         this.items = [{ label: 'Quản lý kho' }, { label: 'Danh sách kho' }];
@@ -242,6 +245,7 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
         if (!this.isEdit) {
             // delete this.inventoryData.userCreate;
             body = { ...this.inventoryData };
+            body.cityId = this.inventoryData.cityId.id;
             body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
             body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.userName) || [];
         } else {
