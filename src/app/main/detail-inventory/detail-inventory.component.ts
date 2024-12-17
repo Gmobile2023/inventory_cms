@@ -56,14 +56,14 @@ export class DetailInventoryComponent extends AppComponentBase {
     stockId!: number;
     inventoryData: any = {};
     stockCode: string | undefined;
-    productType: ProductType = ProductType.Serial;
+    productType: ProductType = ProductType.Mobile;
     ProductType = ProductType;
     mobile: string | undefined;
     serial: string | undefined;
     categoryCode: string | undefined;
     attribute: string | undefined;
     status: number | undefined;
-    kitingStatus: number | undefined;
+    kitingStatus: number = 0;
     value: number = 0;
     createData: any = {};
     cities: any[] = [];

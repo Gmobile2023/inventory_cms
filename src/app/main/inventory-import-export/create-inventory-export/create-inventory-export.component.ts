@@ -61,6 +61,10 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     stockId: number;
     selectedStockFrom: any;
     selectedStockTo: any;
+    productAttribute: any[] = [];
+    simTypes: any[] = [];
+    product: string;
+    attribute: string;
 
     ngOnInit() {
         this.items = [
@@ -69,13 +73,9 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
             { label: 'Tạo mới yêu cầu xuất kho' },
         ];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
-        let interval = setInterval(() => {
-            this.value = this.value + Math.floor(Math.random() * 10) + 1;
-            if (this.value >= 100) {
-                this.value = 0;
-            }
-        }, 2000);
         this.getListStock();
+        this.getProductAttributes();
+        this.getSimsTypes();
     }
 
     getListStock() {
@@ -101,10 +101,31 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
 
     onRangeRuleChange(event: Event) {
         this.isRangeRule = !this.isRangeRule;
+        if (!this.isRangeRule) {
+            this.objectType = ObjectType.List;
+        } else {
+            this.objectType = ObjectType.All;
+        }
+    }
+
+    getProductAttributes() {
+        this._inventoryServiceProxy
+            .getProductAttributes(this.productType.toString(), undefined, 0, 10)
+            .subscribe((result) => {
+                this.productAttribute = result.items;
+            });
+    }
+
+    getSimsTypes() {
+        this._inventoryServiceProxy.getSimsTypes(this.productType.toString(), undefined, 0, 10).subscribe((result) => {
+            this.simTypes = result.items;
+        });
     }
 
     onChangeProductType(event: Event) {
         this.productType = (event.target as HTMLSelectElement).value as unknown as ProductType;
+        this.getProductAttributes();
+        this.getSimsTypes();
     }
 
     onChangeStock(event: { value: any }) {
@@ -119,9 +140,9 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
             .getListSims(
                 this.stockId,
                 this.productType,
-                undefined,
-                undefined,
-                undefined,
+                this.productType == ProductType.Mobile ? this.product : undefined,
+                this.productType == ProductType.Serial ? this.product : undefined,
+                this.attribute,
                 undefined,
                 undefined,
                 undefined,

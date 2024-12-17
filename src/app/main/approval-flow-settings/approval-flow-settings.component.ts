@@ -74,6 +74,7 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
         { label: '6', value: 6 },
     ];
     productTypes = [
+        { label: 'Tất cả', value: undefined },
         { label: 'Số', value: ProductType.Mobile },
         { label: 'Serial', value: ProductType.Serial },
     ];
