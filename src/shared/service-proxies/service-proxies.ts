@@ -9991,6 +9991,87 @@ export class InventoryServiceProxy {
     }
 
     /**
+     * @param productType (optional) 
+     * @param stockCode (optional) 
+     * @param fromDate (optional) 
+     * @param toDate (optional) 
+     * @param parentId (optional) 
+     * @param stockId (optional) 
+     * @return Success
+     */
+    getListInventoryReportToExcel(productType: ProductType | undefined, stockCode: string | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, parentId: number | undefined, stockId: number | undefined): Observable<FileDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListInventoryReportToExcel?";
+        if (productType === null)
+            throw new Error("The parameter 'productType' cannot be null.");
+        else if (productType !== undefined)
+            url_ += "ProductType=" + encodeURIComponent("" + productType) + "&";
+        if (stockCode === null)
+            throw new Error("The parameter 'stockCode' cannot be null.");
+        else if (stockCode !== undefined)
+            url_ += "StockCode=" + encodeURIComponent("" + stockCode) + "&";
+        if (fromDate === null)
+            throw new Error("The parameter 'fromDate' cannot be null.");
+        else if (fromDate !== undefined)
+            url_ += "FromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toString() : "") + "&";
+        if (toDate === null)
+            throw new Error("The parameter 'toDate' cannot be null.");
+        else if (toDate !== undefined)
+            url_ += "ToDate=" + encodeURIComponent(toDate ? "" + toDate.toString() : "") + "&";
+        if (parentId === null)
+            throw new Error("The parameter 'parentId' cannot be null.");
+        else if (parentId !== undefined)
+            url_ += "ParentId=" + encodeURIComponent("" + parentId) + "&";
+        if (stockId === null)
+            throw new Error("The parameter 'stockId' cannot be null.");
+        else if (stockId !== undefined)
+            url_ += "StockId=" + encodeURIComponent("" + stockId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListInventoryReportToExcel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListInventoryReportToExcel(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileDto>;
+        }));
+    }
+
+    protected processGetListInventoryReportToExcel(response: HttpResponseBase): Observable<FileDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FileDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param stockId (optional) 
      * @param fromDate (optional) 
      * @param toDate (optional) 

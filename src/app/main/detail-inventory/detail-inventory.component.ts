@@ -20,6 +20,7 @@ import { debounceTime } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { FileUpload } from 'primeng/fileupload';
 import { AppConsts } from '@shared/AppConsts';
+import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
     templateUrl: './detail-inventory.component.html',
@@ -40,7 +41,8 @@ export class DetailInventoryComponent extends AppComponentBase {
         private modalService: BsModalService,
         private _commonLookupServiceProxy: CommonLookupServiceProxy,
         private _httpClient: HttpClient,
-        private router: Router
+        private router: Router,
+        private _fileDownloadService: FileDownloadService,
     ) {
         super(injector);
         this.lazyLoadSubject.pipe(debounceTime(500)).subscribe((event) => {
@@ -192,6 +194,24 @@ export class DetailInventoryComponent extends AppComponentBase {
                 this.listSim = result.items;
                 this.primengTableHelper.totalRecordsCount = result.totalCount;
                 this.primengTableHelper.hideLoadingIndicator();
+            });
+    }
+
+    exportToExcel(): void {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getListSimToExcel(
+                this.stockId,
+                this.productType,
+                this.mobile,
+                this.serial,
+                this.attribute,
+                this.status,
+                this.kitingStatus,
+            )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this._fileDownloadService.downloadTempFile(result);
             });
     }
 

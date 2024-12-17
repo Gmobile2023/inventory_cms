@@ -8,6 +8,7 @@ import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { DateTimeService } from '@app/shared/common/timing/date-time.service';
 import { DateTime } from '@node_modules/@types/luxon';
+import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
     templateUrl: './action-history.component.html',
@@ -20,7 +21,8 @@ export class ActionHistoryComponent extends AppComponentBase {
     constructor(
         injector: Injector,
         private _inventoryServiceProxy: InventoryServiceProxy,
-        private _dateTimeService: DateTimeService
+        private _dateTimeService: DateTimeService,
+        private _fileDownloadService: FileDownloadService,
     ) {
         super(injector);
     }
@@ -68,25 +70,24 @@ export class ActionHistoryComponent extends AppComponentBase {
             });
     }
 
-    // exportToExcel(): void {
-    //     this.primengTableHelper.showLoadingIndicator();
-    //     this._inventoryServiceProxy
-    //         .getListStockToExcel(
-    //             this.stockCode,
-    //             this.stockName,
-    //             this.cityId,
-    //             this.districtId,
-    //             this.wardId,
-    //             this.fromDate,
-    //             this.toDate,
-    //             this.inventoryId ? this.inventoryId : this.parentId,
-    //             this.status == null ? undefined : this.status,
-    //         )
-    //         .subscribe((result) => {
-    //             this.primengTableHelper.hideLoadingIndicator();
-    //             this._fileDownloadService.downloadTempFile(result);
-    //         });
-    // }
+    exportToExcel(): void {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getHistoriesToExcel(
+                this.stockCode,
+                this.stockName,
+                this.orderCode,
+                this.mobile,
+                this.serial,
+                this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
+                this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
+                this.userProcess,
+            )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this._fileDownloadService.downloadTempFile(result);
+            });
+    }
 
     resetSearch() {
         this.stockCode = undefined;

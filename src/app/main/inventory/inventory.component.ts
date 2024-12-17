@@ -148,8 +148,8 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
                 this.inventoryId ? this.inventoryId : this.parentId,
                 this.status == null ? undefined : this.status
             )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
             .subscribe((result) => {
-                this.primengTableHelper.hideLoadingIndicator();
                 this._fileDownloadService.downloadTempFile(result);
             });
     }
