@@ -10,6 +10,7 @@ import { Paginator } from 'primeng/paginator';
 import { DateTime } from '@node_modules/@types/luxon';
 import { DateTimeService } from '@app/shared/common/timing/date-time.service';
 import { SimDetailModalComponent } from './sim-detail-modal.component';
+import { FileDownloadService } from '@shared/utils/file-download.service';
 @Component({
     templateUrl: './inventory-report.component.html',
     encapsulation: ViewEncapsulation.None,
@@ -23,7 +24,8 @@ export class InventoryReportComponent extends AppComponentBase {
         injector: Injector,
         private modalService: BsModalService,
         private _inventoryServiceProxy: InventoryServiceProxy,
-        private _dateTimeService: DateTimeService
+        private _dateTimeService: DateTimeService,
+        private _fileDownloadService: FileDownloadService,
     ) {
         super(injector);
     }
@@ -77,6 +79,23 @@ export class InventoryReportComponent extends AppComponentBase {
                 this.primengTableHelper.records = result.items;
                 this.primengTableHelper.totalRecordsCount = result.totalCount;
                 this.primengTableHelper.hideLoadingIndicator();
+            });
+    }
+
+    exportToExcel(): void {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getListInventoryReportToExcel(
+                this.productType,
+                this.stockCode,
+                this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
+                this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
+                this.parentId,
+                this.stockId,
+            )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this._fileDownloadService.downloadTempFile(result);
             });
     }
 

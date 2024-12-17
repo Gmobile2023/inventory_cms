@@ -9901,9 +9901,12 @@ export class InventoryServiceProxy {
      * @param toDate (optional) 
      * @param parentId (optional) 
      * @param stockId (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
      * @return Success
      */
-    getListInventoryReport(productType: ProductType | undefined, stockCode: string | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, parentId: number | undefined, stockId: number | undefined): Observable<PagedResultDtoOfInventoryReportDto> {
+    getListInventoryReport(productType: ProductType | undefined, stockCode: string | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, parentId: number | undefined, stockId: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfInventoryReportDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetListInventoryReport?";
         if (productType === null)
             throw new Error("The parameter 'productType' cannot be null.");
@@ -9929,6 +9932,18 @@ export class InventoryServiceProxy {
             throw new Error("The parameter 'stockId' cannot be null.");
         else if (stockId !== undefined)
             url_ += "StockId=" + encodeURIComponent("" + stockId) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -9982,12 +9997,9 @@ export class InventoryServiceProxy {
      * @param toDate (optional) 
      * @param parentId (optional) 
      * @param stockId (optional) 
-     * @param sorting (optional) 
-     * @param skipCount (optional) 
-     * @param maxResultCount (optional) 
      * @return Success
      */
-    getListInventoryReportToExcel(productType: ProductType | undefined, stockCode: string | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, parentId: number | undefined, stockId: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<FileDto> {
+    getListInventoryReportToExcel(productType: ProductType | undefined, stockCode: string | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, parentId: number | undefined, stockId: number | undefined): Observable<FileDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetListInventoryReportToExcel?";
         if (productType === null)
             throw new Error("The parameter 'productType' cannot be null.");
@@ -10013,18 +10025,6 @@ export class InventoryServiceProxy {
             throw new Error("The parameter 'stockId' cannot be null.");
         else if (stockId !== undefined)
             url_ += "StockId=" + encodeURIComponent("" + stockId) + "&";
-        if (sorting === null)
-            throw new Error("The parameter 'sorting' cannot be null.");
-        else if (sorting !== undefined)
-            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
-        if (skipCount === null)
-            throw new Error("The parameter 'skipCount' cannot be null.");
-        else if (skipCount !== undefined)
-            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
-        if (maxResultCount === null)
-            throw new Error("The parameter 'maxResultCount' cannot be null.");
-        else if (maxResultCount !== undefined)
-            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
