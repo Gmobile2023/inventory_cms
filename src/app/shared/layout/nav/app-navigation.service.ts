@@ -33,7 +33,7 @@ export class AppNavigationService {
                     new AppMenuItem(
                         'Danh sách kho',
                         'Pages.Inventories.Stock',
-                        'flaticon-app',
+                        'flaticon-list',
                         '/app/main/inventory-manager'
                     ),
                     new AppMenuItem(
