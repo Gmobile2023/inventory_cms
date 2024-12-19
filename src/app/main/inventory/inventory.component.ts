@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { LazyLoadEvent, MenuItem } from 'primeng/api';
+import { LazyLoadEvent, MenuItem, TreeNode } from 'primeng/api';
 import {
     ActivateStockDto,
     CommonLookupServiceProxy,
@@ -17,6 +17,12 @@ import { ActivatedRoute } from '@angular/router';
 import { FileDownloadService } from '@shared/utils/file-download.service';
 import { DateTimeService } from '@app/shared/common/timing/date-time.service';
 import { DateTime } from '@node_modules/@types/luxon';
+
+interface CustomTreeNode extends TreeNode {
+    stockId?: number;
+    stockLevel?: number;
+    parentStockId?: number;
+}
 
 @Component({
     templateUrl: './inventory.component.html',
@@ -65,7 +71,7 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     listStock: any[] = [];
     inventoryId!: number;
     stockLevels = [
-        { label: '0', value: 0 },
+        // { label: '0', value: 0 },
         { label: '1', value: 1 },
         { label: '2', value: 2 },
         { label: '3', value: 3 },
@@ -82,13 +88,49 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     selectedCity: any;
     selectedDistrict: any;
     selectedWard: any;
+    treeData: CustomTreeNode[];
+    typeViewStock: number = 1;
 
     ngOnInit() {
-        this.items = [{ label: 'Quản lý kho' }, { label: 'Danh sách kho' }];
-        this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.inventoryId = parseInt(this.route.snapshot.queryParamMap.get('id')!);
+        this.items = [{ label: 'Quản lý kho' }, { label: this.inventoryId ? 'Danh sách kho con' : 'Danh sách kho' }];
+        this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.getProvinces();
     }
+
+    buildTreeByStockLevel = (data: any[]): CustomTreeNode[] => {
+        // Tìm node gốc (stockLevel = 0)
+        const rootNode = data.find((item) => item.stockLevel === 0);
+        if (!rootNode) return []; // Nếu không có node gốc thì trả về mảng rỗng
+
+        // Hàm đệ quy để xây dựng cây
+        const buildChildren = (parentId: number): CustomTreeNode[] => {
+            return data
+                .filter((item) => item.parentStockId === parentId) // Lọc các node con
+                .map((item) => ({
+                    label: item.stockName,
+                    data: item,
+                    stockId: item.id,
+                    stockLevel: item.stockLevel,
+                    parentStockId: item.parentStockId,
+                    children: buildChildren(item.id), // Đệ quy tìm con
+                    expanded: true, // Mở rộng mặc định
+                }));
+        };
+
+        // Xây dựng cây bắt đầu từ rootNode
+        return [
+            {
+                label: rootNode.stockName,
+                data: rootNode,
+                stockId: rootNode.id,
+                stockLevel: rootNode.stockLevel,
+                parentStockId: rootNode.parentStockId,
+                children: buildChildren(rootNode.id), // Xây dựng cây con
+                expanded: true, // Mở rộng mặc định
+            },
+        ];
+    };
 
     getListStock(event?: LazyLoadEvent) {
         this.primengTableHelper.showLoadingIndicator();
@@ -105,11 +147,13 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
                 this.status == null ? undefined : this.status,
                 this.primengTableHelper.getSorting(this.dataTable),
                 this.primengTableHelper.getSkipCount(this.paginator, event),
-                this.primengTableHelper.getMaxResultCount(this.paginator, event)
+                this.typeViewStock === 1 ? this.primengTableHelper.getMaxResultCount(this.paginator, event) : 1000
             )
             .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
             .subscribe((result) => {
                 this.primengTableHelper.records = result.items;
+                this.treeData = this.buildTreeByStockLevel(result.items);
+                console.log(this.treeData);
                 this.primengTableHelper.totalRecordsCount = result.totalCount;
                 this.primengTableHelper.hideLoadingIndicator();
             });
@@ -245,7 +289,6 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
         if (!this.isEdit) {
             // delete this.inventoryData.userCreate;
             body = { ...this.inventoryData };
-            body.cityId = this.inventoryData.cityId.id;
             body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
             body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.userName) || [];
         } else {
@@ -270,7 +313,6 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     activateStock() {
         let body = new ActivateStockDto();
         body.id = this.idAction;
-        console.log(this.idAction);
         this._inventoryServiceProxy.activateStock(body).subscribe(() => {
             this.notify.info(this.l('SavedSuccessfully'));
             this.closeModal();
@@ -280,6 +322,12 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
 
     viewAllStock() {
         this.inventoryId = undefined;
+        this.getListStock();
+    }
+
+    changeViewStock(event: Event): void {
+        const selectedValue = (event.target as HTMLSelectElement).value;
+        this.typeViewStock = parseInt(selectedValue);
         this.getListStock();
     }
 
