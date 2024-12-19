@@ -196,8 +196,8 @@
                                                 {{ 'Chỉnh sửa' | localize }}
                                             </a>
                                         </li>
-                                        <li>
-                                            <a *ngIf="'Pages.Inventories.Stock.Activate' | permission"
+                                        <li *ngIf="!record.isActive">
+                                            <a *ngIf="('Pages.Inventories.Stock.Activate' | permission)"
                                                 href="javascript:;" class="dropdown-item"
                                                 (click)="openModal(active, 'modal-md', record.id)">
                                                 {{ 'Kích hoạt kho' | localize }}
@@ -207,7 +207,7 @@
                                             <a *ngIf="'Pages.Inventories.Stock.Edit' | permission" href="javascript:;"
                                                 class="dropdown-item"
                                                 (click)="openModal(lockOrUnlock, 'modal-md', record.id)">
-                                                {{ 'Khoá/Mở kho' | localize }}
+                                                {{ record.status == 3 ? 'Mở kho' : 'Khoá kho' | localize }}
                                             </a>
                                         </li>
                                     </ul>
@@ -460,12 +460,13 @@
     <ng-template #lockOrUnlock>
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Xác nhận yêu cầu khoá/mở kho</h3>
+                <h3 class="modal-title">{{statusAction === 3 ? 'Xác nhận yêu cầu mở kho' : 'Xác nhận yêu cầu khoá kho'}}
+                </h3>
                 <button type="button" class="btn-close" (click)="closeModal()"></button>
             </div>
             <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
-                <button type="button" class="btn btn-primary btn-sm" (click)="closeModal()">XÁC NHẬN</button>
+                <button type="button" class="btn btn-primary btn-sm" (click)="lockOrUnlockStock()">XÁC NHẬN</button>
             </div>
         </div>
     </ng-template>

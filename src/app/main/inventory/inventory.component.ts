@@ -91,6 +91,7 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     selectedWard: any;
     treeData: CustomTreeNode[];
     typeViewStock: number = 1;
+    statusAction: number;
 
     ngOnInit() {
         this.inventoryId = parseInt(this.route.snapshot.queryParamMap.get('id')!);
@@ -290,24 +291,33 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     createOrEditStock() {
         let body = new CreateOrEditStockDto();
         if (!this.isEdit) {
-            // delete this.inventoryData.userCreate;
             body = { ...this.inventoryData };
             body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
             body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.userName) || [];
         } else {
-            // Gộp dữ liệu vào body rồi mới thực hiện xử lý bên dưới
-            // delete this.inventoryData.userCreate;
             body = { ...this.inventoryData };
-            // Không set kiểu this.inventoryData.userManager =
-            // vì sẽ mất dữ liệu trên UI
             body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
             body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.userName) || [];
         }
-        // console.log(body);
 
         this._inventoryServiceProxy.createOrEditStock(body).subscribe(() => {
             this.notify.info(this.l('SavedSuccessfully'));
             this.resetSearch();
+            this.closeModal();
+            this.getListStock();
+        });
+    }
+
+    lockOrUnlockStock() {
+        let body = new CreateOrEditStockDto();
+        body = { ...this.inventoryData };
+        if (this.statusAction === 3) {
+            body.status = 1;
+        } else {
+            body.status = 3;
+        }
+        this._inventoryServiceProxy.createOrEditStock(body).subscribe(() => {
+            this.notify.info(this.l('SavedSuccessfully'));
             this.closeModal();
             this.getListStock();
         });
@@ -334,9 +344,10 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
         this.getListStock();
     }
 
-    openModal(template: TemplateRef<any>, typeModal: string, id?: number) {
+    openModal(template: TemplateRef<any>, typeModal: string, id?: number, statusProduct?: number): void {
         if (id) {
             this.idAction = id;
+            this.statusAction = statusProduct;
             this.isEdit = true;
             this.getStockForEdit(id);
         } else {

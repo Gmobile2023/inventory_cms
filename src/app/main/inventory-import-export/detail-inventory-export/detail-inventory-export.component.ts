@@ -8,6 +8,7 @@ import { ConfirmOrderDto, InventoryServiceProxy } from '@shared/service-proxies/
 import { finalize } from 'rxjs';
 import { Paginator } from 'primeng/paginator';
 import { Table } from 'primeng/table';
+import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
     templateUrl: './detail-inventory-export.component.html',
@@ -24,7 +25,8 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
         private modalService: BsModalService,
         private route: ActivatedRoute,
         private _inventoryServiceProxy: InventoryServiceProxy,
-        private router: Router
+        private router: Router,
+        private _fileDownloadService: FileDownloadService
     ) {
         super(injector);
     }
@@ -37,6 +39,7 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     listAction: any[] = [];
     listSim: any[] = [];
     description: string;
+    orderDataItems: any = {};
 
     ngOnInit(): void {
         this.items = [
@@ -52,7 +55,7 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     getStockForView() {
         this._inventoryServiceProxy.getOrderForView(this.orderId).subscribe((result) => {
             this.orderData = result.order;
-            console.log(this.orderData);
+            this.orderDataItems = result.order.items[0];
             if (this.orderData.orderCode) {
                 this.orderCode = this.orderData.orderCode;
                 this.getActionHistory();
@@ -126,6 +129,16 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
             this.notify.info(this.l('SavedSuccessfully'));
             this.closeModal();
         });
+    }
+
+    exportToExcel(): void {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getListSimToExcel(undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this._fileDownloadService.downloadTempFile(result);
+            });
     }
 
     openModal(template: TemplateRef<any>) {
