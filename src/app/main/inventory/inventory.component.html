@@ -286,6 +286,7 @@
                             <img src="https://i.imgur.com/kKC39GX.png" [alt]="node.label" width="32"
                                 *ngIf="node.stockLevel >= 1" />
                             <div class="p-2">{{ node.label }}</div>
+                            <div>SL: {{ node.quantity }}</div>
                         </div>
                     </ng-template>
                 </p-organizationChart>

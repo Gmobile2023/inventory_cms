@@ -22,6 +22,7 @@ interface CustomTreeNode extends TreeNode {
     stockId?: number;
     stockLevel?: number;
     parentStockId?: number;
+    quantity?: number;
 }
 
 @Component({
@@ -112,6 +113,7 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
                     data: item,
                     stockId: item.id,
                     stockLevel: item.stockLevel,
+                    quantity: item.quantity,
                     parentStockId: item.parentStockId,
                     children: buildChildren(item.id), // Đệ quy tìm con
                     expanded: true, // Mở rộng mặc định
@@ -125,6 +127,7 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
                 data: rootNode,
                 stockId: rootNode.id,
                 stockLevel: rootNode.stockLevel,
+                quantity: rootNode.quantity,
                 parentStockId: rootNode.parentStockId,
                 children: buildChildren(rootNode.id), // Xây dựng cây con
                 expanded: true, // Mở rộng mặc định
