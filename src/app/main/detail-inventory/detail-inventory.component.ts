@@ -42,7 +42,7 @@ export class DetailInventoryComponent extends AppComponentBase {
         private _commonLookupServiceProxy: CommonLookupServiceProxy,
         private _httpClient: HttpClient,
         private router: Router,
-        private _fileDownloadService: FileDownloadService,
+        private _fileDownloadService: FileDownloadService
     ) {
         super(injector);
         this.lazyLoadSubject.pipe(debounceTime(500)).subscribe((event) => {
@@ -86,6 +86,9 @@ export class DetailInventoryComponent extends AppComponentBase {
     filteredUsers: UserInfoDto[] = new Array<UserInfoDto>();
     type: SettingType = SettingType.Kiting;
     SettingType = SettingType;
+    selectedCity: any;
+    selectedDistrict: any;
+    selectedWard: any;
     remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
 
     ngOnInit() {
@@ -94,12 +97,6 @@ export class DetailInventoryComponent extends AppComponentBase {
             { label: 'Danh sách kho', routerLink: '/app/main/inventory-manager' },
             { label: 'Chi tiết kho' },
         ];
-        let interval = setInterval(() => {
-            this.value = this.value + Math.floor(Math.random() * 10) + 1;
-            if (this.value >= 100) {
-                this.value = 0;
-            }
-        }, 2000);
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.stockId = parseInt(this.route.snapshot.queryParamMap.get('id')!);
         this.getStockForView(this.stockId);
@@ -133,8 +130,12 @@ export class DetailInventoryComponent extends AppComponentBase {
     }
 
     onCityChange(event: { value: any }): void {
-        const selectedCity = event.value;
-        this.getDistrictByCity(selectedCity);
+        const selectedCityId = event.value;
+        const selectedCity = this.cities.find((city) => city.id === selectedCityId);
+        if (selectedCity) {
+            this.inventoryData.cityName = selectedCity.cityName;
+        }
+        this.getDistrictByCity(selectedCityId);
     }
 
     getDistrictByCity(cityId: number) {
@@ -144,8 +145,20 @@ export class DetailInventoryComponent extends AppComponentBase {
     }
 
     onDistrictChange(event: { value: any }): void {
-        const selectedDistrict = event.value;
-        this.getWardByDistrict(selectedDistrict);
+        const selectedDistrictId = event.value;
+        const selectedDistrict = this.districts.find((district) => district.id === selectedDistrictId);
+        if (selectedDistrict) {
+            this.inventoryData.districtName = selectedDistrict.displayName;
+        }
+        this.getWardByDistrict(selectedDistrictId);
+    }
+
+    onWardChange(event: { value: any }): void {
+        const selectedWardId = event.value;
+        const selectedWard = this.wards.find((ward) => ward.id === selectedWardId);
+        if (selectedWard) {
+            this.inventoryData.wardName = selectedWard.displayName;
+        }
     }
 
     getWardByDistrict(districtId: number) {
@@ -207,7 +220,7 @@ export class DetailInventoryComponent extends AppComponentBase {
                 this.serial,
                 this.attribute,
                 this.status,
-                this.kitingStatus,
+                this.kitingStatus
             )
             .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
             .subscribe((result) => {

@@ -2,7 +2,8 @@
     <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
     <div [class]="containerClass">
         <div class="row bg-white py-5 ps-3">
-            <h4 class="mb-4">TÌM KIẾM KHO</h4>
+            <h5 class="mb-4" *ngIf="inventoryId">TÊN KHO CHA:</h5>
+            <h5 class="mb-4">{{ inventoryId ? 'TÌM KIẾM KHO CON' : 'TÌM KIẾM KHO'}}</h5>
             <div class="col-md-6 mb-5">
                 <div class="d-flex align-items-center mb-5">
                     <label for="stockName" class="form-label text-start ms-5" style="width: 38%;">
@@ -18,20 +19,6 @@
                         {{ 'Địa điểm kho' | localize }}
                     </label>
                     <div class="input-group">
-                        <!-- <p-dropdown [style]="{width: '100%'}" [options]="cities" [(ngModel)]="cityId"
-                            optionLabel="cityName" optionValue="id" placeholder="Chọn Tỉnh/Thành phố" class="w-100 mb-3"
-                            (onChange)="onCityChange($event)">
-                        </p-dropdown> -->
-
-
-                        <!-- <p-dropdown [style]="{width: '100%'}" [options]="districts" [(ngModel)]="districtId"
-                            optionLabel="displayName" optionValue="id" placeholder="Chọn Quận/Huyện" class="w-100 mb-3"
-                            (onChange)="onDistrictChange($event)">
-                        </p-dropdown> -->
-
-                        <!-- <p-dropdown [style]="{width: '100%'}" [options]="wards" [(ngModel)]="wardId"
-                            optionLabel="displayName" optionValue="id" placeholder="Chọn Phường/Xã" class="w-100">
-                        </p-dropdown> -->
                         <p-dropdown [style]="{width: '100%'}" [options]="cities" [(ngModel)]="cityId"
                             optionLabel="cityName" optionValue="id" [filter]="true" filterBy="cityName"
                             [showClear]="true" placeholder="Chọn Tỉnh/Thành phố" (onChange)="onCityChange($event)"
@@ -121,7 +108,13 @@
     <div [class]="containerClass" class="mt-5">
         <div class="row bg-white py-5 ps-3 column-gap-5">
             <div class="d-flex justify-content-between">
-                <h4 class="mb-4">DANH SÁCH KHO</h4>
+                <div class="input-group" [style]="{width: '15%'}">
+                    <select id="typeViewStock" name="typeViewStock" class="form-select"
+                        (change)="changeViewStock($event)" [(ngModel)]="typeViewStock">
+                        <option [value]="1">DANH SÁCH KHO</option>
+                        <option [value]="2">SƠ ĐỒ CƠ CẤU TỔ CHỨC KHO</option>
+                    </select>
+                </div>
                 <div class="d-flex align-items-center justify-content-end">
                     <button class="btn btn-primary btn-sm" type="button" (click)="viewAllStock()" *ngIf="inventoryId">
                         XEM TẤT CẢ KHO
@@ -136,8 +129,8 @@
             </div>
         </div>
         <div class="row align-items-center">
-            <!--<Primeng-TurboTable-Start>-->
-            <div class="col primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
+            <div class="col primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading"
+                [class]="this.typeViewStock === 2 ? 'd-none' : null">
                 <p-table #dataTable sortMode="multiple" [value]="primengTableHelper.records"
                     rows="{{primengTableHelper.defaultRecordsCountPerPage}}" (onLazyLoad)="getListStock($event)"
                     [paginator]="false" [lazy]="true" [tableStyle]="{'min-width': '50rem'}">
@@ -283,7 +276,20 @@
                         "></p-paginator>
                 </div>
             </div>
-            <!--<Primeng-TurboTable-End>-->
+            <div class="mt-5" [class]="this.typeViewStock === 1 ? 'd-none' : null">
+                <p-organizationChart [value]="treeData">
+                    <ng-template let-node pTemplate="default">
+                        <div class="p-2 text-center" [routerLink]="'/app/main/inventory-manager/detail-inventory'"
+                            [queryParams]="{ id: node.stockId }" [style]="{cursor: 'pointer'}">
+                            <img src="https://i.imgur.com/ask029Z.png" [alt]="node.label" width="32"
+                                *ngIf="node.stockLevel == 0" />
+                            <img src="https://i.imgur.com/kKC39GX.png" [alt]="node.label" width="32"
+                                *ngIf="node.stockLevel >= 1" />
+                            <div class="p-2">{{ node.label }}</div>
+                        </div>
+                    </ng-template>
+                </p-organizationChart>
+            </div>
         </div>
     </div>
     <ng-template #addOrEdit>
@@ -363,21 +369,6 @@
                                     <input type="hidden" [(ngModel)]="inventoryData.cityName">
                                     <input type="hidden" [(ngModel)]="inventoryData.districtName">
                                     <input type="hidden" [(ngModel)]="inventoryData.wardName">
-                                    <!-- <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="cities"
-                                        [(ngModel)]="inventoryData.cityId" optionLabel="cityName" optionValue="id"
-                                        placeholder="Chọn Tỉnh/Thành phố" class="w-100 mb-3"
-                                        (onChange)="onCityChange($event)">
-                                    </p-dropdown>
-                                    
-                                    <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="districts"
-                                        [(ngModel)]="inventoryData.districtId" optionLabel="displayName"
-                                        optionValue="id" placeholder="Chọn Quận/Huyện" class="w-100 mb-3"
-                                        (onChange)="onDistrictChange($event)">
-                                    </p-dropdown>
-                                    <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="wards"
-                                        [(ngModel)]="inventoryData.wardId" optionLabel="displayName" optionValue="id"
-                                        placeholder="Chọn Phường/Xã" class="w-100" (onChange)="onWardChange($event)">
-                                    </p-dropdown> -->
                                 </div>
                             </div>
                         </div>
