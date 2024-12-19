@@ -16,16 +16,29 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="" class="form-label">Kho xuất đi</label>
-                            <input type="text" class="form-control" id="" [value]="orderData.srcStockName" disabled>
+                            <input type="text" class="form-control" [value]="orderData.srcStockName" disabled>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="" class="form-label">Kho xuất đến</label>
-                            <input type="text" class="form-control" id="" [value]="orderData.desStockName" disabled>
+                            <input type="text" class="form-control" [value]="orderData.desStockName" disabled>
                         </div>
-                        <!-- <div class="col-md-4 mb-3">
-                            <label for="" class="form-label">Hình thức xuất</label>
-                            <input type="text" class="form-control" id="" value="Theo đợt" disabled>
-                        </div> -->
+                        <div class="col-md-3 mb-3">
+                            <label for="" class="form-label">Loại sản phẩm</label>
+                            <input type="text" class="form-control"
+                                [value]="orderDataItems.categoryCode == 'MOBILE' ? 'Số' : 'Sim'" disabled>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="" class="form-label">Dải số/serial từ</label>
+                            <input type="text" class="form-control" [value]="orderDataItems.fromRange" disabled>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="" class="form-label">Dải số/serial đến</label>
+                            <input type="text" class="form-control" [value]="orderDataItems.toRange" disabled>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="" class="form-label">Số lượng</label>
+                            <input type="text" class="form-control" [value]="orderDataItems.quantity" disabled>
+                        </div>
                         <div class="mb-3">
                             <label for="description" class="form-label">Ghi chú</label>
                             <textarea class="form-control" id="description" rows="2"
@@ -42,12 +55,13 @@
                                 {{ orderData.status == 5 ? 'XUẤT KHO' : 'ĐỒNG Ý'}}
                             </button>
                             <button *ngIf="'Pages.Inventories.Orders.Confirm' | permission" class="btn btn-danger"
-                                type="button" (click)="openModal(refuse)" [disabled]="orderData.status == 5">TỪ
+                                type="button" (click)="openModal(refuse)" [disabled]="orderData.status == 5"
+                                [class]="orderData.status == 5 ? 'd-none' : null">TỪ
                                 CHỐI</button>
                         </div>
                     </div>
                 </p-tabPanel>
-                <p-tabPanel header="Kế hoạch xuất kho">
+                <!-- <p-tabPanel header="Kế hoạch xuất kho">
                     <div class="border mt-5">
                         <p-table #dataTable sortMode="multiple" [value]="dataFake"
                             rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
@@ -82,21 +96,17 @@
                                     <th style="width: 160px">{{ 'HÀNH ĐỘNG' | localize }}</th>
                                     <th>
                                         {{ 'TÊN ĐỢT XUẤT KHO' | localize }}
-                                        <!-- <p-sortIcon field="tenancyName"></p-sortIcon> -->
                                     </th>
                                     <th>
                                         {{ 'LOẠI SẢN PHẨM' | localize }}
-                                        <!-- <p-sortIcon field="name"></p-sortIcon> -->
                                     </th>
                                     <th>{{ 'SỐ LƯỢNG' | localize }}</th>
                                     <th>{{ 'NGÀY TẠO' | localize }}</th>
                                     <th>
                                         {{ 'TRẠNG THÁI' | localize }}
-                                        <!-- <p-sortIcon field="subscriptionEndDateUtc"></p-sortIcon> -->
                                     </th>
                                     <th>
                                         {{ 'BƯỚC DUYỆT HIỆN TẠI' | localize }}
-                                        <!-- <p-sortIcon field="isActive"></p-sortIcon> -->
                                     </th>
                                     <th>{{ 'NGÀY DUYỆT' | localize }}</th>
                                 </tr>
@@ -188,8 +198,17 @@
                         "></p-paginator>
                         </div>
                     </div>
-                </p-tabPanel>
+                </p-tabPanel> -->
                 <p-tabPanel header="Danh sách SIM/SỐ">
+                    <div class="d-flex justify-content-end gap-5 mb-3">
+                        <input type=" text" class="form-control" placeholder="Nhập số/serial">
+                        <button type="button" class="btn btn-primary btn-sm"
+                            [style]="{width: '150px', height: 'auto'}">TÌM
+                            KIẾM</button>
+                        <button *ngIf="'Pages.Inventories.Sims' | permission" type="button"
+                            class="btn btn-success btn-sm" [style]="{width: '150px', height: 'auto'}"
+                            (click)="exportToExcel()">XUẤT EXCEL</button>
+                    </div>
                     <div class="border">
                         <p-table #dataTable2 sortMode="multiple" [value]="listSim"
                             rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
@@ -211,18 +230,6 @@
                                     <th>
                                         {{ 'NGÀY NHẬP' | localize }}
                                     </th>
-                                    <!-- <th>{{ 'MÃ LÔ' | localize }}</th>
-                                    <th>{{ 'LOẠI SẢN PHẨM' | localize }}</th>
-                                    <th>
-                                        {{ 'SẢN PHẨM' | localize }}
-                                    </th>
-                                    <th>
-                                        {{ 'NHÀ MẠNG' | localize }}
-                                    </th>
-                                    
-                                    <th>
-                                        {{ 'THUỘC TÍNH' | localize }}
-                                    </th> -->
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-record="$implicit">
@@ -239,26 +246,6 @@
                                         <span class="p-column-title">{{ '' | localize }}</span>
                                         {{ record.salePrice }}
                                     </td>
-                                    <!-- <td>
-                                        <span class="p-column-title">{{ '' | localize }}</span>
-                                        {{ record.productType }}
-                                    </td>
-                                    <td>
-                                        <span class="p-column-title">{{ '' | localize }}</span>
-                                        {{ record.product }}
-                                    </td>
-                                    <td>
-                                        <span class="p-column-title">{{ '' | localize }}</span>
-                                        {{ record.network }}
-                                    </td>
-                                    <td>
-                                        <span class="p-column-title">{{ '' | localize }}</span>
-                                        {{ record.price }}
-                                    </td>
-                                    <td>
-                                        <span class="p-column-title">{{ '' | localize }}</span>
-                                        {{ record.attribute }}
-                                    </td> -->
                                     <td>
                                         <span class="p-column-title">{{ 'Status' | localize }}</span>
                                         <span *ngIf="record.status == 0" class="badge badge-secondary badge-inline">

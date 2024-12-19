@@ -59,7 +59,8 @@
                                 {{ orderData.status == 5 ? 'NHẬP KHO' : 'ĐỒNG Ý'}}
                             </button>
                             <button *ngIf="'Pages.Inventories.Orders.Confirm' | permission" class="btn btn-danger"
-                                type="button" (click)="openModal(refuse)" [disabled]="orderData.status == 5">TỪ
+                                type="button" (click)="openModal(refuse)" [disabled]="orderData.status == 5"
+                                [class]="orderData.status == 5 ? 'd-none' : null">TỪ
                                 CHỐI</button>
                         </div>
                     </div>

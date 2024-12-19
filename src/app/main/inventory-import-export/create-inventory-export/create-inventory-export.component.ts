@@ -65,6 +65,7 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     simTypes: any[] = [];
     product: string;
     attribute: string;
+    isAllChecked: boolean = false;
 
     ngOnInit() {
         this.items = [
@@ -154,6 +155,7 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
                 this.listSimSrcStock = result.items;
                 this.primengTableHelper.totalRecordsCount = result.totalCount;
                 this.primengTableHelper.hideLoadingIndicator();
+                this.isAllChecked = false;
             });
     }
 
@@ -207,9 +209,9 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     }
 
     moveSelectedRecords() {
+        // console.log(this.selectedRecordsTo);
         this.selectedRecordsTo.forEach((record) => {
             const index = this.listSimSrcStock.indexOf(record);
-            // Kiểm tra xem record đã tồn tại trong rangeItems chưa
             const existingRecord = this.rangeItems.find((item) => JSON.stringify(item) === JSON.stringify(record));
 
             if (index > -1 && !existingRecord) {
@@ -237,6 +239,46 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         const end = start + this.rowsPerPage;
         this.currentDataFrom = this.rangeItems.slice(start, end);
     }
+
+    // isSelected(record: any): boolean {
+    //     return this.selectedRecordsTo.some((r) => r.id === record.id);
+    // }
+
+    // // Chọn một dòng
+    // onRowSelect(record: any): void {
+    //     if (!this.isSelected(record)) {
+    //         this.selectedRecordsTo.push(record);
+    //     }
+    // }
+
+    // // Bỏ chọn một dòng
+    // onRowUnselect(record: any): void {
+    //     const index = this.selectedRecordsTo.findIndex((r) => r.id === record.id);
+    //     if (index !== -1) {
+    //         this.selectedRecordsTo.splice(index, 1);
+    //     }
+    // }
+
+    // // Chọn tất cả các bản ghi trên trang hiện tại
+    // onSelectAll(): void {
+    //     this.isAllChecked = true;
+    //     this.listSimSrcStock.forEach((record) => {
+    //         if (!this.isSelected(record)) {
+    //             this.selectedRecordsTo.push(record);
+    //         }
+    //     });
+    // }
+
+    // // Bỏ chọn tất cả các bản ghi trên trang hiện tại
+    // onUnselectAll(): void {
+    //     this.isAllChecked = false;
+    //     this.listSimSrcStock.forEach((record) => {
+    //         const index = this.selectedRecordsTo.findIndex((r) => r.id === record.id);
+    //         if (index !== -1) {
+    //             this.selectedRecordsTo.splice(index, 1);
+    //         }
+    //     });
+    // }
 
     onUpload(event) {}
 }

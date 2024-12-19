@@ -166,21 +166,16 @@
                         <ng-template pTemplate="caption">
                             <div class="d-flex align-items-center justify-content-between">
                                 <h4 class="mb-0">Kết quả tìm kiếm</h4>
-                                <!-- <span class="p-input-icon-left">
-                                    <input class="form-control form-control-sm" pInputText type="text"
-                                        (input)="dataTable.filterGlobal($event.target.value, 'contains')"
-                                        placeholder="Search..." />
-                                </span> -->
                             </div>
                         </ng-template>
                         <ng-template pTemplate="header">
                             <tr>
-                                <th style="width: 4rem"><p-tableHeaderCheckbox
-                                        [disabled]="selectedRecordsFrom.length > 0 || isRangeRule" /></th>
+                                <th style="width: 4rem">
+                                    <p-tableHeaderCheckbox [disabled]="selectedRecordsFrom.length > 0 || isRangeRule" />
+                                </th>
                                 <th>{{ 'SĐT/SERIAL' | localize }}</th>
                                 <th>{{ 'HẠNG SỐ' | localize }}</th>
                                 <th>{{ 'GIÁ BÁN' | localize }}</th>
-                                <th>{{ 'NGÀY TẠO' | localize }}</th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-record="$implicit">
@@ -192,7 +187,6 @@
                                 <td>{{productType == 1 ? record.mobile : record.serial}}</td>
                                 <td>{{record.attribute}}</td>
                                 <td>{{record.salePrice}}</td>
-                                <td>{{record.createdDate | luxonFormat: 'F' }}</td>
                             </tr>
                         </ng-template>
                     </p-table>
@@ -231,7 +225,7 @@
                                 <th>{{ 'SĐT/SERIAL' | localize }}</th>
                                 <th>{{ 'HẠNG SỐ' | localize }}</th>
                                 <th>{{ 'GIÁ BÁN' | localize }}</th>
-                                <th>{{ 'NGÀY TẠO' | localize }}</th>
+                                <!-- <th>{{ 'NGÀY TẠO' | localize }}</th> -->
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-record="$implicit">
@@ -242,7 +236,7 @@
                                 <td>{{productType == 1 ? record.mobile : record.serial}}</td>
                                 <td>{{record.attribute}}</td>
                                 <td>{{record.salePrice}}</td>
-                                <td>{{record.createdDate | luxonFormat: 'F' }}</td>
+                                <!-- <td>{{record.createdDate | luxonFormat: 'F' }}</td> -->
                             </tr>
                         </ng-template>
                     </p-table>
