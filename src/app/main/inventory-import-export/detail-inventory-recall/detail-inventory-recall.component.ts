@@ -8,6 +8,7 @@ import { ConfirmOrderDto, InventoryServiceProxy } from '@shared/service-proxies/
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { finalize } from 'rxjs';
+import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
     templateUrl: './detail-inventory-recall.component.html',
@@ -24,7 +25,8 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
         private modalService: BsModalService,
         private route: ActivatedRoute,
         private _inventoryServiceProxy: InventoryServiceProxy,
-        private router: Router
+        private router: Router,
+        private _fileDownloadService: FileDownloadService
     ) {
         super(injector);
     }
@@ -88,6 +90,8 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
         this._inventoryServiceProxy
             .getListSimOrderDetail(
                 this.orderId,
+                undefined,
+                undefined,
                 this.primengTableHelper.getSorting(this.dataTable2),
                 this.primengTableHelper.getSkipCount(this.paginator2, event),
                 this.primengTableHelper.getMaxResultCount(this.paginator2, event)
@@ -129,6 +133,16 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
 
     openModal(template: TemplateRef<any>) {
         this.modalRef = this.modalService.show(template, { id: 1, class: 'modal-md' });
+    }
+
+    exportToExcel(): void {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getListSimToExcel(undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this._fileDownloadService.downloadTempFile(result);
+            });
     }
 
     closeModal(modalId?: number) {

@@ -30,7 +30,8 @@
                     <hr>
                     <div class="row py-5">
                         <h4>THÔNG TIN CHỨNG TỪ</h4>
-                        <div class="d-flex justify-content-center" style="margin-top: 100px;" *ngIf="data.status !== 1">
+                        <div class="d-flex justify-content-center" style="margin-top: 100px;"
+                            *ngIf="data.status !== 1 && data.status !== 7">
                             <button *ngIf="'Pages.Inventories.Orders.Confirm' | permission" class="btn btn-success me-3"
                                 type="button" (click)="openModal(approve)">
                                 {{ data.status == 5 ? 'THU HỒI' : 'ĐỒNG Ý'}}
@@ -42,6 +43,15 @@
                     </div>
                 </p-tabPanel>
                 <p-tabPanel header="Danh sách SIM/SỐ">
+                    <div class="d-flex justify-content-end gap-5 mb-3">
+                        <input type=" text" class="form-control" placeholder="Nhập số/serial">
+                        <button type="button" class="btn btn-primary btn-sm"
+                            [style]="{width: '150px', height: 'auto'}">TÌM
+                            KIẾM</button>
+                        <button *ngIf="'Pages.Inventories.Sims' | permission" type="button"
+                            class="btn btn-success btn-sm" [style]="{width: '150px', height: 'auto'}"
+                            (click)="exportToExcel()">XUẤT EXCEL</button>
+                    </div>
                     <div class="border">
                         <p-table #dataTable2 sortMode="multiple" [value]="listSim"
                             rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
@@ -76,26 +86,6 @@
                                         <span class="p-column-title">{{ '' | localize }}</span>
                                         {{ record.salePrice }}
                                     </td>
-                                    <!-- <td>
-                                        <span class="p-column-title">{{ '' | localize }}</span>
-                                        {{ record.productType }}
-                                    </td>
-                                    <td>
-                                        <span class="p-column-title">{{ '' | localize }}</span>
-                                        {{ record.product }}
-                                    </td>
-                                    <td>
-                                        <span class="p-column-title">{{ '' | localize }}</span>
-                                        {{ record.network }}
-                                    </td>
-                                    <td>
-                                        <span class="p-column-title">{{ '' | localize }}</span>
-                                        {{ record.price }}
-                                    </td>
-                                    <td>
-                                        <span class="p-column-title">{{ '' | localize }}</span>
-                                        {{ record.attribute }}
-                                    </td> -->
                                     <td>
                                         <span class="p-column-title">{{ 'Status' | localize }}</span>
                                         <span *ngIf="record.status == 0" class="badge badge-warning badge-inline">

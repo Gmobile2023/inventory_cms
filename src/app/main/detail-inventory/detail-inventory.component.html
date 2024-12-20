@@ -84,6 +84,29 @@
                             placeholder="{{ 'Nhập số serial' | localize }}" type="text" [(ngModel)]="serial" />
                     </div>
                 </div>
+                <div class="d-flex align-items-center mb-5">
+                    <label for="" class="form-label ms-5" style="width: 35%;">Kho hiện tại</label>
+                    <p-dropdown [style]="{width: '100%'}" class="w-100" [options]="listStock"
+                        [(ngModel)]="selectedStock" optionLabel="stockName" [filter]="true" filterBy="stockName"
+                        [showClear]="true" placeholder="Chọn kho">
+                        <ng-template pTemplate="selectedStock">
+                            <div class="flex align-items-center gap-2" *ngIf="selectedStock">
+                                <div>{{ selectedStock.stockName }}</div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-stock pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ stock.stockName }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+                <div class="d-flex align-items-center mb-5">
+                    <label for="" class="form-label ms-5" style="width: 35%;">Lô xuất/nhập</label>
+                    <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="batchOption"
+                        optionLabel="label" optionValue="value" placeholder="Chọn lô xuất/nhập" class="w-100">
+                    </p-dropdown>
+                </div>
             </div>
             <div class="col-md-6 mb-5">
                 <div class="d-flex align-items-center mb-5">
@@ -120,10 +143,36 @@
                             <option [ngValue]="undefined">
                                 Tất cả
                             </option>
-                            <option [ngValue]="0">Chưa bán</option>
-                            <option [ngValue]="1">Đang bán</option>
+                            <option [ngValue]="0">Khởi tạo</option>
+                            <option [ngValue]="1">Hoạt động</option>
+                            <option [ngValue]="2">Số khoá</option>
+                            <option [ngValue]="3">Số lỗi</option>
+                            <option [ngValue]="4">Số huỷ</option>
+                            <option [ngValue]="5">Số đã bán</option>
                         </select>
                     </div>
+                </div>
+                <div class="d-flex align-items-center mb-5">
+                    <label for="product" class="form-label ms-5" style="width: 35%;">
+                        {{ 'Trạng thái hiện tại' | localize }}
+                    </label>
+                    <div class="input-group">
+                        <select id="product" name="product" class="form-select" [(ngModel)]="status">
+                            <option [ngValue]="undefined">
+                                Tất cả
+                            </option>
+                            <option [ngValue]="0">Khởi tạo</option>
+                            <option [ngValue]="1">Hoạt động</option>
+                            <option [ngValue]="2">Số khoá</option>
+                            <option [ngValue]="3">Số lỗi</option>
+                            <option [ngValue]="4">Số huỷ</option>
+                            <option [ngValue]="5">Số đã bán</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-5">
+                    <label for="" class="form-label ms-5" style="width: 35%;">Tìm kiếm theo file excel</label>
+                    <input type="file" class="form-control" id="">
                 </div>
                 <div class="d-flex align-items-center justify-content-end">
                     <button class="btn btn-secondary btn-sm me-3" type="button">CHỌN LẠI</button>
@@ -165,36 +214,40 @@
                             <th style="width: 130px">{{ 'HÀNH ĐỘNG' | localize }}</th>
                             <th *ngIf="!isSerial">
                                 {{ 'SỐ THUÊ BAO' | localize }}
-                                <!-- <p-sortIcon field="tenancyName"></p-sortIcon> -->
                             </th>
                             <th>
                                 {{ 'SỐ SERIAL' | localize }}
-                                <!-- <p-sortIcon field="name"></p-sortIcon> -->
                             </th>
-                            <!-- <th>{{ 'MÃ LÔ' | localize }}</th> -->
                             <th *ngIf="!isSerial">{{ 'HẠNG SỐ' | localize }}</th>
-                            <!-- <th>
-                                {{ 'SẢN PHẨM' | localize }}
-                            </th> -->
                             <th *ngIf="!isSerial">
                                 {{ 'NHÀ MẠNG' | localize }}
-                                <!-- <p-sortIcon field="isActive"></p-sortIcon> -->
+                            </th>
+                            <th>
+                                {{ 'KHO HIỆN TẠI' | localize }}
+                            </th>
+                            <th>
+                                {{ 'LÔ NHẬP/XUẤT' | localize }}
                             </th>
                             <th>
                                 {{ 'GIÁ BÁN' | localize }}
-                                <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
                             </th>
                             <th *ngIf="!isSerial">
                                 {{ 'THUỘC TÍNH' | localize }}
-                                <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
                             </th>
                             <th>
                                 {{ 'TRẠNG THÁI' | localize }}
-                                <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
+                            </th>
+                            <th>
+                                {{ 'TRẠNG THÁI HIỆN TẠI' | localize }}
                             </th>
                             <th>
                                 {{ 'NGÀY NHẬP' | localize }}
-                                <!-- <p-sortIcon field="creationTime"></p-sortIcon> -->
+                            </th>
+                            <th>
+                                {{ 'NGÀY XUẤT' | localize }}
+                            </th>
+                            <th>
+                                {{ 'KHO XUẤT ĐẾN' | localize }}
                             </th>
                         </tr>
                     </ng-template>
@@ -240,24 +293,67 @@
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.salePrice }}
                             </td>
                             <td *ngIf="!isSerial">
                                 <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.attribute }}
                             </td>
-                            <td>
-                                <span class="p-column-title">{{ 'Status' | localize }}</span>
-                                <span *ngIf="record.status == 0" class="badge badge-warning badge-inline">
-                                    {{ 'Chưa bán' | localize }}
+                            <td class="text-center">
+                                <span *ngIf="record.status == 0" class="badge badge-secondary badge-inline">
+                                    {{ 'Khởi tạo' | localize }}
                                 </span>
                                 <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
-                                    {{ 'Đang bán' | localize }}
+                                    {{ 'Hoạt động' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 2" class="badge badge-danger badge-inline">
+                                    {{ 'Số khoá' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 3" class="badge badge-danger badge-inline">
+                                    {{ 'Số lỗi' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 4" class="badge badge-danger badge-inline">
+                                    {{ 'Số huỷ' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 5" class="badge badge-success badge-inline">
+                                    {{ 'Số đã bán' | localize }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span *ngIf="record.status == 0" class="badge badge-secondary badge-inline">
+                                    {{ 'Khởi tạo' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
+                                    {{ 'Hoạt động' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 2" class="badge badge-danger badge-inline">
+                                    {{ 'Số khoá' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 3" class="badge badge-danger badge-inline">
+                                    {{ 'Số lỗi' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 4" class="badge badge-danger badge-inline">
+                                    {{ 'Số huỷ' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 5" class="badge badge-success badge-inline">
+                                    {{ 'Số đã bán' | localize }}
                                 </span>
                             </td>
                             <td>
                                 <span class="p-column-title">{{ 'Date' | localize }}</span>
                                 {{ record.createdDate | luxonFormat: 'F'}}
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
                             </td>
                         </tr>
                     </ng-template>

@@ -171,13 +171,13 @@
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
                                 <span class="badge badge-inline"
-                                    [class]="record.status == 1 ? 'badge-success' : 'badge-warning'">{{
+                                    [class]="record.status == 1 ? 'badge-success' : record.status == 7 ? 'badge-danger' : 'badge-warning'">{{
                                     record.statusName }}</span>
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
                                 <span class="badge badge-inline"
-                                    [class]="record.status == 1 ? 'badge-success' : 'badge-warning'">{{
+                                    [class]="record.status == 1 ? 'badge-success' : record.status == 7 ? 'badge-danger' : 'badge-warning'">{{
                                     record.statusCurrentName }}</span>
                             </td>
                             <td>

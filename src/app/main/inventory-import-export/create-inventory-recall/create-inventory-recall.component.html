@@ -77,18 +77,18 @@
                 <label for="fromRange" class="form-label">Dải số/serial từ<span class="text-danger">(*)</span></label>
                 <input type="text" class="form-control" id="fromRange" name="fromRange"
                     [(ngModel)]="tempOrderItems.fromRange" (input)="calculateQuantity($event)" pattern="^[0-9]*$"
-                    maxlength="20" (keypress)="onKeyPress($event)">
+                    maxlength="20" (keypress)="onKeyPress($event)" [disabled]="!isRangeRule">
             </div>
             <div class="col-md-4 mb-3">
                 <label for="toRange" class="form-label">Dải số/serial đến<span class="text-danger">(*)</span></label>
                 <input type="text" class="form-control" id="toRange" name="toRange" [(ngModel)]="tempOrderItems.toRange"
                     (input)="calculateQuantity($event)" pattern="^[0-9]*$" maxlength="20"
-                    (keypress)="onKeyPress($event)">
+                    (keypress)="onKeyPress($event)" [disabled]="!isRangeRule">
             </div>
             <div class="col-md-4 mb-3">
                 <label for="quantity" class="form-label">Số lượng<span class="text-danger">(*)</span></label>
                 <input type="text" class="form-control" id="quantity" name="quantity"
-                    [(ngModel)]="tempOrderItems.quantity">
+                    [(ngModel)]="tempOrderItems.quantity" [disabled]="!isRangeRule">
             </div>
             <div class="col-12 mb-3">
                 <label for="" class="form-label">Ghi chú</label>
@@ -97,30 +97,44 @@
             </div>
         </div>
     </div>
-    <div [class]="containerClass" class="mt-5">
+    <div [class]="isRangeRule ? 'd-none' : null" class="container-fluid mt-5">
         <div class="row bg-white py-5">
             <h4>BỘ LỌC TÌM KIẾM</h4>
-            <div class="col-md-4">
-                <label for="" class="form-label">Dải từ</label>
-                <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial" (input)="onInput($event)"
-                    pattern="^[0-9]*$" maxlength="20" (keypress)="onKeyPress($event)">
+            <div class="col-md-3">
+                <label for="" class="form-label">Số/Serial</label>
+                <input type="text" class="form-control" id="" placeholder="Nhập số/serial" [(ngModel)]="product">
             </div>
-            <div class="col-md-4">
-                <label for="" class="form-label">Dải đến</label>
-                <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial" (input)="onInput($event)"
-                    pattern="^[0-9]*$" maxlength="20" (keypress)="onKeyPress($event)">
-            </div>
-            <div class="col-md-4">
-                <div class="d-flex align-items-center">
-                    <div>
-                        <label for="" class="form-label">Tìm kiếm theo file excel</label>
-                        <input type="file" class="form-control" id="">
-                    </div>
-                    <div class="ms-5" style="cursor: pointer; padding-top: 24px;">
-                        <i class="pi pi-download me-2" style="color: #009EF7; font-size: 18px;"></i>
-                        <span style="font-size: 15px;">Tải xuống file mẫu</span>
-                    </div>
+            <div class="col-md-3">
+                <label for="attribute" class="form-label" style="width: 35%;">
+                    {{ 'Hạng số' | localize }}
+                </label>
+                <div class="input-group">
+                    <select id="attribute" name="attribute" class="form-select" [(ngModel)]="attribute">
+                        <option [ngValue]="undefined">
+                            Tất cả
+                        </option>
+                        <option [ngValue]="pdAtt.attributeType" *ngFor="let pdAtt of productAttribute">
+                            {{pdAtt.attributeName}}</option>
+                    </select>
                 </div>
+            </div>
+            <div class="col-md-3">
+                <label for="simType" class="form-label" style="width: 35%;">
+                    {{ 'Loại số' | localize }}
+                </label>
+                <div class="input-group">
+                    <select id="simType" name="simType" class="form-select">
+                        <option [ngValue]="undefined">
+                            Tất cả
+                        </option>
+                        <option [ngValue]="simType.simType" *ngFor="let simType of simTypes">
+                            {{simType.simName}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="" class="form-label">Tìm kiếm theo file excel</label>
+                <input type="file" class="form-control" id="">
             </div>
             <div>
                 <button class="btn btn-primary btn-sm mt-5" type="button" (click)="getListSimsTransfers($event)">TÌM

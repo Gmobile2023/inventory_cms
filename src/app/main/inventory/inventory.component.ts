@@ -70,7 +70,7 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     inventoryData: any = {};
     isEdit = false;
     listStock: any[] = [];
-    inventoryId!: number;
+    inventoryId: number;
     stockLevels = [
         // { label: '0', value: 0 },
         { label: '1', value: 1 },
@@ -151,7 +151,11 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
                 this.status == null ? undefined : this.status,
                 this.primengTableHelper.getSorting(this.dataTable),
                 this.primengTableHelper.getSkipCount(this.paginator, event),
-                this.typeViewStock === 1 ? this.primengTableHelper.getMaxResultCount(this.paginator, event) : 1000
+                this.typeViewStock === 1
+                    ? this.primengTableHelper.getMaxResultCount(this.paginator, event)
+                    : this.inventoryId
+                    ? this.primengTableHelper.getMaxResultCount(this.paginator, event)
+                    : 1000
             )
             .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
             .subscribe((result) => {
@@ -312,6 +316,8 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
         let body = new CreateOrEditStockDto();
         body = { ...this.inventoryData };
         if (this.statusAction === 3) {
+            body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
+            body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.userName) || [];
             body.status = 1;
         } else {
             body.status = 3;
