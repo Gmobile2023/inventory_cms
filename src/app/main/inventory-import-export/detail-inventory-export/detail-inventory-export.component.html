@@ -49,7 +49,7 @@
                     <div class="row py-5">
                         <h4>THÔNG TIN CHỨNG TỪ</h4>
                         <div class="d-flex justify-content-center" style="margin-top: 100px;"
-                            *ngIf="orderData.status !== 1">
+                            *ngIf="orderData.status !== 1 && orderData.status !== 7">
                             <button *ngIf="'Pages.Inventories.Orders.Confirm' | permission" class="btn btn-success me-3"
                                 type="button" (click)="openModal(approve)">
                                 {{ orderData.status == 5 ? 'XUẤT KHO' : 'ĐỒNG Ý'}}
@@ -247,7 +247,6 @@
                                         {{ record.salePrice }}
                                     </td>
                                     <td>
-                                        <span class="p-column-title">{{ 'Status' | localize }}</span>
                                         <span *ngIf="record.status == 0" class="badge badge-secondary badge-inline">
                                             {{ 'Khởi tạo' | localize }}
                                         </span>
@@ -255,7 +254,7 @@
                                             {{ 'Hoạt động' | localize }}
                                         </span>
                                         <span *ngIf="record.status == 2" class="badge badge-danger badge-inline">
-                                            {{ 'Số block' | localize }}
+                                            {{ 'Số khoá' | localize }}
                                         </span>
                                         <span *ngIf="record.status == 3" class="badge badge-danger badge-inline">
                                             {{ 'Số lỗi' | localize }}

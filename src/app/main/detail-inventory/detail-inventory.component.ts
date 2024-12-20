@@ -90,6 +90,9 @@ export class DetailInventoryComponent extends AppComponentBase {
     selectedDistrict: any;
     selectedWard: any;
     remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
+    selectedStock: any;
+    listStock: any[] = [];
+    batchOption = [];
 
     ngOnInit() {
         this.items = [
@@ -102,6 +105,28 @@ export class DetailInventoryComponent extends AppComponentBase {
         this.getStockForView(this.stockId);
         this.getProvinces();
         this.getProductAttributes();
+        this.getListStock();
+    }
+
+    getListStock() {
+        this._inventoryServiceProxy
+            .getListStock(
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                0,
+                99
+            )
+            .subscribe((result) => {
+                this.listStock = result.items;
+            });
     }
 
     filterUsers(event): void {
@@ -196,7 +221,9 @@ export class DetailInventoryComponent extends AppComponentBase {
                 this.mobile,
                 this.serial,
                 this.attribute,
+                undefined,
                 this.status,
+                undefined,
                 this.kitingStatus,
                 this.primengTableHelper.getSorting(this.dataTable),
                 this.primengTableHelper.getSkipCount(this.paginator, event),

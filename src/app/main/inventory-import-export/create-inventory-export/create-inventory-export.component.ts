@@ -147,6 +147,8 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
                 undefined,
                 undefined,
                 undefined,
+                undefined,
+                undefined,
                 this.primengTableHelper.getSkipCount(this.paginator, event),
                 this.primengTableHelper.getMaxResultCount(this.paginator, event)
             )
@@ -209,15 +211,23 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     }
 
     moveSelectedRecords() {
-        // console.log(this.selectedRecordsTo);
-        this.selectedRecordsTo.forEach((record) => {
-            const index = this.listSimSrcStock.indexOf(record);
-            const existingRecord = this.rangeItems.find((item) => JSON.stringify(item) === JSON.stringify(record));
+        const duplicateRecord = this.selectedRecordsTo.find((record) =>
+            this.rangeItems.some((item) => JSON.stringify(item) === JSON.stringify(record))
+        );
 
-            if (index > -1 && !existingRecord) {
-                this.rangeItems.push(record);
+        if (duplicateRecord) {
+            // Hiển thị thông báo lỗi cho bản ghi đầu tiên bị trùng
+            if (this.productType === ProductType.Mobile) {
+                this.message.error(`Bản ghi ${duplicateRecord.mobile} đã tồn tại`);
+            } else {
+                this.message.error(`Bản ghi ${duplicateRecord.serial} đã tồn tại`);
             }
-        });
+        } else {
+            // Không có bản ghi nào bị trùng, thêm tất cả vào rangeItems
+            this.rangeItems.push(...this.selectedRecordsTo);
+        }
+
+        // Làm trống selectedRecordsTo sau khi xử lý
         this.selectedRecordsTo = [];
         this.updateCurrentDataFrom();
     }

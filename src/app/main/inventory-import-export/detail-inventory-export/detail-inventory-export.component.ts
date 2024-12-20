@@ -92,6 +92,8 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
         this._inventoryServiceProxy
             .getListSimOrderDetail(
                 this.orderId,
+                undefined,
+                undefined,
                 this.primengTableHelper.getSorting(this.dataTable2),
                 this.primengTableHelper.getSkipCount(this.paginator2, event),
                 this.primengTableHelper.getMaxResultCount(this.paginator2, event)

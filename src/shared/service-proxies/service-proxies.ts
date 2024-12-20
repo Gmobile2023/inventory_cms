@@ -8517,14 +8517,16 @@ export class InventoryServiceProxy {
      * @param mobile (optional) 
      * @param serial (optional) 
      * @param attribute (optional) 
+     * @param transCode (optional) 
      * @param status (optional) 
+     * @param seachType (optional) 
      * @param kitingStatus (optional) 
      * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getListSims(stockId: number | undefined, productType: ProductType | undefined, mobile: string | undefined, serial: string | undefined, attribute: string | undefined, status: ProductStatus | undefined, kitingStatus: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
+    getListSims(stockId: number | undefined, productType: ProductType | undefined, mobile: string | undefined, serial: string | undefined, attribute: string | undefined, transCode: string | undefined, status: ProductStatus | undefined, seachType: SeachTypeProductValue | undefined, kitingStatus: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSims?";
         if (stockId === null)
             throw new Error("The parameter 'stockId' cannot be null.");
@@ -8546,10 +8548,18 @@ export class InventoryServiceProxy {
             throw new Error("The parameter 'attribute' cannot be null.");
         else if (attribute !== undefined)
             url_ += "Attribute=" + encodeURIComponent("" + attribute) + "&";
+        if (transCode === null)
+            throw new Error("The parameter 'transCode' cannot be null.");
+        else if (transCode !== undefined)
+            url_ += "TransCode=" + encodeURIComponent("" + transCode) + "&";
         if (status === null)
             throw new Error("The parameter 'status' cannot be null.");
         else if (status !== undefined)
             url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        if (seachType === null)
+            throw new Error("The parameter 'seachType' cannot be null.");
+        else if (seachType !== undefined)
+            url_ += "SeachType=" + encodeURIComponent("" + seachType) + "&";
         if (kitingStatus === null)
             throw new Error("The parameter 'kitingStatus' cannot be null.");
         else if (kitingStatus !== undefined)
@@ -9597,17 +9607,27 @@ export class InventoryServiceProxy {
 
     /**
      * @param orderId (optional) 
+     * @param mobile (optional) 
+     * @param serial (optional) 
      * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getListSimOrderDetail(orderId: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
+    getListSimOrderDetail(orderId: number | undefined, mobile: string | undefined, serial: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSimOrderDetail?";
         if (orderId === null)
             throw new Error("The parameter 'orderId' cannot be null.");
         else if (orderId !== undefined)
             url_ += "OrderId=" + encodeURIComponent("" + orderId) + "&";
+        if (mobile === null)
+            throw new Error("The parameter 'mobile' cannot be null.");
+        else if (mobile !== undefined)
+            url_ += "Mobile=" + encodeURIComponent("" + mobile) + "&";
+        if (serial === null)
+            throw new Error("The parameter 'serial' cannot be null.");
+        else if (serial !== undefined)
+            url_ += "Serial=" + encodeURIComponent("" + serial) + "&";
         if (sorting === null)
             throw new Error("The parameter 'sorting' cannot be null.");
         else if (sorting !== undefined)
@@ -9656,6 +9676,82 @@ export class InventoryServiceProxy {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PagedResultDtoOfSimNumberDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param stockId (optional) 
+     * @param suggests (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getListOrderSuggest(stockId: number | undefined, suggests: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSuggestOrderItemDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListOrderSuggest?";
+        if (stockId === null)
+            throw new Error("The parameter 'stockId' cannot be null.");
+        else if (stockId !== undefined)
+            url_ += "StockId=" + encodeURIComponent("" + stockId) + "&";
+        if (suggests === null)
+            throw new Error("The parameter 'suggests' cannot be null.");
+        else if (suggests !== undefined)
+            url_ += "Suggests=" + encodeURIComponent("" + suggests) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListOrderSuggest(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListOrderSuggest(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagedResultDtoOfSuggestOrderItemDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagedResultDtoOfSuggestOrderItemDto>;
+        }));
+    }
+
+    protected processGetListOrderSuggest(response: HttpResponseBase): Observable<PagedResultDtoOfSuggestOrderItemDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfSuggestOrderItemDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -22506,6 +22602,7 @@ export class CreateOrEditStockDto implements ICreateOrEditStockDto {
     status!: InventoryStatus;
     isActive!: boolean;
     parentStockId!: number | undefined;
+    parentStockName!: string | undefined;
     treePath!: string | undefined;
     cityId!: number | undefined;
     cityName!: string | undefined;
@@ -22561,6 +22658,7 @@ export class CreateOrEditStockDto implements ICreateOrEditStockDto {
             this.status = _data["status"];
             this.isActive = _data["isActive"];
             this.parentStockId = _data["parentStockId"];
+            this.parentStockName = _data["parentStockName"];
             this.treePath = _data["treePath"];
             this.cityId = _data["cityId"];
             this.cityName = _data["cityName"];
@@ -22616,6 +22714,7 @@ export class CreateOrEditStockDto implements ICreateOrEditStockDto {
         data["status"] = this.status;
         data["isActive"] = this.isActive;
         data["parentStockId"] = this.parentStockId;
+        data["parentStockName"] = this.parentStockName;
         data["treePath"] = this.treePath;
         data["cityId"] = this.cityId;
         data["cityName"] = this.cityName;
@@ -22648,6 +22747,7 @@ export interface ICreateOrEditStockDto {
     status: InventoryStatus;
     isActive: boolean;
     parentStockId: number | undefined;
+    parentStockName: string | undefined;
     treePath: string | undefined;
     cityId: number | undefined;
     cityName: string | undefined;
@@ -29111,6 +29211,7 @@ export class InventoryDto implements IInventoryDto {
     status!: InventoryStatus;
     isActive!: boolean;
     parentStockId!: number | undefined;
+    parentStockName!: string | undefined;
     treePath!: string | undefined;
     cityId!: number | undefined;
     cityName!: string | undefined;
@@ -29146,6 +29247,7 @@ export class InventoryDto implements IInventoryDto {
             this.status = _data["status"];
             this.isActive = _data["isActive"];
             this.parentStockId = _data["parentStockId"];
+            this.parentStockName = _data["parentStockName"];
             this.treePath = _data["treePath"];
             this.cityId = _data["cityId"];
             this.cityName = _data["cityName"];
@@ -29181,6 +29283,7 @@ export class InventoryDto implements IInventoryDto {
         data["status"] = this.status;
         data["isActive"] = this.isActive;
         data["parentStockId"] = this.parentStockId;
+        data["parentStockName"] = this.parentStockName;
         data["treePath"] = this.treePath;
         data["cityId"] = this.cityId;
         data["cityName"] = this.cityName;
@@ -29209,6 +29312,7 @@ export interface IInventoryDto {
     status: InventoryStatus;
     isActive: boolean;
     parentStockId: number | undefined;
+    parentStockName: string | undefined;
     treePath: string | undefined;
     cityId: number | undefined;
     cityName: string | undefined;
@@ -29306,6 +29410,7 @@ export class InventoryViewDto implements IInventoryViewDto {
     status!: InventoryStatus;
     isActive!: boolean;
     parentStockId!: number | undefined;
+    parentStockName!: string | undefined;
     treePath!: string | undefined;
     cityId!: number | undefined;
     cityName!: string | undefined;
@@ -29361,6 +29466,7 @@ export class InventoryViewDto implements IInventoryViewDto {
             this.status = _data["status"];
             this.isActive = _data["isActive"];
             this.parentStockId = _data["parentStockId"];
+            this.parentStockName = _data["parentStockName"];
             this.treePath = _data["treePath"];
             this.cityId = _data["cityId"];
             this.cityName = _data["cityName"];
@@ -29416,6 +29522,7 @@ export class InventoryViewDto implements IInventoryViewDto {
         data["status"] = this.status;
         data["isActive"] = this.isActive;
         data["parentStockId"] = this.parentStockId;
+        data["parentStockName"] = this.parentStockName;
         data["treePath"] = this.treePath;
         data["cityId"] = this.cityId;
         data["cityName"] = this.cityName;
@@ -29448,6 +29555,7 @@ export interface IInventoryViewDto {
     status: InventoryStatus;
     isActive: boolean;
     parentStockId: number | undefined;
+    parentStockName: string | undefined;
     treePath: string | undefined;
     cityId: number | undefined;
     cityName: string | undefined;
@@ -33456,6 +33564,54 @@ export interface IPagedResultDtoOfSubscriptionPaymentListDto {
     items: SubscriptionPaymentListDto[] | undefined;
 }
 
+export class PagedResultDtoOfSuggestOrderItemDto implements IPagedResultDtoOfSuggestOrderItemDto {
+    totalCount!: number;
+    items!: SuggestOrderItemDto[] | undefined;
+
+    constructor(data?: IPagedResultDtoOfSuggestOrderItemDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(SuggestOrderItemDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfSuggestOrderItemDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultDtoOfSuggestOrderItemDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IPagedResultDtoOfSuggestOrderItemDto {
+    totalCount: number;
+    items: SuggestOrderItemDto[] | undefined;
+}
+
 export class PagedResultDtoOfTenantListDto implements IPagedResultDtoOfTenantListDto {
     totalCount!: number;
     items!: TenantListDto[] | undefined;
@@ -34753,6 +34909,14 @@ export interface ISavePageInput {
     pages: Page[] | undefined;
 }
 
+export enum SeachTypeProductValue {
+    Current = 0,
+    Import = 1,
+    Transfer = 2,
+    Recovery = 3,
+    Sale = 5,
+}
+
 export class SecuritySettingsEditDto implements ISecuritySettingsEditDto {
     allowOneConcurrentLoginPerUser!: boolean;
     useDefaultPasswordComplexitySettings!: boolean;
@@ -35709,6 +35873,46 @@ export enum SubscriptionStartType {
     Free = 1,
     Trial = 2,
     Paid = 3,
+}
+
+export class SuggestOrderItemDto implements ISuggestOrderItemDto {
+    orderCode!: string | undefined;
+    orderName!: string | undefined;
+
+    constructor(data?: ISuggestOrderItemDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.orderCode = _data["orderCode"];
+            this.orderName = _data["orderName"];
+        }
+    }
+
+    static fromJS(data: any): SuggestOrderItemDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SuggestOrderItemDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["orderCode"] = this.orderCode;
+        data["orderName"] = this.orderName;
+        return data;
+    }
+}
+
+export interface ISuggestOrderItemDto {
+    orderCode: string | undefined;
+    orderName: string | undefined;
 }
 
 export class SwitchToLinkedAccountInput implements ISwitchToLinkedAccountInput {

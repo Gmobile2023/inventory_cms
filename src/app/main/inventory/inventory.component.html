@@ -206,7 +206,7 @@
                                         <li>
                                             <a *ngIf="'Pages.Inventories.Stock.Edit' | permission" href="javascript:;"
                                                 class="dropdown-item"
-                                                (click)="openModal(lockOrUnlock, 'modal-md', record.id)">
+                                                (click)="openModal(lockOrUnlock, 'modal-md', record.id, record.status)">
                                                 {{ record.status == 3 ? 'Mở kho' : 'Khoá kho' | localize }}
                                             </a>
                                         </li>
@@ -372,6 +372,16 @@
                                     <input type="hidden" [(ngModel)]="inventoryData.wardName">
                                 </div>
                             </div>
+                            <div class="d-flex align-items-center mb-5">
+                                <label for="address" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Địa chỉ chi tiết' | localize }}
+                                </label>
+                                <div class="input-group">
+                                    <input id="address" name="address" class="form-control"
+                                        placeholder="{{ 'Nhập địa chỉ' | localize }}" type="text"
+                                        [(ngModel)]="inventoryData.address" />
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="d-flex align-items-center mb-5">
@@ -460,7 +470,7 @@
     <ng-template #lockOrUnlock>
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">{{statusAction === 3 ? 'Xác nhận yêu cầu mở kho' : 'Xác nhận yêu cầu khoá kho'}}
+                <h3 class="modal-title">{{statusAction == 3 ? 'Xác nhận yêu cầu mở kho' : 'Xác nhận yêu cầu khoá kho'}}
                 </h3>
                 <button type="button" class="btn-close" (click)="closeModal()"></button>
             </div>

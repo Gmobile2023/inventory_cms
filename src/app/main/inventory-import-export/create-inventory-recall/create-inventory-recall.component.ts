@@ -65,6 +65,10 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
     isRecover: boolean | undefined = true;
     selectedStockFrom: any;
     selectedStockTo: any;
+    productAttribute: any[] = [];
+    simTypes: any[] = [];
+    product: string;
+    attribute: string;
 
     ngOnInit() {
         this.items = [
@@ -73,13 +77,9 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
             { label: 'Tạo mới yêu cầu thu hồi về kho' },
         ];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
-        let interval = setInterval(() => {
-            this.value = this.value + Math.floor(Math.random() * 10) + 1;
-            if (this.value >= 100) {
-                this.value = 100;
-            }
-        }, 2000);
         this.getListStock();
+        this.getProductAttributes();
+        this.getSimsTypes();
     }
 
     getListStock() {
@@ -101,6 +101,20 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
             .subscribe((result) => {
                 this.listStock = result.items;
             });
+    }
+
+    getProductAttributes() {
+        this._inventoryServiceProxy
+            .getProductAttributes(this.productType.toString(), undefined, 0, 10)
+            .subscribe((result) => {
+                this.productAttribute = result.items;
+            });
+    }
+
+    getSimsTypes() {
+        this._inventoryServiceProxy.getSimsTypes(this.productType.toString(), undefined, 0, 10).subscribe((result) => {
+            this.simTypes = result.items;
+        });
     }
 
     onRangeRuleChange(event: Event) {
@@ -206,15 +220,23 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
     }
 
     moveSelectedRecords() {
-        this.selectedRecordsTo.forEach((record) => {
-            const index = this.listSimSrcStock.indexOf(record);
-            // Kiểm tra xem record đã tồn tại trong rangeItems chưa
-            const existingRecord = this.rangeItems.find((item) => JSON.stringify(item) === JSON.stringify(record));
+        const duplicateRecord = this.selectedRecordsTo.find((record) =>
+            this.rangeItems.some((item) => JSON.stringify(item) === JSON.stringify(record))
+        );
 
-            if (index > -1 && !existingRecord) {
-                this.rangeItems.push(record);
+        if (duplicateRecord) {
+            // Hiển thị thông báo lỗi cho bản ghi đầu tiên bị trùng
+            if (this.productType === ProductType.Mobile) {
+                this.message.error(`Bản ghi ${duplicateRecord.mobile} đã tồn tại`);
+            } else {
+                this.message.error(`Bản ghi ${duplicateRecord.serial} đã tồn tại`);
             }
-        });
+        } else {
+            // Không có bản ghi nào bị trùng, thêm tất cả vào rangeItems
+            this.rangeItems.push(...this.selectedRecordsTo);
+        }
+
+        // Làm trống selectedRecordsTo sau khi xử lý
         this.selectedRecordsTo = [];
         this.updateCurrentDataFrom();
     }
