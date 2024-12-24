@@ -201,12 +201,14 @@
                 </p-tabPanel> -->
                 <p-tabPanel header="Danh sách SIM/SỐ">
                     <div class="d-flex justify-content-end gap-5 mb-3">
-                        <input type=" text" class="form-control" placeholder="Nhập số/serial">
-                        <button type="button" class="btn btn-primary btn-sm"
-                            [style]="{width: '150px', height: 'auto'}">TÌM
-                            KIẾM</button>
+                        <input type=" text" class="form-control" placeholder="Nhập số" [(ngModel)]="mobile">
+                        <input type=" text" class="form-control" placeholder="Nhập serial" [(ngModel)]="serial">
+                        <button type="button" class="btn btn-primary btn-sm" [style]="{width: '200px', height: 'auto'}"
+                            (click)="getListSimOrderDetail($event)">
+                            TÌM KIẾM
+                        </button>
                         <button *ngIf="'Pages.Inventories.Sims' | permission" type="button"
-                            class="btn btn-success btn-sm" [style]="{width: '150px', height: 'auto'}"
+                            class="btn btn-success btn-sm" [style]="{width: '250px', height: 'auto'}"
                             (click)="exportToExcel()">XUẤT EXCEL</button>
                     </div>
                     <div class="border">
@@ -248,16 +250,16 @@
                                     </td>
                                     <td>
                                         <span *ngIf="record.status == 0" class="badge badge-secondary badge-inline">
-                                            {{ 'Khởi tạo' | localize }}
+                                            {{ 'Đang xử lý' | localize }}
                                         </span>
                                         <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
-                                            {{ 'Hoạt động' | localize }}
+                                            {{ 'Trong kho' | localize }}
                                         </span>
                                         <span *ngIf="record.status == 2" class="badge badge-danger badge-inline">
-                                            {{ 'Số khoá' | localize }}
+                                            {{ 'Số không hoạt động' | localize }}
                                         </span>
-                                        <span *ngIf="record.status == 3" class="badge badge-danger badge-inline">
-                                            {{ 'Số lỗi' | localize }}
+                                        <span *ngIf="record.status == 6" class="badge badge-danger badge-inline">
+                                            {{ 'Đã xuất kho' | localize }}
                                         </span>
                                         <span *ngIf="record.status == 4" class="badge badge-danger badge-inline">
                                             {{ 'Số huỷ' | localize }}

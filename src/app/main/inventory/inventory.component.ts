@@ -92,9 +92,15 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     treeData: CustomTreeNode[];
     typeViewStock: number = 1;
     statusAction: number;
+    parentStockName: string;
 
     ngOnInit() {
         this.inventoryId = parseInt(this.route.snapshot.queryParamMap.get('id')!);
+        if (this.inventoryId) {
+            this._inventoryServiceProxy.getStockForView(this.inventoryId).subscribe((result) => {
+                this.parentStockName = result.inventory.stockName;
+            });
+        }
         this.items = [{ label: 'Quản lý kho' }, { label: this.inventoryId ? 'Danh sách kho con' : 'Danh sách kho' }];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.getProvinces();

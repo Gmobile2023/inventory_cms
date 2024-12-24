@@ -39,6 +39,8 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
     listSim: any[] = [];
     orderCode: string;
     description: string;
+    mobile: string;
+    serial: string;
 
     ngOnInit(): void {
         this.items = [
@@ -90,8 +92,8 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
         this._inventoryServiceProxy
             .getListSimOrderDetail(
                 this.orderId,
-                undefined,
-                undefined,
+                this.mobile,
+                this.serial,
                 this.primengTableHelper.getSorting(this.dataTable2),
                 this.primengTableHelper.getSkipCount(this.paginator2, event),
                 this.primengTableHelper.getMaxResultCount(this.paginator2, event)

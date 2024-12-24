@@ -63,36 +63,35 @@
                                 </select>
                             </td>
                             <td><input type="text" class="form-control" [(ngModel)]="record.orderName" /></td>
-                            <td><input type="text" class="form-control" [(ngModel)]="record.telCo" /></td>
-                            <td><input type="text" pattern="^[0-9]*$" maxlength="20" class="form-control"
-                                    (keypress)="onKeyPress($event)" (input)="onInput($event)"
+                            <td>
+                                <select class="form-select" [(ngModel)]="record.telCo">
+                                    <option value="Bộ">Bộ</option>
+                                    <option value="Cái">Cái</option>
+                                </select>
+                            </td>
+                            <td><input type="text" pattern="^[0-9]*$" maxlength="18" class="form-control"
+                                    (keypress)="onKeyPress($event)" (input)="onInput($event, record)"
                                     [(ngModel)]="record.fromRange" /></td>
-                            <td><input type="text" pattern="^[0-9]*$" maxlength="20" class="form-control"
-                                    (keypress)="onKeyPress($event)" (input)="onInput($event)"
+                            <td><input type="text" pattern="^[0-9]*$" maxlength="18" class="form-control"
+                                    (keypress)="onKeyPress($event)" (input)="onInput($event, record)"
                                     [(ngModel)]="record.toRange" /></td>
                             <td><input type="number" class="form-control" [(ngModel)]="record.quantity" /></td>
-                            <td><button class="btn btn-danger" (click)="removeRow(rowIndex)">Xóa</button></td>
+                            <td><button class="btn btn-danger" (click)="removeRow(rowIndex)"
+                                    [disabled]="tempOrderItems.length == 1">Xóa</button></td>
                         </tr>
                     </ng-template>
                 </p-table>
             </div>
             <div class="d-flex align-items-center">
                 <button class="btn btn-primary btn-sm mt-3" type="button" (click)="addRow()">THÊM HÀNG HOÁ</button>
-                <!-- <div class="ms-5 pt-4" style="cursor: pointer;">
-                    <i class="pi pi-download me-2" style="color: #009EF7; font-size: 18px;"></i>
-                    <span style="font-size: 15px;">Tải xuống file mẫu</span>
-                </div> -->
             </div>
-            <!-- <span class="fs-5 mt-5">Tải lên file Excel</span>
-            <div class="d-flex justify-content-start align-items-center mt-1 custom-progress">
-                <div class="me-5">
-                    <p-fileUpload mode="basic" chooseLabel="Chọn file" name="demo[]"
-                        url="https://www.primefaces.org/cdn/api/upload.php" maxFileSize="1000000"
-                        (onUpload)="onUpload($event)"></p-fileUpload>
-                </div>
-                <div style="width: 15%;" class="me-2"><p-progressBar [value]="value"></p-progressBar></div>
-                <span>{{value}}%</span>
-            </div> -->
+            <hr class="mt-5">
+            <div class="mt-5">
+                <h4>THÔNG TIN CHỨNG TỪ</h4>
+                <p-fileUpload customUpload="true" maxFileSize="10000000" auto="auto"
+                    accept=".csv,.xls,.xlsx,.pdf,.png,.jpg" chooseLabel="Tải file chứng từ"
+                    (onSelect)="onFileSelect($event)"></p-fileUpload>
+            </div>
             <div class="d-flex justify-content-center mt-5 pt-5">
                 <button class="btn btn-success" type="button" (click)="createOrder()">GỬI YÊU CẦU</button>
             </div>

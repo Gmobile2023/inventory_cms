@@ -15,6 +15,10 @@
                     <div class="description" style="font-size: 14px;">{{inventoryData.stockName}}</div>
                 </div>
                 <div class="d-flex align-items-center mb-3">
+                    <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Tên kho cha:</div>
+                    <div class="description" style="font-size: 14px;">{{inventoryData.parentStockName}}</div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
                     <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Cấp độ kho:</div>
                     <div class="description" style="font-size: 14px;">{{inventoryData.stockLevel}}</div>
                 </div>
@@ -153,24 +157,6 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-5">
-                    <label for="product" class="form-label ms-5" style="width: 35%;">
-                        {{ 'Trạng thái hiện tại' | localize }}
-                    </label>
-                    <div class="input-group">
-                        <select id="product" name="product" class="form-select" [(ngModel)]="status">
-                            <option [ngValue]="undefined">
-                                Tất cả
-                            </option>
-                            <option [ngValue]="0">Khởi tạo</option>
-                            <option [ngValue]="1">Hoạt động</option>
-                            <option [ngValue]="2">Số khoá</option>
-                            <option [ngValue]="3">Số lỗi</option>
-                            <option [ngValue]="4">Số huỷ</option>
-                            <option [ngValue]="5">Số đã bán</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-5">
                     <label for="" class="form-label ms-5" style="width: 35%;">Tìm kiếm theo file excel</label>
                     <input type="file" class="form-control" id="">
                 </div>
@@ -191,13 +177,12 @@
                         type="button" (click)="openModal(createStock, 'modal-xl')">TẠO KHO
                         CON</button>
                     <button *ngIf="'Pages.Inventories.Stock.Kitting' | permission" class="btn btn-primary btn-sm ms-3"
-                        type="button" (click)="openModal(kitting, 'modal-md')">KITTING</button>
+                        type="button" (click)="openModal(kitting, 'modal-md')">ĐÓNG KIT</button>
                     <button *ngIf="'Pages.Inventories.Stock.AddSale' | permission" class="btn btn-primary btn-sm ms-3"
                         type="button" (click)="openModal(addSaleStock, 'modal-md')">THÊM NGƯỜI BÁN HÀNG</button>
                     <button *ngIf="'Pages.Inventories.UpdatePrice' | permission" class="btn btn-primary btn-sm ms-3"
                         type="button" [routerLink]="'/app/main/price-update'"
-                        [queryParams]="{ stockCode: inventoryData.stockCode, id: inventoryData.id }">CẬP NHẬT
-                        GIÁ</button>
+                        [queryParams]="{ stockCode: inventoryData.stockCode, id: inventoryData.id }">ĐỊNH GIÁ</button>
                     <button *ngIf="'Pages.Inventories.Sims' | permission" class="btn btn-success btn-sm ms-3"
                         (click)="exportToExcel()" type="button">XUẤT EXCEL</button>
                 </div>
@@ -236,9 +221,6 @@
                             </th>
                             <th>
                                 {{ 'TRẠNG THÁI' | localize }}
-                            </th>
-                            <th>
-                                {{ 'TRẠNG THÁI HIỆN TẠI' | localize }}
                             </th>
                             <th>
                                 {{ 'NGÀY NHẬP' | localize }}
@@ -307,36 +289,16 @@
                             </td>
                             <td class="text-center">
                                 <span *ngIf="record.status == 0" class="badge badge-secondary badge-inline">
-                                    {{ 'Khởi tạo' | localize }}
+                                    {{ 'Đang xử lý' | localize }}
                                 </span>
                                 <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
-                                    {{ 'Hoạt động' | localize }}
+                                    {{ 'Trong kho' | localize }}
                                 </span>
                                 <span *ngIf="record.status == 2" class="badge badge-danger badge-inline">
-                                    {{ 'Số khoá' | localize }}
+                                    {{ 'Số không hoạt động' | localize }}
                                 </span>
-                                <span *ngIf="record.status == 3" class="badge badge-danger badge-inline">
-                                    {{ 'Số lỗi' | localize }}
-                                </span>
-                                <span *ngIf="record.status == 4" class="badge badge-danger badge-inline">
-                                    {{ 'Số huỷ' | localize }}
-                                </span>
-                                <span *ngIf="record.status == 5" class="badge badge-success badge-inline">
-                                    {{ 'Số đã bán' | localize }}
-                                </span>
-                            </td>
-                            <td class="text-center">
-                                <span *ngIf="record.status == 0" class="badge badge-secondary badge-inline">
-                                    {{ 'Khởi tạo' | localize }}
-                                </span>
-                                <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
-                                    {{ 'Hoạt động' | localize }}
-                                </span>
-                                <span *ngIf="record.status == 2" class="badge badge-danger badge-inline">
-                                    {{ 'Số khoá' | localize }}
-                                </span>
-                                <span *ngIf="record.status == 3" class="badge badge-danger badge-inline">
-                                    {{ 'Số lỗi' | localize }}
+                                <span *ngIf="record.status == 6" class="badge badge-danger badge-inline">
+                                    {{ 'Đã xuất kho' | localize }}
                                 </span>
                                 <span *ngIf="record.status == 4" class="badge badge-danger badge-inline">
                                     {{ 'Số huỷ' | localize }}
