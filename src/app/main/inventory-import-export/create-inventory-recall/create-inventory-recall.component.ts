@@ -123,7 +123,11 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
 
     onChangeProductType(event: Event) {
         this.productType = (event.target as HTMLSelectElement).value as unknown as ProductType;
-        console.log(this.productType);
+        this.getProductAttributes();
+        this.getSimsTypes();
+        if (this.stockId) {
+            this.getListSimsTransfers();
+        }
     }
 
     onChangeStock(event: { value: any }) {
@@ -257,6 +261,22 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
         const start = this.currentPage * this.rowsPerPage;
         const end = start + this.rowsPerPage;
         this.currentDataFrom = this.rangeItems.slice(start, end);
+    }
+
+    onHeaderCheckboxToggle(event: { checked: boolean }): void {
+        if (event.checked) {
+            // Chỉ chọn những item không bị disabled
+            this.selectedRecordsTo = this.listSimSrcStock.filter(
+                (record) => !this.isRecordInTable2(record) && !this.isRangeRule
+            );
+        } else {
+            // Bỏ chọn tất cả
+            this.selectedRecordsTo = [];
+        }
+    }
+
+    isRecordInTable2(record: any): boolean {
+        return this.currentDataFrom.some((item) => JSON.stringify(item) === JSON.stringify(record));
     }
 
     onUpload(event) {}

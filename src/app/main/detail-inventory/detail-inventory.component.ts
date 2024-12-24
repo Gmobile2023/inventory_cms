@@ -62,7 +62,7 @@ export class DetailInventoryComponent extends AppComponentBase {
     serial: string | undefined;
     categoryCode: string | undefined;
     attribute: string | undefined;
-    status: number | undefined;
+    status: number;
     kitingStatus: number = 0;
     value: number = 0;
     createData: any = {};

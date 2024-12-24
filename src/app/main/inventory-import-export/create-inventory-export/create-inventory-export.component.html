@@ -154,7 +154,8 @@
                 <div class="table1 border">
                     <p-table #dataTable [value]="listSimSrcStock" [(selection)]="selectedRecordsTo"
                         [rows]="primengTableHelper.defaultRecordsCountPerPage" [paginator]="false" [lazy]="true"
-                        [tableStyle]="{'min-width': '50rem'}" class="table-custom">
+                        [tableStyle]="{'min-width': '50rem'}" class="table-custom"
+                        (onHeaderCheckboxToggle)="onHeaderCheckboxToggle($event)">
                         <ng-template pTemplate="caption">
                             <div class="d-flex align-items-center justify-content-between">
                                 <h4 class="mb-0">Kết quả tìm kiếm</h4>
@@ -163,7 +164,7 @@
                         <ng-template pTemplate="header">
                             <tr>
                                 <th style="width: 4rem">
-                                    <p-tableHeaderCheckbox [disabled]="selectedRecordsFrom.length > 0 || isRangeRule" />
+                                    <p-tableHeaderCheckbox [disabled]="isRangeRule" />
                                 </th>
                                 <th>{{ 'SĐT/SERIAL' | localize }}</th>
                                 <th>{{ 'HẠNG SỐ' | localize }}</th>
@@ -174,7 +175,7 @@
                             <tr>
                                 <td>
                                     <p-tableCheckbox [value]="record"
-                                        [disabled]="selectedRecordsFrom.length > 0 || isRangeRule" />
+                                        [disabled]="isRecordInTable2(record) || isRangeRule" />
                                 </td>
                                 <td>{{productType == 1 ? record.mobile : record.serial}}</td>
                                 <td>{{record.attribute}}</td>
@@ -195,7 +196,7 @@
                             "></p-paginator>
                     </div>
                 </div>
-                <div class="action d-flex flex-column justify-content-center align-items-center">
+                <div class="action d-flex flex-column justify-content-start align-items-center">
                     <button class="btn btn-primary btn-sm" (click)="moveSelectedRecords()"
                         [disabled]="selectedRecordsFrom.length > 0 || selectedRecordsTo.length == 0">THÊM</button>
                     <button class="btn btn-danger btn-sm mt-3 w-100" (click)="moveBackSelectedRecords()"

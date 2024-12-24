@@ -127,6 +127,9 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         this.productType = (event.target as HTMLSelectElement).value as unknown as ProductType;
         this.getProductAttributes();
         this.getSimsTypes();
+        if (this.stockId) {
+            this.getListSimSrcStock();
+        }
     }
 
     onChangeStock(event: { value: any }) {
@@ -250,45 +253,21 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         this.currentDataFrom = this.rangeItems.slice(start, end);
     }
 
-    // isSelected(record: any): boolean {
-    //     return this.selectedRecordsTo.some((r) => r.id === record.id);
-    // }
+    onHeaderCheckboxToggle(event: { checked: boolean }): void {
+        if (event.checked) {
+            // Chỉ chọn những item không bị disabled
+            this.selectedRecordsTo = this.listSimSrcStock.filter(
+                (record) => !this.isRecordInTable2(record) && !this.isRangeRule
+            );
+        } else {
+            // Bỏ chọn tất cả
+            this.selectedRecordsTo = [];
+        }
+    }
 
-    // // Chọn một dòng
-    // onRowSelect(record: any): void {
-    //     if (!this.isSelected(record)) {
-    //         this.selectedRecordsTo.push(record);
-    //     }
-    // }
-
-    // // Bỏ chọn một dòng
-    // onRowUnselect(record: any): void {
-    //     const index = this.selectedRecordsTo.findIndex((r) => r.id === record.id);
-    //     if (index !== -1) {
-    //         this.selectedRecordsTo.splice(index, 1);
-    //     }
-    // }
-
-    // // Chọn tất cả các bản ghi trên trang hiện tại
-    // onSelectAll(): void {
-    //     this.isAllChecked = true;
-    //     this.listSimSrcStock.forEach((record) => {
-    //         if (!this.isSelected(record)) {
-    //             this.selectedRecordsTo.push(record);
-    //         }
-    //     });
-    // }
-
-    // // Bỏ chọn tất cả các bản ghi trên trang hiện tại
-    // onUnselectAll(): void {
-    //     this.isAllChecked = false;
-    //     this.listSimSrcStock.forEach((record) => {
-    //         const index = this.selectedRecordsTo.findIndex((r) => r.id === record.id);
-    //         if (index !== -1) {
-    //             this.selectedRecordsTo.splice(index, 1);
-    //         }
-    //     });
-    // }
+    isRecordInTable2(record: any): boolean {
+        return this.currentDataFrom.some((item) => JSON.stringify(item) === JSON.stringify(record));
+    }
 
     onUpload(event) {}
 }

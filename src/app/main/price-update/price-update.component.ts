@@ -14,6 +14,8 @@ import { finalize } from 'rxjs';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { HttpClient } from '@angular/common/http';
+import { AppConsts } from '@shared/AppConsts';
 
 @Component({
     templateUrl: './price-update.component.html',
@@ -27,7 +29,8 @@ export class PriceUpdateComponent extends AppComponentBase implements OnInit {
         injector: Injector,
         private route: ActivatedRoute,
         private _inventoryServiceProxy: InventoryServiceProxy,
-        private modalService: BsModalService
+        private modalService: BsModalService,
+        private _httpClient: HttpClient
     ) {
         super(injector);
     }
@@ -54,6 +57,8 @@ export class PriceUpdateComponent extends AppComponentBase implements OnInit {
         { label: 'Tất cả', value: ObjectType.All },
         { label: 'Theo danh sách chọn', value: ObjectType.List },
     ];
+    uploadedFile: File | null = null;
+    remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
 
     ngOnInit() {
         this.items = [
@@ -95,6 +100,9 @@ export class PriceUpdateComponent extends AppComponentBase implements OnInit {
     }
 
     handleUpdatePrice() {
+        const updatePriceUrl = `${this.remoteServiceBaseUrl}/api/services/app/Inventory/UpdatePrice`;
+        const formData = new FormData();
+
         const body = new UpdatePriceDto();
         body.stockId = this.stockId;
         body.productType = this.productType;
@@ -107,14 +115,51 @@ export class PriceUpdateComponent extends AppComponentBase implements OnInit {
             body.items = [];
         }
         this.isLoading = true;
-        this._inventoryServiceProxy.updatePrice(body).subscribe(() => {
-            this.notify.info(this.l('SavedSuccessfully'));
-            this.isLoading = false;
-            this.closeModal();
-            this.getListSims();
-            this.selectedRecords = [];
-            this.valuePrice = 0;
-        });
+
+        if (this.uploadedFile) {
+            Object.keys(body).forEach((key) => {
+                if (key !== 'items') {
+                    formData.append(key, body[key]);
+                }
+            });
+            // body.items.forEach((item: any, index: number) => {
+            //     Object.keys(item).forEach((itemKey) => {
+            //         formData.append(`items[${index}][${itemKey}]`, item[itemKey]);
+            //     });
+            // });
+            formData.append('file', this.uploadedFile);
+            this._httpClient.post<any>(updatePriceUrl, formData).subscribe({
+                next: (response) => {
+                    if (response.success) {
+                        this.notify.info(this.l('SavedSuccessfully'));
+                        this.isLoading = false;
+                        this.closeModal();
+                        this.getListSims();
+                        this.selectedRecords = [];
+                        this.valuePrice = 0;
+                    }
+                },
+                error: (err) => {
+                    this.message.error(this.l(err.error.error?.message));
+                },
+            });
+        } else {
+            this._inventoryServiceProxy.updatePrice(body).subscribe(() => {
+                this.notify.info(this.l('SavedSuccessfully'));
+                this.isLoading = false;
+                this.closeModal();
+                this.getListSims();
+                this.selectedRecords = [];
+                this.valuePrice = 0;
+            });
+        }
+    }
+
+    onFileSelect(event: any): void {
+        const file = event.files && event.files[0];
+        if (file) {
+            this.uploadedFile = file;
+        }
     }
 
     openModal(template: TemplateRef<any>) {

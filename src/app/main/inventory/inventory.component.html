@@ -2,7 +2,7 @@
     <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
     <div [class]="containerClass">
         <div class="row bg-white py-5 ps-3">
-            <h5 class="mb-4" *ngIf="inventoryId">TÊN KHO CHA:</h5>
+            <h5 class="mb-4" *ngIf="inventoryId">TÊN KHO CHA: {{parentStockName}}</h5>
             <h5 class="mb-4">{{ inventoryId ? 'TÌM KIẾM KHO CON' : 'TÌM KIẾM KHO'}}</h5>
             <div class="col-md-6 mb-5">
                 <div class="d-flex align-items-center mb-5">

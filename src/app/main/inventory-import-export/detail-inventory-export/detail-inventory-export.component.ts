@@ -40,6 +40,8 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     listSim: any[] = [];
     description: string;
     orderDataItems: any = {};
+    mobile: string;
+    serial: string;
 
     ngOnInit(): void {
         this.items = [
@@ -92,8 +94,8 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
         this._inventoryServiceProxy
             .getListSimOrderDetail(
                 this.orderId,
-                undefined,
-                undefined,
+                this.mobile,
+                this.serial,
                 this.primengTableHelper.getSorting(this.dataTable2),
                 this.primengTableHelper.getSkipCount(this.paginator2, event),
                 this.primengTableHelper.getMaxResultCount(this.paginator2, event)
