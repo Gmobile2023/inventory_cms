@@ -45,7 +45,8 @@
                 </div>
                 <div class="d-flex align-items-center mb-3">
                     <div class="title fw-semibold" style="width: 20%; font-size: 15px;">Địa điểm kho:</div>
-                    <div class="description" style="font-size: 14px;">{{inventoryData.wardName}} -
+                    <div class="description" style="font-size: 14px;">{{inventoryData.address}} -
+                        {{inventoryData.wardName}} -
                         {{inventoryData.districtName}} - {{inventoryData.cityName}}</div>
                 </div>
                 <button class="btn btn-primary btn-sm" type="button" *ngIf="inventoryData.numberChild > 0"
@@ -89,23 +90,6 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">Kho hiện tại</label>
-                    <p-dropdown [style]="{width: '100%'}" class="w-100" [options]="listStock"
-                        [(ngModel)]="selectedStock" optionLabel="stockName" [filter]="true" filterBy="stockName"
-                        [showClear]="true" placeholder="Chọn kho">
-                        <ng-template pTemplate="selectedStock">
-                            <div class="flex align-items-center gap-2" *ngIf="selectedStock">
-                                <div>{{ selectedStock.stockName }}</div>
-                            </div>
-                        </ng-template>
-                        <ng-template let-stock pTemplate="item">
-                            <div class="flex align-items-center gap-2">
-                                <div>{{ stock.stockName }}</div>
-                            </div>
-                        </ng-template>
-                    </p-dropdown>
-                </div>
-                <div class="d-flex align-items-center mb-5">
                     <label for="" class="form-label ms-5" style="width: 35%;">Lô xuất/nhập</label>
                     <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="batchOption"
                         optionLabel="label" optionValue="value" placeholder="Chọn lô xuất/nhập" class="w-100">
@@ -119,6 +103,7 @@
                     </label>
                     <div class="input-group">
                         <select id="kitingStatus" name="kitingStatus" class="form-select" [(ngModel)]="kitingStatus">
+                            <option [ngValue]="99">Tất cả</option>
                             <option [ngValue]="0">Chưa Kitting</option>
                             <option [ngValue]="1">Đã Kitting</option>
                         </select>
@@ -147,12 +132,12 @@
                             <option [ngValue]="undefined">
                                 Tất cả
                             </option>
-                            <option [ngValue]="0">Khởi tạo</option>
-                            <option [ngValue]="1">Hoạt động</option>
-                            <option [ngValue]="2">Số khoá</option>
-                            <option [ngValue]="3">Số lỗi</option>
-                            <option [ngValue]="4">Số huỷ</option>
-                            <option [ngValue]="5">Số đã bán</option>
+                            <option [ngValue]="0">Chờ xuất kho</option>
+                            <option [ngValue]="1">Trong kho</option>
+                            <option [ngValue]="2">Khoá</option>
+                            <option [ngValue]="4">Đã huỷ</option>
+                            <option [ngValue]="5">Đã bán</option>
+                            <option [ngValue]="6">Đã xuất kho</option>
                         </select>
                     </div>
                 </div>
@@ -208,13 +193,10 @@
                                 {{ 'NHÀ MẠNG' | localize }}
                             </th>
                             <th>
-                                {{ 'KHO HIỆN TẠI' | localize }}
-                            </th>
-                            <th>
                                 {{ 'LÔ NHẬP/XUẤT' | localize }}
                             </th>
                             <th>
-                                {{ 'GIÁ BÁN' | localize }}
+                                {{ 'ĐỊNH GIÁ' | localize }}
                             </th>
                             <th *ngIf="!isSerial">
                                 {{ 'THUỘC TÍNH' | localize }}
@@ -278,9 +260,6 @@
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                            </td>
-                            <td>
-                                <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.salePrice }}
                             </td>
                             <td *ngIf="!isSerial">
@@ -288,23 +267,23 @@
                                 {{ record.attribute }}
                             </td>
                             <td class="text-center">
-                                <span *ngIf="record.status == 0" class="badge badge-secondary badge-inline">
-                                    {{ 'Đang xử lý' | localize }}
+                                <span *ngIf="record.status == 0" class="badge badge-warning badge-inline">
+                                    {{ 'Chờ duyệt xuất kho' | localize }}
                                 </span>
                                 <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
                                     {{ 'Trong kho' | localize }}
                                 </span>
-                                <span *ngIf="record.status == 2" class="badge badge-danger badge-inline">
-                                    {{ 'Số không hoạt động' | localize }}
+                                <span *ngIf="record.status == 2" class="badge badge-secondary badge-inline">
+                                    {{ 'Khoá' | localize }}
                                 </span>
-                                <span *ngIf="record.status == 6" class="badge badge-danger badge-inline">
+                                <span *ngIf="record.status == 6" class="badge badge-primary badge-inline">
                                     {{ 'Đã xuất kho' | localize }}
                                 </span>
                                 <span *ngIf="record.status == 4" class="badge badge-danger badge-inline">
-                                    {{ 'Số huỷ' | localize }}
+                                    {{ 'Đã huỷ' | localize }}
                                 </span>
-                                <span *ngIf="record.status == 5" class="badge badge-success badge-inline">
-                                    {{ 'Số đã bán' | localize }}
+                                <span *ngIf="record.status == 5" class="badge badge-info badge-inline">
+                                    {{ 'Đã bán' | localize }}
                                 </span>
                             </td>
                             <td>
@@ -313,9 +292,11 @@
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.exportDate | luxonFormat: 'F'}}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.desStockName}}
                             </td>
                         </tr>
                     </ng-template>
@@ -500,7 +481,8 @@
                                 {{ 'Trạng thái' | localize }}
                             </label>
                             <div class="input-group">
-                                <input class="form-control" [value]="simData.status == 0 ? 'Chưa bán' : 'Đang bán'"
+                                <input class="form-control"
+                                    [value]="simData.status == 0 ? 'Đang xử lý' : simData.status == 1 ? 'Trong kho' : simData.status == 2 ? 'Số không hoạt động' : simData.status == 4 ? 'Số huỷ' : simData.status == 5 ? 'Số đã bán' : 'Đã xuất kho'"
                                     disabled />
                             </div>
                         </div>

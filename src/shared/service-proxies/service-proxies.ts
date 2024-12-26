@@ -8519,14 +8519,13 @@ export class InventoryServiceProxy {
      * @param attribute (optional) 
      * @param transCode (optional) 
      * @param status (optional) 
-     * @param seachType (optional) 
      * @param kitingStatus (optional) 
      * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getListSims(stockId: number | undefined, productType: ProductType | undefined, mobile: string | undefined, serial: string | undefined, attribute: string | undefined, transCode: string | undefined, status: ProductStatus | undefined, seachType: SeachTypeProductValue | undefined, kitingStatus: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
+    getListSims(stockId: number | undefined, productType: ProductType | undefined, mobile: string | undefined, serial: string | undefined, attribute: string | undefined, transCode: string | undefined, status: ProductRecordStatus | undefined, kitingStatus: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSims?";
         if (stockId === null)
             throw new Error("The parameter 'stockId' cannot be null.");
@@ -8556,10 +8555,6 @@ export class InventoryServiceProxy {
             throw new Error("The parameter 'status' cannot be null.");
         else if (status !== undefined)
             url_ += "Status=" + encodeURIComponent("" + status) + "&";
-        if (seachType === null)
-            throw new Error("The parameter 'seachType' cannot be null.");
-        else if (seachType !== undefined)
-            url_ += "SeachType=" + encodeURIComponent("" + seachType) + "&";
         if (kitingStatus === null)
             throw new Error("The parameter 'kitingStatus' cannot be null.");
         else if (kitingStatus !== undefined)
@@ -10509,6 +10504,61 @@ export class InventoryServiceProxy {
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PagedResultDtoOfOrderInventoryDto.fromJS(resultData200);
             return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param orderCode (optional) 
+     * @return Success
+     */
+    uploadOrderDocument(orderCode: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/UploadOrderDocument";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (orderCode === null || orderCode === undefined)
+            throw new Error("The parameter 'orderCode' cannot be null.");
+        else
+            content_.append("orderCode", orderCode.toString());
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUploadOrderDocument(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUploadOrderDocument(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUploadOrderDocument(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -31662,6 +31712,8 @@ export class OrderDto implements IOrderDto {
     statusName!: string | undefined;
     statusCurrent!: number;
     statusCurrentName!: string | undefined;
+    roleName!: string | undefined;
+    document!: string | undefined;
     items!: OrderDetailDto[] | undefined;
 
     constructor(data?: IOrderDto) {
@@ -31706,6 +31758,8 @@ export class OrderDto implements IOrderDto {
             this.statusName = _data["statusName"];
             this.statusCurrent = _data["statusCurrent"];
             this.statusCurrentName = _data["statusCurrentName"];
+            this.roleName = _data["roleName"];
+            this.document = _data["document"];
             if (Array.isArray(_data["items"])) {
                 this.items = [] as any;
                 for (let item of _data["items"])
@@ -31754,6 +31808,8 @@ export class OrderDto implements IOrderDto {
         data["statusName"] = this.statusName;
         data["statusCurrent"] = this.statusCurrent;
         data["statusCurrentName"] = this.statusCurrentName;
+        data["roleName"] = this.roleName;
+        data["document"] = this.document;
         if (Array.isArray(this.items)) {
             data["items"] = [];
             for (let item of this.items)
@@ -31795,6 +31851,8 @@ export interface IOrderDto {
     statusName: string | undefined;
     statusCurrent: number;
     statusCurrentName: string | undefined;
+    roleName: string | undefined;
+    document: string | undefined;
     items: OrderDetailDto[] | undefined;
 }
 
@@ -34049,6 +34107,16 @@ export interface IProductAttributeDto {
     attributeName: string | undefined;
 }
 
+export enum ProductRecordStatus {
+    Init = 0,
+    Success = 1,
+    Block = 2,
+    Cancel = 4,
+    Sale = 5,
+    Export = 6,
+    Default = 99,
+}
+
 export enum ProductStatus {
     Init = 0,
     Success = 1,
@@ -34909,14 +34977,6 @@ export interface ISavePageInput {
     pages: Page[] | undefined;
 }
 
-export enum SeachTypeProductValue {
-    Current = 0,
-    Import = 1,
-    Transfer = 2,
-    Recovery = 3,
-    Sale = 5,
-}
-
 export class SecuritySettingsEditDto implements ISecuritySettingsEditDto {
     allowOneConcurrentLoginPerUser!: boolean;
     useDefaultPasswordComplexitySettings!: boolean;
@@ -35343,6 +35403,12 @@ export class SimNumberDto implements ISimNumberDto {
     salePrice!: number;
     createdDate!: DateTime;
     attribute!: string | undefined;
+    importDate!: DateTime | undefined;
+    exportDate!: DateTime | undefined;
+    desStockId!: number | undefined;
+    desStockCode!: string | undefined;
+    desStockName!: string | undefined;
+    desStockLevel!: number | undefined;
 
     constructor(data?: ISimNumberDto) {
         if (data) {
@@ -35367,6 +35433,12 @@ export class SimNumberDto implements ISimNumberDto {
             this.salePrice = _data["salePrice"];
             this.createdDate = _data["createdDate"] ? DateTime.fromISO(_data["createdDate"].toString()) : <any>undefined;
             this.attribute = _data["attribute"];
+            this.importDate = _data["importDate"] ? DateTime.fromISO(_data["importDate"].toString()) : <any>undefined;
+            this.exportDate = _data["exportDate"] ? DateTime.fromISO(_data["exportDate"].toString()) : <any>undefined;
+            this.desStockId = _data["desStockId"];
+            this.desStockCode = _data["desStockCode"];
+            this.desStockName = _data["desStockName"];
+            this.desStockLevel = _data["desStockLevel"];
         }
     }
 
@@ -35391,6 +35463,12 @@ export class SimNumberDto implements ISimNumberDto {
         data["salePrice"] = this.salePrice;
         data["createdDate"] = this.createdDate ? this.createdDate.toString() : <any>undefined;
         data["attribute"] = this.attribute;
+        data["importDate"] = this.importDate ? this.importDate.toString() : <any>undefined;
+        data["exportDate"] = this.exportDate ? this.exportDate.toString() : <any>undefined;
+        data["desStockId"] = this.desStockId;
+        data["desStockCode"] = this.desStockCode;
+        data["desStockName"] = this.desStockName;
+        data["desStockLevel"] = this.desStockLevel;
         return data;
     }
 }
@@ -35408,6 +35486,12 @@ export interface ISimNumberDto {
     salePrice: number;
     createdDate: DateTime;
     attribute: string | undefined;
+    importDate: DateTime | undefined;
+    exportDate: DateTime | undefined;
+    desStockId: number | undefined;
+    desStockCode: string | undefined;
+    desStockName: string | undefined;
+    desStockLevel: number | undefined;
 }
 
 export class SimTypeDto implements ISimTypeDto {
