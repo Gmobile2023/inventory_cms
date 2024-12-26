@@ -105,7 +105,8 @@ export class DetailInventoryComponent extends AppComponentBase {
         this.stockId = parseInt(this.route.snapshot.queryParamMap.get('id')!);
         this.productType =
             this.route.snapshot.queryParamMap.get('productType') == '2' ? ProductType.Serial : ProductType.Mobile;
-        this.status = parseInt(this.route.snapshot.queryParamMap.get('status')!);
+        if (this.route.snapshot.queryParamMap.get('status'))
+            this.status = parseInt(this.route.snapshot.queryParamMap.get('status'));
         this.getStockForView(this.stockId);
         this.getProvinces();
         this.getProductAttributes();
