@@ -63,7 +63,7 @@ export class DetailInventoryComponent extends AppComponentBase {
     categoryCode: string | undefined;
     attribute: string | undefined;
     status: number;
-    kitingStatus: number = 0;
+    kitingStatus: number = 99;
     value: number = 0;
     createData: any = {};
     cities: any[] = [];
@@ -93,6 +93,7 @@ export class DetailInventoryComponent extends AppComponentBase {
     selectedStock: any;
     listStock: any[] = [];
     batchOption = [];
+    transCode: string;
 
     ngOnInit() {
         this.items = [
@@ -102,6 +103,9 @@ export class DetailInventoryComponent extends AppComponentBase {
         ];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.stockId = parseInt(this.route.snapshot.queryParamMap.get('id')!);
+        this.productType =
+            this.route.snapshot.queryParamMap.get('productType') == '2' ? ProductType.Serial : ProductType.Mobile;
+        this.status = parseInt(this.route.snapshot.queryParamMap.get('status')!);
         this.getStockForView(this.stockId);
         this.getProvinces();
         this.getProductAttributes();
@@ -202,7 +206,7 @@ export class DetailInventoryComponent extends AppComponentBase {
         body.userAccounting = this.createData.userAccounting?.map((user) => user.userName) || [];
         // console.log(body);
         this._inventoryServiceProxy.createOrEditStock(body).subscribe(() => {
-            this.router.navigate(['/app/main/inventory-import-export']);
+            this.router.navigate(['/app/main/inventory-manager']);
             this.notify.info(this.l('SavedSuccessfully'));
             this.closeModal();
         });
@@ -221,9 +225,8 @@ export class DetailInventoryComponent extends AppComponentBase {
                 this.mobile,
                 this.serial,
                 this.attribute,
-                undefined,
+                this.transCode,
                 this.status,
-                undefined,
                 this.kitingStatus,
                 this.primengTableHelper.getSorting(this.dataTable),
                 this.primengTableHelper.getSkipCount(this.paginator, event),

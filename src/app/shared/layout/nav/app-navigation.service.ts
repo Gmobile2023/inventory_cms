@@ -60,6 +60,12 @@ export class AppNavigationService {
                         'flaticon-app',
                         '/app/main/approval-flow-settings'
                     ),
+                    new AppMenuItem(
+                        'Cấu hình nhóm telegram nhận thông báo',
+                        '',
+                        'flaticon-app',
+                        '/app/main/groups-setting'
+                    ),
                 ]
             ),
             new AppMenuItem(

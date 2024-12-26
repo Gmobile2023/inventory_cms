@@ -66,6 +66,9 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     product: string;
     attribute: string;
     isAllChecked: boolean = false;
+    simType: string;
+    fromRange: string;
+    toRange: string;
 
     ngOnInit() {
         this.items = [
@@ -141,16 +144,16 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     getListSimSrcStock(event?: LazyLoadEvent) {
         this.primengTableHelper.showLoadingIndicator();
         this._inventoryServiceProxy
-            .getListSims(
+            .getListSimsTransfers(
                 this.stockId,
                 this.productType,
-                this.productType == ProductType.Mobile ? this.product : undefined,
-                this.productType == ProductType.Serial ? this.product : undefined,
                 this.attribute,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
+                this.simType,
+                this.productType == ProductType.Mobile ? this.product : undefined,
+                // this.productType == ProductType.Serial ? this.product : undefined,
+                this.fromRange,
+                this.toRange,
+                false,
                 undefined,
                 this.primengTableHelper.getSkipCount(this.paginator, event),
                 this.primengTableHelper.getMaxResultCount(this.paginator, event)
@@ -183,8 +186,8 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         const body = new CreateTransferDto();
         body.title = this.title;
         body.description = this.description;
-        body.srcStockId = this.selectedStockFrom.id;
-        body.desStockId = this.selectedStockTo.id;
+        if (this.selectedStockFrom) body.srcStockId = this.selectedStockFrom.id;
+        if (this.selectedStockTo) body.desStockId = this.selectedStockTo.id;
         body.productType = this.productType;
         body.objectType = this.objectType;
         if (this.isRangeRule) {

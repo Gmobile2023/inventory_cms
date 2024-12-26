@@ -15,19 +15,19 @@ import { RouterModule } from '@angular/router';
                     {
                         path: 'inventory-manager',
                         loadChildren: () => import('./inventory/inventory.module').then((m) => m.InventoryModule),
-                        data: { permission: '' },
+                        data: { permission: 'Pages.Inventories.Stock' },
                     },
                     {
                         path: 'inventory-manager/detail-inventory',
                         loadChildren: () =>
                             import('./detail-inventory/detail-inventory.module').then((m) => m.DetailInventoryModule),
-                        data: { permission: '' },
+                        data: { permission: 'Pages.Inventories.Stock' },
                     },
                     {
                         path: 'action-history',
                         loadChildren: () =>
                             import('./action-history/action-history.module').then((m) => m.ActionHistoryModule),
-                        data: { permission: '' },
+                        data: { permission: 'Pages.Inventories.Historys' },
                     },
                     {
                         path: 'inventory-import-export',
@@ -35,7 +35,7 @@ import { RouterModule } from '@angular/router';
                             import('./inventory-import-export/inventory-import-export.module').then(
                                 (m) => m.InventoryImportExportModule
                             ),
-                        data: { permission: '' },
+                        data: { permission: 'Pages.Inventories.Orders' },
                     },
                     {
                         path: 'inventory-import-export/create-inventory-import',
@@ -43,7 +43,7 @@ import { RouterModule } from '@angular/router';
                             import(
                                 './inventory-import-export/create-inventory-import/create-inventory-import.module'
                             ).then((m) => m.CreateInventoryImportModule),
-                        data: { permission: '' },
+                        data: { permission: 'Pages.Inventories.Orders.Create' },
                     },
                     {
                         path: 'inventory-import-export/detail-inventory-import',
@@ -51,7 +51,7 @@ import { RouterModule } from '@angular/router';
                             import(
                                 './inventory-import-export/detail-inventory-import/detail-inventory-import.module'
                             ).then((m) => m.DetailInventoryImportModule),
-                        data: { permission: '' },
+                        data: { permission: 'Pages.Inventories.Orders' },
                     },
                     {
                         path: 'inventory-import-export/create-inventory-export',
@@ -59,7 +59,7 @@ import { RouterModule } from '@angular/router';
                             import(
                                 './inventory-import-export/create-inventory-export/create-inventory-export.module'
                             ).then((m) => m.CreateInventoryExportModule),
-                        data: { permission: '' },
+                        data: { permission: 'Pages.Inventories.Transfer.Create' },
                     },
                     {
                         path: 'inventory-import-export/detail-inventory-export',
@@ -67,7 +67,7 @@ import { RouterModule } from '@angular/router';
                             import(
                                 './inventory-import-export/detail-inventory-export/detail-inventory-export.module'
                             ).then((m) => m.DetailInventoryExportModule),
-                        data: { permission: '' },
+                        data: { permission: 'Pages.Inventories.Orders' },
                     },
                     {
                         path: 'inventory-import-export/create-inventory-recall',
@@ -75,7 +75,7 @@ import { RouterModule } from '@angular/router';
                             import(
                                 './inventory-import-export/create-inventory-recall/create-inventory-recall.module'
                             ).then((m) => m.CreateInventoryRecallModule),
-                        data: { permission: '' },
+                        data: { permission: 'Pages.Inventories.Recall.Create' },
                     },
                     {
                         path: 'inventory-import-export/detail-inventory-recall',
@@ -83,7 +83,7 @@ import { RouterModule } from '@angular/router';
                             import(
                                 './inventory-import-export/detail-inventory-recall/detail-inventory-recall.module'
                             ).then((m) => m.DetailInventoryRecallModule),
-                        data: { permission: '' },
+                        data: { permission: 'Pages.Inventories.Orders' },
                     },
                     {
                         path: 'inventory-report',
@@ -95,7 +95,7 @@ import { RouterModule } from '@angular/router';
                         path: 'price-update',
                         loadChildren: () =>
                             import('./price-update/price-update.module').then((m) => m.PriceUpdateModule),
-                        data: { permission: '' },
+                        data: { permission: 'Pages.Inventories.UpdatePrice' },
                     },
                     {
                         path: 'approval-flow-settings',
@@ -103,6 +103,12 @@ import { RouterModule } from '@angular/router';
                             import('./approval-flow-settings/approval-flow-settings.module').then(
                                 (m) => m.ApprovalFlowSettingsModule
                             ),
+                        data: { permission: 'Pages.Inventories.ApprovalFlow' },
+                    },
+                    {
+                        path: 'groups-setting',
+                        loadChildren: () =>
+                            import('./groups-setting/groups-setting.module').then((m) => m.GroupsSettingModule),
                         data: { permission: '' },
                     },
                     {

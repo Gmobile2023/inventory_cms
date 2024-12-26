@@ -69,6 +69,9 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
     simTypes: any[] = [];
     product: string;
     attribute: string;
+    simType: string;
+    fromRange: string;
+    toRange: string;
 
     ngOnInit() {
         this.items = [
@@ -171,12 +174,13 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
             .getListSimsTransfers(
                 this.stockId,
                 this.productType,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                this.isRecover,
+                this.attribute,
+                this.simType,
+                this.productType == ProductType.Mobile ? this.product : undefined,
+                // this.productType == ProductType.Serial ? this.product : undefined,
+                this.fromRange,
+                this.toRange,
+                false,
                 undefined,
                 this.primengTableHelper.getSkipCount(this.paginator, event),
                 this.primengTableHelper.getMaxResultCount(this.paginator, event)
@@ -193,7 +197,8 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
         const body = new CreateRecoveryDto();
         body.title = this.title;
         body.description = this.description;
-        body.srcStockId = this.selectedStockFrom.id;
+        if (this.selectedStockFrom) body.srcStockId = this.selectedStockFrom.id;
+        if (this.selectedStockTo) body.desStockId = this.selectedStockTo.id;
         body.desStockId = this.selectedStockTo.id;
         body.productType = this.productType;
         body.objectType = this.objectType;
