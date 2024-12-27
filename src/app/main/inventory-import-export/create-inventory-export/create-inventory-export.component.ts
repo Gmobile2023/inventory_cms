@@ -69,6 +69,9 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     simType: string;
     fromRange: string;
     toRange: string;
+    mobile: string;
+    serial: string;
+    expectedQuantity: number;
 
     ngOnInit() {
         this.items = [
@@ -148,9 +151,10 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
                 this.stockId,
                 this.productType,
                 this.attribute,
+                this.productType === ProductType.Mobile ? this.product : undefined,
+                this.productType === ProductType.Serial ? this.product : undefined,
                 this.simType,
-                this.productType == ProductType.Mobile ? this.product : undefined,
-                // this.productType == ProductType.Serial ? this.product : undefined,
+                undefined,
                 this.fromRange,
                 this.toRange,
                 false,
@@ -190,6 +194,7 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         if (this.selectedStockTo) body.desStockId = this.selectedStockTo.id;
         body.productType = this.productType;
         body.objectType = this.objectType;
+        body.expectedQuantity = this.expectedQuantity;
         if (this.isRangeRule) {
             body.rangeRule = OrderItem.fromJS(this.tempOrderItems);
         }

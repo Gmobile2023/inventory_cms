@@ -8768,6 +8768,8 @@ export class InventoryServiceProxy {
      * @param stockId (optional) 
      * @param productType (optional) 
      * @param attribute (optional) 
+     * @param mobile (optional) 
+     * @param serial (optional) 
      * @param simType (optional) 
      * @param number (optional) 
      * @param fromRange (optional) 
@@ -8778,7 +8780,7 @@ export class InventoryServiceProxy {
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getListSimsTransfers(stockId: number | undefined, productType: ProductType | undefined, attribute: string | undefined, simType: string | undefined, number: string | undefined, fromRange: string | undefined, toRange: string | undefined, isRecover: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
+    getListSimsTransfers(stockId: number | undefined, productType: ProductType | undefined, attribute: string | undefined, mobile: string | undefined, serial: string | undefined, simType: string | undefined, number: string | undefined, fromRange: string | undefined, toRange: string | undefined, isRecover: boolean | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSimsTransfers?";
         if (stockId === null)
             throw new Error("The parameter 'stockId' cannot be null.");
@@ -8792,6 +8794,14 @@ export class InventoryServiceProxy {
             throw new Error("The parameter 'attribute' cannot be null.");
         else if (attribute !== undefined)
             url_ += "Attribute=" + encodeURIComponent("" + attribute) + "&";
+        if (mobile === null)
+            throw new Error("The parameter 'mobile' cannot be null.");
+        else if (mobile !== undefined)
+            url_ += "Mobile=" + encodeURIComponent("" + mobile) + "&";
+        if (serial === null)
+            throw new Error("The parameter 'serial' cannot be null.");
+        else if (serial !== undefined)
+            url_ += "Serial=" + encodeURIComponent("" + serial) + "&";
         if (simType === null)
             throw new Error("The parameter 'simType' cannot be null.");
         else if (simType !== undefined)
@@ -9335,6 +9345,7 @@ export class InventoryServiceProxy {
      * @param orderType (optional) 
      * @param orderCode (optional) 
      * @param orderTitle (optional) 
+     * @param productType (optional) 
      * @param fromDate (optional) 
      * @param toDate (optional) 
      * @param stockCode (optional) 
@@ -9344,7 +9355,7 @@ export class InventoryServiceProxy {
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getListOrder(orderType: number | undefined, orderCode: string | undefined, orderTitle: string | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, stockCode: string | undefined, status: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfOrderDto> {
+    getListOrder(orderType: number | undefined, orderCode: string | undefined, orderTitle: string | undefined, productType: ProductType | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, stockCode: string | undefined, status: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfOrderDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetListOrder?";
         if (orderType === null)
             throw new Error("The parameter 'orderType' cannot be null.");
@@ -9358,6 +9369,10 @@ export class InventoryServiceProxy {
             throw new Error("The parameter 'orderTitle' cannot be null.");
         else if (orderTitle !== undefined)
             url_ += "OrderTitle=" + encodeURIComponent("" + orderTitle) + "&";
+        if (productType === null)
+            throw new Error("The parameter 'productType' cannot be null.");
+        else if (productType !== undefined)
+            url_ += "ProductType=" + encodeURIComponent("" + productType) + "&";
         if (fromDate === null)
             throw new Error("The parameter 'fromDate' cannot be null.");
         else if (fromDate !== undefined)
@@ -9758,22 +9773,24 @@ export class InventoryServiceProxy {
     }
 
     /**
-     * @param body (optional) 
+     * @param updatePrice (optional) 
      * @return Success
      */
-    updatePrice(body: UpdatePriceDto | undefined): Observable<OrderActionResponse> {
+    updatePrice(updatePrice: string | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/UpdatePrice";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
+        const content_ = new FormData();
+        if (updatePrice === null || updatePrice === undefined)
+            throw new Error("The parameter 'updatePrice' cannot be null.");
+        else
+            content_.append("updatePrice", updatePrice.toString());
 
         let options_ : any = {
             body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Content-Type": "application/json-patch+json",
-                "Accept": "text/plain"
             })
         };
 
@@ -9784,14 +9801,14 @@ export class InventoryServiceProxy {
                 try {
                     return this.processUpdatePrice(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<OrderActionResponse>;
+                    return _observableThrow(e) as any as Observable<void>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<OrderActionResponse>;
+                return _observableThrow(response_) as any as Observable<void>;
         }));
     }
 
-    protected processUpdatePrice(response: HttpResponseBase): Observable<OrderActionResponse> {
+    protected processUpdatePrice(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -9800,10 +9817,7 @@ export class InventoryServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = OrderActionResponse.fromJS(resultData200);
-            return _observableOf(result200);
+            return _observableOf(null as any);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -9988,6 +10002,7 @@ export class InventoryServiceProxy {
     /**
      * @param productType (optional) 
      * @param stockCode (optional) 
+     * @param stockName (optional) 
      * @param fromDate (optional) 
      * @param toDate (optional) 
      * @param parentId (optional) 
@@ -9997,7 +10012,7 @@ export class InventoryServiceProxy {
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getListInventoryReport(productType: ProductType | undefined, stockCode: string | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, parentId: number | undefined, stockId: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfInventoryReportDto> {
+    getListInventoryReport(productType: ProductType | undefined, stockCode: string | undefined, stockName: string | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, parentId: number | undefined, stockId: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfInventoryReportDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetListInventoryReport?";
         if (productType === null)
             throw new Error("The parameter 'productType' cannot be null.");
@@ -10007,6 +10022,10 @@ export class InventoryServiceProxy {
             throw new Error("The parameter 'stockCode' cannot be null.");
         else if (stockCode !== undefined)
             url_ += "StockCode=" + encodeURIComponent("" + stockCode) + "&";
+        if (stockName === null)
+            throw new Error("The parameter 'stockName' cannot be null.");
+        else if (stockName !== undefined)
+            url_ += "StockName=" + encodeURIComponent("" + stockName) + "&";
         if (fromDate === null)
             throw new Error("The parameter 'fromDate' cannot be null.");
         else if (fromDate !== undefined)
@@ -10550,6 +10569,284 @@ export class InventoryServiceProxy {
     }
 
     protected processUploadOrderDocument(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getListTelegramGroup(sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfGroupTelegramDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListTelegramGroup?";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListTelegramGroup(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListTelegramGroup(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagedResultDtoOfGroupTelegramDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagedResultDtoOfGroupTelegramDto>;
+        }));
+    }
+
+    protected processGetListTelegramGroup(response: HttpResponseBase): Observable<PagedResultDtoOfGroupTelegramDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfGroupTelegramDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getTelegramGroupForView(id: number | undefined): Observable<GetTelegramGroupForViewDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetTelegramGroupForView?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTelegramGroupForView(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTelegramGroupForView(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GetTelegramGroupForViewDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GetTelegramGroupForViewDto>;
+        }));
+    }
+
+    protected processGetTelegramGroupForView(response: HttpResponseBase): Observable<GetTelegramGroupForViewDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetTelegramGroupForViewDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createOrEditTelegramGroup(body: CreateOrEditTelegramGroupDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/CreateOrEditTelegramGroup";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateOrEditTelegramGroup(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateOrEditTelegramGroup(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processCreateOrEditTelegramGroup(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createTelegramGroup(body: CreateOrEditTelegramGroupDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/CreateTelegramGroup";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateTelegramGroup(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateTelegramGroup(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processCreateTelegramGroup(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateTelegramGroup(body: CreateOrEditTelegramGroupDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/UpdateTelegramGroup";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateTelegramGroup(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateTelegramGroup(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdateTelegramGroup(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -22815,6 +23112,94 @@ export interface ICreateOrEditStockDto {
     location: string | undefined;
 }
 
+export class CreateOrEditTelegramGroupDto implements ICreateOrEditTelegramGroupDto {
+    id!: number | undefined;
+    chatId!: number | undefined;
+    token!: string | undefined;
+    type!: GroupTelegramInfoType;
+    status!: GroupTelegramInfoStatus;
+    groupName!: string | undefined;
+    groupStock!: string | undefined;
+    userCreated!: string | undefined;
+    createdDate!: DateTime;
+    userModify!: string | undefined;
+    modifyDate!: DateTime | undefined;
+    listStocks!: StockGroupDto[] | undefined;
+
+    constructor(data?: ICreateOrEditTelegramGroupDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.chatId = _data["chatId"];
+            this.token = _data["token"];
+            this.type = _data["type"];
+            this.status = _data["status"];
+            this.groupName = _data["groupName"];
+            this.groupStock = _data["groupStock"];
+            this.userCreated = _data["userCreated"];
+            this.createdDate = _data["createdDate"] ? DateTime.fromISO(_data["createdDate"].toString()) : <any>undefined;
+            this.userModify = _data["userModify"];
+            this.modifyDate = _data["modifyDate"] ? DateTime.fromISO(_data["modifyDate"].toString()) : <any>undefined;
+            if (Array.isArray(_data["listStocks"])) {
+                this.listStocks = [] as any;
+                for (let item of _data["listStocks"])
+                    this.listStocks!.push(StockGroupDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateOrEditTelegramGroupDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateOrEditTelegramGroupDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["chatId"] = this.chatId;
+        data["token"] = this.token;
+        data["type"] = this.type;
+        data["status"] = this.status;
+        data["groupName"] = this.groupName;
+        data["groupStock"] = this.groupStock;
+        data["userCreated"] = this.userCreated;
+        data["createdDate"] = this.createdDate ? this.createdDate.toString() : <any>undefined;
+        data["userModify"] = this.userModify;
+        data["modifyDate"] = this.modifyDate ? this.modifyDate.toString() : <any>undefined;
+        if (Array.isArray(this.listStocks)) {
+            data["listStocks"] = [];
+            for (let item of this.listStocks)
+                data["listStocks"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ICreateOrEditTelegramGroupDto {
+    id: number | undefined;
+    chatId: number | undefined;
+    token: string | undefined;
+    type: GroupTelegramInfoType;
+    status: GroupTelegramInfoStatus;
+    groupName: string | undefined;
+    groupStock: string | undefined;
+    userCreated: string | undefined;
+    createdDate: DateTime;
+    userModify: string | undefined;
+    modifyDate: DateTime | undefined;
+    listStocks: StockGroupDto[] | undefined;
+}
+
 export class CreateOrEditWardDto implements ICreateOrEditWardDto {
     wardCode!: string;
     wardName!: string;
@@ -23364,6 +23749,7 @@ export class CreateTransferDto implements ICreateTransferDto {
     objectType!: ObjectType;
     rangeRule!: OrderItem;
     rangeItems!: string[] | undefined;
+    expectedQuantity!: number | undefined;
 
     constructor(data?: ICreateTransferDto) {
         if (data) {
@@ -23389,6 +23775,7 @@ export class CreateTransferDto implements ICreateTransferDto {
                 for (let item of _data["rangeItems"])
                     this.rangeItems!.push(item);
             }
+            this.expectedQuantity = _data["expectedQuantity"];
         }
     }
 
@@ -23414,6 +23801,7 @@ export class CreateTransferDto implements ICreateTransferDto {
             for (let item of this.rangeItems)
                 data["rangeItems"].push(item);
         }
+        data["expectedQuantity"] = this.expectedQuantity;
         return data;
     }
 }
@@ -23428,6 +23816,7 @@ export interface ICreateTransferDto {
     objectType: ObjectType;
     rangeRule: OrderItem;
     rangeItems: string[] | undefined;
+    expectedQuantity: number | undefined;
 }
 
 export class CreateUserDelegationDto implements ICreateUserDelegationDto {
@@ -27913,6 +28302,42 @@ export interface IGetStockForViewDto {
     inventory: InventoryViewDto;
 }
 
+export class GetTelegramGroupForViewDto implements IGetTelegramGroupForViewDto {
+    groupTelegram!: GroupTelegramDto;
+
+    constructor(data?: IGetTelegramGroupForViewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.groupTelegram = _data["groupTelegram"] ? GroupTelegramDto.fromJS(_data["groupTelegram"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): GetTelegramGroupForViewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetTelegramGroupForViewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["groupTelegram"] = this.groupTelegram ? this.groupTelegram.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IGetTelegramGroupForViewDto {
+    groupTelegram: GroupTelegramDto;
+}
+
 export class GetTenantFeaturesEditOutput implements IGetTenantFeaturesEditOutput {
     featureValues!: NameValueDto[] | undefined;
     features!: FlatFeatureDto[] | undefined;
@@ -28395,6 +28820,105 @@ export interface IGoogleExternalLoginProviderSettings {
     clientId: string | undefined;
     clientSecret: string | undefined;
     userInfoEndpoint: string | undefined;
+}
+
+export class GroupTelegramDto implements IGroupTelegramDto {
+    id!: number | undefined;
+    chatId!: number | undefined;
+    token!: string | undefined;
+    type!: GroupTelegramInfoType;
+    status!: GroupTelegramInfoStatus;
+    groupName!: string | undefined;
+    groupStock!: string | undefined;
+    userCreated!: string | undefined;
+    createdDate!: DateTime;
+    userModify!: string | undefined;
+    modifyDate!: DateTime | undefined;
+    listStocks!: StockGroupDto[] | undefined;
+
+    constructor(data?: IGroupTelegramDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.chatId = _data["chatId"];
+            this.token = _data["token"];
+            this.type = _data["type"];
+            this.status = _data["status"];
+            this.groupName = _data["groupName"];
+            this.groupStock = _data["groupStock"];
+            this.userCreated = _data["userCreated"];
+            this.createdDate = _data["createdDate"] ? DateTime.fromISO(_data["createdDate"].toString()) : <any>undefined;
+            this.userModify = _data["userModify"];
+            this.modifyDate = _data["modifyDate"] ? DateTime.fromISO(_data["modifyDate"].toString()) : <any>undefined;
+            if (Array.isArray(_data["listStocks"])) {
+                this.listStocks = [] as any;
+                for (let item of _data["listStocks"])
+                    this.listStocks!.push(StockGroupDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GroupTelegramDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GroupTelegramDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["chatId"] = this.chatId;
+        data["token"] = this.token;
+        data["type"] = this.type;
+        data["status"] = this.status;
+        data["groupName"] = this.groupName;
+        data["groupStock"] = this.groupStock;
+        data["userCreated"] = this.userCreated;
+        data["createdDate"] = this.createdDate ? this.createdDate.toString() : <any>undefined;
+        data["userModify"] = this.userModify;
+        data["modifyDate"] = this.modifyDate ? this.modifyDate.toString() : <any>undefined;
+        if (Array.isArray(this.listStocks)) {
+            data["listStocks"] = [];
+            for (let item of this.listStocks)
+                data["listStocks"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IGroupTelegramDto {
+    id: number | undefined;
+    chatId: number | undefined;
+    token: string | undefined;
+    type: GroupTelegramInfoType;
+    status: GroupTelegramInfoStatus;
+    groupName: string | undefined;
+    groupStock: string | undefined;
+    userCreated: string | undefined;
+    createdDate: DateTime;
+    userModify: string | undefined;
+    modifyDate: DateTime | undefined;
+    listStocks: StockGroupDto[] | undefined;
+}
+
+export enum GroupTelegramInfoStatus {
+    Success = 1,
+    Lock = 2,
+    Default = 99,
+}
+
+export enum GroupTelegramInfoType {
+    Center = 0,
+    Group = 1,
 }
 
 export class HistorysDto implements IHistorysDto {
@@ -29450,8 +29974,7 @@ export enum InventoryStatus {
 export class InventoryViewDto implements IInventoryViewDto {
     userManager!: string[] | undefined;
     userCreate!: string[] | undefined;
-    userApprove!: string[] | undefined;
-    userAccounting!: string[] | undefined;
+    userSale!: string[] | undefined;
     id!: number | undefined;
     stockCode!: string | undefined;
     stockName!: string | undefined;
@@ -29498,15 +30021,10 @@ export class InventoryViewDto implements IInventoryViewDto {
                 for (let item of _data["userCreate"])
                     this.userCreate!.push(item);
             }
-            if (Array.isArray(_data["userApprove"])) {
-                this.userApprove = [] as any;
-                for (let item of _data["userApprove"])
-                    this.userApprove!.push(item);
-            }
-            if (Array.isArray(_data["userAccounting"])) {
-                this.userAccounting = [] as any;
-                for (let item of _data["userAccounting"])
-                    this.userAccounting!.push(item);
+            if (Array.isArray(_data["userSale"])) {
+                this.userSale = [] as any;
+                for (let item of _data["userSale"])
+                    this.userSale!.push(item);
             }
             this.id = _data["id"];
             this.stockCode = _data["stockCode"];
@@ -29554,15 +30072,10 @@ export class InventoryViewDto implements IInventoryViewDto {
             for (let item of this.userCreate)
                 data["userCreate"].push(item);
         }
-        if (Array.isArray(this.userApprove)) {
-            data["userApprove"] = [];
-            for (let item of this.userApprove)
-                data["userApprove"].push(item);
-        }
-        if (Array.isArray(this.userAccounting)) {
-            data["userAccounting"] = [];
-            for (let item of this.userAccounting)
-                data["userAccounting"].push(item);
+        if (Array.isArray(this.userSale)) {
+            data["userSale"] = [];
+            for (let item of this.userSale)
+                data["userSale"].push(item);
         }
         data["id"] = this.id;
         data["stockCode"] = this.stockCode;
@@ -29595,8 +30108,7 @@ export class InventoryViewDto implements IInventoryViewDto {
 export interface IInventoryViewDto {
     userManager: string[] | undefined;
     userCreate: string[] | undefined;
-    userApprove: string[] | undefined;
-    userAccounting: string[] | undefined;
+    userSale: string[] | undefined;
     id: number | undefined;
     stockCode: string | undefined;
     stockName: string | undefined;
@@ -31418,6 +31930,7 @@ export interface INotificationSubscriptionWithDisplayNameDto {
 export enum ObjectType {
     All = 1,
     List = 2,
+    File = 3,
 }
 
 export class OpenIdConnectExternalLoginProviderSettings implements IOpenIdConnectExternalLoginProviderSettings {
@@ -31533,6 +32046,8 @@ export class OrderActionResponse implements IOrderActionResponse {
     productType!: ProductType;
     orderType!: OrderTypeValue;
     status!: OrderStatus;
+    fileBytes!: string | undefined;
+    fileName!: string | undefined;
 
     constructor(data?: IOrderActionResponse) {
         if (data) {
@@ -31553,6 +32068,8 @@ export class OrderActionResponse implements IOrderActionResponse {
             this.productType = _data["productType"];
             this.orderType = _data["orderType"];
             this.status = _data["status"];
+            this.fileBytes = _data["fileBytes"];
+            this.fileName = _data["fileName"];
         }
     }
 
@@ -31573,6 +32090,8 @@ export class OrderActionResponse implements IOrderActionResponse {
         data["productType"] = this.productType;
         data["orderType"] = this.orderType;
         data["status"] = this.status;
+        data["fileBytes"] = this.fileBytes;
+        data["fileName"] = this.fileName;
         return data;
     }
 }
@@ -31586,6 +32105,8 @@ export interface IOrderActionResponse {
     productType: ProductType;
     orderType: OrderTypeValue;
     status: OrderStatus;
+    fileBytes: string | undefined;
+    fileName: string | undefined;
 }
 
 export class OrderDetailDto implements IOrderDetailDto {
@@ -31708,6 +32229,7 @@ export class OrderDto implements IOrderDto {
     quantity!: number;
     costPrice!: number;
     salePrice!: number;
+    expectedQuantity!: number | undefined;
     status!: OrderStatus;
     statusName!: string | undefined;
     statusCurrent!: number;
@@ -31754,6 +32276,7 @@ export class OrderDto implements IOrderDto {
             this.quantity = _data["quantity"];
             this.costPrice = _data["costPrice"];
             this.salePrice = _data["salePrice"];
+            this.expectedQuantity = _data["expectedQuantity"];
             this.status = _data["status"];
             this.statusName = _data["statusName"];
             this.statusCurrent = _data["statusCurrent"];
@@ -31804,6 +32327,7 @@ export class OrderDto implements IOrderDto {
         data["quantity"] = this.quantity;
         data["costPrice"] = this.costPrice;
         data["salePrice"] = this.salePrice;
+        data["expectedQuantity"] = this.expectedQuantity;
         data["status"] = this.status;
         data["statusName"] = this.statusName;
         data["statusCurrent"] = this.statusCurrent;
@@ -31847,6 +32371,7 @@ export interface IOrderDto {
     quantity: number;
     costPrice: number;
     salePrice: number;
+    expectedQuantity: number | undefined;
     status: OrderStatus;
     statusName: string | undefined;
     statusCurrent: number;
@@ -32660,6 +33185,54 @@ export class PagedResultDtoOfGetWardForViewDto implements IPagedResultDtoOfGetWa
 export interface IPagedResultDtoOfGetWardForViewDto {
     totalCount: number;
     items: GetWardForViewDto[] | undefined;
+}
+
+export class PagedResultDtoOfGroupTelegramDto implements IPagedResultDtoOfGroupTelegramDto {
+    totalCount!: number;
+    items!: GroupTelegramDto[] | undefined;
+
+    constructor(data?: IPagedResultDtoOfGroupTelegramDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(GroupTelegramDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfGroupTelegramDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultDtoOfGroupTelegramDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IPagedResultDtoOfGroupTelegramDto {
+    totalCount: number;
+    items: GroupTelegramDto[] | undefined;
 }
 
 export class PagedResultDtoOfHistorysDto implements IPagedResultDtoOfHistorysDto {
@@ -34059,12 +34632,6 @@ export enum PaymentPeriodType {
     Weekly = 7,
     Monthly = 30,
     Annual = 365,
-}
-
-export enum PriceType {
-    Change = 1,
-    PlusRate = 2,
-    PlusExtra = 3,
 }
 
 export class ProductAttributeDto implements IProductAttributeDto {
@@ -35532,6 +36099,50 @@ export class SimTypeDto implements ISimTypeDto {
 export interface ISimTypeDto {
     simType: string | undefined;
     simName: string | undefined;
+}
+
+export class StockGroupDto implements IStockGroupDto {
+    stockId!: number;
+    stockName!: string | undefined;
+    stockCode!: string | undefined;
+
+    constructor(data?: IStockGroupDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.stockId = _data["stockId"];
+            this.stockName = _data["stockName"];
+            this.stockCode = _data["stockCode"];
+        }
+    }
+
+    static fromJS(data: any): StockGroupDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StockGroupDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["stockId"] = this.stockId;
+        data["stockName"] = this.stockName;
+        data["stockCode"] = this.stockCode;
+        return data;
+    }
+}
+
+export interface IStockGroupDto {
+    stockId: number;
+    stockName: string | undefined;
+    stockCode: string | undefined;
 }
 
 export class StringOutput implements IStringOutput {
@@ -37803,74 +38414,6 @@ export class UpdateOrganizationUnitInput implements IUpdateOrganizationUnitInput
 export interface IUpdateOrganizationUnitInput {
     id: number;
     displayName: string;
-}
-
-export class UpdatePriceDto implements IUpdatePriceDto {
-    stockId!: number;
-    userCreated!: string | undefined;
-    productType!: ProductType;
-    objectType!: ObjectType;
-    priceType!: PriceType;
-    value!: number;
-    items!: string[] | undefined;
-
-    constructor(data?: IUpdatePriceDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.stockId = _data["stockId"];
-            this.userCreated = _data["userCreated"];
-            this.productType = _data["productType"];
-            this.objectType = _data["objectType"];
-            this.priceType = _data["priceType"];
-            this.value = _data["value"];
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): UpdatePriceDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdatePriceDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["stockId"] = this.stockId;
-        data["userCreated"] = this.userCreated;
-        data["productType"] = this.productType;
-        data["objectType"] = this.objectType;
-        data["priceType"] = this.priceType;
-        data["value"] = this.value;
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item);
-        }
-        return data;
-    }
-}
-
-export interface IUpdatePriceDto {
-    stockId: number;
-    userCreated: string | undefined;
-    productType: ProductType;
-    objectType: ObjectType;
-    priceType: PriceType;
-    value: number;
-    items: string[] | undefined;
 }
 
 export class UpdateProfilePictureInput implements IUpdateProfilePictureInput {

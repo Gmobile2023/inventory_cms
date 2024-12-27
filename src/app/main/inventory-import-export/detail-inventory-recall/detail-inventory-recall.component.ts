@@ -9,6 +9,8 @@ import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { finalize } from 'rxjs';
 import { FileDownloadService } from '@shared/utils/file-download.service';
+import { AppConsts } from '@shared/AppConsts';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
     templateUrl: './detail-inventory-recall.component.html',
@@ -26,7 +28,8 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
         private route: ActivatedRoute,
         private _inventoryServiceProxy: InventoryServiceProxy,
         private router: Router,
-        private _fileDownloadService: FileDownloadService
+        private _fileDownloadService: FileDownloadService,
+        private _httpClient: HttpClient
     ) {
         super(injector);
     }
@@ -41,6 +44,9 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
     description: string;
     mobile: string;
     serial: string;
+    remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
+    uploadedFile: File | null = null;
+    convertedUrl: string;
 
     ngOnInit(): void {
         this.items = [
@@ -61,6 +67,7 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
                 this.getActionHistory();
                 this.getListSimOrderDetail();
             }
+            if (this.data.document) this.convertUrl(this.data.document);
         });
     }
 
@@ -130,6 +137,43 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
             this.router.navigate(['/app/main/inventory-import-export']);
             this.notify.info(this.l('SavedSuccessfully'));
             this.closeModal();
+        });
+    }
+
+    onFileSelect(event: any): void {
+        const file = event.files && event.files[0];
+        if (file) {
+            this.uploadedFile = file;
+        }
+    }
+
+    onSubmitUpload() {
+        this.uploadOrderDocument(this.data.orderCode, this.uploadedFile);
+    }
+
+    convertUrl(url: string): void {
+        const parts = url.split('/');
+        const fileName = parts.pop(); // Lấy phần tên file cuối
+        const hiddenPath = '******';
+        this.convertedUrl = `${hiddenPath}/${fileName}`;
+    }
+
+    uploadOrderDocument(orderCode: string, file: File) {
+        const uploadUrl = `${this.remoteServiceBaseUrl}/api/services/app/Inventory/UploadOrderDocument`;
+        const formData = new FormData();
+        formData.append('orderCode', orderCode);
+        formData.append('file', file);
+        this._httpClient.post<any>(uploadUrl, formData).subscribe({
+            next: (response) => {
+                if (response.success) {
+                    this.getStockForView();
+                    this.closeModal();
+                    this.notify.success(this.l('Tải file chứng từ thành công'));
+                }
+            },
+            error: (err) => {
+                this.message.error(this.l(err.error.error?.message));
+            },
         });
     }
 

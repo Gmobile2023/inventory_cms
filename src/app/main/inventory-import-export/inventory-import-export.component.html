@@ -115,7 +115,16 @@
                                 {{ 'LOẠI YÊU CẦU' | localize }}
                             </th>
                             <th>
+                                {{ 'KHO NGUỒN' | localize }}
+                            </th>
+                            <th>
+                                {{ 'KHO ĐẾN' | localize }}
+                            </th>
+                            <th>
                                 {{ 'SỐ LƯỢNG DỰ KIẾN' | localize }}
+                            </th>
+                            <th>
+                                {{ 'SỐ LƯỢNG THỰC TẾ' | localize }}
                             </th>
                             <th>{{ 'TRẠNG THÁI' | localize }}</th>
                             <th>
@@ -163,6 +172,18 @@
                                 <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.orderType == "1" ? 'Nhập kho' : record.orderType == "2" ? 'Xuất kho' :
                                 record.orderType == "3" ? 'Thu hồi về kho cha' : 'Bán hàng' }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.srcStockName }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.desStockName }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.expectedQuantity }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>

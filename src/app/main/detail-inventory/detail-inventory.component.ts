@@ -163,7 +163,7 @@ export class DetailInventoryComponent extends AppComponentBase {
         const selectedCityId = event.value;
         const selectedCity = this.cities.find((city) => city.id === selectedCityId);
         if (selectedCity) {
-            this.inventoryData.cityName = selectedCity.cityName;
+            this.createData.cityName = selectedCity.cityName;
         }
         this.getDistrictByCity(selectedCityId);
     }
@@ -178,7 +178,7 @@ export class DetailInventoryComponent extends AppComponentBase {
         const selectedDistrictId = event.value;
         const selectedDistrict = this.districts.find((district) => district.id === selectedDistrictId);
         if (selectedDistrict) {
-            this.inventoryData.districtName = selectedDistrict.displayName;
+            this.createData.districtName = selectedDistrict.displayName;
         }
         this.getWardByDistrict(selectedDistrictId);
     }
@@ -187,7 +187,7 @@ export class DetailInventoryComponent extends AppComponentBase {
         const selectedWardId = event.value;
         const selectedWard = this.wards.find((ward) => ward.id === selectedWardId);
         if (selectedWard) {
-            this.inventoryData.wardName = selectedWard.displayName;
+            this.createData.wardName = selectedWard.displayName;
         }
     }
 
@@ -203,8 +203,6 @@ export class DetailInventoryComponent extends AppComponentBase {
         body.parentStockId = this.inventoryData.id;
         body.userManager = this.createData.userManager?.map((user) => user.userName) || [];
         body.userCreateOrder = this.createData.userCreateOrder?.map((user) => user.userName) || [];
-        body.userApprove = this.createData.userApprove?.map((user) => user.userName) || [];
-        body.userAccounting = this.createData.userAccounting?.map((user) => user.userName) || [];
         // console.log(body);
         this._inventoryServiceProxy.createOrEditStock(body).subscribe(() => {
             this.router.navigate(['/app/main/inventory-manager']);

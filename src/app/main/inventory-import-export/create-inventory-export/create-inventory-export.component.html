@@ -6,11 +6,11 @@
                 <h4>THÔNG TIN CHUNG</h4>
                 <button class="btn btn-success btn-sm" (click)="createTransfer()">GỬI YÊU CẦU</button>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="title" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
                 <input type="text" class="form-control" id="title" placeholder="Nhập tiêu đề" [(ngModel)]="title">
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="productType" class="form-label">Loại sản phẩm</label>
                 <div class="input-group">
                     <select id="productType" name="productType" class="form-select" [(ngModel)]="productType"
@@ -19,6 +19,11 @@
                         <option [value]="ProductType.Serial">Serial</option>
                     </select>
                 </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="title" class="form-label">Số lượng dự kiến</label>
+                <input type="number" class="form-control" id="title" placeholder="Nhập số lượng dự kiến"
+                    [(ngModel)]="expectedQuantity">
             </div>
             <div class="col-md-6 mb-3">
                 <label for="srcStockId" class="form-label">Kho xuất đi <span class="text-danger">(*)</span></label>
@@ -110,11 +115,19 @@
     <div class="container-fluid mt-5" [class]="isRangeRule ? 'd-none' : null">
         <div class="row bg-white py-5">
             <h4 class="mb-5">BỘ LỌC TÌM KIẾM</h4>
-            <div class="col-md-3">
+            <div class="col-md-4 mb-5">
                 <label for="" class="form-label">Số/Serial</label>
                 <input type="text" class="form-control" id="" placeholder="Nhập số/serial" [(ngModel)]="product">
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4 mb-5">
+                <label for="" class="form-label">Dải số/serial từ</label>
+                <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial" [(ngModel)]="fromRange">
+            </div>
+            <div class="col-md-4 mb-5">
+                <label for="" class="form-label">Dải số/serial đến</label>
+                <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial" [(ngModel)]="toRange">
+            </div>
+            <div class="col-md-4">
                 <label for="attribute" class="form-label" style="width: 35%;">
                     {{ 'Hạng số' | localize }}
                 </label>
@@ -128,7 +141,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label for="simType" class="form-label" style="width: 35%;">
                     {{ 'Loại số' | localize }}
                 </label>
@@ -142,7 +155,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label for="" class="form-label">Tìm kiếm theo file excel</label>
                 <input type="file" class="form-control" id="">
             </div>

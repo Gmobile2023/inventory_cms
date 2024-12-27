@@ -2,7 +2,7 @@ import { Component, Injector, Input, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { InventoryServiceProxy } from '@shared/service-proxies/service-proxies';
+import { InventoryServiceProxy, ProductType } from '@shared/service-proxies/service-proxies';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { LazyLoadEvent } from 'primeng/api';
@@ -19,7 +19,7 @@ export class SimDetailModalComponent extends AppComponentBase {
     @ViewChild('paginator', { static: true }) paginator: Paginator;
     @Input() simData: any;
     @Input() inventoryData: any;
-    @Input() productType: any;
+    @Input() productType: ProductType;
 
     constructor(
         injector: Injector,
@@ -37,6 +37,7 @@ export class SimDetailModalComponent extends AppComponentBase {
     fromDate: DateTime;
     toDate: DateTime;
     stockId: number;
+    // productType: ProductType = ProductType.Mobile;
 
     getOrdersImport(event?: LazyLoadEvent) {
         this._inventoryServiceProxy
@@ -44,6 +45,7 @@ export class SimDetailModalComponent extends AppComponentBase {
                 this.orderType,
                 undefined,
                 undefined,
+                this.productType,
                 undefined,
                 undefined,
                 this.stockCode,

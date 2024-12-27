@@ -25,7 +25,7 @@ export class InventoryReportComponent extends AppComponentBase {
         private modalService: BsModalService,
         private _inventoryServiceProxy: InventoryServiceProxy,
         private _dateTimeService: DateTimeService,
-        private _fileDownloadService: FileDownloadService,
+        private _fileDownloadService: FileDownloadService
     ) {
         super(injector);
     }
@@ -66,6 +66,7 @@ export class InventoryReportComponent extends AppComponentBase {
             .getListInventoryReport(
                 this.productType,
                 this.stockCode,
+                this.stockName,
                 this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
                 this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
                 this.parentId,
@@ -91,7 +92,7 @@ export class InventoryReportComponent extends AppComponentBase {
                 this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
                 this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
                 this.parentId,
-                this.stockId,
+                this.stockId
             )
             .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
             .subscribe((result) => {

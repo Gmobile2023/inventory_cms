@@ -105,6 +105,23 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
         });
     }
 
+    uploadOrderDocument(orderCode: string, file: File) {
+        const uploadUrl = `${this.remoteServiceBaseUrl}/api/services/app/Inventory/UploadOrderDocument`;
+        const formData = new FormData();
+        formData.append('type', orderCode);
+        formData.append('file', file);
+        this._httpClient.post<any>(uploadUrl, formData).subscribe({
+            next: (response) => {
+                if (response.success) {
+                    this.notify.success(this.l('Tạo Kitting thành công'));
+                }
+            },
+            error: (err) => {
+                this.message.error(this.l(err.error.error?.message));
+            },
+        });
+    }
+
     addRow() {
         this.tempOrderItems.push({
             orderName: '',
