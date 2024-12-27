@@ -2,7 +2,7 @@
     <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
     <div [class]="containerClass">
         <div class="row bg-white pt-5 ps-3">
-            <h4 class="mb-4">CẬP NHẬT GIÁ BÁN</h4>
+            <h4 class="mb-4">CẬP NHẬT GIÁ ĐỊNH GIÁ</h4>
             <p-table #dataTable [value]="primengTableHelper.records" (onLazyLoad)="getListSims($event)"
                 [(selection)]="selectedRecords" rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
                 [paginator]="false" [lazy]="true" [tableStyle]="{'min-width': '50rem'}" class="table-custom">
@@ -18,7 +18,7 @@
                             </div>
                         </div>
                         <button class="btn btn-success btn-sm" type="button" (click)="openModal(updatePrice)">
-                            CẬP NHẬT GIÁ
+                            CẬP NHẬT GIÁ ĐỊNH GIÁ
                         </button>
                     </div>
                 </ng-template>
@@ -28,7 +28,7 @@
                         <th *ngIf="productType == 1">{{ 'SỐ THUÊ BAO' | localize }}</th>
                         <th>{{ 'SERIAL' | localize }}</th>
                         <th *ngIf="productType == 1">{{ 'HẠNG SỐ' | localize }}</th>
-                        <th>{{ 'GIÁ BÁN' | localize }}</th>
+                        <th>{{ 'GIÁ ĐỊNH GIÁ' | localize }}</th>
                         <th *ngIf="productType == 1">{{ 'NHÀ MẠNG' | localize }}</th>
                         <th>{{ 'TRẠNG THÁI' | localize }}</th>
                         <th>{{ 'NGÀY NHẬP' | localize }}</th>
@@ -45,12 +45,23 @@
                         <td>{{record.salePrice}}</td>
                         <td *ngIf="productType == 1">{{record.telCo}}</td>
                         <td>
-                            <span class="p-column-title">{{ 'Status' | localize }}</span>
                             <span *ngIf="record.status == 0" class="badge badge-warning badge-inline">
-                                {{ 'Chưa bán' | localize }}
+                                {{ 'Chờ duyệt xuất kho' | localize }}
                             </span>
                             <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
-                                {{ 'Đang bán' | localize }}
+                                {{ 'Trong kho' | localize }}
+                            </span>
+                            <span *ngIf="record.status == 2" class="badge badge-secondary badge-inline">
+                                {{ 'Khoá' | localize }}
+                            </span>
+                            <span *ngIf="record.status == 6" class="badge badge-primary badge-inline">
+                                {{ 'Đã xuất kho' | localize }}
+                            </span>
+                            <span *ngIf="record.status == 4" class="badge badge-danger badge-inline">
+                                {{ 'Đã huỷ' | localize }}
+                            </span>
+                            <span *ngIf="record.status == 5" class="badge badge-info badge-inline">
+                                {{ 'Đã bán' | localize }}
                             </span>
                         </td>
                         <td>

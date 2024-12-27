@@ -3,7 +3,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import { finalize } from 'rxjs';
-import { InventoryServiceProxy } from '@shared/service-proxies/service-proxies';
+import { InventoryServiceProxy, ProductType } from '@shared/service-proxies/service-proxies';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { DateTime } from '@node_modules/@types/luxon';
@@ -34,6 +34,7 @@ export class InventoryImportExportComponent extends AppComponentBase implements 
     toDate: DateTime | undefined;
     stockCode: string | undefined;
     status: number = 99;
+    productType: ProductType = ProductType.Mobile;
 
     ngOnInit() {
         this.items = [{ label: 'Quản lý kho', routerLink: '/app/main/inventory-manager' }, { label: 'Xuất/Nhập kho' }];
@@ -47,6 +48,7 @@ export class InventoryImportExportComponent extends AppComponentBase implements 
                 this.orderType,
                 this.orderCode,
                 this.orderTitle,
+                undefined,
                 this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
                 this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
                 this.stockCode,

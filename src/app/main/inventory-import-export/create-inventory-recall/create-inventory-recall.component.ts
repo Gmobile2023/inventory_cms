@@ -72,6 +72,8 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
     simType: string;
     fromRange: string;
     toRange: string;
+    mobile: string;
+    serial: string;
 
     ngOnInit() {
         this.items = [
@@ -176,6 +178,8 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
                 this.productType,
                 this.attribute,
                 this.simType,
+                this.mobile,
+                this.serial,
                 this.productType == ProductType.Mobile ? this.product : undefined,
                 // this.productType == ProductType.Serial ? this.product : undefined,
                 this.fromRange,

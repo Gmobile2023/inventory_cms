@@ -52,6 +52,14 @@
                     <hr>
                     <div class="section py-5">
                         <h4>THÔNG TIN CHỨNG TỪ</h4>
+                        <div class="mt-3" *ngIf="!orderData.document">
+                            <button class="btn btn-primary btn-sm" type="button" (click)="openModal(document)">
+                                Tải lên thông tin chứng từ
+                            </button>
+                        </div>
+                        <div class="mt-3">
+                            <a [href]="orderData.document">{{convertedUrl}}</a>
+                        </div>
                         <div class="d-flex justify-content-center" style="margin-top: 100px;"
                             *ngIf="orderData.status !== 1 && orderData.status !== 7">
                             <button *ngIf="'Pages.Inventories.Orders.Confirm' | permission" class="btn btn-success me-5"
@@ -172,6 +180,25 @@
                 <div class="d-flex justify-content-center">
                     <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
                     <button type="button" class="btn btn-danger btn-sm" (click)="refuseOrder()">TỪ CHỐI</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #document>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Tải lên thông tin chứng từ</h3>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+                <p-fileUpload customUpload="true" maxFileSize="10000000" auto="auto"
+                    accept=".csv,.xls,.xlsx,.pdf,.png,.jpg" chooseLabel="Chọn tệp"
+                    (onSelect)="onFileSelect($event)"></p-fileUpload>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="onSubmitUpload()">XÁC NHẬN</button>
                 </div>
             </div>
         </div>

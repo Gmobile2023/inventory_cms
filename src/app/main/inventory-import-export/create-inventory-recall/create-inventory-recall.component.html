@@ -100,11 +100,19 @@
     <div [class]="isRangeRule ? 'd-none' : null" class="container-fluid mt-5">
         <div class="row bg-white py-5">
             <h4>BỘ LỌC TÌM KIẾM</h4>
-            <div class="col-md-3">
+            <div class="col-md-4 mb-5">
                 <label for="" class="form-label">Số/Serial</label>
                 <input type="text" class="form-control" id="" placeholder="Nhập số/serial" [(ngModel)]="product">
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4 mb-5">
+                <label for="" class="form-label">Dải số/serial từ</label>
+                <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial" [(ngModel)]="fromRange">
+            </div>
+            <div class="col-md-4 mb-5">
+                <label for="" class="form-label">Dải số/serial đến</label>
+                <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial" [(ngModel)]="toRange">
+            </div>
+            <div class="col-md-4">
                 <label for="attribute" class="form-label" style="width: 35%;">
                     {{ 'Hạng số' | localize }}
                 </label>
@@ -118,7 +126,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label for="simType" class="form-label" style="width: 35%;">
                     {{ 'Loại số' | localize }}
                 </label>
@@ -132,7 +140,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label for="" class="form-label">Tìm kiếm theo file excel</label>
                 <input type="file" class="form-control" id="">
             </div>
