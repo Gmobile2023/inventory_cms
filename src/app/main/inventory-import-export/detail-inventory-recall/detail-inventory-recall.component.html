@@ -22,9 +22,13 @@
                             <label for="" class="form-label">Kho nhận thu hồi</label>
                             <input type="text" class="form-control" id="" value={{data.desStockName}} disabled>
                         </div>
-                        <div class="col-12 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label for="" class="form-label">Ghi chú</label>
                             <textarea class="form-control" id="" rows="2" disabled>{{data.description}}</textarea>
+                        </div>
+                        <div class="col-md-6 mb-3" *ngIf="data.contentReject">
+                            <label for="description" class="form-label">Lý do từ chối</label>
+                            <input type="text" class="form-control" [value]="data.contentReject" disabled>
                         </div>
                     </div>
                     <hr>

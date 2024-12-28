@@ -14,6 +14,10 @@
                             <label for="" class="form-label">Tiêu đề</label>
                             <input type="text" class="form-control" id="" value={{orderData.orderTitle}} disabled>
                         </div>
+                        <div class="mb-3" *ngIf="orderData.contentReject">
+                            <label for="" class="form-label">Tiêu đề</label>
+                            <input type="text" class="form-control" id="" value={{orderData.contentReject}} disabled>
+                        </div>
                         <div class="mb-3">
                             <label for="" class="form-label">Ghi chú</label>
                             <textarea class="form-control" id="" rows="2" disabled>{{orderData.description}}</textarea>
