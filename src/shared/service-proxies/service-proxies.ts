@@ -10588,13 +10588,38 @@ export class InventoryServiceProxy {
     }
 
     /**
+     * @param groupName (optional) 
+     * @param chatId (optional) 
+     * @param status (optional) 
+     * @param fromDate (optional) 
+     * @param toDate (optional) 
      * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getListTelegramGroup(sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfGroupTelegramDto> {
+    getListTelegramGroup(groupName: string | undefined, chatId: string | undefined, status: GroupTelegramInfoStatus | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfGroupTelegramDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetListTelegramGroup?";
+        if (groupName === null)
+            throw new Error("The parameter 'groupName' cannot be null.");
+        else if (groupName !== undefined)
+            url_ += "GroupName=" + encodeURIComponent("" + groupName) + "&";
+        if (chatId === null)
+            throw new Error("The parameter 'chatId' cannot be null.");
+        else if (chatId !== undefined)
+            url_ += "ChatId=" + encodeURIComponent("" + chatId) + "&";
+        if (status === null)
+            throw new Error("The parameter 'status' cannot be null.");
+        else if (status !== undefined)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        if (fromDate === null)
+            throw new Error("The parameter 'fromDate' cannot be null.");
+        else if (fromDate !== undefined)
+            url_ += "FromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toString() : "") + "&";
+        if (toDate === null)
+            throw new Error("The parameter 'toDate' cannot be null.");
+        else if (toDate !== undefined)
+            url_ += "ToDate=" + encodeURIComponent(toDate ? "" + toDate.toString() : "") + "&";
         if (sorting === null)
             throw new Error("The parameter 'sorting' cannot be null.");
         else if (sorting !== undefined)
@@ -32237,6 +32262,7 @@ export class OrderDto implements IOrderDto {
     roleName!: string | undefined;
     document!: string | undefined;
     items!: OrderDetailDto[] | undefined;
+    contentReject!: string | undefined;
 
     constructor(data?: IOrderDto) {
         if (data) {
@@ -32288,6 +32314,7 @@ export class OrderDto implements IOrderDto {
                 for (let item of _data["items"])
                     this.items!.push(OrderDetailDto.fromJS(item));
             }
+            this.contentReject = _data["contentReject"];
         }
     }
 
@@ -32339,6 +32366,7 @@ export class OrderDto implements IOrderDto {
             for (let item of this.items)
                 data["items"].push(item.toJSON());
         }
+        data["contentReject"] = this.contentReject;
         return data;
     }
 }
@@ -32379,6 +32407,7 @@ export interface IOrderDto {
     roleName: string | undefined;
     document: string | undefined;
     items: OrderDetailDto[] | undefined;
+    contentReject: string | undefined;
 }
 
 export class OrderInventoryDto implements IOrderInventoryDto {
@@ -35976,6 +36005,7 @@ export class SimNumberDto implements ISimNumberDto {
     desStockCode!: string | undefined;
     desStockName!: string | undefined;
     desStockLevel!: number | undefined;
+    contentReject!: string | undefined;
 
     constructor(data?: ISimNumberDto) {
         if (data) {
@@ -36006,6 +36036,7 @@ export class SimNumberDto implements ISimNumberDto {
             this.desStockCode = _data["desStockCode"];
             this.desStockName = _data["desStockName"];
             this.desStockLevel = _data["desStockLevel"];
+            this.contentReject = _data["contentReject"];
         }
     }
 
@@ -36036,6 +36067,7 @@ export class SimNumberDto implements ISimNumberDto {
         data["desStockCode"] = this.desStockCode;
         data["desStockName"] = this.desStockName;
         data["desStockLevel"] = this.desStockLevel;
+        data["contentReject"] = this.contentReject;
         return data;
     }
 }
@@ -36059,6 +36091,7 @@ export interface ISimNumberDto {
     desStockCode: string | undefined;
     desStockName: string | undefined;
     desStockLevel: number | undefined;
+    contentReject: string | undefined;
 }
 
 export class SimTypeDto implements ISimTypeDto {
