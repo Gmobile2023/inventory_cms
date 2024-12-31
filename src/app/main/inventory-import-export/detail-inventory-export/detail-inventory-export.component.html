@@ -55,7 +55,8 @@
                         <div class="d-flex justify-content-center" style="margin-top: 100px;"
                             *ngIf="orderData.status !== 1 && orderData.status !== 7">
                             <button *ngIf="'Pages.Inventories.Orders.Confirm' | permission" class="btn btn-success me-3"
-                                type="button" (click)="openModal(approve)">
+                                type="button" (click)="openModal(approve)"
+                                [class]="userName !== orderData.userCreated ? 'd-none' : null">
                                 {{ orderData.status == 5 ? 'XUẤT KHO' : 'ĐỒNG Ý'}}
                             </button>
                             <button *ngIf="'Pages.Inventories.Orders.Confirm' | permission" class="btn btn-danger"

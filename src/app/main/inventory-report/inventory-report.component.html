@@ -84,7 +84,7 @@
                     [tableStyle]="{'min-width': '50rem'}">
                     <ng-template pTemplate="header">
                         <tr>
-                            <th style="width: 160px">{{ 'HÀNH ĐỘNG' | localize }}</th>
+                            <!-- <th style="width: 160px">{{ 'HÀNH ĐỘNG' | localize }}</th> -->
                             <th>
                                 {{ 'MÃ KHO' | localize }}
                                 <!-- <p-sortIcon field="tenancyName"></p-sortIcon> -->
@@ -107,7 +107,7 @@
                     </ng-template>
                     <ng-template pTemplate="body" let-record="$implicit">
                         <tr>
-                            <td style="width: 130px">
+                            <!-- <td style="width: 130px">
                                 <div class="btn-group" dropdown placement="bottom left" container="body">
                                     <button id="dropdownButton" type="button"
                                         class="btn btn-primary btn-sm dropdown-toggle" dropdownToggle
@@ -130,7 +130,7 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </td>
+                            </td> -->
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.stockCode }}
