@@ -48,6 +48,7 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
     uploadedFile: File | null = null;
     convertedUrl: string;
+    userName: string = '';
 
     ngOnInit(): void {
         this.items = [
@@ -58,6 +59,7 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.orderId = parseInt(this.route.snapshot.queryParamMap.get('id')!);
         this.getStockForView();
+        this.userName = this.appSession.user.userName;
     }
 
     getStockForView() {

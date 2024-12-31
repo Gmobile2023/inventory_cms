@@ -6,8 +6,10 @@ import {
     ActivateStockDto,
     CommonLookupServiceProxy,
     CreateOrEditStockDto,
+    GetUsersInput,
     InventoryServiceProxy,
     UserInfoDto,
+    UserServiceProxy,
 } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs';
 import { Table } from 'primeng/table';
@@ -41,7 +43,8 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
         private _inventoryServiceProxy: InventoryServiceProxy,
         private _fileDownloadService: FileDownloadService,
         private modalService: BsModalService,
-        private _dateTimeService: DateTimeService
+        private _dateTimeService: DateTimeService,
+        private _userServiceProxy: UserServiceProxy
     ) {
         super(injector);
     }
@@ -167,7 +170,6 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
             .subscribe((result) => {
                 this.primengTableHelper.records = result.items;
                 this.treeData = this.buildTreeByStockLevel(result.items);
-                console.log(this.treeData);
                 this.primengTableHelper.totalRecordsCount = result.totalCount;
                 this.primengTableHelper.hideLoadingIndicator();
             });
@@ -175,15 +177,29 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
 
     loadInventoryData(data: any): void {
         this.inventoryData = data;
+        console.log(this.inventoryData.userManager);
         // Gọi API để lấy danh sách người dùng đầy đủ
-        this._commonLookupServiceProxy.getListUserSearch('').subscribe((users: UserInfoDto[]) => {
-            // Gán giá trị cho `userManager`
-            if (this.inventoryData.userManager)
-                this.inventoryData.userManager = users.filter((user) => data.userManager.includes(user.userName));
-            // Gán giá trị cho `userCreateOrder`
-            if (this.inventoryData.userCreate)
-                this.inventoryData.userCreate = users.filter((user) => data.userCreate.includes(user.userName));
-        });
+        this._userServiceProxy
+            .getUsers(
+                new GetUsersInput({
+                    filter: undefined,
+                    permissions: undefined,
+                    role: undefined,
+                    onlyLockedUsers: false,
+                    sorting: '',
+                    maxResultCount: 1000,
+                    skipCount: 0,
+                })
+            )
+            .subscribe((response) => {
+                const users = response.items;
+                // Gán giá trị cho `userManager`
+                if (this.inventoryData.userManager)
+                    this.inventoryData.userManager = users.filter((user) => data.userManager.includes(user.userName));
+                console.log(this.inventoryData.userManager);
+                if (this.inventoryData.userCreate)
+                    this.inventoryData.userCreate = users.filter((user) => data.userCreate.includes(user.userName));
+            });
     }
     // get users
     filterUsers(event): void {
