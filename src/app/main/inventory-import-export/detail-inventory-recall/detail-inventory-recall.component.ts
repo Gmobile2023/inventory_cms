@@ -47,6 +47,8 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
     remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
     uploadedFile: File | null = null;
     convertedUrl: string;
+    isAction: boolean = false;
+    userName: string = '';
 
     ngOnInit(): void {
         this.items = [
@@ -56,6 +58,7 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
         ];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.orderId = parseInt(this.route.snapshot.queryParamMap.get('id')!);
+        this.userName = this.appSession.user.userName;
         this.getStockForView();
     }
 
@@ -68,6 +71,9 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
                 this.getListSimOrderDetail();
             }
             if (this.data.document) this.convertUrl(this.data.document);
+            if (this.data.settingUser) {
+                this.isAction = this.data.settingUser.includes(this.userName);
+            }
         });
     }
 

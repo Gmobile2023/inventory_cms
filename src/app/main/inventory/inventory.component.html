@@ -203,7 +203,7 @@
                                                 {{ 'Kích hoạt kho' | localize }}
                                             </a>
                                         </li>
-                                        <li>
+                                        <li *ngIf="record.status !== 0">
                                             <a *ngIf="'Pages.Inventories.Stock.Edit' | permission" href="javascript:;"
                                                 class="dropdown-item"
                                                 (click)="openModal(lockOrUnlock, 'modal-md', record.id, record.status)">

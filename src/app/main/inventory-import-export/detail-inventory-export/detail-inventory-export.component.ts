@@ -49,6 +49,7 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     uploadedFile: File | null = null;
     convertedUrl: string;
     userName: string = '';
+    isAction: boolean = false;
 
     ngOnInit(): void {
         this.items = [
@@ -72,6 +73,9 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
                 this.getListSimOrderDetail();
             }
             if (this.orderData.document) this.convertUrl(this.orderData.document);
+            if (this.orderData.settingUser) {
+                this.isAction = this.orderData.settingUser.includes(this.userName);
+            }
         });
     }
 

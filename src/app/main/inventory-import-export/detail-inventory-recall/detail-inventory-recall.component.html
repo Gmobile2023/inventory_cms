@@ -43,7 +43,7 @@
                             <a [href]="data.document">{{convertedUrl}}</a>
                         </div>
                         <div class="d-flex justify-content-center" style="margin-top: 100px;"
-                            *ngIf="data.status !== 1 && data.status !== 7">
+                            *ngIf="data.status !== 1 && data.status !== 7 && isAction">
                             <button *ngIf="'Pages.Inventories.Orders.Confirm' | permission" class="btn btn-success me-3"
                                 type="button" (click)="openModal(approve)">
                                 {{ data.status == 5 ? 'THU HỒI' : 'ĐỒNG Ý'}}

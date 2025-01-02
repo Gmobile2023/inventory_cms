@@ -65,7 +65,7 @@
                             <a [href]="orderData.document">{{convertedUrl}}</a>
                         </div>
                         <div class="d-flex justify-content-center" style="margin-top: 100px;"
-                            *ngIf="orderData.status !== 1 && orderData.status !== 7">
+                            *ngIf="orderData.status !== 1 && orderData.status !== 7 && isAction">
                             <button *ngIf="'Pages.Inventories.Orders.Confirm' | permission" class="btn btn-success me-5"
                                 type="button" (click)="openModal(approve)">
                                 {{ orderData.status == 5 ? 'NHẬP KHO' : 'ĐỒNG Ý'}}

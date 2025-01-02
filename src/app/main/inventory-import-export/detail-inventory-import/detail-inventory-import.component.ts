@@ -41,6 +41,8 @@ export class DetailInventoryImportComponent extends AppComponentBase implements 
     remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
     uploadedFile: File | null = null;
     convertedUrl: string;
+    isAction: boolean = false;
+    userName: string = '';
 
     ngOnInit(): void {
         this.items = [
@@ -50,6 +52,7 @@ export class DetailInventoryImportComponent extends AppComponentBase implements 
         ];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.orderId = parseInt(this.route.snapshot.queryParamMap.get('id')!);
+        this.userName = this.appSession.user.userName;
         this.getStockForView();
     }
 
@@ -61,6 +64,9 @@ export class DetailInventoryImportComponent extends AppComponentBase implements 
                 this.getActionHistory();
             }
             if (this.orderData.document) this.convertUrl(this.orderData.document);
+            if (this.orderData.settingUser) {
+                this.isAction = this.orderData.settingUser.includes(this.userName);
+            }
         });
     }
 

@@ -8627,7 +8627,7 @@ export class InventoryServiceProxy {
      * @param kitingStatus (optional) 
      * @return Success
      */
-    getListSimToExcel(stockId: number | undefined, productType: ProductType | undefined, mobile: string | undefined, serial: string | undefined, attribute: string | undefined, status: ProductStatus | undefined, kitingStatus: number | undefined): Observable<FileDto> {
+    getListSimToExcel(stockId: number | undefined, productType: ProductType | undefined, mobile: string | undefined, serial: string | undefined, attribute: string | undefined, status: ProductStatus | undefined, kitingStatus: number | undefined): Observable<string> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSimToExcel?";
         if (stockId === null)
             throw new Error("The parameter 'stockId' cannot be null.");
@@ -8674,14 +8674,14 @@ export class InventoryServiceProxy {
                 try {
                     return this.processGetListSimToExcel(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<FileDto>;
+                    return _observableThrow(e) as any as Observable<string>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<FileDto>;
+                return _observableThrow(response_) as any as Observable<string>;
         }));
     }
 
-    protected processGetListSimToExcel(response: HttpResponseBase): Observable<FileDto> {
+    protected processGetListSimToExcel(response: HttpResponseBase): Observable<string> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -8692,7 +8692,8 @@ export class InventoryServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = FileDto.fromJS(resultData200);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -32261,6 +32262,8 @@ export class OrderDto implements IOrderDto {
     statusCurrentName!: string | undefined;
     roleName!: string | undefined;
     document!: string | undefined;
+    settingUser!: string[] | undefined;
+    settingUserStock!: string[] | undefined;
     items!: OrderDetailDto[] | undefined;
     contentReject!: string | undefined;
 
@@ -32309,6 +32312,16 @@ export class OrderDto implements IOrderDto {
             this.statusCurrentName = _data["statusCurrentName"];
             this.roleName = _data["roleName"];
             this.document = _data["document"];
+            if (Array.isArray(_data["settingUser"])) {
+                this.settingUser = [] as any;
+                for (let item of _data["settingUser"])
+                    this.settingUser!.push(item);
+            }
+            if (Array.isArray(_data["settingUserStock"])) {
+                this.settingUserStock = [] as any;
+                for (let item of _data["settingUserStock"])
+                    this.settingUserStock!.push(item);
+            }
             if (Array.isArray(_data["items"])) {
                 this.items = [] as any;
                 for (let item of _data["items"])
@@ -32361,6 +32374,16 @@ export class OrderDto implements IOrderDto {
         data["statusCurrentName"] = this.statusCurrentName;
         data["roleName"] = this.roleName;
         data["document"] = this.document;
+        if (Array.isArray(this.settingUser)) {
+            data["settingUser"] = [];
+            for (let item of this.settingUser)
+                data["settingUser"].push(item);
+        }
+        if (Array.isArray(this.settingUserStock)) {
+            data["settingUserStock"] = [];
+            for (let item of this.settingUserStock)
+                data["settingUserStock"].push(item);
+        }
         if (Array.isArray(this.items)) {
             data["items"] = [];
             for (let item of this.items)
@@ -32406,6 +32429,8 @@ export interface IOrderDto {
     statusCurrentName: string | undefined;
     roleName: string | undefined;
     document: string | undefined;
+    settingUser: string[] | undefined;
+    settingUserStock: string[] | undefined;
     items: OrderDetailDto[] | undefined;
     contentReject: string | undefined;
 }

@@ -50,20 +50,8 @@
                         </div>
                     </div>
                     <hr>
-                    <div class="row py-5">
+                    <div class="row justify-content-center py-5">
                         <h4>THÔNG TIN CHỨNG TỪ</h4>
-                        <div class="d-flex justify-content-center" style="margin-top: 100px;"
-                            *ngIf="orderData.status !== 1 && orderData.status !== 7">
-                            <button *ngIf="'Pages.Inventories.Orders.Confirm' | permission" class="btn btn-success me-3"
-                                type="button" (click)="openModal(approve)"
-                                [class]="userName !== orderData.userCreated ? 'd-none' : null">
-                                {{ orderData.status == 5 ? 'XUẤT KHO' : 'ĐỒNG Ý'}}
-                            </button>
-                            <button *ngIf="'Pages.Inventories.Orders.Confirm' | permission" class="btn btn-danger"
-                                type="button" (click)="openModal(refuse)" [disabled]="orderData.status == 5"
-                                [class]="orderData.status == 5 ? 'd-none' : null">TỪ
-                                CHỐI</button>
-                        </div>
                         <div class="mt-3" *ngIf="!orderData.document">
                             <button class="btn btn-primary btn-sm" type="button" (click)="openModal(document)">
                                 Tải lên thông tin chứng từ
@@ -71,6 +59,25 @@
                         </div>
                         <div class="mt-3">
                             <a [href]="orderData.document">{{convertedUrl}}</a>
+                        </div>
+                        <div class="d-flex justify-content-center" style="margin-top: 100px;"
+                            *ngIf="orderData.status !== 1 && orderData.status !== 7 && isAction">
+                            <button class="btn btn-success me-3" type="button" (click)="openModal(approve)">
+                                ĐỒNG Ý
+                            </button>
+                            <button class="btn btn-danger" type="button" (click)="openModal(refuse)">
+                                TỪ CHỐI
+                            </button>
+                        </div>
+                        <div class="d-flex justify-content-center" style="margin-top: 100px;"
+                            *ngIf="isAction && orderData.status == 5">
+                            <button class="btn btn-success me-3" type="button" (click)="openModal(approve)">
+                                XUẤT KHO
+                            </button>
+                        </div>
+                        <div class="alert alert-danger text-center mt-5 col-md-3" role="alert"
+                            *ngIf="orderData.status !== 1 && orderData.status !== 7 && isAction">
+                            {{orderData.roleName}}!
                         </div>
                     </div>
                 </p-tabPanel>
