@@ -154,7 +154,7 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
             .getListSimToExcel(undefined, undefined, undefined, undefined, undefined, undefined, undefined)
             .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
             .subscribe((result) => {
-                // this._fileDownloadService.downloadTempFile(result);
+                this._fileDownloadService.downloadTempFile(result);
             });
     }
 

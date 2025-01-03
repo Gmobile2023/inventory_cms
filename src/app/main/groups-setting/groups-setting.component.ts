@@ -2,7 +2,7 @@ import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angu
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
-import { InventoryServiceProxy } from '@shared/service-proxies/service-proxies';
+import { GroupTelegramInfoStatus, InventoryServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
@@ -29,14 +29,13 @@ export class GroupsSettingComponent extends AppComponentBase {
 
     items: MenuItem[];
     home: MenuItem;
-    stockCode: string | undefined;
-    stockName: string | undefined;
-    orderCode: string | undefined;
-    mobile: string | undefined;
-    serial: string | undefined;
+    groupName: string;
+    chatId: string;
+    status: GroupTelegramInfoStatus = GroupTelegramInfoStatus.Default;
     fromDate: DateTime | undefined;
     toDate: DateTime | undefined;
     userProcess: string | undefined;
+    GroupTelegramInfoStatus = GroupTelegramInfoStatus;
 
     ngOnInit() {
         this.items = [
@@ -46,18 +45,15 @@ export class GroupsSettingComponent extends AppComponentBase {
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
     }
 
-    getActionHistory(event?: LazyLoadEvent) {
+    getListTelegramGroup(event?: LazyLoadEvent) {
         this.primengTableHelper.showLoadingIndicator();
         this._inventoryServiceProxy
-            .getHistories(
-                this.stockCode,
-                this.stockName,
-                this.orderCode,
-                this.mobile,
-                this.serial,
+            .getListTelegramGroup(
+                this.groupName,
+                this.chatId,
+                this.status,
                 this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
                 this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
-                this.userProcess,
                 this.primengTableHelper.getSorting(this.dataTable),
                 this.primengTableHelper.getSkipCount(this.paginator, event),
                 this.primengTableHelper.getMaxResultCount(this.paginator, event)
@@ -70,33 +66,37 @@ export class GroupsSettingComponent extends AppComponentBase {
             });
     }
 
+    getStockCodes(listStocks: any[]): string {
+        if (!listStocks || listStocks.length === 0) {
+            return '';
+        }
+        return listStocks.map((stock) => stock.stockCode).join(', ');
+    }
+
     exportToExcel(): void {
-        this.primengTableHelper.showLoadingIndicator();
-        this._inventoryServiceProxy
-            .getHistoriesToExcel(
-                this.stockCode,
-                this.stockName,
-                this.orderCode,
-                this.mobile,
-                this.serial,
-                this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
-                this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
-                this.userProcess
-            )
-            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
-            .subscribe((result) => {
-                this._fileDownloadService.downloadTempFile(result);
-            });
+        // this.primengTableHelper.showLoadingIndicator();
+        // this._inventoryServiceProxy
+        //     .getHistoriesToExcel(
+        //         this.stockCode,
+        //         this.stockName,
+        //         this.orderCode,
+        //         this.mobile,
+        //         this.serial,
+        //         this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
+        //         this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
+        //         this.userProcess
+        //     )
+        //     .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+        //     .subscribe((result) => {
+        //         this._fileDownloadService.downloadTempFile(result);
+        //     });
     }
 
     resetSearch() {
-        this.stockCode = undefined;
-        this.stockName = undefined;
-        this.orderCode = undefined;
-        this.mobile = undefined;
-        this.serial = undefined;
+        this.groupName = undefined;
+        this.chatId = undefined;
+        this.status = GroupTelegramInfoStatus.Default;
         this.fromDate = undefined;
         this.toDate = undefined;
-        this.userProcess = undefined;
     }
 }

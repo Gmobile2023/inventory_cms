@@ -253,7 +253,7 @@ export class DetailInventoryComponent extends AppComponentBase {
             )
             .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
             .subscribe((result) => {
-                // this._fileDownloadService.downloadTempFile(result);
+                this._fileDownloadService.downloadTempFile(result);
             });
     }
 
