@@ -268,6 +268,7 @@ export class DetailInventoryComponent extends AppComponentBase {
         body.id = this.stockId;
         body.userSale = this.userSale[0].userName;
         this._inventoryServiceProxy.addSaleStock(body).subscribe(() => {
+            this.getStockForView(this.stockId);
             this.notify.info(this.l('SavedSuccessfully'));
             this.closeModal();
         });

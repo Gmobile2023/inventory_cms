@@ -177,33 +177,25 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
 
     loadInventoryData(data: any): void {
         this.inventoryData = data;
-        console.log(this.inventoryData.userManager);
-        // Gọi API để lấy danh sách người dùng đầy đủ
-        this._userServiceProxy
-            .getUsers(
-                new GetUsersInput({
-                    filter: undefined,
-                    permissions: undefined,
-                    role: undefined,
-                    onlyLockedUsers: false,
-                    sorting: '',
-                    maxResultCount: 1000,
-                    skipCount: 0,
-                })
-            )
-            .subscribe((response) => {
-                const users = response.items;
-                // Gán giá trị cho `userManager`
-                if (this.inventoryData.userManager)
-                    this.inventoryData.userManager = users.filter((user) => data.userManager.includes(user.userName));
-                console.log(this.inventoryData.userManager);
-                if (this.inventoryData.userCreate)
-                    this.inventoryData.userCreate = users.filter((user) => data.userCreate.includes(user.userName));
-            });
+
+        // Giả lập dữ liệu userManager và userCreate nếu có
+        if (this.inventoryData.userManager) {
+            this.inventoryData.userManager = this.inventoryData.userManager.map((userName: string) => ({
+                userName: userName,
+            }));
+        }
+
+        if (this.inventoryData.userCreate) {
+            this.inventoryData.userCreate = this.inventoryData.userCreate.map((userName: string) => ({
+                userName: userName,
+            }));
+        }
     }
-    // get users
-    filterUsers(event): void {
-        this._commonLookupServiceProxy.getListUserSearch(event.query).subscribe((users) => {
+
+    // Lọc user khi nhập vào autocomplete
+    filterUsers(event: any): void {
+        const query = event.query;
+        this._commonLookupServiceProxy.getListUserSearch(query).subscribe((users) => {
             this.filteredUsers = users;
         });
     }

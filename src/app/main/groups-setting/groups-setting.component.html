@@ -9,7 +9,7 @@
                 </label>
                 <div class="input-group">
                     <input id="stockCode" name="stockCode" class="form-control"
-                        placeholder="{{ 'Nhập tên nhóm' | localize }}" type="text" [(ngModel)]="stockCode" />
+                        placeholder="{{ 'Nhập tên nhóm' | localize }}" type="text" [(ngModel)]="groupName" />
                 </div>
             </div>
             <div class="col-md-4 mb-5">
@@ -36,7 +36,7 @@
                 <div class="d-flex align-items-center justify-content-end">
                     <button class="btn btn-secondary btn-sm me-3" type="button" (click)="resetSearch()">CHỌN
                         LẠI</button>
-                    <button class="btn btn-primary btn-sm" type="button" (click)="getActionHistory($event)">TÌM
+                    <button class="btn btn-primary btn-sm" type="button" (click)="getListTelegramGroup($event)">TÌM
                         KIẾM</button>
                 </div>
             </div>
@@ -56,8 +56,9 @@
         <div class="row align-items-center">
             <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
                 <p-table #dataTable sortMode="multiple" [value]="primengTableHelper.records"
-                    (onLazyLoad)="getActionHistory($event)" rows="{{ primengTableHelper.defaultRecordsCountPerPage }}"
-                    [paginator]="false" [lazy]="true" [tableStyle]="{'min-width': '50rem'}">
+                    (onLazyLoad)="getListTelegramGroup($event)"
+                    rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
+                    [tableStyle]="{'min-width': '50rem'}">
                     <ng-template pTemplate="header">
                         <tr>
                             <th>
@@ -65,6 +66,9 @@
                             </th>
                             <th>
                                 {{ 'TÊN NHÓM' | localize }}
+                            </th>
+                            <th>
+                                {{ 'MÃ KHO' | localize }}
                             </th>
                             <th>
                                 {{ 'THỜI GIAN TẠO' | localize }}
@@ -100,7 +104,11 @@
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.mobile }}
+                                {{ record.groupName }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ getStockCodes(record.listStocks) }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ 'Date' | localize }}</span>
@@ -108,7 +116,12 @@
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.mobile }}
+                                <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
+                                    {{ 'Hoạt động' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 2" class="badge badge-warning badge-inline">
+                                    {{ 'Dừng hoạt động' | localize }}
+                                </span>
                             </td>
                         </tr>
                     </ng-template>
@@ -118,7 +131,7 @@
                 </div>
                 <div class="primeng-paging-container">
                     <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
-                        (onPageChange)="getActionHistory($event)" #paginator
+                        (onPageChange)="getListTelegramGroup($event)" #paginator
                         [totalRecords]="primengTableHelper.totalRecordsCount"
                         [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
                         [showCurrentPageReport]="true" [currentPageReportTemplate]="

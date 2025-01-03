@@ -43,7 +43,7 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     productType: ProductType = ProductType.Mobile;
     objectType: ObjectType = ObjectType.All;
     rangeRule: OrderItem;
-    rangeItems: string[] | undefined = [];
+    rangeItems: any[] = [];
     isRangeRule: boolean = true;
     orderName: string = '';
     tempOrderItems: IOrderItem = {
@@ -198,9 +198,9 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         if (this.isRangeRule) {
             body.rangeRule = OrderItem.fromJS(this.tempOrderItems);
         }
-        if (this.currentDataFrom.length > 0) {
+        if (this.rangeItems.length > 0) {
             const data = [];
-            this.currentDataFrom.forEach((item) => {
+            this.rangeItems.forEach((item) => {
                 if (this.productType == 1) {
                     data.push(item.mobile);
                 } else {

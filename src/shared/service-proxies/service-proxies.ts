@@ -8704,6 +8704,93 @@ export class InventoryServiceProxy {
     }
 
     /**
+     * @param stockId (optional) 
+     * @param productType (optional) 
+     * @param mobile (optional) 
+     * @param serial (optional) 
+     * @param attribute (optional) 
+     * @param status (optional) 
+     * @param kitingStatus (optional) 
+     * @return Success
+     */
+    getListSimToExcelJob(stockId: number | undefined, productType: ProductType | undefined, mobile: string | undefined, serial: string | undefined, attribute: string | undefined, status: ProductStatus | undefined, kitingStatus: number | undefined): Observable<string> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSimToExcelJob?";
+        if (stockId === null)
+            throw new Error("The parameter 'stockId' cannot be null.");
+        else if (stockId !== undefined)
+            url_ += "StockId=" + encodeURIComponent("" + stockId) + "&";
+        if (productType === null)
+            throw new Error("The parameter 'productType' cannot be null.");
+        else if (productType !== undefined)
+            url_ += "ProductType=" + encodeURIComponent("" + productType) + "&";
+        if (mobile === null)
+            throw new Error("The parameter 'mobile' cannot be null.");
+        else if (mobile !== undefined)
+            url_ += "Mobile=" + encodeURIComponent("" + mobile) + "&";
+        if (serial === null)
+            throw new Error("The parameter 'serial' cannot be null.");
+        else if (serial !== undefined)
+            url_ += "Serial=" + encodeURIComponent("" + serial) + "&";
+        if (attribute === null)
+            throw new Error("The parameter 'attribute' cannot be null.");
+        else if (attribute !== undefined)
+            url_ += "Attribute=" + encodeURIComponent("" + attribute) + "&";
+        if (status === null)
+            throw new Error("The parameter 'status' cannot be null.");
+        else if (status !== undefined)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        if (kitingStatus === null)
+            throw new Error("The parameter 'kitingStatus' cannot be null.");
+        else if (kitingStatus !== undefined)
+            url_ += "KitingStatus=" + encodeURIComponent("" + kitingStatus) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListSimToExcelJob(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListSimToExcelJob(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<string>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<string>;
+        }));
+    }
+
+    protected processGetListSimToExcelJob(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param number (optional) 
      * @param productType (optional) 
      * @return Success
@@ -32261,6 +32348,8 @@ export class OrderDto implements IOrderDto {
     statusCurrentName!: string | undefined;
     roleName!: string | undefined;
     document!: string | undefined;
+    settingUser!: string[] | undefined;
+    settingUserStock!: string[] | undefined;
     items!: OrderDetailDto[] | undefined;
     contentReject!: string | undefined;
 
@@ -32309,6 +32398,16 @@ export class OrderDto implements IOrderDto {
             this.statusCurrentName = _data["statusCurrentName"];
             this.roleName = _data["roleName"];
             this.document = _data["document"];
+            if (Array.isArray(_data["settingUser"])) {
+                this.settingUser = [] as any;
+                for (let item of _data["settingUser"])
+                    this.settingUser!.push(item);
+            }
+            if (Array.isArray(_data["settingUserStock"])) {
+                this.settingUserStock = [] as any;
+                for (let item of _data["settingUserStock"])
+                    this.settingUserStock!.push(item);
+            }
             if (Array.isArray(_data["items"])) {
                 this.items = [] as any;
                 for (let item of _data["items"])
@@ -32361,6 +32460,16 @@ export class OrderDto implements IOrderDto {
         data["statusCurrentName"] = this.statusCurrentName;
         data["roleName"] = this.roleName;
         data["document"] = this.document;
+        if (Array.isArray(this.settingUser)) {
+            data["settingUser"] = [];
+            for (let item of this.settingUser)
+                data["settingUser"].push(item);
+        }
+        if (Array.isArray(this.settingUserStock)) {
+            data["settingUserStock"] = [];
+            for (let item of this.settingUserStock)
+                data["settingUserStock"].push(item);
+        }
         if (Array.isArray(this.items)) {
             data["items"] = [];
             for (let item of this.items)
@@ -32406,6 +32515,8 @@ export interface IOrderDto {
     statusCurrentName: string | undefined;
     roleName: string | undefined;
     document: string | undefined;
+    settingUser: string[] | undefined;
+    settingUserStock: string[] | undefined;
     items: OrderDetailDto[] | undefined;
     contentReject: string | undefined;
 }
