@@ -165,26 +165,4 @@ export class DetailInventoryImportComponent extends AppComponentBase implements 
     closeModal(modalId?: number) {
         this.modalService.hide(modalId);
     }
-    dataFake = [
-        {
-            id: 1,
-            loai: 'SIM',
-            ma: 'MLOAD_64K',
-            ten: 'MLOAD_64K',
-            donvi: 'Cái',
-            quantity: 1000,
-            to: '898407210016823000',
-            from: '898407210016824000',
-        },
-        {
-            id: 2,
-            loai: 'SIM',
-            ma: 'MLOAD_54K',
-            ten: 'MLOAD_54K',
-            donvi: 'Cái',
-            quantity: 1000,
-            to: '898407210016823000',
-            from: '898407210016824000',
-        },
-    ];
 }

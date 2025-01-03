@@ -70,13 +70,14 @@
                             </button>
                         </div>
                         <div class="d-flex justify-content-center" style="margin-top: 100px;"
-                            *ngIf="isAction && orderData.status == 5">
+                            *ngIf="isAdmin && orderData.status == 5">
                             <button class="btn btn-success me-3" type="button" (click)="openModal(approve)">
                                 XUẤT KHO
                             </button>
                         </div>
                         <div class="alert alert-danger text-center mt-5 col-md-3" role="alert"
-                            *ngIf="orderData.status !== 1 && orderData.status !== 7 && isAction">
+                            *ngIf="orderData.status !== 1 && orderData.status !== 7 && isAction || isAdmin"
+                            [class]="isAction ? 'd-none' : null">
                             {{orderData.roleName}}!
                         </div>
                     </div>

@@ -50,6 +50,7 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     convertedUrl: string;
     userName: string = '';
     isAction: boolean = false;
+    isAdmin: boolean = false;
 
     ngOnInit(): void {
         this.items = [
@@ -73,9 +74,8 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
                 this.getListSimOrderDetail();
             }
             if (this.orderData.document) this.convertUrl(this.orderData.document);
-            if (this.orderData.settingUser) {
-                this.isAction = this.orderData.settingUser.includes(this.userName);
-            }
+            if (this.orderData.settingUser) this.isAction = this.orderData.settingUser.includes(this.userName);
+            if (this.orderData.settingUserStock) this.isAdmin = this.orderData.settingUserStock.includes(this.userName);
         });
     }
 
@@ -154,7 +154,7 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
             .getListSimToExcel(undefined, undefined, undefined, undefined, undefined, undefined, undefined)
             .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
             .subscribe((result) => {
-                this._fileDownloadService.downloadTempFile(result);
+                // this._fileDownloadService.downloadTempFile(result);
             });
     }
 
