@@ -47,7 +47,8 @@
             <div class="d-flex justify-content-between">
                 <h4 class="mb-4">DANH SÁCH NHÓM</h4>
                 <div class="d-flex align-items-center justify-content-end">
-                    <button class="btn btn-primary btn-sm" type="button">TẠO NHÓM</button>
+                    <button class="btn btn-primary btn-sm" type="button" (click)="openModal(addOrEdit)">TẠO
+                        NHÓM</button>
                     <button class="btn btn-success btn-sm ms-3" (click)="exportToExcel()" type="button">XUẤT
                         EXCEL</button>
                 </div>
@@ -92,10 +93,12 @@
                                     <ul id="dropdownMenu" class="dropdown-menu" role="menu" *dropdownMenu
                                         aria-labelledby="dropdownButton">
                                         <li>
-                                            <a href="javascript:;" class="dropdown-item">
+                                            <a href="javascript:;" class="dropdown-item"
+                                                (click)="openModal(view, record.id)">
                                                 {{ 'Xem chi tiết' | localize }}
                                             </a>
-                                            <a href="javascript:;" class="dropdown-item">
+                                            <a href="javascript:;" class="dropdown-item"
+                                                (click)="openModal(addOrEdit, record.id)">
                                                 {{ 'Chỉnh sửa' | localize }}
                                             </a>
                                         </li>
@@ -141,4 +144,139 @@
             </div>
         </div>
     </div>
+    <ng-template #addOrEdit>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">{{ isEdit ? 'Chỉnh sửa nhóm nhận thông báo' : 'Tạo mới nhóm nhận thông báo'}}
+                </h3>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div [class]="containerClass">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-5">
+                                <label for="groupName" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Tên nhóm' | localize }}
+                                    <span class="text-danger">(*)</span>
+                                </label>
+                                <div class="input-group">
+                                    <input id="groupName" name="groupName" class="form-control"
+                                        placeholder="{{ 'Nhập tên nhóm' | localize }}" type="text"
+                                        [(ngModel)]="groupData.groupName" />
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-5">
+                                <label for="chatId" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'ID nhóm' | localize }}
+                                    <span class="text-danger">(*)</span>
+                                </label>
+                                <div class="input-group">
+                                    <input id="chatId" name="chatId" class="form-control"
+                                        placeholder="{{ 'Nhập ID nhóm' | localize }}" type="text"
+                                        [(ngModel)]="groupData.chatId" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-5">
+                                <label for="chatId" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Trạng thái' | localize }}
+                                    <span class="text-danger">(*)</span>
+                                </label>
+                                <div class="input-group">
+                                    <select id="productType" name="productType" class="form-select"
+                                        [(ngModel)]="groupData.status">
+                                        <option [value]="GroupTelegramInfoStatus.Success">Hoạt động</option>
+                                        <option [value]="GroupTelegramInfoStatus.Lock">Dừng hoạt động</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-5">
+                                <label for="chatId" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Mã kho' | localize }}
+                                    <span class="text-danger">(*)</span>
+                                </label>
+                                <div class="w-100">
+                                    <p-multiSelect [style]="{'text-align': 'left', width: '100%'}" [options]="stocks"
+                                        [(ngModel)]="groupData.items" optionLabel="stockName" optionValue="stockId"
+                                        placeholder="Chọn kho"></p-multiSelect>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="createOrEditTelegramGroup()">XÁC
+                        NHẬN</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #view>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Xem nhóm nhận thông báo</h3>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div [class]="containerClass">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-5">
+                                <label for="groupName" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Tên nhóm' | localize }}
+                                </label>
+                                <div class="input-group">
+                                    <input id="groupName" name="groupName" class="form-control" type="text"
+                                        [value]="groupData.groupName" disabled />
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-5">
+                                <label for="chatId" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'ID nhóm' | localize }}
+                                </label>
+                                <div class="input-group">
+                                    <input id="chatId" name="chatId" class="form-control" type="text"
+                                        [value]="groupData.chatId" disabled />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-5">
+                                <label for="chatId" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Trạng thái' | localize }}
+                                </label>
+                                <div class="input-group">
+                                    <select id="productType" name="productType" class="form-select"
+                                        [(ngModel)]="groupData.status" disabled>
+                                        <option [value]="GroupTelegramInfoStatus.Success">Hoạt động</option>
+                                        <option [value]="GroupTelegramInfoStatus.Lock">Dừng hoạt động</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-5">
+                                <label for="chatId" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Mã kho' | localize }}
+                                </label>
+                                <div class="w-100">
+                                    <input id="chatId" name="chatId" class="form-control" type="text"
+                                        [value]="getStockCodes(groupData.listStocks)" disabled />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-center">
+                    <!-- <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button> -->
+                    <button type="button" class="btn btn-primary btn-sm" (click)="closeModal()">ĐÓNG</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
 </div>

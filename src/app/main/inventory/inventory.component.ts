@@ -177,7 +177,6 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
 
     loadInventoryData(data: any): void {
         this.inventoryData = data;
-
         // Giả lập dữ liệu userManager và userCreate nếu có
         if (this.inventoryData.userManager) {
             this.inventoryData.userManager = this.inventoryData.userManager.map((userName: string) => ({
@@ -334,6 +333,8 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
             body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.userName) || [];
             body.status = 1;
         } else {
+            body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
+            body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.userName) || [];
             body.status = 3;
         }
         this._inventoryServiceProxy.createOrEditStock(body).subscribe(() => {

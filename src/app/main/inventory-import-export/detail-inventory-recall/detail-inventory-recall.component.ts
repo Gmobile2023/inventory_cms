@@ -139,11 +139,15 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
         body.orderCode = this.orderCode;
         body.description = this.description;
         body.status = 7;
-        this._inventoryServiceProxy.confirmOrder(body).subscribe(() => {
-            this.router.navigate(['/app/main/inventory-import-export']);
-            this.notify.info(this.l('SavedSuccessfully'));
-            this.closeModal();
-        });
+        if (body.description) {
+            this._inventoryServiceProxy.confirmOrder(body).subscribe(() => {
+                this.router.navigate(['/app/main/inventory-import-export']);
+                this.notify.info(this.l('SavedSuccessfully'));
+                this.closeModal();
+            });
+        } else {
+            this.message.error(this.l('Vui lòng nhập lý do từ chối'));
+        }
     }
 
     onFileSelect(event: any): void {

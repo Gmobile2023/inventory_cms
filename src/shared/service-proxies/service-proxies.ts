@@ -23226,17 +23226,11 @@ export interface ICreateOrEditStockDto {
 
 export class CreateOrEditTelegramGroupDto implements ICreateOrEditTelegramGroupDto {
     id!: number | undefined;
-    chatId!: number | undefined;
-    token!: string | undefined;
-    type!: GroupTelegramInfoType;
-    status!: GroupTelegramInfoStatus;
     groupName!: string | undefined;
-    groupStock!: string | undefined;
+    chatId!: number | undefined;
+    status!: GroupTelegramInfoStatus;
+    items!: number[] | undefined;
     userCreated!: string | undefined;
-    createdDate!: DateTime;
-    userModify!: string | undefined;
-    modifyDate!: DateTime | undefined;
-    listStocks!: StockGroupDto[] | undefined;
 
     constructor(data?: ICreateOrEditTelegramGroupDto) {
         if (data) {
@@ -23250,21 +23244,15 @@ export class CreateOrEditTelegramGroupDto implements ICreateOrEditTelegramGroupD
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.chatId = _data["chatId"];
-            this.token = _data["token"];
-            this.type = _data["type"];
-            this.status = _data["status"];
             this.groupName = _data["groupName"];
-            this.groupStock = _data["groupStock"];
-            this.userCreated = _data["userCreated"];
-            this.createdDate = _data["createdDate"] ? DateTime.fromISO(_data["createdDate"].toString()) : <any>undefined;
-            this.userModify = _data["userModify"];
-            this.modifyDate = _data["modifyDate"] ? DateTime.fromISO(_data["modifyDate"].toString()) : <any>undefined;
-            if (Array.isArray(_data["listStocks"])) {
-                this.listStocks = [] as any;
-                for (let item of _data["listStocks"])
-                    this.listStocks!.push(StockGroupDto.fromJS(item));
+            this.chatId = _data["chatId"];
+            this.status = _data["status"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(item);
             }
+            this.userCreated = _data["userCreated"];
         }
     }
 
@@ -23278,38 +23266,26 @@ export class CreateOrEditTelegramGroupDto implements ICreateOrEditTelegramGroupD
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["chatId"] = this.chatId;
-        data["token"] = this.token;
-        data["type"] = this.type;
-        data["status"] = this.status;
         data["groupName"] = this.groupName;
-        data["groupStock"] = this.groupStock;
-        data["userCreated"] = this.userCreated;
-        data["createdDate"] = this.createdDate ? this.createdDate.toString() : <any>undefined;
-        data["userModify"] = this.userModify;
-        data["modifyDate"] = this.modifyDate ? this.modifyDate.toString() : <any>undefined;
-        if (Array.isArray(this.listStocks)) {
-            data["listStocks"] = [];
-            for (let item of this.listStocks)
-                data["listStocks"].push(item.toJSON());
+        data["chatId"] = this.chatId;
+        data["status"] = this.status;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item);
         }
+        data["userCreated"] = this.userCreated;
         return data;
     }
 }
 
 export interface ICreateOrEditTelegramGroupDto {
     id: number | undefined;
-    chatId: number | undefined;
-    token: string | undefined;
-    type: GroupTelegramInfoType;
-    status: GroupTelegramInfoStatus;
     groupName: string | undefined;
-    groupStock: string | undefined;
+    chatId: number | undefined;
+    status: GroupTelegramInfoStatus;
+    items: number[] | undefined;
     userCreated: string | undefined;
-    createdDate: DateTime;
-    userModify: string | undefined;
-    modifyDate: DateTime | undefined;
-    listStocks: StockGroupDto[] | undefined;
 }
 
 export class CreateOrEditWardDto implements ICreateOrEditWardDto {
