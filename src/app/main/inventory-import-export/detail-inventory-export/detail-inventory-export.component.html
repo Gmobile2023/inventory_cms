@@ -75,7 +75,7 @@
                                 XUẤT KHO
                             </button>
                         </div>
-                        <div class="alert alert-danger text-center mt-5 col-md-3" role="alert"
+                        <div class="alert alert-warning text-center mt-5 col-md-3" role="alert"
                             *ngIf="orderData.status !== 1 && orderData.status !== 7 && isAction || isAdmin"
                             [class]="isAction ? 'd-none' : null">
                             {{orderData.roleName}}!

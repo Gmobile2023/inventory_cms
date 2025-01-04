@@ -347,6 +347,7 @@ export class DetailInventoryComponent extends AppComponentBase {
 
     openModal(template: TemplateRef<any>, typeModal: string, id?: number) {
         this.modalRef = this.modalService.show(template, { id: 1, class: typeModal });
+        this.userSale = [];
     }
 
     closeModal(modalId?: number) {
