@@ -15,6 +15,8 @@ import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
+import { AppConsts } from '@shared/AppConsts';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
     templateUrl: './create-inventory-recall.component.html',
@@ -24,7 +26,12 @@ import { Paginator } from 'primeng/paginator';
 export class CreateInventoryRecallComponent extends AppComponentBase implements OnInit {
     @ViewChild('dataTable', { static: true }) dataTable: Table;
     @ViewChild('paginator', { static: true }) paginator: Paginator;
-    constructor(injector: Injector, private _inventoryServiceProxy: InventoryServiceProxy, private router: Router) {
+    constructor(
+        injector: Injector,
+        private _inventoryServiceProxy: InventoryServiceProxy,
+        private router: Router,
+        private _httpClient: HttpClient
+    ) {
         super(injector);
     }
     uploadedFiles: any[] = [];
@@ -74,6 +81,8 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
     toRange: string;
     mobile: string;
     serial: string;
+    uploadedFile: File | null = null;
+    remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
 
     ngOnInit() {
         this.items = [
@@ -220,10 +229,43 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
             });
             body.rangeItems = data;
         }
-        console.log(body);
-        this._inventoryServiceProxy.createRecovery(body).subscribe(() => {
-            this.router.navigate(['/app/main/inventory-import-export']);
-            this.notify.info(this.l('SavedSuccessfully'));
+        if (this.uploadedFile) {
+            this._inventoryServiceProxy.createRecovery(body).subscribe((result) => {
+                if (result.orderCode) {
+                    this.uploadOrderDocument(result.orderCode, this.uploadedFile);
+                }
+            });
+        } else {
+            this.message.error(this.l('Vui lòng tải lên thông tin chứng từ!'));
+        }
+        // this._inventoryServiceProxy.createRecovery(body).subscribe(() => {
+        //     this.router.navigate(['/app/main/inventory-import-export']);
+        //     this.notify.info(this.l('SavedSuccessfully'));
+        // });
+    }
+
+    onFileSelect(event: any): void {
+        const file = event.files && event.files[0];
+        if (file) {
+            this.uploadedFile = file;
+        }
+    }
+
+    uploadOrderDocument(orderCode: string, file: File) {
+        const uploadUrl = `${this.remoteServiceBaseUrl}/api/services/app/Inventory/UploadOrderDocument`;
+        const formData = new FormData();
+        formData.append('orderCode', orderCode);
+        formData.append('file', file);
+        this._httpClient.post<any>(uploadUrl, formData).subscribe({
+            next: (response) => {
+                if (response.success) {
+                    this.router.navigate(['/app/main/inventory-import-export']);
+                    this.notify.info(this.l('Tạo yêu cầu thu hồi thành công!'));
+                }
+            },
+            error: (err) => {
+                this.message.error(this.l(err.error.error?.message));
+            },
         });
     }
 

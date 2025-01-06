@@ -42,6 +42,7 @@ export class DetailInventoryImportComponent extends AppComponentBase implements 
     uploadedFile: File | null = null;
     convertedUrl: string;
     isAction: boolean = false;
+    isAdmin: boolean = false;
     userName: string = '';
 
     ngOnInit(): void {
@@ -64,9 +65,8 @@ export class DetailInventoryImportComponent extends AppComponentBase implements 
                 this.getActionHistory();
             }
             if (this.orderData.document) this.convertUrl(this.orderData.document);
-            if (this.orderData.settingUser) {
-                this.isAction = this.orderData.settingUser.includes(this.userName);
-            }
+            if (this.orderData.settingUser) this.isAction = this.orderData.settingUser.includes(this.userName);
+            if (this.orderData.settingUserStock) this.isAdmin = this.orderData.settingUserStock.includes(this.userName);
         });
     }
 
