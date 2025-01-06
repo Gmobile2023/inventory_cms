@@ -48,6 +48,7 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
     uploadedFile: File | null = null;
     convertedUrl: string;
     isAction: boolean = false;
+    isAdmin: boolean = false;
     userName: string = '';
 
     ngOnInit(): void {
@@ -71,9 +72,8 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
                 this.getListSimOrderDetail();
             }
             if (this.data.document) this.convertUrl(this.data.document);
-            if (this.data.settingUser) {
-                this.isAction = this.data.settingUser.includes(this.userName);
-            }
+            if (this.data.settingUser) this.isAction = this.data.settingUser.includes(this.userName);
+            if (this.data.settingUserStock) this.isAdmin = this.data.settingUserStock.includes(this.userName);
         });
     }
 

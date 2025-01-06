@@ -77,7 +77,7 @@
                         </div>
                         <div class="alert alert-warning text-center mt-5 col-md-3" role="alert"
                             *ngIf="orderData.status !== 1 && orderData.status !== 7 && isAction || isAdmin"
-                            [class]="isAction ? 'd-none' : null">
+                            [class]="isAction || orderData.status === 5 ? 'd-none' : null">
                             {{orderData.roleName}}!
                         </div>
                     </div>
@@ -247,11 +247,11 @@
                                     <th>
                                         {{ 'GIÁ BÁN' | localize }}
                                     </th>
-                                    <th>
+                                    <!-- <th>
                                         {{ 'TRẠNG THÁI' | localize }}
-                                    </th>
+                                    </th> -->
                                     <th>
-                                        {{ 'NGÀY NHẬP' | localize }}
+                                        {{ 'NGÀY XUẤT' | localize }}
                                     </th>
                                 </tr>
                             </ng-template>
@@ -269,7 +269,7 @@
                                         <span class="p-column-title">{{ '' | localize }}</span>
                                         {{ record.salePrice }}
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         <span *ngIf="record.status == 0" class="badge badge-secondary badge-inline">
                                             {{ 'Đang xử lý' | localize }}
                                         </span>
@@ -288,7 +288,7 @@
                                         <span *ngIf="record.status == 5" class="badge badge-success badge-inline">
                                             {{ 'Số đã bán' | localize }}
                                         </span>
-                                    </td>
+                                    </td> -->
                                     <td>
                                         <span class="p-column-title">{{ 'Date' | localize }}</span>
                                         {{ record.createdDate | luxonFormat: 'F' }}

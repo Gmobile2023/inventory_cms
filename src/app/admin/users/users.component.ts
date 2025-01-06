@@ -87,7 +87,7 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
                     permissions: this.permissionFilterTreeModal.getSelectedPermissions(),
                     role: this.role !== '' ? parseInt(this.role) : undefined,
                     onlyLockedUsers: this.onlyLockedUsers,
-                    sorting: this.primengTableHelper.getSorting(this.dataTable),
+                    sorting: 'creationTime DESC',
                     maxResultCount: this.primengTableHelper.getMaxResultCount(this.paginator, event),
                     skipCount: this.primengTableHelper.getSkipCount(this.paginator, event),
                 })

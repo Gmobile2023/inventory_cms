@@ -69,10 +69,10 @@
                                     <option value="Cái">Cái</option>
                                 </select>
                             </td>
-                            <td><input type="text" pattern="^[0-9]*$" maxlength="18" class="form-control"
+                            <td><input type="text" pattern="^[0-9]*$" maxlength="25" class="form-control"
                                     (keypress)="onKeyPress($event)" (input)="onInput($event, record)"
                                     [(ngModel)]="record.fromRange" /></td>
-                            <td><input type="text" pattern="^[0-9]*$" maxlength="18" class="form-control"
+                            <td><input type="text" pattern="^[0-9]*$" maxlength="25" class="form-control"
                                     (keypress)="onKeyPress($event)" (input)="onInput($event, record)"
                                     [(ngModel)]="record.toRange" /></td>
                             <td><input type="number" class="form-control" [(ngModel)]="record.quantity" /></td>

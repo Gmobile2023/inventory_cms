@@ -93,27 +93,32 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
         body.title = this.title;
         body.description = this.description;
         body.productType = this.productType;
-        // Convert IOrderItem[] to OrderItem[]
         if (this.tempOrderItems) {
             body.items = this.tempOrderItems.map((item) => {
-                return OrderItem.fromJS(item); // Convert each IOrderItem to OrderItem
+                return OrderItem.fromJS(item);
             });
         }
-        this._inventoryServiceProxy.createOrder(body).subscribe(() => {
-            this.router.navigate(['/app/main/inventory-import-export']);
-            this.notify.info(this.l('SavedSuccessfully'));
-        });
+        if (this.uploadedFile) {
+            this._inventoryServiceProxy.createOrder(body).subscribe((result) => {
+                if (result.orderCode) {
+                    this.uploadOrderDocument(result.orderCode, this.uploadedFile);
+                }
+            });
+        } else {
+            this.message.error(this.l('Vui lòng tải lên thông tin chứng từ!'));
+        }
     }
 
     uploadOrderDocument(orderCode: string, file: File) {
         const uploadUrl = `${this.remoteServiceBaseUrl}/api/services/app/Inventory/UploadOrderDocument`;
         const formData = new FormData();
-        formData.append('type', orderCode);
+        formData.append('orderCode', orderCode);
         formData.append('file', file);
         this._httpClient.post<any>(uploadUrl, formData).subscribe({
             next: (response) => {
                 if (response.success) {
-                    this.notify.success(this.l('Tạo Kitting thành công'));
+                    this.router.navigate(['/app/main/inventory-import-export']);
+                    this.notify.info(this.l('Tạo yêu cầu nhập kho thành công'));
                 }
             },
             error: (err) => {
