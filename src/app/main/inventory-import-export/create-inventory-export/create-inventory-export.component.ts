@@ -81,6 +81,7 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     expectedQuantity: number;
     uploadedFile: File | null = null;
     remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
+    isLoading: boolean = false;
 
     ngOnInit() {
         this.items = [
@@ -196,6 +197,7 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     }
 
     createTransfer() {
+        this.isLoading = true;
         const body = new CreateTransferDto();
         body.title = this.title;
         body.description = this.description;
@@ -221,11 +223,12 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
 
         if (this.uploadedFile) {
             this._inventoryServiceProxy.createTransfer(body).subscribe((result) => {
-                if (result.orderCode) {
-                    this.uploadOrderDocument(result.orderCode, this.uploadedFile);
+                if (result.results.orderCode) {
+                    this.uploadOrderDocument(result.results.orderCode, this.uploadedFile);
                 }
             });
         } else {
+            this.isLoading = false;
             this.message.error(this.l('Vui lòng tải lên thông tin chứng từ!'));
         }
     }

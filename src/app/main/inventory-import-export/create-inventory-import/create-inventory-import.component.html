@@ -93,7 +93,10 @@
                     (onSelect)="onFileSelect($event)"></p-fileUpload>
             </div>
             <div class="d-flex justify-content-center mt-5 pt-5">
-                <button class="btn btn-success" type="button" (click)="createOrder()">GỬI YÊU CẦU</button>
+                <button class="btn btn-success" type="button" (click)="createOrder()" *ngIf="!isLoading">GỬI YÊU
+                    CẦU</button>
+                <p-progressSpinner class="me-5" [style]="{width: '32px', height: '32px'}" strokeWidth="4"
+                    fill="var(--surface-ground)" animationDuration=".8s" *ngIf="isLoading"></p-progressSpinner>
             </div>
         </div>
     </div>

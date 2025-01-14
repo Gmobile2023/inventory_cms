@@ -4,16 +4,16 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { ProgressBarModule } from 'primeng/progressbar';
-import { CreateInventoryExportComponent } from './create-inventory-export.component';
-import { CreateInventoryExportRoutingModule } from './create-inventory-export-routing.module';
 import { TagModule } from 'primeng/tag';
+import { CreateReuseNumberRoutingModule } from './create-reuse-number-routing.module';
+import { CreateReuseNumberComponent } from './create-reuse-number.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
-    declarations: [CreateInventoryExportComponent],
+    declarations: [CreateReuseNumberComponent],
     imports: [
         AppSharedModule,
-        CreateInventoryExportRoutingModule,
+        CreateReuseNumberRoutingModule,
         BreadcrumbModule,
         FileUploadModule,
         ToastModule,
@@ -22,4 +22,4 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
         ProgressSpinnerModule,
     ],
 })
-export class CreateInventoryExportModule {}
+export class CreateReuseNumberModule {}

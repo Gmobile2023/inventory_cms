@@ -6,29 +6,25 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmOrderDto, InventoryServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs';
-import { Paginator } from 'primeng/paginator';
 import { Table } from 'primeng/table';
-import { FileDownloadService } from '@shared/utils/file-download.service';
+import { Paginator } from 'primeng/paginator';
 import { AppConsts } from '@shared/AppConsts';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
-    templateUrl: './detail-inventory-export.component.html',
+    templateUrl: './detail-reuse-number.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [appModuleAnimation()],
 })
-export class DetailInventoryExportComponent extends AppComponentBase implements OnInit {
+export class DetailReuseNumberComponent extends AppComponentBase implements OnInit {
     @ViewChild('dataTable', { static: true }) dataTable: Table;
     @ViewChild('paginator', { static: true }) paginator: Paginator;
-    @ViewChild('dataTable2', { static: true }) dataTable2: Table;
-    @ViewChild('paginator2', { static: true }) paginator2: Paginator;
     constructor(
         injector: Injector,
         private modalService: BsModalService,
         private route: ActivatedRoute,
         private _inventoryServiceProxy: InventoryServiceProxy,
         private router: Router,
-        private _fileDownloadService: FileDownloadService,
         private _httpClient: HttpClient
     ) {
         super(injector);
@@ -40,38 +36,31 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     orderData: any = {};
     orderCode: string;
     listAction: any[] = [];
-    listSim: any[] = [];
+    listItem: any[] = [];
     description: string;
-    orderDataItems: any = {};
-    mobile: string;
-    serial: string;
     remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
     uploadedFile: File | null = null;
     convertedUrl: string;
-    userName: string = '';
     isAction: boolean = false;
     isAdmin: boolean = false;
+    userName: string = '';
 
     ngOnInit(): void {
-        this.items = [
-            { label: 'Quản lý kho', routerLink: '/app/main/inventory-manager' },
-            { label: 'Xuất/Nhập kho', routerLink: '/app/main/inventory-import-export' },
-            { label: 'Chi tiết yêu cầu xuất kho' },
-        ];
+        this.items = [{ label: 'Quản lý kho thu hồi' }, { label: 'Chi tiết yêu cầu tái sử dụng số' }];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.orderId = parseInt(this.route.snapshot.queryParamMap.get('id')!);
-        this.getStockForView();
         this.userName = this.appSession.user.userName;
+        if (this.orderId) {
+            this.getStockForView();
+        }
     }
 
     getStockForView() {
         this._inventoryServiceProxy.getOrderForView(this.orderId).subscribe((result) => {
             this.orderData = result.order;
-            this.orderDataItems = result.order.items[0];
             if (this.orderData.orderCode) {
                 this.orderCode = this.orderData.orderCode;
                 this.getActionHistory();
-                this.getListSimOrderDetail();
             }
             if (this.orderData.document) this.convertUrl(this.orderData.document);
             if (this.orderData.settingUser) this.isAction = this.orderData.settingUser.includes(this.userName);
@@ -98,24 +87,6 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
             .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
             .subscribe((result) => {
                 this.listAction = result.items;
-                this.primengTableHelper.totalRecordsCount = result.totalCount;
-                this.primengTableHelper.hideLoadingIndicator();
-            });
-    }
-
-    getListSimOrderDetail(event?: LazyLoadEvent) {
-        this._inventoryServiceProxy
-            .getListSimOrderDetail(
-                this.orderId,
-                this.mobile,
-                this.serial,
-                this.primengTableHelper.getSorting(this.dataTable2),
-                this.primengTableHelper.getSkipCount(this.paginator2, event),
-                this.primengTableHelper.getMaxResultCount(this.paginator2, event)
-            )
-            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
-            .subscribe((result) => {
-                this.listSim = result.items;
                 this.primengTableHelper.totalRecordsCount = result.totalCount;
                 this.primengTableHelper.hideLoadingIndicator();
             });
@@ -150,16 +121,6 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
         } else {
             this.message.error(this.l('Vui lòng nhập lý do từ chối'));
         }
-    }
-
-    exportToExcel(): void {
-        this.primengTableHelper.showLoadingIndicator();
-        this._inventoryServiceProxy
-            .getListSimOrderToExcel(this.orderId, undefined, undefined)
-            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
-            .subscribe((result) => {
-                this._fileDownloadService.downloadTempFile(result);
-            });
     }
 
     onFileSelect(event: any): void {
@@ -206,5 +167,4 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     closeModal(modalId?: number) {
         this.modalService.hide(modalId);
     }
-    dataFake = [];
 }

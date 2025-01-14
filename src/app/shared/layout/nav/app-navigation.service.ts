@@ -62,9 +62,26 @@ export class AppNavigationService {
                     ),
                     new AppMenuItem(
                         'Cấu hình nhóm telegram nhận thông báo',
-                        '',
+                        'Pages.Inventories.TelegramGroup',
                         'flaticon-app',
                         '/app/main/groups-setting'
+                    ),
+                ]
+            ),
+            new AppMenuItem(
+                'Quản lý Kho thu hồi',
+                '',
+                'flaticon-app',
+                '',
+                [],
+                [
+                    new AppMenuItem('Danh sách thuê bao', '', 'flaticon-app', '/app/main/recovery-inventory'),
+                    new AppMenuItem('Danh sách yêu cầu tái sử dụng TB', '', 'flaticon-app', '/app/main/reuse-number'),
+                    new AppMenuItem(
+                        'Cấu hình thời gian lưu số trong kho',
+                        '',
+                        'flaticon-app',
+                        '/app/main/setting-recovery'
                     ),
                 ]
             ),

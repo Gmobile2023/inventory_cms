@@ -194,7 +194,7 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
     exportToExcel(): void {
         this.primengTableHelper.showLoadingIndicator();
         this._inventoryServiceProxy
-            .getListSimToExcel(undefined, undefined, undefined, undefined, undefined, undefined, undefined)
+            .getListSimOrderToExcel(this.orderId, undefined, undefined)
             .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
             .subscribe((result) => {
                 this._fileDownloadService.downloadTempFile(result);
