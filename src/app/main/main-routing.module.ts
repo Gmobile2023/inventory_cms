@@ -109,6 +109,42 @@ import { RouterModule } from '@angular/router';
                         path: 'groups-setting',
                         loadChildren: () =>
                             import('./groups-setting/groups-setting.module').then((m) => m.GroupsSettingModule),
+                        data: { permission: 'Pages.Inventories.TelegramGroup' },
+                    },
+                    {
+                        path: 'recovery-inventory',
+                        loadChildren: () =>
+                            import('./recovery-inventory/recovery-inventory.module').then(
+                                (m) => m.RecoveryInventoryModule
+                            ),
+                        data: { permission: '' },
+                    },
+                    {
+                        path: 'recovery-inventory/create-reuse-number',
+                        loadChildren: () =>
+                            import('./create-reuse-number/create-reuse-number.module').then(
+                                (m) => m.CreateReuseNumberModule
+                            ),
+                        data: { permission: '' },
+                    },
+                    {
+                        path: 'recovery-inventory/detail-reuse-number',
+                        loadChildren: () =>
+                            import('./detail-reuse-number/detail-reuse-number.module').then(
+                                (m) => m.DetailReuseNumberModule
+                            ),
+                        data: { permission: '' },
+                    },
+                    {
+                        path: 'reuse-number',
+                        loadChildren: () =>
+                            import('./reuse-number/reuse-number.module').then((m) => m.ReuseNumberModule),
+                        data: { permission: '' },
+                    },
+                    {
+                        path: 'setting-recovery',
+                        loadChildren: () =>
+                            import('./setting-recovery/setting-recovery.module').then((m) => m.SettingRecoveryModule),
                         data: { permission: '' },
                     },
                     {

@@ -53,3 +53,23 @@
 ::ng-deep .p-element.p-inputwrapper.select-user .p-inputtext {
   padding: 0.375rem 0.75rem !important;
 }
+
+::ng-deep .p-element .p-fileupload .p-fileupload-content .p-progressbar {
+  display: none !important;
+}
+
+::ng-deep .p-element .p-fileupload .p-fileupload-content .p-fileupload-files .p-fileupload-row  {
+  justify-items: flex-start !important;
+  gap: 40px !important;
+  border: 1px dotted #ccc;
+  padding: 12px;
+}
+
+::ng-deep .p-element .p-fileupload .p-fileupload-content .p-fileupload-files .ng-star-inserted  {
+  width: max-content;
+}
+
+::ng-deep .p-element .p-fileupload .p-fileupload-content .p-fileupload-files .p-fileupload-row > div {
+  flex: initial !important;
+  width: initial !important;
+}

@@ -1,29 +1,27 @@
-import { Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import {
-    CreateRecoveryDto,
+    CreateTransferDto,
     InventoryServiceProxy,
     IOrderItem,
     ObjectType,
     OrderItem,
     ProductType,
 } from '@shared/service-proxies/service-proxies';
-import { Router } from '@angular/router';
-import { finalize } from 'rxjs';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
+import { finalize } from 'rxjs';
+import { Router } from '@angular/router';
 import { AppConsts } from '@shared/AppConsts';
 import { HttpClient } from '@angular/common/http';
-
 @Component({
-    templateUrl: './create-inventory-recall.component.html',
+    templateUrl: './create-reuse-number.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [appModuleAnimation()],
 })
-export class CreateInventoryRecallComponent extends AppComponentBase implements OnInit {
+export class CreateReuseNumberComponent extends AppComponentBase implements OnInit {
     @ViewChild('dataTable', { static: true }) dataTable: Table;
     @ViewChild('paginator', { static: true }) paginator: Paginator;
     constructor(
@@ -35,7 +33,6 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
         super(injector);
     }
     uploadedFiles: any[] = [];
-    selectedRecords: [];
     items: MenuItem[];
     home: MenuItem;
     value: number = 0;
@@ -53,7 +50,7 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
     productType: ProductType = ProductType.Mobile;
     objectType: ObjectType = ObjectType.All;
     rangeRule: OrderItem;
-    rangeItems: string[] | undefined = [];
+    rangeItems: any[] = [];
     isRangeRule: boolean = true;
     orderName: string = '';
     tempOrderItems: IOrderItem = {
@@ -69,18 +66,19 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
     ObjectType = ObjectType;
     listSimSrcStock: any[] = [];
     stockId: number;
-    isRecover: boolean | undefined = true;
     selectedStockFrom: any;
     selectedStockTo: any;
     productAttribute: any[] = [];
     simTypes: any[] = [];
     product: string;
     attribute: string;
+    isAllChecked: boolean = false;
     simType: string;
     fromRange: string;
     toRange: string;
     mobile: string;
     serial: string;
+    expectedQuantity: number;
     uploadedFile: File | null = null;
     remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
     isLoading: boolean = false;
@@ -88,8 +86,8 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
     ngOnInit() {
         this.items = [
             { label: 'Quản lý kho', routerLink: '/app/main/inventory-manager' },
-            { label: 'Xuất/Nhập kho', routerLink: '/app/main/inventory-import-export' },
-            { label: 'Tạo mới yêu cầu thu hồi về kho' },
+            { label: 'Quản lý kho thu hồi' },
+            { label: 'Tạo mới yêu cầu tái sử dụng số' },
         ];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.getListStock();
@@ -118,6 +116,15 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
             });
     }
 
+    onRangeRuleChange(event: Event) {
+        this.isRangeRule = !this.isRangeRule;
+        if (!this.isRangeRule) {
+            this.objectType = ObjectType.List;
+        } else {
+            this.objectType = ObjectType.All;
+        }
+    }
+
     getProductAttributes() {
         this._inventoryServiceProxy
             .getProductAttributes(this.productType.toString(), undefined, 0, 10)
@@ -132,28 +139,49 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
         });
     }
 
-    onRangeRuleChange(event: Event) {
-        this.isRangeRule = !this.isRangeRule;
-    }
-
     onChangeProductType(event: Event) {
         this.productType = (event.target as HTMLSelectElement).value as unknown as ProductType;
         this.getProductAttributes();
         this.getSimsTypes();
         if (this.stockId) {
-            this.getListSimsTransfers();
+            this.getListSimSrcStock();
         }
     }
 
     onChangeStock(event: { value: any }) {
         const stockId = event.value.id;
         this.stockId = stockId;
-        this.getListSimsTransfers();
+        this.getListSimSrcStock();
     }
 
-    calculateQuantity(event: Event): void {
-        const input = event.target as HTMLInputElement;
-        input.value = input.value.replace(/[^0-9]/g, ''); // Loại bỏ ký tự không hợp lệ
+    getListSimSrcStock(event?: LazyLoadEvent) {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getListSimsTransfers(
+                this.stockId,
+                this.productType,
+                this.attribute,
+                this.productType === ProductType.Mobile ? this.product : undefined,
+                this.productType === ProductType.Serial ? this.product : undefined,
+                this.simType,
+                undefined,
+                this.fromRange,
+                this.toRange,
+                false,
+                undefined,
+                this.primengTableHelper.getSkipCount(this.paginator, event),
+                this.primengTableHelper.getMaxResultCount(this.paginator, event)
+            )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this.listSimSrcStock = result.items;
+                this.primengTableHelper.totalRecordsCount = result.totalCount;
+                this.primengTableHelper.hideLoadingIndicator();
+                this.isAllChecked = false;
+            });
+    }
+
+    calculateQuantity(): void {
         if (this.tempOrderItems.fromRange && this.tempOrderItems.toRange) {
             const from = parseInt(this.tempOrderItems.fromRange, 10);
             const to = parseInt(this.tempOrderItems.toRange, 10);
@@ -168,61 +196,22 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
         }
     }
 
-    onKeyPress(event: KeyboardEvent): void {
-        const regex = /^[0-9]*$/; // Chỉ cho phép nhập số
-        if (!regex.test(event.key)) {
-            event.preventDefault(); // Chặn ký tự không hợp lệ
-        }
-    }
-
-    onInput(event: Event): void {
-        const input = event.target as HTMLInputElement;
-        input.value = input.value.replace(/[^0-9]/g, ''); // Loại bỏ ký tự không hợp lệ
-    }
-
-    getListSimsTransfers(event?: LazyLoadEvent) {
-        this.primengTableHelper.showLoadingIndicator();
-        this._inventoryServiceProxy
-            .getListSimsTransfers(
-                this.stockId,
-                this.productType,
-                this.attribute,
-                this.simType,
-                this.mobile,
-                this.serial,
-                this.productType == ProductType.Mobile ? this.product : undefined,
-                // this.productType == ProductType.Serial ? this.product : undefined,
-                this.fromRange,
-                this.toRange,
-                false,
-                undefined,
-                this.primengTableHelper.getSkipCount(this.paginator, event),
-                this.primengTableHelper.getMaxResultCount(this.paginator, event)
-            )
-            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
-            .subscribe((result) => {
-                this.listSimSrcStock = result.items;
-                this.primengTableHelper.totalRecordsCount = result.totalCount;
-                this.primengTableHelper.hideLoadingIndicator();
-            });
-    }
-
-    createRecovery() {
+    createTransfer() {
         this.isLoading = true;
-        const body = new CreateRecoveryDto();
+        const body = new CreateTransferDto();
         body.title = this.title;
         body.description = this.description;
         if (this.selectedStockFrom) body.srcStockId = this.selectedStockFrom.id;
         if (this.selectedStockTo) body.desStockId = this.selectedStockTo.id;
-        body.desStockId = this.selectedStockTo.id;
         body.productType = this.productType;
         body.objectType = this.objectType;
+        body.expectedQuantity = this.expectedQuantity;
         if (this.isRangeRule) {
             body.rangeRule = OrderItem.fromJS(this.tempOrderItems);
         }
-        if (this.currentDataFrom.length > 0) {
+        if (this.rangeItems.length > 0) {
             const data = [];
-            this.currentDataFrom.forEach((item) => {
+            this.rangeItems.forEach((item) => {
                 if (this.productType == 1) {
                     data.push(item.mobile);
                 } else {
@@ -231,8 +220,9 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
             });
             body.rangeItems = data;
         }
+
         if (this.uploadedFile) {
-            this._inventoryServiceProxy.createRecovery(body).subscribe((result) => {
+            this._inventoryServiceProxy.createTransfer(body).subscribe((result) => {
                 if (result.results.orderCode) {
                     this.uploadOrderDocument(result.results.orderCode, this.uploadedFile);
                 }
@@ -259,7 +249,7 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
             next: (response) => {
                 if (response.success) {
                     this.router.navigate(['/app/main/inventory-import-export']);
-                    this.notify.info(this.l('Tạo yêu cầu thu hồi thành công!'));
+                    this.notify.info(this.l('Tạo yêu cầu xuất kho thành công!'));
                 }
             },
             error: (err) => {

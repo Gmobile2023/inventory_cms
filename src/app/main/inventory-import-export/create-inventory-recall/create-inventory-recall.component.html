@@ -4,7 +4,10 @@
         <div class="row bg-white py-5">
             <div class="d-flex justify-content-between align-items-center">
                 <h4>THÔNG TIN CHUNG</h4>
-                <button class="btn btn-success btn-sm" (click)="createRecovery()">GỬI YÊU CẦU</button>
+                <button class="btn btn-success btn-sm" (click)="createRecovery()" *ngIf="!isLoading">GỬI YÊU
+                    CẦU</button>
+                <p-progressSpinner class="me-5" [style]="{width: '32px', height: '32px'}" strokeWidth="4"
+                    fill="var(--surface-ground)" animationDuration=".8s" *ngIf="isLoading"></p-progressSpinner>
             </div>
             <div class="col-md-6 mb-3">
                 <label for="title" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
@@ -146,10 +149,10 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
                 <label for="" class="form-label">Tìm kiếm theo file excel</label>
                 <input type="file" class="form-control" id="">
-            </div>
+            </div> -->
             <div>
                 <button class="btn btn-primary btn-sm mt-5" type="button" (click)="getListSimsTransfers($event)">TÌM
                     KIẾM</button>
@@ -175,7 +178,7 @@
                                 <th style="width: 4rem"><p-tableHeaderCheckbox [disabled]="isRangeRule" /></th>
                                 <th>{{ 'SĐT/SERIAL' | localize }}</th>
                                 <th>{{ 'HẠNG SỐ' | localize }}</th>
-                                <th>{{ 'GIÁ BÁN' | localize }}</th>
+                                <th>{{ 'ĐỊNH GIÁ' | localize }}</th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-record="$implicit">
@@ -224,7 +227,7 @@
                                         [disabled]="selectedRecordsTo.length > 0" /></th>
                                 <th>{{ 'SĐT/SERIAL' | localize }}</th>
                                 <th>{{ 'HẠNG SỐ' | localize }}</th>
-                                <th>{{ 'GIÁ BÁN' | localize }}</th>
+                                <th>{{ 'ĐỊNH GIÁ' | localize }}</th>
                                 <!-- <th>{{ 'NGÀY TẠO' | localize }}</th> -->
                             </tr>
                         </ng-template>

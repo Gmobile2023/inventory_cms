@@ -6,6 +6,7 @@ import { CreateInventoryImportRoutingModule } from './create-inventory-import-ro
 import { FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
     declarations: [CreateInventoryImportComponent],
@@ -16,6 +17,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
         FileUploadModule,
         ToastModule,
         ProgressBarModule,
+        ProgressSpinnerModule,
     ],
 })
 export class CreateInventoryImportModule {}

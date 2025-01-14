@@ -8145,110 +8145,6 @@ export class InventoryServiceProxy {
      * @param body (optional) 
      * @return Success
      */
-    createStock(body: CreateOrEditStockDto | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/Inventory/CreateStock";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json-patch+json",
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreateStock(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCreateStock(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processCreateStock(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    updateStock(body: CreateOrEditStockDto | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/Inventory/UpdateStock";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json-patch+json",
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUpdateStock(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUpdateStock(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processUpdateStock(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
     activateStock(body: ActivateStockDto | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/ActivateStock";
         url_ = url_.replace(/[?&]$/, "");
@@ -9784,6 +9680,72 @@ export class InventoryServiceProxy {
     }
 
     /**
+     * @param orderId (optional) 
+     * @param mobile (optional) 
+     * @param serial (optional) 
+     * @return Success
+     */
+    getListSimOrderToExcel(orderId: number | undefined, mobile: string | undefined, serial: string | undefined): Observable<FileDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSimOrderToExcel?";
+        if (orderId === null)
+            throw new Error("The parameter 'orderId' cannot be null.");
+        else if (orderId !== undefined)
+            url_ += "OrderId=" + encodeURIComponent("" + orderId) + "&";
+        if (mobile === null)
+            throw new Error("The parameter 'mobile' cannot be null.");
+        else if (mobile !== undefined)
+            url_ += "Mobile=" + encodeURIComponent("" + mobile) + "&";
+        if (serial === null)
+            throw new Error("The parameter 'serial' cannot be null.");
+        else if (serial !== undefined)
+            url_ += "Serial=" + encodeURIComponent("" + serial) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListSimOrderToExcel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListSimOrderToExcel(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileDto>;
+        }));
+    }
+
+    protected processGetListSimOrderToExcel(response: HttpResponseBase): Observable<FileDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FileDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param stockId (optional) 
      * @param suggests (optional) 
      * @param sorting (optional) 
@@ -9918,7 +9880,7 @@ export class InventoryServiceProxy {
      * @param body (optional) 
      * @return Success
      */
-    createTransfer(body: CreateTransferDto | undefined): Observable<OrderActionResponse> {
+    createTransfer(body: CreateTransferDto | undefined): Observable<ResponseMessageBaseOfOrderActionResponse> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/CreateTransfer";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -9941,14 +9903,14 @@ export class InventoryServiceProxy {
                 try {
                     return this.processCreateTransfer(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<OrderActionResponse>;
+                    return _observableThrow(e) as any as Observable<ResponseMessageBaseOfOrderActionResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<OrderActionResponse>;
+                return _observableThrow(response_) as any as Observable<ResponseMessageBaseOfOrderActionResponse>;
         }));
     }
 
-    protected processCreateTransfer(response: HttpResponseBase): Observable<OrderActionResponse> {
+    protected processCreateTransfer(response: HttpResponseBase): Observable<ResponseMessageBaseOfOrderActionResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -9959,7 +9921,199 @@ export class InventoryServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = OrderActionResponse.fromJS(resultData200);
+            result200 = ResponseMessageBaseOfOrderActionResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param mobile (optional) 
+     * @param telCo (optional) 
+     * @param batchCode (optional) 
+     * @param fromDate (optional) 
+     * @param toDate (optional) 
+     * @param status (optional) 
+     * @param statusProvider (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getListSimRecalls(mobile: string | undefined, telCo: string | undefined, batchCode: string | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, status: SimRecoveryStatus | undefined, statusProvider: SimRecoveryStatus | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimRecallDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSimRecalls?";
+        if (mobile === null)
+            throw new Error("The parameter 'mobile' cannot be null.");
+        else if (mobile !== undefined)
+            url_ += "Mobile=" + encodeURIComponent("" + mobile) + "&";
+        if (telCo === null)
+            throw new Error("The parameter 'telCo' cannot be null.");
+        else if (telCo !== undefined)
+            url_ += "TelCo=" + encodeURIComponent("" + telCo) + "&";
+        if (batchCode === null)
+            throw new Error("The parameter 'batchCode' cannot be null.");
+        else if (batchCode !== undefined)
+            url_ += "BatchCode=" + encodeURIComponent("" + batchCode) + "&";
+        if (fromDate === null)
+            throw new Error("The parameter 'fromDate' cannot be null.");
+        else if (fromDate !== undefined)
+            url_ += "FromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toString() : "") + "&";
+        if (toDate === null)
+            throw new Error("The parameter 'toDate' cannot be null.");
+        else if (toDate !== undefined)
+            url_ += "ToDate=" + encodeURIComponent(toDate ? "" + toDate.toString() : "") + "&";
+        if (status === null)
+            throw new Error("The parameter 'status' cannot be null.");
+        else if (status !== undefined)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        if (statusProvider === null)
+            throw new Error("The parameter 'statusProvider' cannot be null.");
+        else if (statusProvider !== undefined)
+            url_ += "StatusProvider=" + encodeURIComponent("" + statusProvider) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListSimRecalls(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListSimRecalls(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagedResultDtoOfSimRecallDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagedResultDtoOfSimRecallDto>;
+        }));
+    }
+
+    protected processGetListSimRecalls(response: HttpResponseBase): Observable<PagedResultDtoOfSimRecallDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfSimRecallDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param mobile (optional) 
+     * @param telCo (optional) 
+     * @param batchCode (optional) 
+     * @param fromRange (optional) 
+     * @param toRange (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getListSuggestSimRecalls(mobile: string | undefined, telCo: string | undefined, batchCode: string | undefined, fromRange: string | undefined, toRange: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSuggestSimRecallDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSuggestSimRecalls?";
+        if (mobile === null)
+            throw new Error("The parameter 'mobile' cannot be null.");
+        else if (mobile !== undefined)
+            url_ += "Mobile=" + encodeURIComponent("" + mobile) + "&";
+        if (telCo === null)
+            throw new Error("The parameter 'telCo' cannot be null.");
+        else if (telCo !== undefined)
+            url_ += "TelCo=" + encodeURIComponent("" + telCo) + "&";
+        if (batchCode === null)
+            throw new Error("The parameter 'batchCode' cannot be null.");
+        else if (batchCode !== undefined)
+            url_ += "BatchCode=" + encodeURIComponent("" + batchCode) + "&";
+        if (fromRange === null)
+            throw new Error("The parameter 'fromRange' cannot be null.");
+        else if (fromRange !== undefined)
+            url_ += "FromRange=" + encodeURIComponent("" + fromRange) + "&";
+        if (toRange === null)
+            throw new Error("The parameter 'toRange' cannot be null.");
+        else if (toRange !== undefined)
+            url_ += "ToRange=" + encodeURIComponent("" + toRange) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListSuggestSimRecalls(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListSuggestSimRecalls(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagedResultDtoOfSuggestSimRecallDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagedResultDtoOfSuggestSimRecallDto>;
+        }));
+    }
+
+    protected processGetListSuggestSimRecalls(response: HttpResponseBase): Observable<PagedResultDtoOfSuggestSimRecallDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfSuggestSimRecallDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -9974,7 +10128,63 @@ export class InventoryServiceProxy {
      * @param body (optional) 
      * @return Success
      */
-    createRecovery(body: CreateRecoveryDto | undefined): Observable<OrderActionResponse> {
+    createSimRecall(body: CreateSimRecallDto | undefined): Observable<ResponseMessageBaseOfOrderActionResponse> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/CreateSimRecall";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateSimRecall(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateSimRecall(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ResponseMessageBaseOfOrderActionResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ResponseMessageBaseOfOrderActionResponse>;
+        }));
+    }
+
+    protected processCreateSimRecall(response: HttpResponseBase): Observable<ResponseMessageBaseOfOrderActionResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ResponseMessageBaseOfOrderActionResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createRecovery(body: CreateRecoveryDto | undefined): Observable<ResponseMessageBaseOfOrderActionResponse> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/CreateRecovery";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -9997,14 +10207,14 @@ export class InventoryServiceProxy {
                 try {
                     return this.processCreateRecovery(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<OrderActionResponse>;
+                    return _observableThrow(e) as any as Observable<ResponseMessageBaseOfOrderActionResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<OrderActionResponse>;
+                return _observableThrow(response_) as any as Observable<ResponseMessageBaseOfOrderActionResponse>;
         }));
     }
 
-    protected processCreateRecovery(response: HttpResponseBase): Observable<OrderActionResponse> {
+    protected processCreateRecovery(response: HttpResponseBase): Observable<ResponseMessageBaseOfOrderActionResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -10015,7 +10225,7 @@ export class InventoryServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = OrderActionResponse.fromJS(resultData200);
+            result200 = ResponseMessageBaseOfOrderActionResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -10675,6 +10885,62 @@ export class InventoryServiceProxy {
     }
 
     /**
+     * @param body (optional) 
+     * @return Success
+     */
+    orderExport(body: OrderExportDto | undefined): Observable<ResponseMessageBaseOfObject> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/OrderExport";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processOrderExport(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processOrderExport(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ResponseMessageBaseOfObject>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ResponseMessageBaseOfObject>;
+        }));
+    }
+
+    protected processOrderExport(response: HttpResponseBase): Observable<ResponseMessageBaseOfObject> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ResponseMessageBaseOfObject.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param groupName (optional) 
      * @param chatId (optional) 
      * @param status (optional) 
@@ -10874,11 +11140,163 @@ export class InventoryServiceProxy {
     }
 
     /**
+     * @param fromDate (optional) 
+     * @param toDate (optional) 
+     * @param settingName (optional) 
+     * @param desStockId (optional) 
+     * @param srcStockId (optional) 
+     * @param status (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getListConfigureNumberReclaimSchedules(fromDate: DateTime | undefined, toDate: DateTime | undefined, settingName: string | undefined, desStockId: number | undefined, srcStockId: number | undefined, status: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfConfigureNumberReclaimScheduleDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListConfigureNumberReclaimSchedules?";
+        if (fromDate === null)
+            throw new Error("The parameter 'fromDate' cannot be null.");
+        else if (fromDate !== undefined)
+            url_ += "FromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toString() : "") + "&";
+        if (toDate === null)
+            throw new Error("The parameter 'toDate' cannot be null.");
+        else if (toDate !== undefined)
+            url_ += "ToDate=" + encodeURIComponent(toDate ? "" + toDate.toString() : "") + "&";
+        if (settingName === null)
+            throw new Error("The parameter 'settingName' cannot be null.");
+        else if (settingName !== undefined)
+            url_ += "SettingName=" + encodeURIComponent("" + settingName) + "&";
+        if (desStockId === null)
+            throw new Error("The parameter 'desStockId' cannot be null.");
+        else if (desStockId !== undefined)
+            url_ += "DesStockId=" + encodeURIComponent("" + desStockId) + "&";
+        if (srcStockId === null)
+            throw new Error("The parameter 'srcStockId' cannot be null.");
+        else if (srcStockId !== undefined)
+            url_ += "SrcStockId=" + encodeURIComponent("" + srcStockId) + "&";
+        if (status === null)
+            throw new Error("The parameter 'status' cannot be null.");
+        else if (status !== undefined)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListConfigureNumberReclaimSchedules(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListConfigureNumberReclaimSchedules(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagedResultDtoOfConfigureNumberReclaimScheduleDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagedResultDtoOfConfigureNumberReclaimScheduleDto>;
+        }));
+    }
+
+    protected processGetListConfigureNumberReclaimSchedules(response: HttpResponseBase): Observable<PagedResultDtoOfConfigureNumberReclaimScheduleDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfConfigureNumberReclaimScheduleDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getConfigureNumberReclaimScheduleForView(id: number | undefined): Observable<GetConfigureNumberReclaimScheduleForViewDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetConfigureNumberReclaimScheduleForView?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetConfigureNumberReclaimScheduleForView(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetConfigureNumberReclaimScheduleForView(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GetConfigureNumberReclaimScheduleForViewDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GetConfigureNumberReclaimScheduleForViewDto>;
+        }));
+    }
+
+    protected processGetConfigureNumberReclaimScheduleForView(response: HttpResponseBase): Observable<GetConfigureNumberReclaimScheduleForViewDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetConfigureNumberReclaimScheduleForViewDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
-    createTelegramGroup(body: CreateOrEditTelegramGroupDto | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/Inventory/CreateTelegramGroup";
+    createOrEditConfigureNumberReclaimSchedule(body: CreateOrEditConfigureNumberReclaimScheduleDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/CreateOrEditConfigureNumberReclaimSchedule";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -10893,11 +11311,11 @@ export class InventoryServiceProxy {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreateTelegramGroup(response_);
+            return this.processCreateOrEditConfigureNumberReclaimSchedule(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCreateTelegramGroup(response_ as any);
+                    return this.processCreateOrEditConfigureNumberReclaimSchedule(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<void>;
                 }
@@ -10906,59 +11324,7 @@ export class InventoryServiceProxy {
         }));
     }
 
-    protected processCreateTelegramGroup(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    updateTelegramGroup(body: CreateOrEditTelegramGroupDto | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/Inventory/UpdateTelegramGroup";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json-patch+json",
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUpdateTelegramGroup(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUpdateTelegramGroup(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processUpdateTelegramGroup(response: HttpResponseBase): Observable<void> {
+    protected processCreateOrEditConfigureNumberReclaimSchedule(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -22431,6 +22797,150 @@ export interface IComboboxItemDto {
     isSelected: boolean;
 }
 
+export class ConfigureNumberReclaimScheduleDetailDto implements IConfigureNumberReclaimScheduleDetailDto {
+    status!: RecoveryConfigStatus;
+    day!: number | undefined;
+    content!: string | undefined;
+
+    constructor(data?: IConfigureNumberReclaimScheduleDetailDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.day = _data["day"];
+            this.content = _data["content"];
+        }
+    }
+
+    static fromJS(data: any): ConfigureNumberReclaimScheduleDetailDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ConfigureNumberReclaimScheduleDetailDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["day"] = this.day;
+        data["content"] = this.content;
+        return data;
+    }
+}
+
+export interface IConfigureNumberReclaimScheduleDetailDto {
+    status: RecoveryConfigStatus;
+    day: number | undefined;
+    content: string | undefined;
+}
+
+export class ConfigureNumberReclaimScheduleDto implements IConfigureNumberReclaimScheduleDto {
+    id!: number | undefined;
+    settingName!: string | undefined;
+    srcStockId!: number | undefined;
+    desStockId!: number | undefined;
+    srcStockCode!: string | undefined;
+    desStockCode!: string | undefined;
+    srcStockName!: string | undefined;
+    desStockName!: string | undefined;
+    day!: number | undefined;
+    status!: SettingStatus;
+    createdDate!: DateTime;
+    userCreated!: string | undefined;
+    description!: string | undefined;
+    type!: RecoveryConfigType;
+    items!: ConfigureNumberReclaimScheduleDetailDto[] | undefined;
+
+    constructor(data?: IConfigureNumberReclaimScheduleDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.settingName = _data["settingName"];
+            this.srcStockId = _data["srcStockId"];
+            this.desStockId = _data["desStockId"];
+            this.srcStockCode = _data["srcStockCode"];
+            this.desStockCode = _data["desStockCode"];
+            this.srcStockName = _data["srcStockName"];
+            this.desStockName = _data["desStockName"];
+            this.day = _data["day"];
+            this.status = _data["status"];
+            this.createdDate = _data["createdDate"] ? DateTime.fromISO(_data["createdDate"].toString()) : <any>undefined;
+            this.userCreated = _data["userCreated"];
+            this.description = _data["description"];
+            this.type = _data["type"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(ConfigureNumberReclaimScheduleDetailDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ConfigureNumberReclaimScheduleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ConfigureNumberReclaimScheduleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["settingName"] = this.settingName;
+        data["srcStockId"] = this.srcStockId;
+        data["desStockId"] = this.desStockId;
+        data["srcStockCode"] = this.srcStockCode;
+        data["desStockCode"] = this.desStockCode;
+        data["srcStockName"] = this.srcStockName;
+        data["desStockName"] = this.desStockName;
+        data["day"] = this.day;
+        data["status"] = this.status;
+        data["createdDate"] = this.createdDate ? this.createdDate.toString() : <any>undefined;
+        data["userCreated"] = this.userCreated;
+        data["description"] = this.description;
+        data["type"] = this.type;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IConfigureNumberReclaimScheduleDto {
+    id: number | undefined;
+    settingName: string | undefined;
+    srcStockId: number | undefined;
+    desStockId: number | undefined;
+    srcStockCode: string | undefined;
+    desStockCode: string | undefined;
+    srcStockName: string | undefined;
+    desStockName: string | undefined;
+    day: number | undefined;
+    status: SettingStatus;
+    createdDate: DateTime;
+    userCreated: string | undefined;
+    description: string | undefined;
+    type: RecoveryConfigType;
+    items: ConfigureNumberReclaimScheduleDetailDto[] | undefined;
+}
+
 export class ConfirmOrderDto implements IConfirmOrderDto {
     orderCode!: string | undefined;
     description!: string | undefined;
@@ -22946,6 +23456,106 @@ export interface ICreateOrEditCityDto {
     status: CityStatus;
     countryId: number | undefined;
     id: number | undefined;
+}
+
+export class CreateOrEditConfigureNumberReclaimScheduleDto implements ICreateOrEditConfigureNumberReclaimScheduleDto {
+    id!: number | undefined;
+    settingName!: string | undefined;
+    srcStockId!: number | undefined;
+    desStockId!: number | undefined;
+    srcStockCode!: string | undefined;
+    desStockCode!: string | undefined;
+    srcStockName!: string | undefined;
+    desStockName!: string | undefined;
+    day!: number | undefined;
+    status!: SettingStatus;
+    createdDate!: DateTime;
+    userCreated!: string | undefined;
+    description!: string | undefined;
+    type!: RecoveryConfigType;
+    items!: ConfigureNumberReclaimScheduleDetailDto[] | undefined;
+
+    constructor(data?: ICreateOrEditConfigureNumberReclaimScheduleDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.settingName = _data["settingName"];
+            this.srcStockId = _data["srcStockId"];
+            this.desStockId = _data["desStockId"];
+            this.srcStockCode = _data["srcStockCode"];
+            this.desStockCode = _data["desStockCode"];
+            this.srcStockName = _data["srcStockName"];
+            this.desStockName = _data["desStockName"];
+            this.day = _data["day"];
+            this.status = _data["status"];
+            this.createdDate = _data["createdDate"] ? DateTime.fromISO(_data["createdDate"].toString()) : <any>undefined;
+            this.userCreated = _data["userCreated"];
+            this.description = _data["description"];
+            this.type = _data["type"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(ConfigureNumberReclaimScheduleDetailDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateOrEditConfigureNumberReclaimScheduleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateOrEditConfigureNumberReclaimScheduleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["settingName"] = this.settingName;
+        data["srcStockId"] = this.srcStockId;
+        data["desStockId"] = this.desStockId;
+        data["srcStockCode"] = this.srcStockCode;
+        data["desStockCode"] = this.desStockCode;
+        data["srcStockName"] = this.srcStockName;
+        data["desStockName"] = this.desStockName;
+        data["day"] = this.day;
+        data["status"] = this.status;
+        data["createdDate"] = this.createdDate ? this.createdDate.toString() : <any>undefined;
+        data["userCreated"] = this.userCreated;
+        data["description"] = this.description;
+        data["type"] = this.type;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ICreateOrEditConfigureNumberReclaimScheduleDto {
+    id: number | undefined;
+    settingName: string | undefined;
+    srcStockId: number | undefined;
+    desStockId: number | undefined;
+    srcStockCode: string | undefined;
+    desStockCode: string | undefined;
+    srcStockName: string | undefined;
+    desStockName: string | undefined;
+    day: number | undefined;
+    status: SettingStatus;
+    createdDate: DateTime;
+    userCreated: string | undefined;
+    description: string | undefined;
+    type: RecoveryConfigType;
+    items: ConfigureNumberReclaimScheduleDetailDto[] | undefined;
 }
 
 export class CreateOrEditCountryDto implements ICreateOrEditCountryDto {
@@ -23741,6 +24351,54 @@ export interface ICreateRecoveryDto {
     productType: ProductType;
     rangeRule: OrderItem;
     rangeItems: string[] | undefined;
+}
+
+export class CreateSimRecallDto implements ICreateSimRecallDto {
+    items!: string[] | undefined;
+    userCreated!: string | undefined;
+
+    constructor(data?: ICreateSimRecallDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(item);
+            }
+            this.userCreated = _data["userCreated"];
+        }
+    }
+
+    static fromJS(data: any): CreateSimRecallDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateSimRecallDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item);
+        }
+        data["userCreated"] = this.userCreated;
+        return data;
+    }
+}
+
+export interface ICreateSimRecallDto {
+    items: string[] | undefined;
+    userCreated: string | undefined;
 }
 
 export class CreateTenantInput implements ICreateTenantInput {
@@ -26848,6 +27506,42 @@ export class GetCityForViewDto implements IGetCityForViewDto {
 export interface IGetCityForViewDto {
     city: CityDto;
     countryCountryName: string | undefined;
+}
+
+export class GetConfigureNumberReclaimScheduleForViewDto implements IGetConfigureNumberReclaimScheduleForViewDto {
+    configureNumberReclaimSchedule!: ConfigureNumberReclaimScheduleDto;
+
+    constructor(data?: IGetConfigureNumberReclaimScheduleForViewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.configureNumberReclaimSchedule = _data["configureNumberReclaimSchedule"] ? ConfigureNumberReclaimScheduleDto.fromJS(_data["configureNumberReclaimSchedule"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): GetConfigureNumberReclaimScheduleForViewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetConfigureNumberReclaimScheduleForViewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["configureNumberReclaimSchedule"] = this.configureNumberReclaimSchedule ? this.configureNumberReclaimSchedule.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IGetConfigureNumberReclaimScheduleForViewDto {
+    configureNumberReclaimSchedule: ConfigureNumberReclaimScheduleDto;
 }
 
 export class GetCountryForEditOutput implements IGetCountryForEditOutput {
@@ -31627,6 +32321,58 @@ export interface IMemberActivity {
     profilePictureName: string | undefined;
 }
 
+export class MessageInfo implements IMessageInfo {
+    title!: string | undefined;
+    message!: string | undefined;
+    icon!: string | undefined;
+    button!: string | undefined;
+    showIcon!: boolean;
+
+    constructor(data?: IMessageInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.title = _data["title"];
+            this.message = _data["message"];
+            this.icon = _data["icon"];
+            this.button = _data["button"];
+            this.showIcon = _data["showIcon"];
+        }
+    }
+
+    static fromJS(data: any): MessageInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new MessageInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["title"] = this.title;
+        data["message"] = this.message;
+        data["icon"] = this.icon;
+        data["button"] = this.button;
+        data["showIcon"] = this.showIcon;
+        return data;
+    }
+}
+
+export interface IMessageInfo {
+    title: string | undefined;
+    message: string | undefined;
+    icon: string | undefined;
+    button: string | undefined;
+    showIcon: boolean;
+}
+
 export class MicrosoftExternalLoginProviderSettings implements IMicrosoftExternalLoginProviderSettings {
     clientId!: string | undefined;
     clientSecret!: string | undefined;
@@ -32497,6 +33243,122 @@ export interface IOrderDto {
     contentReject: string | undefined;
 }
 
+export class OrderExportDto implements IOrderExportDto {
+    orderCode!: string | undefined;
+    description!: string | undefined;
+    userCreated!: string | undefined;
+    exportItems!: OrderExportItemDto[] | undefined;
+
+    constructor(data?: IOrderExportDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.orderCode = _data["orderCode"];
+            this.description = _data["description"];
+            this.userCreated = _data["userCreated"];
+            if (Array.isArray(_data["exportItems"])) {
+                this.exportItems = [] as any;
+                for (let item of _data["exportItems"])
+                    this.exportItems!.push(OrderExportItemDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): OrderExportDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new OrderExportDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["orderCode"] = this.orderCode;
+        data["description"] = this.description;
+        data["userCreated"] = this.userCreated;
+        if (Array.isArray(this.exportItems)) {
+            data["exportItems"] = [];
+            for (let item of this.exportItems)
+                data["exportItems"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IOrderExportDto {
+    orderCode: string | undefined;
+    description: string | undefined;
+    userCreated: string | undefined;
+    exportItems: OrderExportItemDto[] | undefined;
+}
+
+export class OrderExportItemDto implements IOrderExportItemDto {
+    quantity!: number;
+    items!: string[] | undefined;
+    fromRange!: string | undefined;
+    toRange!: string | undefined;
+    productType!: ProductType;
+
+    constructor(data?: IOrderExportItemDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.quantity = _data["quantity"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(item);
+            }
+            this.fromRange = _data["fromRange"];
+            this.toRange = _data["toRange"];
+            this.productType = _data["productType"];
+        }
+    }
+
+    static fromJS(data: any): OrderExportItemDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new OrderExportItemDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["quantity"] = this.quantity;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item);
+        }
+        data["fromRange"] = this.fromRange;
+        data["toRange"] = this.toRange;
+        data["productType"] = this.productType;
+        return data;
+    }
+}
+
+export interface IOrderExportItemDto {
+    quantity: number;
+    items: string[] | undefined;
+    fromRange: string | undefined;
+    toRange: string | undefined;
+    productType: ProductType;
+}
+
 export class OrderInventoryDto implements IOrderInventoryDto {
     id!: number | undefined;
     orderTitle!: string | undefined;
@@ -33013,6 +33875,54 @@ export class PagedResultDtoOfAuditLogListDto implements IPagedResultDtoOfAuditLo
 export interface IPagedResultDtoOfAuditLogListDto {
     totalCount: number;
     items: AuditLogListDto[] | undefined;
+}
+
+export class PagedResultDtoOfConfigureNumberReclaimScheduleDto implements IPagedResultDtoOfConfigureNumberReclaimScheduleDto {
+    totalCount!: number;
+    items!: ConfigureNumberReclaimScheduleDto[] | undefined;
+
+    constructor(data?: IPagedResultDtoOfConfigureNumberReclaimScheduleDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(ConfigureNumberReclaimScheduleDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfConfigureNumberReclaimScheduleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultDtoOfConfigureNumberReclaimScheduleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IPagedResultDtoOfConfigureNumberReclaimScheduleDto {
+    totalCount: number;
+    items: ConfigureNumberReclaimScheduleDto[] | undefined;
 }
 
 export class PagedResultDtoOfEntityChangeListDto implements IPagedResultDtoOfEntityChangeListDto {
@@ -34215,6 +35125,54 @@ export interface IPagedResultDtoOfSimNumberDto {
     items: SimNumberDto[] | undefined;
 }
 
+export class PagedResultDtoOfSimRecallDto implements IPagedResultDtoOfSimRecallDto {
+    totalCount!: number;
+    items!: SimRecallDto[] | undefined;
+
+    constructor(data?: IPagedResultDtoOfSimRecallDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(SimRecallDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfSimRecallDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultDtoOfSimRecallDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IPagedResultDtoOfSimRecallDto {
+    totalCount: number;
+    items: SimRecallDto[] | undefined;
+}
+
 export class PagedResultDtoOfSimTypeDto implements IPagedResultDtoOfSimTypeDto {
     totalCount!: number;
     items!: SimTypeDto[] | undefined;
@@ -34357,6 +35315,54 @@ export class PagedResultDtoOfSuggestOrderItemDto implements IPagedResultDtoOfSug
 export interface IPagedResultDtoOfSuggestOrderItemDto {
     totalCount: number;
     items: SuggestOrderItemDto[] | undefined;
+}
+
+export class PagedResultDtoOfSuggestSimRecallDto implements IPagedResultDtoOfSuggestSimRecallDto {
+    totalCount!: number;
+    items!: SuggestSimRecallDto[] | undefined;
+
+    constructor(data?: IPagedResultDtoOfSuggestSimRecallDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(SuggestSimRecallDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfSuggestSimRecallDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultDtoOfSuggestSimRecallDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IPagedResultDtoOfSuggestSimRecallDto {
+    totalCount: number;
+    items: SuggestSimRecallDto[] | undefined;
 }
 
 export class PagedResultDtoOfTenantListDto implements IPagedResultDtoOfTenantListDto {
@@ -34898,6 +35904,16 @@ export interface IRecentTenant {
     creationTime: DateTime;
 }
 
+export enum RecoveryConfigStatus {
+    Waiting = 0,
+    Transfer = 1,
+}
+
+export enum RecoveryConfigType {
+    System = 0,
+    Backend = 1,
+}
+
 export class RefreshTokenResult implements IRefreshTokenResult {
     accessToken!: string | undefined;
     encryptedAccessToken!: string | undefined;
@@ -35274,6 +36290,54 @@ export interface IRenamePageInput {
     application: string | undefined;
 }
 
+export class ResStatus implements IResStatus {
+    errorCode!: string | undefined;
+    message!: string | undefined;
+    transCode!: string | undefined;
+    messageInfo!: MessageInfo;
+
+    constructor(data?: IResStatus) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.errorCode = _data["errorCode"];
+            this.message = _data["message"];
+            this.transCode = _data["transCode"];
+            this.messageInfo = _data["messageInfo"] ? MessageInfo.fromJS(_data["messageInfo"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ResStatus {
+        data = typeof data === 'object' ? data : {};
+        let result = new ResStatus();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["errorCode"] = this.errorCode;
+        data["message"] = this.message;
+        data["transCode"] = this.transCode;
+        data["messageInfo"] = this.messageInfo ? this.messageInfo.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IResStatus {
+    errorCode: string | undefined;
+    message: string | undefined;
+    transCode: string | undefined;
+    messageInfo: MessageInfo;
+}
+
 export class ResetPasswordInput implements IResetPasswordInput {
     userId!: number;
     resetCode!: string | undefined;
@@ -35408,6 +36472,94 @@ export class ResolveTenantIdInput implements IResolveTenantIdInput {
 
 export interface IResolveTenantIdInput {
     c: string | undefined;
+}
+
+export class ResponseMessageBaseOfObject implements IResponseMessageBaseOfObject {
+    results!: any | undefined;
+    responseStatus!: ResStatus;
+    signature!: string | undefined;
+
+    constructor(data?: IResponseMessageBaseOfObject) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.results = _data["results"];
+            this.responseStatus = _data["responseStatus"] ? ResStatus.fromJS(_data["responseStatus"]) : <any>undefined;
+            this.signature = _data["signature"];
+        }
+    }
+
+    static fromJS(data: any): ResponseMessageBaseOfObject {
+        data = typeof data === 'object' ? data : {};
+        let result = new ResponseMessageBaseOfObject();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["results"] = this.results;
+        data["responseStatus"] = this.responseStatus ? this.responseStatus.toJSON() : <any>undefined;
+        data["signature"] = this.signature;
+        return data;
+    }
+}
+
+export interface IResponseMessageBaseOfObject {
+    results: any | undefined;
+    responseStatus: ResStatus;
+    signature: string | undefined;
+}
+
+export class ResponseMessageBaseOfOrderActionResponse implements IResponseMessageBaseOfOrderActionResponse {
+    results!: OrderActionResponse;
+    responseStatus!: ResStatus;
+    signature!: string | undefined;
+
+    constructor(data?: IResponseMessageBaseOfOrderActionResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.results = _data["results"] ? OrderActionResponse.fromJS(_data["results"]) : <any>undefined;
+            this.responseStatus = _data["responseStatus"] ? ResStatus.fromJS(_data["responseStatus"]) : <any>undefined;
+            this.signature = _data["signature"];
+        }
+    }
+
+    static fromJS(data: any): ResponseMessageBaseOfOrderActionResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new ResponseMessageBaseOfOrderActionResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["results"] = this.results ? this.results.toJSON() : <any>undefined;
+        data["responseStatus"] = this.responseStatus ? this.responseStatus.toJSON() : <any>undefined;
+        data["signature"] = this.signature;
+        return data;
+    }
+}
+
+export interface IResponseMessageBaseOfOrderActionResponse {
+    results: OrderActionResponse;
+    responseStatus: ResStatus;
+    signature: string | undefined;
 }
 
 export class RoleEditDto implements IRoleEditDto {
@@ -36067,6 +37219,11 @@ export enum SettingScopes {
     All = 7,
 }
 
+export enum SettingStatus {
+    Success = 1,
+    Lock = 2,
+}
+
 export enum SettingType {
     Kiting = 1,
     UnKiting = 2,
@@ -36179,6 +37336,99 @@ export interface ISimNumberDto {
     desStockName: string | undefined;
     desStockLevel: number | undefined;
     contentReject: string | undefined;
+}
+
+export class SimRecallDto implements ISimRecallDto {
+    id!: number | undefined;
+    mobile!: string | undefined;
+    srcStockId!: number;
+    srcStockName!: string | undefined;
+    providerCode!: string | undefined;
+    telCo!: string | undefined;
+    status!: SimRecoveryStatus;
+    statusProvider!: SimRecoveryStatus;
+    statusName!: string | undefined;
+    statusProviderName!: string | undefined;
+    createdDate!: DateTime | undefined;
+    content!: string | undefined;
+    description!: string | undefined;
+
+    constructor(data?: ISimRecallDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.mobile = _data["mobile"];
+            this.srcStockId = _data["srcStockId"];
+            this.srcStockName = _data["srcStockName"];
+            this.providerCode = _data["providerCode"];
+            this.telCo = _data["telCo"];
+            this.status = _data["status"];
+            this.statusProvider = _data["statusProvider"];
+            this.statusName = _data["statusName"];
+            this.statusProviderName = _data["statusProviderName"];
+            this.createdDate = _data["createdDate"] ? DateTime.fromISO(_data["createdDate"].toString()) : <any>undefined;
+            this.content = _data["content"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): SimRecallDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SimRecallDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["mobile"] = this.mobile;
+        data["srcStockId"] = this.srcStockId;
+        data["srcStockName"] = this.srcStockName;
+        data["providerCode"] = this.providerCode;
+        data["telCo"] = this.telCo;
+        data["status"] = this.status;
+        data["statusProvider"] = this.statusProvider;
+        data["statusName"] = this.statusName;
+        data["statusProviderName"] = this.statusProviderName;
+        data["createdDate"] = this.createdDate ? this.createdDate.toString() : <any>undefined;
+        data["content"] = this.content;
+        data["description"] = this.description;
+        return data;
+    }
+}
+
+export interface ISimRecallDto {
+    id: number | undefined;
+    mobile: string | undefined;
+    srcStockId: number;
+    srcStockName: string | undefined;
+    providerCode: string | undefined;
+    telCo: string | undefined;
+    status: SimRecoveryStatus;
+    statusProvider: SimRecoveryStatus;
+    statusName: string | undefined;
+    statusProviderName: string | undefined;
+    createdDate: DateTime | undefined;
+    content: string | undefined;
+    description: string | undefined;
+}
+
+export enum SimRecoveryStatus {
+    OneWayLock = 1,
+    TwoWayLock = 2,
+    Revoked = 3,
+    Waiting = 5,
+    Activity = 6,
+    Default = 99,
 }
 
 export class SimTypeDto implements ISimTypeDto {
@@ -36728,6 +37978,58 @@ export class SuggestOrderItemDto implements ISuggestOrderItemDto {
 export interface ISuggestOrderItemDto {
     orderCode: string | undefined;
     orderName: string | undefined;
+}
+
+export class SuggestSimRecallDto implements ISuggestSimRecallDto {
+    mobile!: string | undefined;
+    telCo!: string | undefined;
+    attribute!: string | undefined;
+    format!: string | undefined;
+    simType!: string | undefined;
+
+    constructor(data?: ISuggestSimRecallDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.mobile = _data["mobile"];
+            this.telCo = _data["telCo"];
+            this.attribute = _data["attribute"];
+            this.format = _data["format"];
+            this.simType = _data["simType"];
+        }
+    }
+
+    static fromJS(data: any): SuggestSimRecallDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SuggestSimRecallDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["mobile"] = this.mobile;
+        data["telCo"] = this.telCo;
+        data["attribute"] = this.attribute;
+        data["format"] = this.format;
+        data["simType"] = this.simType;
+        return data;
+    }
+}
+
+export interface ISuggestSimRecallDto {
+    mobile: string | undefined;
+    telCo: string | undefined;
+    attribute: string | undefined;
+    format: string | undefined;
+    simType: string | undefined;
 }
 
 export class SwitchToLinkedAccountInput implements ISwitchToLinkedAccountInput {

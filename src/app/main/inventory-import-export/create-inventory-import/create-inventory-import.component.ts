@@ -46,6 +46,7 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
     selectedStock: any;
     uploadedFile: File | null = null;
     remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
+    isLoading: boolean = false;
 
     ngOnInit() {
         this.items = [
@@ -86,6 +87,7 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
     }
 
     createOrder() {
+        this.isLoading = true;
         const body = new CreateOrderDto();
         if (this.selectedStock) {
             body.stockId = this.selectedStock.id;
@@ -105,6 +107,7 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
                 }
             });
         } else {
+            this.isLoading = false;
             this.message.error(this.l('Vui lòng tải lên thông tin chứng từ!'));
         }
     }
