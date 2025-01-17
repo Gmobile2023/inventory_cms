@@ -15,7 +15,7 @@
             </div>
             <div class="col-md-6 mb-3">
                 <label for="srcStockId" class="form-label">Kho nguồn <span class="text-danger">(*)</span></label>
-                <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStockFrom"
+                <!-- <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStockFrom"
                     optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
                     placeholder="Chọn kho" (onChange)="onChangeStock($event)">
                     <ng-template pTemplate="selectedStockFrom">
@@ -28,7 +28,8 @@
                             <div>{{ stock.stockName }}</div>
                         </div>
                     </ng-template>
-                </p-dropdown>
+                </p-dropdown> -->
+                <input type="text" class="form-control" [value]="selectedStockFrom?.stockName" disabled>
             </div>
             <div class="col-md-6 mb-3">
                 <label for="desStockId" class="form-label">Kho xuất đến <span class="text-danger">(*)</span></label>
@@ -64,8 +65,8 @@
         <div class="row bg-white py-5">
             <h4 class="mb-5">BỘ LỌC TÌM KIẾM</h4>
             <div class="col-md-4 mb-5">
-                <label for="" class="form-label">Số/Serial</label>
-                <input type="text" class="form-control" id="" placeholder="Nhập số/serial" [(ngModel)]="product">
+                <label for="" class="form-label">Số thuê bao</label>
+                <input type="text" class="form-control" id="" placeholder="Nhập số thuê bao" [(ngModel)]="mobile">
             </div>
             <div class="col-md-4 mb-5">
                 <label for="" class="form-label">Dải số/serial từ</label>
@@ -75,7 +76,7 @@
                 <label for="" class="form-label">Dải số/serial đến</label>
                 <input type="text" class="form-control" id="" placeholder="Nhập dải số/serial" [(ngModel)]="toRange">
             </div>
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
                 <label for="attribute" class="form-label" style="width: 35%;">
                     {{ 'Hạng số' | localize }}
                 </label>
@@ -102,10 +103,6 @@
                             {{simType.simName}}</option>
                     </select>
                 </div>
-            </div>
-            <!-- <div class="col-md-4">
-                <label for="" class="form-label">Tìm kiếm theo file excel</label>
-                <input type="file" class="form-control" id="">
             </div> -->
             <div>
                 <button class="btn btn-primary btn-sm mt-5" type="button" (click)="getListSimSrcStock($event)">TÌM
@@ -114,8 +111,8 @@
             <div class="d-flex justify-content-between gap-5 mt-5">
                 <div class="table1 border">
                     <p-table #dataTable [value]="listSimSrcStock" [(selection)]="selectedRecordsTo"
-                        [rows]="primengTableHelper.defaultRecordsCountPerPage" [paginator]="false" [lazy]="true"
-                        [tableStyle]="{'min-width': '50rem'}" class="table-custom"
+                        (onLazyLoad)="getListSimSrcStock($event)" [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                        [paginator]="false" [lazy]="true" [tableStyle]="{'min-width': '50rem'}" class="table-custom"
                         (onHeaderCheckboxToggle)="onHeaderCheckboxToggle($event)">
                         <ng-template pTemplate="caption">
                             <div class="d-flex align-items-center justify-content-between">
@@ -125,7 +122,7 @@
                         <ng-template pTemplate="header">
                             <tr>
                                 <th style="width: 4rem">
-                                    <p-tableHeaderCheckbox [disabled]="isRangeRule" />
+                                    <p-tableHeaderCheckbox />
                                 </th>
                                 <th>{{ 'SĐT/SERIAL' | localize }}</th>
                                 <th>{{ 'HẠNG SỐ' | localize }}</th>
@@ -135,8 +132,7 @@
                         <ng-template pTemplate="body" let-record="$implicit">
                             <tr>
                                 <td>
-                                    <p-tableCheckbox [value]="record"
-                                        [disabled]="isRecordInTable2(record) || isRangeRule" />
+                                    <p-tableCheckbox [value]="record" [disabled]="isRecordInTable2(record)" />
                                 </td>
                                 <td>{{productType == 1 ? record.mobile : record.serial}}</td>
                                 <td>{{record.attribute}}</td>

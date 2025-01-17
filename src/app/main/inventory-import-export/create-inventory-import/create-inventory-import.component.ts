@@ -102,6 +102,7 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
         }
         if (this.uploadedFile) {
             this._inventoryServiceProxy.createOrder(body).subscribe((result) => {
+                this.isLoading = false;
                 if (result.orderCode) {
                     this.uploadOrderDocument(result.orderCode, this.uploadedFile);
                 }

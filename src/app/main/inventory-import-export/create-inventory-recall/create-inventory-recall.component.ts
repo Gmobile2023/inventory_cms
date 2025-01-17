@@ -233,6 +233,7 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
         }
         if (this.uploadedFile) {
             this._inventoryServiceProxy.createRecovery(body).subscribe((result) => {
+                this.isLoading = false;
                 if (result.results.orderCode) {
                     this.uploadOrderDocument(result.results.orderCode, this.uploadedFile);
                 }
