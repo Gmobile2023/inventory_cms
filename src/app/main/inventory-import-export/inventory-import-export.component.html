@@ -147,12 +147,14 @@
                                     <ul id="dropdownMenu" class="dropdown-menu" role="menu" *dropdownMenu
                                         aria-labelledby="dropdownButton">
                                         <li role="menuitem">
-                                            <a href="javascript:;" class="dropdown-item" [routerLink]="record.orderType == '1' 
+                                            <a href="javascript:;" class="dropdown-item" [routerLink]="record.orderType === 1 
                                             ? '/app/main/inventory-import-export/detail-inventory-import' 
-                                            : record.orderType == '2' 
+                                            : record.orderType === 2 
                                             ? '/app/main/inventory-import-export/detail-inventory-export' 
-                                            : record.orderType == '3' 
+                                            : record.orderType === 3 
                                             ? '/app/main/inventory-import-export/detail-inventory-recall' 
+                                            : record.orderType === 6
+                                            ? '/app/main/recovery-inventory/detail-reuse-number'
                                             : null" [queryParams]="{ id: record.id }">
                                                 {{ 'Xem chi tiết' | localize }}
                                             </a>

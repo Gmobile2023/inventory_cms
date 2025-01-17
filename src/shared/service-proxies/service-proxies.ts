@@ -8935,6 +8935,122 @@ export class InventoryServiceProxy {
     }
 
     /**
+     * @param stockId (optional) 
+     * @param orderCode (optional) 
+     * @param productType (optional) 
+     * @param mobile (optional) 
+     * @param serial (optional) 
+     * @param attribute (optional) 
+     * @param format (optional) 
+     * @param simType (optional) 
+     * @param fromRange (optional) 
+     * @param toRange (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getOrderPendingSims(stockId: number | undefined, orderCode: string | undefined, productType: ProductType | undefined, mobile: string | undefined, serial: string | undefined, attribute: string | undefined, format: string | undefined, simType: string | undefined, fromRange: string | undefined, toRange: string | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetOrderPendingSims?";
+        if (stockId === null)
+            throw new Error("The parameter 'stockId' cannot be null.");
+        else if (stockId !== undefined)
+            url_ += "StockId=" + encodeURIComponent("" + stockId) + "&";
+        if (orderCode === null)
+            throw new Error("The parameter 'orderCode' cannot be null.");
+        else if (orderCode !== undefined)
+            url_ += "OrderCode=" + encodeURIComponent("" + orderCode) + "&";
+        if (productType === null)
+            throw new Error("The parameter 'productType' cannot be null.");
+        else if (productType !== undefined)
+            url_ += "ProductType=" + encodeURIComponent("" + productType) + "&";
+        if (mobile === null)
+            throw new Error("The parameter 'mobile' cannot be null.");
+        else if (mobile !== undefined)
+            url_ += "Mobile=" + encodeURIComponent("" + mobile) + "&";
+        if (serial === null)
+            throw new Error("The parameter 'serial' cannot be null.");
+        else if (serial !== undefined)
+            url_ += "Serial=" + encodeURIComponent("" + serial) + "&";
+        if (attribute === null)
+            throw new Error("The parameter 'attribute' cannot be null.");
+        else if (attribute !== undefined)
+            url_ += "Attribute=" + encodeURIComponent("" + attribute) + "&";
+        if (format === null)
+            throw new Error("The parameter 'format' cannot be null.");
+        else if (format !== undefined)
+            url_ += "Format=" + encodeURIComponent("" + format) + "&";
+        if (simType === null)
+            throw new Error("The parameter 'simType' cannot be null.");
+        else if (simType !== undefined)
+            url_ += "SimType=" + encodeURIComponent("" + simType) + "&";
+        if (fromRange === null)
+            throw new Error("The parameter 'fromRange' cannot be null.");
+        else if (fromRange !== undefined)
+            url_ += "FromRange=" + encodeURIComponent("" + fromRange) + "&";
+        if (toRange === null)
+            throw new Error("The parameter 'toRange' cannot be null.");
+        else if (toRange !== undefined)
+            url_ += "ToRange=" + encodeURIComponent("" + toRange) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetOrderPendingSims(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetOrderPendingSims(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagedResultDtoOfSimNumberDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagedResultDtoOfSimNumberDto>;
+        }));
+    }
+
+    protected processGetOrderPendingSims(response: HttpResponseBase): Observable<PagedResultDtoOfSimNumberDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfSimNumberDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param sorting (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
@@ -24354,7 +24470,10 @@ export interface ICreateRecoveryDto {
 }
 
 export class CreateSimRecallDto implements ICreateSimRecallDto {
+    title!: string | undefined;
+    description!: string | undefined;
     items!: string[] | undefined;
+    desStockId!: number;
     userCreated!: string | undefined;
 
     constructor(data?: ICreateSimRecallDto) {
@@ -24368,11 +24487,14 @@ export class CreateSimRecallDto implements ICreateSimRecallDto {
 
     init(_data?: any) {
         if (_data) {
+            this.title = _data["title"];
+            this.description = _data["description"];
             if (Array.isArray(_data["items"])) {
                 this.items = [] as any;
                 for (let item of _data["items"])
                     this.items!.push(item);
             }
+            this.desStockId = _data["desStockId"];
             this.userCreated = _data["userCreated"];
         }
     }
@@ -24386,18 +24508,24 @@ export class CreateSimRecallDto implements ICreateSimRecallDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["title"] = this.title;
+        data["description"] = this.description;
         if (Array.isArray(this.items)) {
             data["items"] = [];
             for (let item of this.items)
                 data["items"].push(item);
         }
+        data["desStockId"] = this.desStockId;
         data["userCreated"] = this.userCreated;
         return data;
     }
 }
 
 export interface ICreateSimRecallDto {
+    title: string | undefined;
+    description: string | undefined;
     items: string[] | undefined;
+    desStockId: number;
     userCreated: string | undefined;
 }
 
@@ -33039,10 +33167,11 @@ export class OrderDto implements IOrderDto {
     id!: number | undefined;
     orderTitle!: string | undefined;
     description!: string | undefined;
+    contentReject!: string | undefined;
     orderCode!: string | undefined;
-    orderType!: string | undefined;
+    orderType!: OrderTypeValue;
     simType!: number;
-    simTypeName!: number;
+    simTypeName!: string | undefined;
     srcStockCode!: string | undefined;
     desStockCode!: string | undefined;
     srcStockName!: string | undefined;
@@ -33073,7 +33202,6 @@ export class OrderDto implements IOrderDto {
     settingUser!: string[] | undefined;
     settingUserStock!: string[] | undefined;
     items!: OrderDetailDto[] | undefined;
-    contentReject!: string | undefined;
 
     constructor(data?: IOrderDto) {
         if (data) {
@@ -33089,6 +33217,7 @@ export class OrderDto implements IOrderDto {
             this.id = _data["id"];
             this.orderTitle = _data["orderTitle"];
             this.description = _data["description"];
+            this.contentReject = _data["contentReject"];
             this.orderCode = _data["orderCode"];
             this.orderType = _data["orderType"];
             this.simType = _data["simType"];
@@ -33135,7 +33264,6 @@ export class OrderDto implements IOrderDto {
                 for (let item of _data["items"])
                     this.items!.push(OrderDetailDto.fromJS(item));
             }
-            this.contentReject = _data["contentReject"];
         }
     }
 
@@ -33151,6 +33279,7 @@ export class OrderDto implements IOrderDto {
         data["id"] = this.id;
         data["orderTitle"] = this.orderTitle;
         data["description"] = this.description;
+        data["contentReject"] = this.contentReject;
         data["orderCode"] = this.orderCode;
         data["orderType"] = this.orderType;
         data["simType"] = this.simType;
@@ -33197,7 +33326,6 @@ export class OrderDto implements IOrderDto {
             for (let item of this.items)
                 data["items"].push(item.toJSON());
         }
-        data["contentReject"] = this.contentReject;
         return data;
     }
 }
@@ -33206,10 +33334,11 @@ export interface IOrderDto {
     id: number | undefined;
     orderTitle: string | undefined;
     description: string | undefined;
+    contentReject: string | undefined;
     orderCode: string | undefined;
-    orderType: string | undefined;
+    orderType: OrderTypeValue;
     simType: number;
-    simTypeName: number;
+    simTypeName: string | undefined;
     srcStockCode: string | undefined;
     desStockCode: string | undefined;
     srcStockName: string | undefined;
@@ -33240,7 +33369,6 @@ export interface IOrderDto {
     settingUser: string[] | undefined;
     settingUserStock: string[] | undefined;
     items: OrderDetailDto[] | undefined;
-    contentReject: string | undefined;
 }
 
 export class OrderExportDto implements IOrderExportDto {

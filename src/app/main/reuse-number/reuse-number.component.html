@@ -4,34 +4,42 @@
         <div class="row bg-white pt-5 ps-3">
             <h4 class="mb-4">BỘ LỌC TÌM KIẾM</h4>
             <div class="col-md-6 mb-3">
-                <input type="text" class="form-control" placeholder="Nhập số điện thoại">
+                <input type="text" class="form-control" placeholder="Tìm kiếm">
             </div>
             <div class="col-md-6 mb-3">
-                <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="network" [(ngModel)]="status"
-                    optionLabel="label" optionValue="value" placeholder="Nhà mạng" class="w-100">
+                <p-dropdown [style]="{width: '100%'}" [options]="stockList" [(ngModel)]="selectedStock"
+                    optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
+                    placeholder="Kho cấu hình">
+                    <ng-template pTemplate="selectedStockTo">
+                        <div class="flex align-items-center gap-2" *ngIf="selectedStock">
+                            <div>{{ selectedStock.stockName }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-stock pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ stock.stockName }}</div>
+                        </div>
+                    </ng-template>
                 </p-dropdown>
             </div>
             <div class="col-md-4 mb-3">
-                <input id="fromDate" type="text" name="fromDate" class="form-control" bsDaterangepicker
-                    dateRangePickerLuxonModifier [(date)]="fromDate" [bsConfig]="{ adaptivePosition: true }"
-                    placeholder="Thời gian thu hồi từ - đến" />
+                <input id="fromDate" type="text" name="fromDate" class="form-control" bsDatepicker
+                    datePickerLuxonModifier [(date)]="fromDate" [bsConfig]="{ adaptivePosition: true }"
+                    placeholder="Thời gian tạo yêu cầu từ" />
             </div>
             <div class="col-md-4 mb-3">
-                <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="statusNetwork"
-                    [(ngModel)]="status" optionLabel="label" optionValue="value" placeholder="Trạng thái nhà mạng"
-                    class="w-100">
-                </p-dropdown>
+                <input id="toDate" type="text" name="toDate" class="form-control" bsDatepicker datePickerLuxonModifier
+                    [(date)]="toDate" [bsConfig]="{ adaptivePosition: true }" placeholder="Thời gian tạo yêu cầu đến" />
             </div>
             <div class="col-md-4 mb-3">
-                <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="statusGmobile"
-                    [(ngModel)]="status" optionLabel="label" optionValue="value" placeholder="Trạng thái Gmobile"
-                    class="w-100">
+                <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="statusOption"
+                    [(ngModel)]="status" optionLabel="label" optionValue="value" placeholder="Trạng thái" class="w-100">
                 </p-dropdown>
             </div>
             <div class="col-12 mt-3 mb-5">
                 <div class="d-flex align-items-center justify-content-start">
                     <button class="btn btn-secondary btn-sm me-3" type="button" (click)="resetFilter()">ĐẶT LẠI</button>
-                    <button class="btn btn-primary btn-sm" type="button" (click)="getListApprovalFlow($event)">TÌM
+                    <button class="btn btn-primary btn-sm" type="button" (click)="getListOrder($event)">TÌM
                         KIẾM</button>
                 </div>
             </div>
@@ -54,7 +62,7 @@
         </div>
         <div class="row align-items-center">
             <div class="col primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
-                <p-table #dataTable sortMode="multiple" (onLazyLoad)="getListApprovalFlow($event)"
+                <p-table #dataTable sortMode="multiple" (onLazyLoad)="getListOrder($event)"
                     [value]="primengTableHelper.records" rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
                     [paginator]="false" [lazy]="true" [tableStyle]="{'min-width': '50rem'}">
                     <ng-template pTemplate="header">
@@ -67,10 +75,10 @@
                                 {{ 'THỜI GIAN TẠO' | localize }}
                             </th>
                             <th>
-                                {{ 'SỐ THUÊ BAO' | localize }}
+                                {{ 'TIÊU ĐỀ' | localize }}
                             </th>
                             <th>
-                                {{ 'NHÀ MẠNG' | localize }}
+                                {{ 'KHO XUẤT ĐẾN' | localize }}
                             </th>
                             <th>
                                 {{ 'TRẠNG THÁI' | localize }}
@@ -95,7 +103,8 @@
                                         aria-labelledby="dropdownButton">
                                         <li>
                                             <a href="javascript:;" class="dropdown-item"
-                                                (click)="openApprovalView(record.id, view)">
+                                                [routerLink]="'/app/main/recovery-inventory/detail-reuse-number'"
+                                                [queryParams]="{ id: record.id }">
                                                 {{ 'Xem chi tiết' | localize }}
                                             </a>
                                         </li>
@@ -104,27 +113,35 @@
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.stockLevel }}
+                                {{ record.orderCode }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.stockLevel }}
+                                {{ record.createdDate | luxonFormat: 'F'}}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.stockLevel }}
+                                {{ record.orderTitle }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.stockLevel }}
+                                {{ record.desStockName }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.stockLevel }}
+                                <span *ngIf="record.status == 1" class="badge badge-warning badge-inline">
+                                    {{ 'Chờ phê duyệt' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 2" class="badge badge-success badge-inline">
+                                    {{ 'Đã duyệt' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 3" class="badge badge-secondary badge-inline">
+                                    {{ 'Từ chối' | localize }}
+                                </span>
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.stockLevel }}
+                                {{ record.description }}
                             </td>
                         </tr>
                     </ng-template>
@@ -133,7 +150,7 @@
                     {{ 'NoData' | localize }}
                 </div>
                 <div class="primeng-paging-container">
-                    <p-paginator (onPageChange)="getListApprovalFlow($event)"
+                    <p-paginator (onPageChange)="getListOrder($event)"
                         [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
                         [totalRecords]="primengTableHelper.totalRecordsCount"
                         [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"

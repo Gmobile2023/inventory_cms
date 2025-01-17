@@ -51,33 +51,22 @@ export class DetailReuseNumberComponent extends AppComponentBase implements OnIn
         this.orderId = parseInt(this.route.snapshot.queryParamMap.get('id')!);
         this.userName = this.appSession.user.userName;
         if (this.orderId) {
-            this.getStockForView();
+            this.getOrderForView();
         }
     }
 
-    getStockForView() {
+    getOrderForView() {
         this._inventoryServiceProxy.getOrderForView(this.orderId).subscribe((result) => {
             this.orderData = result.order;
-            if (this.orderData.orderCode) {
-                this.orderCode = this.orderData.orderCode;
-                this.getActionHistory();
-            }
             if (this.orderData.document) this.convertUrl(this.orderData.document);
-            if (this.orderData.settingUser) this.isAction = this.orderData.settingUser.includes(this.userName);
-            if (this.orderData.settingUserStock) this.isAdmin = this.orderData.settingUserStock.includes(this.userName);
         });
     }
 
-    getActionHistory(event?: LazyLoadEvent) {
+    getListSimOrderDetail(event?: LazyLoadEvent) {
         this.primengTableHelper.showLoadingIndicator();
         this._inventoryServiceProxy
-            .getHistories(
-                undefined,
-                undefined,
-                this.orderCode,
-                undefined,
-                undefined,
-                undefined,
+            .getListSimOrderDetail(
+                this.orderId,
                 undefined,
                 undefined,
                 this.primengTableHelper.getSorting(this.dataTable),
@@ -86,7 +75,7 @@ export class DetailReuseNumberComponent extends AppComponentBase implements OnIn
             )
             .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
             .subscribe((result) => {
-                this.listAction = result.items;
+                this.primengTableHelper.records = result.items;
                 this.primengTableHelper.totalRecordsCount = result.totalCount;
                 this.primengTableHelper.hideLoadingIndicator();
             });
@@ -149,7 +138,7 @@ export class DetailReuseNumberComponent extends AppComponentBase implements OnIn
         this._httpClient.post<any>(uploadUrl, formData).subscribe({
             next: (response) => {
                 if (response.success) {
-                    this.getStockForView();
+                    this.getOrderForView();
                     this.closeModal();
                     this.notify.success(this.l('Tải file chứng từ thành công'));
                 }

@@ -4,16 +4,7 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DateTime } from '@node_modules/@types/luxon';
-import {
-    ApprovalFlowDetailDto,
-    CommonLookupServiceProxy,
-    CreateOrEditApprovalFlowDto,
-    InventoryServiceProxy,
-    ListResultDtoOfOrganizationUnitDto,
-    OrganizationUnitServiceProxy,
-    ProductType,
-    UserInfoDto,
-} from '@shared/service-proxies/service-proxies';
+import { InventoryServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize, map, Observable } from 'rxjs';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
@@ -30,10 +21,8 @@ export class ReuseNumberComponent extends AppComponentBase {
     constructor(
         injector: Injector,
         private modalService: BsModalService,
-        private _commonLookupServiceProxy: CommonLookupServiceProxy,
         private _inventoryServiceProxy: InventoryServiceProxy,
-        private _dateTimeService: DateTimeService,
-        private _organizationUnitService: OrganizationUnitServiceProxy
+        private _dateTimeService: DateTimeService
     ) {
         super(injector);
     }
@@ -41,10 +30,6 @@ export class ReuseNumberComponent extends AppComponentBase {
     modalRef?: BsModalRef | null;
     items: MenuItem[];
     home: MenuItem;
-    stock: number;
-    stockLevel: number;
-    productType: ProductType;
-    stockId: number;
     fromDate: DateTime;
     toDate: DateTime;
     status: number = 99;
@@ -52,63 +37,32 @@ export class ReuseNumberComponent extends AppComponentBase {
     name: string;
     isEdit: boolean = false;
     statusOption = [
-        { label: 'Hoạt động', value: 1 },
-        { label: 'Khoá', value: 2 },
+        { label: 'Chờ phê duyệt', value: 1 },
+        { label: 'Đã duyệt', value: 2 },
+        { label: 'Từ chối', value: 2 },
     ];
-    network = [
-        { label: 'Tất cả', value: 0 },
-        { label: 'Vinaphone', value: 1 },
-        { label: 'Mobifone', value: 1 },
-        { label: 'Vietnamobile', value: 1 },
-        { label: 'Gsim', value: 1 },
-    ];
-    statusNetwork = [
-        { label: 'Tất cả', value: 0 },
-        { label: 'Khoá 1 chiều', value: 1 },
-        { label: 'Khoá 2 chiều', value: 1 },
-        { label: 'Huỷ', value: 1 },
-        { label: 'Thu hồi', value: 1 },
-    ];
-    statusGmobile = [
-        { label: 'Tất cả', value: 0 },
-        { label: 'Thu hồi', value: 1 },
-        { label: 'Chờ tái sử dụng', value: 1 },
-        { label: 'Không tái sử dụng', value: 1 },
-        { label: 'Đã cấp phát', value: 1 },
-    ];
-
-    tempApprovalItems = [
-        {
-            officeCode: '',
-            officeName: '',
-            userName: '',
-            order: null,
-        },
-    ];
-    departmentList = [];
-    userList = [];
     stockList = [];
-    selectedDepartment: any;
-    approvalFlowData: any = {};
-    filteredUsers: UserInfoDto[] = new Array<UserInfoDto>();
     public dateRange: DateTime[] = [this._dateTimeService.getStartOfMonth(), this._dateTimeService.getEndOfMonth()];
     selectedStock: any;
 
     ngOnInit() {
         this.items = [{ label: 'Quản lý kho thu hồi' }, { label: 'Danh sách yêu cầu tái sử dụng thuê bao' }];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
-        this.getTreeDataFromServer();
         this.getListStock();
     }
 
-    getListApprovalFlow(event?: LazyLoadEvent) {
+    getListOrder(event?: LazyLoadEvent) {
         this.primengTableHelper.showLoadingIndicator();
         this._inventoryServiceProxy
-            .getListApprovalFlow(
-                this.selectedStock ? this.selectedStock.id : undefined,
+            .getListOrder(
+                6,
+                undefined,
+                undefined,
+                undefined,
                 this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
                 this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
-                this.status,
+                this.selectedStock ? this.selectedStock.stockCode : undefined,
+                this.status == null ? undefined : this.status,
                 this.primengTableHelper.getSorting(this.dataTable),
                 this.primengTableHelper.getSkipCount(this.paginator, event),
                 this.primengTableHelper.getMaxResultCount(this.paginator, event)
@@ -142,131 +96,15 @@ export class ReuseNumberComponent extends AppComponentBase {
             });
     }
 
-    private getTreeDataFromServer(): void {
-        this._commonLookupServiceProxy
-            .getOrganizationUnits()
-            .subscribe((result: ListResultDtoOfOrganizationUnitDto) => {
-                this.departmentList = result.items.filter((item) => item.parentId !== null);
-            });
-    }
-
-    onDepartmentChange(event: any, item: any): void {
-        const selectedCode = event.value; // Lấy mã code từ dropdown
-        const selectedDepartment = this.departmentList.find((dept) => dept.code === selectedCode); // Lấy đối tượng phòng ban
-        if (selectedDepartment) {
-            const selectedId = selectedDepartment.id;
-            item.officeName = selectedDepartment.displayName;
-            this.getOrganizationUnitUsers(selectedId).subscribe((users) => {
-                item.userList = users; // Gán danh sách user cho từng item
-            });
-        }
-    }
-
-    // getOrganizationUnitUsers(id: number) {
-    //     this._organizationUnitService.getOrganizationUnitUsers(id, undefined, 100, 0).subscribe((result) => {
-    //         this.userList = result.items;
-    //     });
-    // }
-
-    getOrganizationUnitUsers(id: number): Observable<any[]> {
-        return this._commonLookupServiceProxy.getOrganizationUnitUsers(id, undefined, 100, 0).pipe(
-            map((result) => result.items) // Chỉ trả về danh sách items
-        );
-    }
-
-    createOrEditApprovalFlow() {
-        let body = new CreateOrEditApprovalFlowDto();
-        body = { ...this.approvalFlowData };
-        if (this.selectedStock) {
-            body.stockId = this.selectedStock.id;
-        }
-        if (this.tempApprovalItems) {
-            body.items = this.tempApprovalItems.map((item) => {
-                return ApprovalFlowDetailDto.fromJS(item);
-            });
-        }
-        this._inventoryServiceProxy.createOrEditApprovalFlow(body).subscribe(() => {
-            this.isEdit = false;
-            this.selectedStock = undefined;
-            this.tempApprovalItems = [];
-            this.addUserRow();
-            this.approvalFlowData = {};
-            this.getListApprovalFlow();
-            this.closeModal();
-            this.notify.info(this.l('SavedSuccessfully'));
-        });
-    }
-
-    openApprovalView(id: number, elModal: TemplateRef<any>, type?: string) {
-        if (id) {
-            this.getApprovalFlowForView(id);
-            this.openModal(elModal);
-        }
-        if (type === 'edit') {
-            this.isEdit = true;
-        }
-    }
-
-    getApprovalFlowForView(id: number) {
-        this._inventoryServiceProxy.getApprovalFlowForView(id).subscribe((result) => {
-            this.approvalFlowData = result.approvalFlow;
-            this.tempApprovalItems = result.approvalFlow.items;
-            const stockId = result.approvalFlow.stockId;
-            this.selectedStock = this.stockList.find((stock) => stock.id === stockId) || null;
-            if (this.isEdit) {
-                this.tempApprovalItems.forEach((item: any) => {
-                    const department = this.departmentList.find((dept) => dept.code === item.officeCode);
-                    if (department) {
-                        const departmentId = department.id;
-                        this.getOrganizationUnitUsers(departmentId).subscribe((users) => {
-                            item.userList = users; // Gán danh sách user vào từng item
-                        });
-                    }
-                });
-            }
-        });
-    }
-
-    filterUsers(event): void {
-        this._commonLookupServiceProxy.getListUserSearch(event.query).subscribe((users) => {
-            this.filteredUsers = users;
-        });
-    }
-
     resetFilter() {
-        this.stockId = undefined;
         this.fromDate = undefined;
+        this.toDate = undefined;
         this.status = undefined;
-    }
-
-    addUserRow() {
-        this.tempApprovalItems.push({
-            officeCode: '',
-            officeName: '',
-            userName: '',
-            order: null,
-        });
-    }
-
-    removeRow(index: number): void {
-        if (this.tempApprovalItems.length > 1) {
-            this.tempApprovalItems.splice(index, 1);
-        } else {
-            // Thông báo cho người dùng nếu muốn
-            console.warn('Không thể xóa.');
-        }
+        this.selectedStock = undefined;
     }
 
     openModal(template: TemplateRef<any>) {
         this.modalRef = this.modalService.show(template, { id: 1, class: 'modal-xl' });
-        // Lắng nghe sự kiện `onHidden`
-        const onHiddenSubscription = this.modalService.onHidden.subscribe(() => {
-            // Khi modal đóng, đặt lại selectedStock
-            this.selectedStock = undefined;
-
-            // Hủy đăng ký sự kiện sau khi xử lý
-            onHiddenSubscription.unsubscribe();
-        });
     }
 
     closeModal(modalId?: number) {

@@ -4,20 +4,28 @@
         <div class="row bg-white py-5">
             <div class="d-flex justify-content-between align-items-center">
                 <h4>THÔNG TIN CHUNG</h4>
-                <button class="btn btn-success btn-sm" (click)="createTransfer()" *ngIf="!isLoading">GỬI YÊU
-                    CẦU</button>
+                <button class="btn btn-success btn-sm" (click)="createTransfer()" *ngIf="!isLoading"
+                    [class]="stockIdParam ? 'd-none' : null">
+                    GỬI YÊU CẦU
+                </button>
+                <button class="btn btn-success btn-sm" (click)="createOrderExport()" *ngIf="!isLoading"
+                    [class]="!stockIdParam ? 'd-none' : null">
+                    TẠO ĐỢT XUẤT
+                </button>
                 <p-progressSpinner class="me-5" [style]="{width: '32px', height: '32px'}" strokeWidth="4"
                     fill="var(--surface-ground)" animationDuration=".8s" *ngIf="isLoading"></p-progressSpinner>
             </div>
             <div class="col-md-12 mb-3">
-                <label for="title" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
-                <input type="text" class="form-control" id="title" placeholder="Nhập tiêu đề" [(ngModel)]="title">
+                <label for="title" class="form-label">{{ stockIdParam ? 'Tên đợt xuất' : 'Tiêu đề' }}<span
+                        class="text-danger">(*)</span></label>
+                <input type="text" class="form-control" id="title"
+                    [placeholder]="stockIdParam ? 'Nhập tên đợt xuất' : 'Nhập tiêu đề'" [(ngModel)]="title">
             </div>
             <div class="col-md-4 mb-3">
                 <label for="productType" class="form-label">Loại sản phẩm</label>
                 <div class="input-group">
                     <select id="productType" name="productType" class="form-select" [(ngModel)]="productType"
-                        (change)="onChangeProductType($event)">
+                        (change)="onChangeProductType($event)" [disabled]="stockIdParam">
                         <option [value]="ProductType.Mobile">Số</option>
                         <option [value]="ProductType.Serial">Serial</option>
                     </select>
@@ -27,7 +35,7 @@
                 <label for="srcStockId" class="form-label">Kho xuất đi <span class="text-danger">(*)</span></label>
                 <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStockFrom"
                     optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
-                    placeholder="Chọn kho" (onChange)="onChangeStock($event)">
+                    placeholder="Chọn kho" (onChange)="onChangeStock($event)" *ngIf="!stockIdParam">
                     <ng-template pTemplate="selectedStockFrom">
                         <div class="flex align-items-center gap-2" *ngIf="selectedStockFrom">
                             <div>{{ selectedStockFrom.stockName }}</div>
@@ -39,12 +47,15 @@
                         </div>
                     </ng-template>
                 </p-dropdown>
+                <select class="form-select" disabled *ngIf="stockIdParam">
+                    <option [value]="selectedStockFrom?.id">{{selectedStockFrom?.stockName}}</option>
+                </select>
             </div>
             <div class="col-md-4 mb-3">
                 <label for="desStockId" class="form-label">Kho xuất đến <span class="text-danger">(*)</span></label>
                 <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStockTo"
                     optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
-                    placeholder="Chọn kho">
+                    placeholder="Chọn kho" *ngIf="!stockIdParam">
                     <ng-template pTemplate="selectedStockTo">
                         <div class="flex align-items-center gap-2" *ngIf="selectedStockTo">
                             <div>{{ selectedStockTo.stockName }}</div>
@@ -56,11 +67,14 @@
                         </div>
                     </ng-template>
                 </p-dropdown>
+                <select class="form-select" disabled *ngIf="stockIdParam">
+                    <option [value]="selectedStockTo?.id">{{selectedStockTo?.stockName}}</option>
+                </select>
             </div>
             <div class="col-md-4 mb-3">
                 <label for="title" class="form-label">Số lượng dự kiến</label>
                 <input type="number" class="form-control" id="title" placeholder="Nhập số lượng dự kiến"
-                    [(ngModel)]="expectedQuantity">
+                    [(ngModel)]="expectedQuantity" [disabled]="stockIdParam">
             </div>
             <div class="col-md-4 mb-3">
                 <label for="" class="form-label">Cách thức xuất <span class="text-danger">(*)</span></label>
@@ -100,7 +114,7 @@
                 <textarea class="form-control" id="" rows="2" placeholder="Nhập nội dung ghi chú"
                     [(ngModel)]="description"></textarea>
             </div>
-            <div class="col-12">
+            <div class="col-12" *ngIf="!stockIdParam">
                 <h4>THÔNG TIN CHỨNG TỪ</h4>
                 <p-fileUpload customUpload="true" maxFileSize="10000000" auto="auto"
                     accept=".csv,.xls,.xlsx,.pdf,.png,.jpg" chooseLabel="Tải file chứng từ"
@@ -156,7 +170,11 @@
                 <input type="file" class="form-control" id="">
             </div> -->
             <div>
-                <button class="btn btn-primary btn-sm mt-5" type="button" (click)="getListSimSrcStock($event)">TÌM
+                <button class="btn btn-primary btn-sm mt-5" type="button" (click)="getListSimSrcStock($event)"
+                    *ngIf="!stockIdParam">TÌM
+                    KIẾM</button>
+                <button class="btn btn-primary btn-sm mt-5" type="button" (click)="getOrderPendingSims($event)"
+                    *ngIf="stockIdParam">TÌM
                     KIẾM</button>
             </div>
             <div class="d-flex justify-content-between gap-5 mt-5">

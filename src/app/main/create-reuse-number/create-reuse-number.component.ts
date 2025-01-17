@@ -3,6 +3,7 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import {
+    CreateSimRecallDto,
     CreateTransferDto,
     InventoryServiceProxy,
     IOrderItem,
@@ -82,6 +83,8 @@ export class CreateReuseNumberComponent extends AppComponentBase implements OnIn
     uploadedFile: File | null = null;
     remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
     isLoading: boolean = false;
+    telCo: string;
+    batchCode: string;
 
     ngOnInit() {
         this.items = [
@@ -91,7 +94,7 @@ export class CreateReuseNumberComponent extends AppComponentBase implements OnIn
         ];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.getListStock();
-        this.getProductAttributes();
+        // this.getListSimSrcStock();
         this.getSimsTypes();
     }
 
@@ -113,23 +116,7 @@ export class CreateReuseNumberComponent extends AppComponentBase implements OnIn
             )
             .subscribe((result) => {
                 this.listStock = result.items;
-            });
-    }
-
-    onRangeRuleChange(event: Event) {
-        this.isRangeRule = !this.isRangeRule;
-        if (!this.isRangeRule) {
-            this.objectType = ObjectType.List;
-        } else {
-            this.objectType = ObjectType.All;
-        }
-    }
-
-    getProductAttributes() {
-        this._inventoryServiceProxy
-            .getProductAttributes(this.productType.toString(), undefined, 0, 10)
-            .subscribe((result) => {
-                this.productAttribute = result.items;
+                this.selectedStockFrom = this.listStock.find((stock) => stock.id == 127);
             });
     }
 
@@ -139,36 +126,16 @@ export class CreateReuseNumberComponent extends AppComponentBase implements OnIn
         });
     }
 
-    onChangeProductType(event: Event) {
-        this.productType = (event.target as HTMLSelectElement).value as unknown as ProductType;
-        this.getProductAttributes();
-        this.getSimsTypes();
-        if (this.stockId) {
-            this.getListSimSrcStock();
-        }
-    }
-
-    onChangeStock(event: { value: any }) {
-        const stockId = event.value.id;
-        this.stockId = stockId;
-        this.getListSimSrcStock();
-    }
-
     getListSimSrcStock(event?: LazyLoadEvent) {
         this.primengTableHelper.showLoadingIndicator();
         this._inventoryServiceProxy
-            .getListSimsTransfers(
-                this.stockId,
-                this.productType,
-                this.attribute,
-                this.productType === ProductType.Mobile ? this.product : undefined,
-                this.productType === ProductType.Serial ? this.product : undefined,
-                this.simType,
-                undefined,
+            .getListSuggestSimRecalls(
+                this.mobile,
+                this.telCo,
+                this.batchCode,
                 this.fromRange,
                 this.toRange,
-                false,
-                undefined,
+                this.primengTableHelper.getSorting(this.dataTable),
                 this.primengTableHelper.getSkipCount(this.paginator, event),
                 this.primengTableHelper.getMaxResultCount(this.paginator, event)
             )
@@ -181,34 +148,12 @@ export class CreateReuseNumberComponent extends AppComponentBase implements OnIn
             });
     }
 
-    calculateQuantity(): void {
-        if (this.tempOrderItems.fromRange && this.tempOrderItems.toRange) {
-            const from = parseInt(this.tempOrderItems.fromRange, 10);
-            const to = parseInt(this.tempOrderItems.toRange, 10);
-
-            if (!isNaN(from) && !isNaN(to) && to >= from) {
-                this.tempOrderItems.quantity = to - from + 1; // Tính số lượng
-            } else {
-                this.tempOrderItems.quantity = 0; // Nếu giá trị không hợp lệ
-            }
-        } else {
-            this.tempOrderItems.quantity = 0; // Nếu chưa nhập đủ
-        }
-    }
-
     createTransfer() {
         this.isLoading = true;
-        const body = new CreateTransferDto();
+        const body = new CreateSimRecallDto();
         body.title = this.title;
         body.description = this.description;
-        if (this.selectedStockFrom) body.srcStockId = this.selectedStockFrom.id;
         if (this.selectedStockTo) body.desStockId = this.selectedStockTo.id;
-        body.productType = this.productType;
-        body.objectType = this.objectType;
-        body.expectedQuantity = this.expectedQuantity;
-        if (this.isRangeRule) {
-            body.rangeRule = OrderItem.fromJS(this.tempOrderItems);
-        }
         if (this.rangeItems.length > 0) {
             const data = [];
             this.rangeItems.forEach((item) => {
@@ -218,11 +163,11 @@ export class CreateReuseNumberComponent extends AppComponentBase implements OnIn
                     data.push(item.serial);
                 }
             });
-            body.rangeItems = data;
+            body.items = data;
         }
-
         if (this.uploadedFile) {
-            this._inventoryServiceProxy.createTransfer(body).subscribe((result) => {
+            this._inventoryServiceProxy.createSimRecall(body).subscribe((result) => {
+                this.isLoading = false;
                 if (result.results.orderCode) {
                     this.uploadOrderDocument(result.results.orderCode, this.uploadedFile);
                 }
@@ -248,8 +193,8 @@ export class CreateReuseNumberComponent extends AppComponentBase implements OnIn
         this._httpClient.post<any>(uploadUrl, formData).subscribe({
             next: (response) => {
                 if (response.success) {
-                    this.router.navigate(['/app/main/inventory-import-export']);
-                    this.notify.info(this.l('Tạo yêu cầu xuất kho thành công!'));
+                    this.router.navigate(['/app/main/reuse-number']);
+                    this.notify.info(this.l('Tạo yêu cầu thành công!'));
                 }
             },
             error: (err) => {
@@ -318,6 +263,4 @@ export class CreateReuseNumberComponent extends AppComponentBase implements OnIn
     isRecordInTable2(record: any): boolean {
         return this.currentDataFrom.some((item) => JSON.stringify(item) === JSON.stringify(record));
     }
-
-    onUpload(event) {}
 }
