@@ -22,6 +22,8 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     @ViewChild('paginator', { static: true }) paginator: Paginator;
     @ViewChild('dataTable2', { static: true }) dataTable2: Table;
     @ViewChild('paginator2', { static: true }) paginator2: Paginator;
+    @ViewChild('dataTable3', { static: true }) dataTable3: Table;
+    @ViewChild('paginator3', { static: true }) paginator3: Paginator;
     constructor(
         injector: Injector,
         private modalService: BsModalService,
@@ -41,6 +43,7 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     orderCode: string;
     listAction: any[] = [];
     listSim: any[] = [];
+    listProduct: any[] = [];
     description: string;
     orderDataItems: any = {};
     mobile: string;
@@ -51,6 +54,10 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     userName: string = '';
     isAction: boolean = false;
     isAdmin: boolean = false;
+    orderChildId: number;
+    totalRecordsCount1: number;
+    totalRecordsCount2: number;
+    totalRecordsCount3: number;
 
     ngOnInit(): void {
         this.items = [
@@ -65,7 +72,7 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
     }
 
     getStockForView() {
-        this._inventoryServiceProxy.getOrderForView(this.orderId).subscribe((result) => {
+        this._inventoryServiceProxy.getOrderForView(this.orderId, true).subscribe((result) => {
             this.orderData = result.order;
             this.orderDataItems = result.order.items[0];
             if (this.orderData.orderCode) {
@@ -98,7 +105,7 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
             .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
             .subscribe((result) => {
                 this.listAction = result.items;
-                this.primengTableHelper.totalRecordsCount = result.totalCount;
+                this.totalRecordsCount1 = result.totalCount;
                 this.primengTableHelper.hideLoadingIndicator();
             });
     }
@@ -116,7 +123,24 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
             .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
             .subscribe((result) => {
                 this.listSim = result.items;
-                this.primengTableHelper.totalRecordsCount = result.totalCount;
+                this.totalRecordsCount2 = result.totalCount;
+                this.primengTableHelper.hideLoadingIndicator();
+            });
+    }
+
+    getSimPeriodDetail(event?: LazyLoadEvent) {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getSimPeriodDetail(
+                this.orderChildId,
+                this.primengTableHelper.getSorting(this.dataTable),
+                this.primengTableHelper.getSkipCount(this.paginator, event),
+                this.primengTableHelper.getMaxResultCount(this.paginator, event)
+            )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this.listProduct = result.items;
+                this.totalRecordsCount3 = result.totalCount;
                 this.primengTableHelper.hideLoadingIndicator();
             });
     }
@@ -199,12 +223,22 @@ export class DetailInventoryExportComponent extends AppComponentBase implements 
         });
     }
 
+    openFormViewSim(template: TemplateRef<any>, idOrder: number) {
+        if (idOrder) {
+            this.orderChildId = idOrder;
+            this.getSimPeriodDetail();
+        }
+        setTimeout(() => {
+            this.modalRef = this.modalService.show(template, { id: 1, class: 'modal-xl' });
+        }, 200);
+    }
+
     openModal(template: TemplateRef<any>) {
         this.modalRef = this.modalService.show(template, { id: 1, class: 'modal-md' });
     }
 
     closeModal(modalId?: number) {
         this.modalService.hide(modalId);
+        this.listProduct = [];
     }
-    dataFake = [];
 }

@@ -14,7 +14,7 @@ import {
     ProductType,
     UserInfoDto,
 } from '@shared/service-proxies/service-proxies';
-import { finalize, map, Observable } from 'rxjs';
+import { finalize, firstValueFrom, map, Observable } from 'rxjs';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { DateTimeService } from '@app/shared/common/timing/date-time.service';
@@ -57,13 +57,17 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
         { label: 'Khoá', value: 2 },
     ];
     stockLevels = [
-        { label: 'Cấp 0', value: 0 },
-        { label: 'Cấp 1', value: 1 },
-        { label: 'Cấp 2', value: 2 },
-        { label: 'Cấp 3', value: 3 },
-        { label: 'Cấp 4', value: 4 },
-        { label: 'Cấp 5', value: 5 },
-        { label: 'Cấp 6', value: 6 },
+        { label: 'Cấp 0', value: 1 },
+        { label: 'Cấp 1', value: 2 },
+        { label: 'Cấp 2', value: 3 },
+        { label: 'Cấp 3', value: 4 },
+        { label: 'Cấp 4', value: 5 },
+        { label: 'Cấp 5', value: 6 },
+        { label: 'Cấp 6', value: 7 },
+        { label: 'Cấp 7', value: 8 },
+        { label: 'Cấp 8', value: 9 },
+        { label: 'Cấp 9', value: 10 },
+        { label: 'Cấp 10', value: 11 },
     ];
     importantlist = [
         { label: '1', value: 1 },
@@ -87,13 +91,15 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
         },
     ];
     departmentList = [];
-    userList = [];
+    userList: any[] = [];
     stockList = [];
+    listStockParent = [];
     selectedDepartment: any;
     approvalFlowData: any = {};
     filteredUsers: UserInfoDto[] = new Array<UserInfoDto>();
     public dateRange: DateTime[] = [this._dateTimeService.getStartOfMonth(), this._dateTimeService.getEndOfMonth()];
     selectedStock: any;
+    selectedStockFilter: any;
 
     ngOnInit() {
         this.items = [
@@ -109,7 +115,7 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
         this.primengTableHelper.showLoadingIndicator();
         this._inventoryServiceProxy
             .getListApprovalFlow(
-                this.selectedStock ? this.selectedStock.id : undefined,
+                this.selectedStockFilter ? this.selectedStockFilter.id : undefined,
                 this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
                 this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
                 this.status,
@@ -166,23 +172,33 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
         }
     }
 
-    // getOrganizationUnitUsers(id: number) {
-    //     this._organizationUnitService.getOrganizationUnitUsers(id, undefined, 100, 0).subscribe((result) => {
-    //         this.userList = result.items;
-    //     });
-    // }
-
     getOrganizationUnitUsers(id: number): Observable<any[]> {
         return this._commonLookupServiceProxy.getOrganizationUnitUsers(id, undefined, 100, 0).pipe(
             map((result) => result.items) // Chỉ trả về danh sách items
         );
     }
 
+    onChangeStockLevel(event: { value: any }) {
+        const stockLevel = event.value;
+        this.getListSuggestStockParent(stockLevel);
+    }
+
+    getListSuggestStockParent(stockLevel: number) {
+        this._inventoryServiceProxy
+            .getListSuggestStockParent(undefined, stockLevel, undefined, undefined, 0, 100)
+            .subscribe((result) => {
+                this.stockList = result.items;
+            });
+    }
+
     createOrEditApprovalFlow() {
         let body = new CreateOrEditApprovalFlowDto();
         body = { ...this.approvalFlowData };
+        body.stockLevel = this.approvalFlowData.stockLevel - 1;
         if (this.selectedStock) {
             body.stockId = this.selectedStock.id;
+        } else {
+            body.stockId = undefined;
         }
         if (this.tempApprovalItems) {
             body.items = this.tempApprovalItems.map((item) => {
@@ -213,10 +229,10 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
 
     getApprovalFlowForView(id: number) {
         this._inventoryServiceProxy.getApprovalFlowForView(id).subscribe((result) => {
+            this.getListSuggestStockParent(result.approvalFlow.stockLevel + 1);
             this.approvalFlowData = result.approvalFlow;
+            this.approvalFlowData.stockLevel = result.approvalFlow.stockLevel + 1;
             this.tempApprovalItems = result.approvalFlow.items;
-            const stockId = result.approvalFlow.stockId;
-            this.selectedStock = this.stockList.find((stock) => stock.id === stockId) || null;
             if (this.isEdit) {
                 this.tempApprovalItems.forEach((item: any) => {
                     const department = this.departmentList.find((dept) => dept.code === item.officeCode);
@@ -228,6 +244,10 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
                     }
                 });
             }
+            setTimeout(() => {
+                const stockId = result.approvalFlow.stockId;
+                this.selectedStock = this.stockList.find((stock) => stock.id === stockId) || null;
+            }, 150);
         });
     }
 
@@ -261,16 +281,24 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
         }
     }
 
-    openModal(template: TemplateRef<any>) {
-        this.modalRef = this.modalService.show(template, { id: 1, class: 'modal-xl' });
-        // Lắng nghe sự kiện `onHidden`
-        const onHiddenSubscription = this.modalService.onHidden.subscribe(() => {
-            // Khi modal đóng, đặt lại selectedStock
-            this.selectedStock = undefined;
+    resetDataAdd() {
+        this.isEdit = false;
+        this.approvalFlowData = {};
+        this.approvalFlowData.status = 1;
+        this.tempApprovalItems = [
+            {
+                officeCode: '',
+                officeName: '',
+                userName: '',
+                order: null,
+            },
+        ];
+        this.selectedStock = undefined;
+    }
 
-            // Hủy đăng ký sự kiện sau khi xử lý
-            onHiddenSubscription.unsubscribe();
-        });
+    openModal(template: TemplateRef<any>) {
+        this.resetDataAdd();
+        this.modalRef = this.modalService.show(template, { id: 1, class: 'modal-xl' });
     }
 
     closeModal(modalId?: number) {

@@ -12,7 +12,7 @@ import {
     ProductType,
 } from '@shared/service-proxies/service-proxies';
 import { Router } from '@angular/router';
-import { finalize } from 'rxjs';
+import { catchError, finalize } from 'rxjs';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { AppConsts } from '@shared/AppConsts';
@@ -187,11 +187,10 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
                 this.stockId,
                 this.productType,
                 this.attribute,
-                this.simType,
-                this.mobile,
-                this.serial,
                 this.productType == ProductType.Mobile ? this.product : undefined,
-                // this.productType == ProductType.Serial ? this.product : undefined,
+                this.productType == ProductType.Serial ? this.product : undefined,
+                this.simType,
+                undefined,
                 this.fromRange,
                 this.toRange,
                 false,
@@ -232,12 +231,25 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
             body.rangeItems = data;
         }
         if (this.uploadedFile) {
-            this._inventoryServiceProxy.createRecovery(body).subscribe((result) => {
-                this.isLoading = false;
-                if (result.results.orderCode) {
-                    this.uploadOrderDocument(result.results.orderCode, this.uploadedFile);
-                }
-            });
+            this._inventoryServiceProxy
+                .createRecovery(body)
+                .pipe(
+                    catchError((err) => {
+                        this.isLoading = false;
+                        throw err;
+                    })
+                )
+                .subscribe({
+                    next: (result) => {
+                        this.isLoading = false;
+                        if (result.results.orderCode) {
+                            this.uploadOrderDocument(result.results.orderCode, this.uploadedFile);
+                        }
+                    },
+                    error: (err) => {
+                        this.isLoading = false;
+                    },
+                });
         } else {
             this.isLoading = false;
             this.message.error(this.l('Vui lòng tải lên thông tin chứng từ!'));

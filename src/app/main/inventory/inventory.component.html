@@ -443,6 +443,30 @@
                                         id="userCreateOrder" [multiple]="true" styleClass="w-100"></p-autoComplete>
                                 </div>
                             </div>
+                            <div class="d-flex align-items-center mb-5">
+                                <label for="userCreateOrder" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Cho phép xem số' | localize }}
+                                </label>
+                                <div class="input-group">
+                                    <p-autoComplete [style]="{'text-align': 'left', width: '100%'}"
+                                        [(ngModel)]="inventoryData.userViewMobile" [suggestions]="filteredUsers"
+                                        (completeMethod)="filterUsers($event)" field="userName" value="userName"
+                                        placeholder="Tìm kiếm và chọn" [minLength]="1" name="userViewMobile"
+                                        id="userViewMobile" [multiple]="true" styleClass="w-100"></p-autoComplete>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-5">
+                                <label for="userCreateOrder" class="form-label text-start ms-5" style="width: 38%;">
+                                    {{ 'Cho phép xem serial' | localize }}
+                                </label>
+                                <div class="input-group">
+                                    <p-autoComplete [style]="{'text-align': 'left', width: '100%'}"
+                                        [(ngModel)]="inventoryData.userViewSerial" [suggestions]="filteredUsers"
+                                        (completeMethod)="filterUsers($event)" field="userName" value="userName"
+                                        placeholder="Tìm kiếm và chọn" [minLength]="1" name="userViewSerial"
+                                        id="userViewSerial" [multiple]="true" styleClass="w-100"></p-autoComplete>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

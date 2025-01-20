@@ -6,6 +6,7 @@ import { CreateOrderDto, InventoryServiceProxy, IOrderItem, OrderItem } from '@s
 import { Router } from '@angular/router';
 import { AppConsts } from '@shared/AppConsts';
 import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs';
 @Component({
     templateUrl: './create-inventory-import.component.html',
     encapsulation: ViewEncapsulation.None,
@@ -101,12 +102,25 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
             });
         }
         if (this.uploadedFile) {
-            this._inventoryServiceProxy.createOrder(body).subscribe((result) => {
-                this.isLoading = false;
-                if (result.orderCode) {
-                    this.uploadOrderDocument(result.orderCode, this.uploadedFile);
-                }
-            });
+            this._inventoryServiceProxy
+                .createOrder(body)
+                .pipe(
+                    catchError((err) => {
+                        this.isLoading = false;
+                        throw err;
+                    })
+                )
+                .subscribe({
+                    next: (result) => {
+                        this.isLoading = false;
+                        if (result.orderCode) {
+                            this.uploadOrderDocument(result.orderCode, this.uploadedFile);
+                        }
+                    },
+                    error: (err) => {
+                        this.isLoading = false;
+                    },
+                });
         } else {
             this.isLoading = false;
             this.message.error(this.l('Vui lòng tải lên thông tin chứng từ!'));
