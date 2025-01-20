@@ -189,6 +189,18 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
                 userName: userName,
             }));
         }
+
+        if (this.inventoryData.userViewMobile) {
+            this.inventoryData.userViewMobile = this.inventoryData.userViewMobile.map((userName: string) => ({
+                userName: userName,
+            }));
+        }
+
+        if (this.inventoryData.userViewSerial) {
+            this.inventoryData.userViewSerial = this.inventoryData.userViewSerial.map((userName: string) => ({
+                userName: userName,
+            }));
+        }
     }
 
     // Lọc user khi nhập vào autocomplete
@@ -307,15 +319,11 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
 
     createOrEditStock() {
         let body = new CreateOrEditStockDto();
-        if (!this.isEdit) {
-            body = { ...this.inventoryData };
-            body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
-            body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.userName) || [];
-        } else {
-            body = { ...this.inventoryData };
-            body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
-            body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.userName) || [];
-        }
+        body = { ...this.inventoryData };
+        body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
+        body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.userName) || [];
+        body.userViewMobile = this.inventoryData.userViewMobile?.map((user) => user.userName) || [];
+        body.userViewSerial = this.inventoryData.userViewSerial?.map((user) => user.userName) || [];
 
         this._inventoryServiceProxy.createOrEditStock(body).subscribe(() => {
             this.notify.info(this.l('SavedSuccessfully'));
@@ -328,13 +336,13 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     lockOrUnlockStock() {
         let body = new CreateOrEditStockDto();
         body = { ...this.inventoryData };
+        body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
+        body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.userName) || [];
+        body.userViewMobile = this.inventoryData.userViewMobile?.map((user) => user.userName) || [];
+        body.userViewSerial = this.inventoryData.userViewSerial?.map((user) => user.userName) || [];
         if (this.statusAction === 3) {
-            body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
-            body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.userName) || [];
             body.status = 1;
         } else {
-            body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
-            body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.userName) || [];
             body.status = 3;
         }
         this._inventoryServiceProxy.createOrEditStock(body).subscribe(() => {

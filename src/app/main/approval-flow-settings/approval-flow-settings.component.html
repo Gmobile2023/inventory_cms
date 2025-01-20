@@ -9,12 +9,12 @@
                     placeholder="Thời gian" />
             </div>
             <div class="col-md-4 mb-3">
-                <p-dropdown [style]="{width: '100%'}" [options]="stockList" [(ngModel)]="selectedStock"
+                <p-dropdown [style]="{width: '100%'}" [options]="stockList" [(ngModel)]="selectedStockFilter"
                     optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
                     placeholder="Chọn kho">
-                    <ng-template pTemplate="selectedStock">
-                        <div class="flex align-items-center gap-2" *ngIf="selectedStock">
-                            <div>{{ selectedStock.stockName }}</div>
+                    <ng-template pTemplate="selectedStockFilter">
+                        <div class="flex align-items-center gap-2" *ngIf="selectedStockFilter">
+                            <div>{{ selectedStockFilter.stockName }}</div>
                         </div>
                     </ng-template>
                     <ng-template let-stock pTemplate="item">
@@ -164,7 +164,7 @@
                     <div class="col-md-4 mb-5">
                         <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="stockLevels"
                             [(ngModel)]="approvalFlowData.stockLevel" optionLabel="label" optionValue="value"
-                            placeholder="Chọn cấp độ kho" class="w-100">
+                            placeholder="Chọn cấp độ kho" class="w-100" (onChange)="onChangeStockLevel($event)">
                         </p-dropdown>
                     </div>
                     <div class="col-md-4 mb-5">
@@ -251,7 +251,8 @@
                             {{ 'Cấp độ kho' | localize }}
                         </label>
                         <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="stockLevels"
-                            optionLabel="label" [optionValue]="approvalFlowData.numberLevel" class="w-100">
+                            [(ngModel)]="approvalFlowData.numberLevel" optionLabel="label" optionValue="value"
+                            placeholder="Chọn cấp độ kho" class="w-100">
                         </p-dropdown>
                     </div>
                     <div class="col-md-4 mb-5">

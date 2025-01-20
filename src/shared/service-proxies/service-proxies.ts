@@ -9660,14 +9660,19 @@ export class InventoryServiceProxy {
 
     /**
      * @param id (optional) 
+     * @param checkPeriod (optional) 
      * @return Success
      */
-    getOrderForView(id: number | undefined): Observable<GetOrderForViewDto> {
+    getOrderForView(id: number | undefined, checkPeriod: boolean | undefined): Observable<GetOrderForViewDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetOrderForView?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
         else if (id !== undefined)
             url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (checkPeriod === null)
+            throw new Error("The parameter 'checkPeriod' cannot be null.");
+        else if (checkPeriod !== undefined)
+            url_ += "checkPeriod=" + encodeURIComponent("" + checkPeriod) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -11450,6 +11455,129 @@ export class InventoryServiceProxy {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    deleteConfigureNumberReclaimSchedule(id: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/DeleteConfigureNumberReclaimSchedule?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteConfigureNumberReclaimSchedule(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteConfigureNumberReclaimSchedule(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDeleteConfigureNumberReclaimSchedule(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param detailId (optional) 
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getSimPeriodDetail(detailId: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetSimPeriodDetail?";
+        if (detailId === null)
+            throw new Error("The parameter 'detailId' cannot be null.");
+        else if (detailId !== undefined)
+            url_ += "DetailId=" + encodeURIComponent("" + detailId) + "&";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetSimPeriodDetail(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSimPeriodDetail(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagedResultDtoOfSimNumberDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagedResultDtoOfSimNumberDto>;
+        }));
+    }
+
+    protected processGetSimPeriodDetail(response: HttpResponseBase): Observable<PagedResultDtoOfSimNumberDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfSimNumberDto.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -21758,7 +21886,7 @@ export interface IAddNewPageOutput {
 
 export class AddSaleStockDto implements IAddSaleStockDto {
     id!: number;
-    userSale!: string | undefined;
+    userSales!: string[] | undefined;
     userCreate!: string | undefined;
 
     constructor(data?: IAddSaleStockDto) {
@@ -21773,7 +21901,11 @@ export class AddSaleStockDto implements IAddSaleStockDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.userSale = _data["userSale"];
+            if (Array.isArray(_data["userSales"])) {
+                this.userSales = [] as any;
+                for (let item of _data["userSales"])
+                    this.userSales!.push(item);
+            }
             this.userCreate = _data["userCreate"];
         }
     }
@@ -21788,7 +21920,11 @@ export class AddSaleStockDto implements IAddSaleStockDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["userSale"] = this.userSale;
+        if (Array.isArray(this.userSales)) {
+            data["userSales"] = [];
+            for (let item of this.userSales)
+                data["userSales"].push(item);
+        }
         data["userCreate"] = this.userCreate;
         return data;
     }
@@ -21796,7 +21932,7 @@ export class AddSaleStockDto implements IAddSaleStockDto {
 
 export interface IAddSaleStockDto {
     id: number;
-    userSale: string | undefined;
+    userSales: string[] | undefined;
     userCreate: string | undefined;
 }
 
@@ -23777,8 +23913,8 @@ export interface ICreateOrEditDistrictDto {
 export class CreateOrEditStockDto implements ICreateOrEditStockDto {
     userManager!: string[] | undefined;
     userCreateOrder!: string[] | undefined;
-    userApprove!: string[] | undefined;
-    userAccounting!: string[] | undefined;
+    userViewMobile!: string[] | undefined;
+    userViewSerial!: string[] | undefined;
     id!: number | undefined;
     stockCode!: string | undefined;
     stockName!: string | undefined;
@@ -23801,8 +23937,11 @@ export class CreateOrEditStockDto implements ICreateOrEditStockDto {
     userConfirm!: string | undefined;
     confirmDate!: DateTime | undefined;
     quantity!: number;
+    quantityMobile!: number;
+    quantitySerial!: number;
     numberChild!: number;
     location!: string | undefined;
+    attribute!: string | undefined;
 
     constructor(data?: ICreateOrEditStockDto) {
         if (data) {
@@ -23825,15 +23964,15 @@ export class CreateOrEditStockDto implements ICreateOrEditStockDto {
                 for (let item of _data["userCreateOrder"])
                     this.userCreateOrder!.push(item);
             }
-            if (Array.isArray(_data["userApprove"])) {
-                this.userApprove = [] as any;
-                for (let item of _data["userApprove"])
-                    this.userApprove!.push(item);
+            if (Array.isArray(_data["userViewMobile"])) {
+                this.userViewMobile = [] as any;
+                for (let item of _data["userViewMobile"])
+                    this.userViewMobile!.push(item);
             }
-            if (Array.isArray(_data["userAccounting"])) {
-                this.userAccounting = [] as any;
-                for (let item of _data["userAccounting"])
-                    this.userAccounting!.push(item);
+            if (Array.isArray(_data["userViewSerial"])) {
+                this.userViewSerial = [] as any;
+                for (let item of _data["userViewSerial"])
+                    this.userViewSerial!.push(item);
             }
             this.id = _data["id"];
             this.stockCode = _data["stockCode"];
@@ -23857,8 +23996,11 @@ export class CreateOrEditStockDto implements ICreateOrEditStockDto {
             this.userConfirm = _data["userConfirm"];
             this.confirmDate = _data["confirmDate"] ? DateTime.fromISO(_data["confirmDate"].toString()) : <any>undefined;
             this.quantity = _data["quantity"];
+            this.quantityMobile = _data["quantityMobile"];
+            this.quantitySerial = _data["quantitySerial"];
             this.numberChild = _data["numberChild"];
             this.location = _data["location"];
+            this.attribute = _data["attribute"];
         }
     }
 
@@ -23881,15 +24023,15 @@ export class CreateOrEditStockDto implements ICreateOrEditStockDto {
             for (let item of this.userCreateOrder)
                 data["userCreateOrder"].push(item);
         }
-        if (Array.isArray(this.userApprove)) {
-            data["userApprove"] = [];
-            for (let item of this.userApprove)
-                data["userApprove"].push(item);
+        if (Array.isArray(this.userViewMobile)) {
+            data["userViewMobile"] = [];
+            for (let item of this.userViewMobile)
+                data["userViewMobile"].push(item);
         }
-        if (Array.isArray(this.userAccounting)) {
-            data["userAccounting"] = [];
-            for (let item of this.userAccounting)
-                data["userAccounting"].push(item);
+        if (Array.isArray(this.userViewSerial)) {
+            data["userViewSerial"] = [];
+            for (let item of this.userViewSerial)
+                data["userViewSerial"].push(item);
         }
         data["id"] = this.id;
         data["stockCode"] = this.stockCode;
@@ -23913,8 +24055,11 @@ export class CreateOrEditStockDto implements ICreateOrEditStockDto {
         data["userConfirm"] = this.userConfirm;
         data["confirmDate"] = this.confirmDate ? this.confirmDate.toString() : <any>undefined;
         data["quantity"] = this.quantity;
+        data["quantityMobile"] = this.quantityMobile;
+        data["quantitySerial"] = this.quantitySerial;
         data["numberChild"] = this.numberChild;
         data["location"] = this.location;
+        data["attribute"] = this.attribute;
         return data;
     }
 }
@@ -23922,8 +24067,8 @@ export class CreateOrEditStockDto implements ICreateOrEditStockDto {
 export interface ICreateOrEditStockDto {
     userManager: string[] | undefined;
     userCreateOrder: string[] | undefined;
-    userApprove: string[] | undefined;
-    userAccounting: string[] | undefined;
+    userViewMobile: string[] | undefined;
+    userViewSerial: string[] | undefined;
     id: number | undefined;
     stockCode: string | undefined;
     stockName: string | undefined;
@@ -23946,8 +24091,11 @@ export interface ICreateOrEditStockDto {
     userConfirm: string | undefined;
     confirmDate: DateTime | undefined;
     quantity: number;
+    quantityMobile: number;
+    quantitySerial: number;
     numberChild: number;
     location: string | undefined;
+    attribute: string | undefined;
 }
 
 export class CreateOrEditTelegramGroupDto implements ICreateOrEditTelegramGroupDto {
@@ -30709,8 +30857,11 @@ export class InventoryDto implements IInventoryDto {
     userConfirm!: string | undefined;
     confirmDate!: DateTime | undefined;
     quantity!: number;
+    quantityMobile!: number;
+    quantitySerial!: number;
     numberChild!: number;
     location!: string | undefined;
+    attribute!: string | undefined;
 
     constructor(data?: IInventoryDto) {
         if (data) {
@@ -30745,8 +30896,11 @@ export class InventoryDto implements IInventoryDto {
             this.userConfirm = _data["userConfirm"];
             this.confirmDate = _data["confirmDate"] ? DateTime.fromISO(_data["confirmDate"].toString()) : <any>undefined;
             this.quantity = _data["quantity"];
+            this.quantityMobile = _data["quantityMobile"];
+            this.quantitySerial = _data["quantitySerial"];
             this.numberChild = _data["numberChild"];
             this.location = _data["location"];
+            this.attribute = _data["attribute"];
         }
     }
 
@@ -30781,8 +30935,11 @@ export class InventoryDto implements IInventoryDto {
         data["userConfirm"] = this.userConfirm;
         data["confirmDate"] = this.confirmDate ? this.confirmDate.toString() : <any>undefined;
         data["quantity"] = this.quantity;
+        data["quantityMobile"] = this.quantityMobile;
+        data["quantitySerial"] = this.quantitySerial;
         data["numberChild"] = this.numberChild;
         data["location"] = this.location;
+        data["attribute"] = this.attribute;
         return data;
     }
 }
@@ -30810,8 +30967,11 @@ export interface IInventoryDto {
     userConfirm: string | undefined;
     confirmDate: DateTime | undefined;
     quantity: number;
+    quantityMobile: number;
+    quantitySerial: number;
     numberChild: number;
     location: string | undefined;
+    attribute: string | undefined;
 }
 
 export class InventoryReportDto implements IInventoryReportDto {
@@ -30885,6 +31045,8 @@ export class InventoryViewDto implements IInventoryViewDto {
     userManager!: string[] | undefined;
     userCreate!: string[] | undefined;
     userSale!: string[] | undefined;
+    userViewMobile!: string[] | undefined;
+    userViewSerial!: string[] | undefined;
     id!: number | undefined;
     stockCode!: string | undefined;
     stockName!: string | undefined;
@@ -30907,8 +31069,11 @@ export class InventoryViewDto implements IInventoryViewDto {
     userConfirm!: string | undefined;
     confirmDate!: DateTime | undefined;
     quantity!: number;
+    quantityMobile!: number;
+    quantitySerial!: number;
     numberChild!: number;
     location!: string | undefined;
+    attribute!: string | undefined;
 
     constructor(data?: IInventoryViewDto) {
         if (data) {
@@ -30936,6 +31101,16 @@ export class InventoryViewDto implements IInventoryViewDto {
                 for (let item of _data["userSale"])
                     this.userSale!.push(item);
             }
+            if (Array.isArray(_data["userViewMobile"])) {
+                this.userViewMobile = [] as any;
+                for (let item of _data["userViewMobile"])
+                    this.userViewMobile!.push(item);
+            }
+            if (Array.isArray(_data["userViewSerial"])) {
+                this.userViewSerial = [] as any;
+                for (let item of _data["userViewSerial"])
+                    this.userViewSerial!.push(item);
+            }
             this.id = _data["id"];
             this.stockCode = _data["stockCode"];
             this.stockName = _data["stockName"];
@@ -30958,8 +31133,11 @@ export class InventoryViewDto implements IInventoryViewDto {
             this.userConfirm = _data["userConfirm"];
             this.confirmDate = _data["confirmDate"] ? DateTime.fromISO(_data["confirmDate"].toString()) : <any>undefined;
             this.quantity = _data["quantity"];
+            this.quantityMobile = _data["quantityMobile"];
+            this.quantitySerial = _data["quantitySerial"];
             this.numberChild = _data["numberChild"];
             this.location = _data["location"];
+            this.attribute = _data["attribute"];
         }
     }
 
@@ -30987,6 +31165,16 @@ export class InventoryViewDto implements IInventoryViewDto {
             for (let item of this.userSale)
                 data["userSale"].push(item);
         }
+        if (Array.isArray(this.userViewMobile)) {
+            data["userViewMobile"] = [];
+            for (let item of this.userViewMobile)
+                data["userViewMobile"].push(item);
+        }
+        if (Array.isArray(this.userViewSerial)) {
+            data["userViewSerial"] = [];
+            for (let item of this.userViewSerial)
+                data["userViewSerial"].push(item);
+        }
         data["id"] = this.id;
         data["stockCode"] = this.stockCode;
         data["stockName"] = this.stockName;
@@ -31009,8 +31197,11 @@ export class InventoryViewDto implements IInventoryViewDto {
         data["userConfirm"] = this.userConfirm;
         data["confirmDate"] = this.confirmDate ? this.confirmDate.toString() : <any>undefined;
         data["quantity"] = this.quantity;
+        data["quantityMobile"] = this.quantityMobile;
+        data["quantitySerial"] = this.quantitySerial;
         data["numberChild"] = this.numberChild;
         data["location"] = this.location;
+        data["attribute"] = this.attribute;
         return data;
     }
 }
@@ -31019,6 +31210,8 @@ export interface IInventoryViewDto {
     userManager: string[] | undefined;
     userCreate: string[] | undefined;
     userSale: string[] | undefined;
+    userViewMobile: string[] | undefined;
+    userViewSerial: string[] | undefined;
     id: number | undefined;
     stockCode: string | undefined;
     stockName: string | undefined;
@@ -31041,8 +31234,11 @@ export interface IInventoryViewDto {
     userConfirm: string | undefined;
     confirmDate: DateTime | undefined;
     quantity: number;
+    quantityMobile: number;
+    quantitySerial: number;
     numberChild: number;
     location: string | undefined;
+    attribute: string | undefined;
 }
 
 export class InvoiceDto implements IInvoiceDto {
@@ -33087,6 +33283,10 @@ export class OrderDetailDto implements IOrderDetailDto {
     telCo!: string | undefined;
     orderName!: string | undefined;
     unit!: string | undefined;
+    productType!: ProductType;
+    userCreated!: string | undefined;
+    periodName!: string | undefined;
+    createdDate!: DateTime | undefined;
 
     constructor(data?: IOrderDetailDto) {
         if (data) {
@@ -33114,6 +33314,10 @@ export class OrderDetailDto implements IOrderDetailDto {
             this.telCo = _data["telCo"];
             this.orderName = _data["orderName"];
             this.unit = _data["unit"];
+            this.productType = _data["productType"];
+            this.userCreated = _data["userCreated"];
+            this.periodName = _data["periodName"];
+            this.createdDate = _data["createdDate"] ? DateTime.fromISO(_data["createdDate"].toString()) : <any>undefined;
         }
     }
 
@@ -33141,6 +33345,10 @@ export class OrderDetailDto implements IOrderDetailDto {
         data["telCo"] = this.telCo;
         data["orderName"] = this.orderName;
         data["unit"] = this.unit;
+        data["productType"] = this.productType;
+        data["userCreated"] = this.userCreated;
+        data["periodName"] = this.periodName;
+        data["createdDate"] = this.createdDate ? this.createdDate.toString() : <any>undefined;
         return data;
     }
 }
@@ -33161,6 +33369,10 @@ export interface IOrderDetailDto {
     telCo: string | undefined;
     orderName: string | undefined;
     unit: string | undefined;
+    productType: ProductType;
+    userCreated: string | undefined;
+    periodName: string | undefined;
+    createdDate: DateTime | undefined;
 }
 
 export class OrderDto implements IOrderDto {
@@ -33199,6 +33411,8 @@ export class OrderDto implements IOrderDto {
     statusCurrentName!: string | undefined;
     roleName!: string | undefined;
     document!: string | undefined;
+    settingLevel!: number | undefined;
+    settingId!: number | undefined;
     settingUser!: string[] | undefined;
     settingUserStock!: string[] | undefined;
     items!: OrderDetailDto[] | undefined;
@@ -33249,6 +33463,8 @@ export class OrderDto implements IOrderDto {
             this.statusCurrentName = _data["statusCurrentName"];
             this.roleName = _data["roleName"];
             this.document = _data["document"];
+            this.settingLevel = _data["settingLevel"];
+            this.settingId = _data["settingId"];
             if (Array.isArray(_data["settingUser"])) {
                 this.settingUser = [] as any;
                 for (let item of _data["settingUser"])
@@ -33311,6 +33527,8 @@ export class OrderDto implements IOrderDto {
         data["statusCurrentName"] = this.statusCurrentName;
         data["roleName"] = this.roleName;
         data["document"] = this.document;
+        data["settingLevel"] = this.settingLevel;
+        data["settingId"] = this.settingId;
         if (Array.isArray(this.settingUser)) {
             data["settingUser"] = [];
             for (let item of this.settingUser)
@@ -33366,6 +33584,8 @@ export interface IOrderDto {
     statusCurrentName: string | undefined;
     roleName: string | undefined;
     document: string | undefined;
+    settingLevel: number | undefined;
+    settingId: number | undefined;
     settingUser: string[] | undefined;
     settingUserStock: string[] | undefined;
     items: OrderDetailDto[] | undefined;
@@ -33373,6 +33593,7 @@ export interface IOrderDto {
 
 export class OrderExportDto implements IOrderExportDto {
     orderCode!: string | undefined;
+    periodName!: string | undefined;
     description!: string | undefined;
     userCreated!: string | undefined;
     exportItems!: OrderExportItemDto[] | undefined;
@@ -33389,6 +33610,7 @@ export class OrderExportDto implements IOrderExportDto {
     init(_data?: any) {
         if (_data) {
             this.orderCode = _data["orderCode"];
+            this.periodName = _data["periodName"];
             this.description = _data["description"];
             this.userCreated = _data["userCreated"];
             if (Array.isArray(_data["exportItems"])) {
@@ -33409,6 +33631,7 @@ export class OrderExportDto implements IOrderExportDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["orderCode"] = this.orderCode;
+        data["periodName"] = this.periodName;
         data["description"] = this.description;
         data["userCreated"] = this.userCreated;
         if (Array.isArray(this.exportItems)) {
@@ -33422,6 +33645,7 @@ export class OrderExportDto implements IOrderExportDto {
 
 export interface IOrderExportDto {
     orderCode: string | undefined;
+    periodName: string | undefined;
     description: string | undefined;
     userCreated: string | undefined;
     exportItems: OrderExportItemDto[] | undefined;

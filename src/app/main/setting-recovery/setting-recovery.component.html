@@ -140,7 +140,8 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:;" class="dropdown-item">
+                                            <a href="javascript:;" class="dropdown-item"
+                                                (click)="openFormDelete(record.id,  deleteSetting)">
                                                 {{ 'Xoá' | localize }}
                                             </a>
                                         </li>
@@ -358,6 +359,24 @@
             <div class="modal-footer">
                 <div class="d-flex justify-content-center">
                     <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">ĐÓNG</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #deleteSetting>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Xác nhận xoá cấu hình</h3>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p style="font-size: 16px;">Bạn có chắc chắn muốn xoá cấu hình?</p>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">HUỶ</button>
+                    <button type="button" class="btn btn-primary btn-sm"
+                        (click)="deleteConfigureNumberReclaimSchedule()">XÁC NHẬN</button>
                 </div>
             </div>
         </div>

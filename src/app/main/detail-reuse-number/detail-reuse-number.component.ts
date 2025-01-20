@@ -56,9 +56,10 @@ export class DetailReuseNumberComponent extends AppComponentBase implements OnIn
     }
 
     getOrderForView() {
-        this._inventoryServiceProxy.getOrderForView(this.orderId).subscribe((result) => {
+        this._inventoryServiceProxy.getOrderForView(this.orderId, false).subscribe((result) => {
             this.orderData = result.order;
             if (this.orderData.document) this.convertUrl(this.orderData.document);
+            if (this.orderData.settingUser) this.isAction = this.orderData.settingUser.includes(this.userName);
         });
     }
 
@@ -83,14 +84,10 @@ export class DetailReuseNumberComponent extends AppComponentBase implements OnIn
 
     confirmOrder() {
         const body = new ConfirmOrderDto();
-        body.orderCode = this.orderCode;
-        if (this.orderData.status !== 5) {
-            body.status = 2;
-        } else {
-            body.status = 1;
-        }
+        body.orderCode = this.orderData.orderCode;
+        body.status = 2;
         this._inventoryServiceProxy.confirmOrder(body).subscribe(() => {
-            this.router.navigate(['/app/main/inventory-import-export']);
+            this.router.navigate(['/app/main/reuse-number']);
             this.notify.info(this.l('SavedSuccessfully'));
             this.closeModal();
         });
@@ -98,12 +95,12 @@ export class DetailReuseNumberComponent extends AppComponentBase implements OnIn
 
     refuseOrder() {
         const body = new ConfirmOrderDto();
-        body.orderCode = this.orderCode;
+        body.orderCode = this.orderData.orderCode;
         body.description = this.description;
         body.status = 7;
         if (body.description) {
             this._inventoryServiceProxy.confirmOrder(body).subscribe(() => {
-                this.router.navigate(['/app/main/inventory-import-export']);
+                this.router.navigate(['/app/main/reuse-number']);
                 this.notify.info(this.l('SavedSuccessfully'));
                 this.closeModal();
             });

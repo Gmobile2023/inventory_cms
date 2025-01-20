@@ -15,7 +15,7 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
-import { finalize } from 'rxjs';
+import { catchError, finalize } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppConsts } from '@shared/AppConsts';
 import { HttpClient } from '@angular/common/http';
@@ -95,6 +95,7 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
     isLoading: boolean = false;
     orderData: any = {};
+    periodName: string;
 
     ngOnInit() {
         this.items = [
@@ -138,7 +139,7 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     }
 
     getOrderForView(id: number) {
-        this._inventoryServiceProxy.getOrderForView(id).subscribe((result) => {
+        this._inventoryServiceProxy.getOrderForView(id, true).subscribe((result) => {
             this.orderData = result.order;
             this.selectedStockTo = this.listStock.find((stock) => stock.stockCode === this.orderData.desStockCode);
             this.selectedStockFrom = this.listStock.find((stock) => stock.stockCode === this.orderData.srcStockCode);
@@ -196,8 +197,8 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
                 this.stockId,
                 this.productType,
                 this.attribute,
-                this.productType === ProductType.Mobile ? this.product : undefined,
-                this.productType === ProductType.Serial ? this.product : undefined,
+                this.productType == ProductType.Mobile ? this.product : undefined,
+                this.productType == ProductType.Serial ? this.product : undefined,
                 this.simType,
                 undefined,
                 this.fromRange,
@@ -223,8 +224,8 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
                 this.selectedStockFrom?.id,
                 this.orderData.orderCode,
                 this.productType,
-                this.productType === ProductType.Mobile ? this.product : undefined,
-                this.productType === ProductType.Serial ? this.product : undefined,
+                this.productType == ProductType.Mobile ? this.product : undefined,
+                this.productType == ProductType.Serial ? this.product : undefined,
                 undefined,
                 undefined,
                 this.simType,
@@ -258,7 +259,7 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         }
     }
 
-    createTransfer() {
+    async createTransfer() {
         this.isLoading = true;
         const body = new CreateTransferDto();
         body.title = this.title;
@@ -284,28 +285,27 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         }
 
         if (this.uploadedFile) {
-            // this._inventoryServiceProxy.createTransfer(body).subscribe({
-            //     next: (response) => {
-            //         if (response.success) {
-            //             this.notify.info(this.l('SavedSuccessfully'));
-            //             this.isLoading = false;
-            //             this.closeModal();
-            //             this.getListSims();
-            //             this.selectedRecords = [];
-            //             this.valuePrice = 0;
-            //         }
-            //     },
-            //     error: (err) => {
-            //         this.message.error(this.l(err.error.error?.message));
-            //         this.isLoading = false;
-            //     },
-            // });
-            this._inventoryServiceProxy.createTransfer(body).subscribe((result) => {
-                this.isLoading = false;
-                if (result.results.orderCode) {
-                    this.uploadOrderDocument(result.results.orderCode, this.uploadedFile);
-                }
-            });
+            this.isLoading = true;
+            this._inventoryServiceProxy
+                .createTransfer(body)
+                .pipe(
+                    catchError((err) => {
+                        this.isLoading = false;
+                        throw err;
+                    })
+                )
+                .subscribe({
+                    next: (result) => {
+                        this.isLoading = false;
+                        if (result.results.orderCode) {
+                            this.uploadOrderDocument(result.results.orderCode, this.uploadedFile);
+                        }
+                    },
+                    error: (err) => {
+                        console.log(err);
+                        this.isLoading = false;
+                    },
+                });
         } else {
             this.isLoading = false;
             this.message.error(this.l('Vui lòng tải lên thông tin chứng từ!'));
@@ -315,7 +315,7 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
     createOrderExport() {
         this.isLoading = true;
         const body = new OrderExportDto();
-        body.description = this.description;
+        body.periodName = this.periodName;
         body.orderCode = this.orderData.orderCode;
         body.exportItems = [];
         body.exportItems.push(OrderExportItemDto.fromJS(this.orderItems));
@@ -335,12 +335,26 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         if (this.tempOrderItems.fromRange) body.exportItems[0].fromRange = this.tempOrderItems.fromRange;
         if (this.tempOrderItems.toRange) body.exportItems[0].toRange = this.tempOrderItems.toRange;
 
-        this._inventoryServiceProxy.orderExport(body).subscribe(() => {
-            this.router.navigate(['/app/main/inventory-import-export/detail-inventory-export'], {
-                queryParams: { id: this.orderData.id },
+        this._inventoryServiceProxy
+            .orderExport(body)
+            .pipe(
+                catchError((err) => {
+                    this.isLoading = false;
+                    throw err;
+                })
+            )
+            .subscribe({
+                next: (result) => {
+                    this.isLoading = false;
+                    this.router.navigate(['/app/main/inventory-import-export/detail-inventory-export'], {
+                        queryParams: { id: this.orderData.id },
+                    });
+                    this.notify.info(this.l('Xuất kho thành công!'));
+                },
+                error: (err) => {
+                    this.isLoading = false;
+                },
             });
-            this.notify.info(this.l('Xuất kho thành công!'));
-        });
     }
 
     onFileSelect(event: any): void {

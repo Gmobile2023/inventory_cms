@@ -18,8 +18,10 @@
             <div class="col-md-12 mb-3">
                 <label for="title" class="form-label">{{ stockIdParam ? 'Tên đợt xuất' : 'Tiêu đề' }}<span
                         class="text-danger">(*)</span></label>
-                <input type="text" class="form-control" id="title"
-                    [placeholder]="stockIdParam ? 'Nhập tên đợt xuất' : 'Nhập tiêu đề'" [(ngModel)]="title">
+                <input type="text" class="form-control" id="title" placeholder="Nhập tiêu đề" [(ngModel)]="title"
+                    *ngIf="!stockIdParam">
+                <input type="text" class="form-control" id="periodName" placeholder="Nhập tên đợt xuất"
+                    [(ngModel)]="periodName" *ngIf="stockIdParam">
             </div>
             <div class="col-md-4 mb-3">
                 <label for="productType" class="form-label">Loại sản phẩm</label>

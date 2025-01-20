@@ -74,6 +74,7 @@ export class SettingRecoveryComponent extends AppComponentBase {
     selectedStockFrom: any;
     selectedStockTo: any;
     listStock: any[] = [];
+    idDelete: number;
 
     ngOnInit() {
         this.items = [{ label: 'Quản lý kho thu hồi' }, { label: 'Cấu hình thời gian lưu số trong kho' }];
@@ -189,6 +190,20 @@ export class SettingRecoveryComponent extends AppComponentBase {
             this.settingStatus = this.configData.items;
             this.selectedStockTo = this.listStock.find((stock) => stock.id === this.configData.desStockId);
             this.selectedStockFrom = this.listStock.find((stock) => stock.id === this.configData.srcStockId);
+        });
+    }
+
+    openFormDelete(id: number, template: TemplateRef<any>) {
+        this.modalRef = this.modalService.show(template, { id: 1, class: 'modal-md' });
+        if (id) {
+            this.idDelete = id;
+        }
+    }
+
+    deleteConfigureNumberReclaimSchedule() {
+        this._inventoryServiceProxy.deleteConfigureNumberReclaimSchedule(this.idDelete).subscribe((result) => {
+            this.getListConfigureNumberReclaimSchedules();
+            this.closeModal();
         });
     }
 

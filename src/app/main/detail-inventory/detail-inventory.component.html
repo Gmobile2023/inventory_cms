@@ -172,7 +172,9 @@
                     <button *ngIf="'Pages.Inventories.Stock.Kitting' | permission" class="btn btn-primary btn-sm ms-3"
                         type="button" (click)="openModal(kitting, 'modal-md')">ĐÓNG KIT</button>
                     <button *ngIf="'Pages.Inventories.Stock.AddSale' | permission" class="btn btn-primary btn-sm ms-3"
-                        type="button" (click)="openModal(addSaleStock, 'modal-md')">THÊM NGƯỜI BÁN HÀNG</button>
+                        type="button" (click)="openModal(addSaleStock, 'modal-md')">{{ inventoryData?.userSale?.length >
+                        0
+                        ? 'CẬP NHẬT NGƯỜI BÁN HÀNG' : 'THÊM NGƯỜI BÁN HÀNG' }}</button>
                     <button *ngIf="'Pages.Inventories.UpdatePrice' | permission" class="btn btn-primary btn-sm ms-3"
                         type="button" [routerLink]="'/app/main/price-update'"
                         [queryParams]="{ stockCode: inventoryData.stockCode, id: inventoryData.id }">ĐỊNH GIÁ</button>
@@ -339,8 +341,8 @@
                 <span class="text-danger">(*)</span>
             </label>
             <div class="input-group">
-                <p-autoComplete [style]="{'text-align': 'left', width: '100%'}" [(ngModel)]="userSale"
-                    [suggestions]="filteredUsers" (completeMethod)="filterUsers($event)" field="fullName"
+                <p-autoComplete [style]="{'text-align': 'left', width: '100%'}" [(ngModel)]="userSales"
+                    [suggestions]="filteredUsers" (completeMethod)="filterUsers($event)" field="userName"
                     value="userName" placeholder="Tìm kiếm và chọn" [minLength]="1" name="userSale" id="userSale"
                     [multiple]="true" styleClass="w-100"></p-autoComplete>
             </div>

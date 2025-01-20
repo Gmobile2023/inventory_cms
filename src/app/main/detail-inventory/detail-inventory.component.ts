@@ -69,7 +69,7 @@ export class DetailInventoryComponent extends AppComponentBase {
     cities: any[] = [];
     districts: any[] = [];
     wards: any[] = [];
-    userSale: any[] = [];
+    userSales: any[] = [];
     productAttribute: any[] = [];
     isSerial: boolean = false;
     simData: any = {};
@@ -150,6 +150,11 @@ export class DetailInventoryComponent extends AppComponentBase {
         this._inventoryServiceProxy.getStockForView(id).subscribe((result) => {
             this.inventoryData = result.inventory;
             this.createData.stockLevel = this.inventoryData.stockLevel + 1;
+            if (this.inventoryData.userSale.length > 0) {
+                this.userSales = this.inventoryData.userSale.map((userName: string) => ({
+                    userName: userName,
+                }));
+            }
         });
     }
 
@@ -266,7 +271,7 @@ export class DetailInventoryComponent extends AppComponentBase {
     handleAddSaleStock() {
         let body = new AddSaleStockDto();
         body.id = this.stockId;
-        body.userSale = this.userSale[0].userName;
+        body.userSales = this.userSales?.map((user) => user.userName) || [];
         this._inventoryServiceProxy.addSaleStock(body).subscribe(() => {
             this.getStockForView(this.stockId);
             this.notify.info(this.l('SavedSuccessfully'));
@@ -347,7 +352,6 @@ export class DetailInventoryComponent extends AppComponentBase {
 
     openModal(template: TemplateRef<any>, typeModal: string, id?: number) {
         this.modalRef = this.modalService.show(template, { id: 1, class: typeModal });
-        this.userSale = [];
     }
 
     closeModal(modalId?: number) {

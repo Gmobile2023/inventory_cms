@@ -166,11 +166,16 @@ export class CreateReuseNumberComponent extends AppComponentBase implements OnIn
             body.items = data;
         }
         if (this.uploadedFile) {
-            this._inventoryServiceProxy.createSimRecall(body).subscribe((result) => {
-                this.isLoading = false;
-                if (result.results.orderCode) {
-                    this.uploadOrderDocument(result.results.orderCode, this.uploadedFile);
-                }
+            this._inventoryServiceProxy.createSimRecall(body).subscribe({
+                next: (result) => {
+                    this.isLoading = false;
+                    if (result.results.orderCode) {
+                        this.uploadOrderDocument(result.results.orderCode, this.uploadedFile);
+                    }
+                },
+                error: (err) => {
+                    this.isLoading = false;
+                },
             });
         } else {
             this.isLoading = false;

@@ -81,7 +81,8 @@
                         TỪ CHỐI
                     </button>
                 </div>
-                <div class="alert alert-warning text-center mt-5 col-md-3" role="alert" *ngIf="orderData.status == 1">
+                <div class="alert alert-warning text-center mt-5 col-md-3" role="alert"
+                    *ngIf="orderData.status !== 1 && !isAction">
                     {{orderData.roleName}}!
                 </div>
             </div>
@@ -90,11 +91,11 @@
     <ng-template #approve>
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Phê duyệt yêu cầu nhập kho</h3>
+                <h3 class="modal-title">Phê duyệt yêu cầu tái sử dụng thuê bao</h3>
                 <button type="button" class="btn-close" (click)="closeModal()"></button>
             </div>
             <div class="modal-body text-center">
-                <p style="font-size: 16px;">Bạn có chắc chắn muốn duyệt yêu cầu nhập kho?</p>
+                <p style="font-size: 16px;">Bạn có chắc chắn muốn duyệt yêu cầu?</p>
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-center">
