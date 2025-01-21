@@ -1,103 +1,138 @@
 <div [@routerTransition]>
     <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
-    <div [class]="containerClass">
-        <div class="row bg-white py-5">
-            <h4>THÔNG TIN NHẬP KHO</h4>
-            <p>Vui lòng nhập đầy đủ thông tin nhập kho</p>
+    <form action="" #createImportForm="ngForm" novalidate>
+        <div [class]="containerClass">
+            <div class="row bg-white py-5">
+                <h4>THÔNG TIN NHẬP KHO</h4>
+                <p>Vui lòng nhập đầy đủ thông tin nhập kho</p>
 
-            <div class="mb-3 col-md-6">
-                <label for="title" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
-                <input type="text" class="form-control" id="title" name="title" placeholder="Nhập tiêu đề"
-                    [(ngModel)]="title">
-            </div>
-            <div class="mb-3 col-md-6">
-                <label for="stockId" class="form-label">Chọn kho nhập hàng<span class="text-danger">(*)</span></label>
-                <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStock"
-                    optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
-                    placeholder="Chọn kho">
-                    <ng-template pTemplate="selectedStock">
-                        <div class="flex align-items-center gap-2" *ngIf="selectedStock">
-                            <div>{{ selectedStock.stockName }}</div>
-                        </div>
-                    </ng-template>
-                    <ng-template let-stock pTemplate="item">
-                        <div class="flex align-items-center gap-2">
-                            <div>{{ stock.stockName }}</div>
-                        </div>
-                    </ng-template>
-                </p-dropdown>
-            </div>
-            <div class="mb-3">
-                <label for="description" class="form-label">Ghi chú</label>
-                <textarea class="form-control" id="description" name="description" rows="3"
-                    placeholder="Nhập nội dung ghi chú" [(ngModel)]="description"></textarea>
-            </div>
-        </div>
-    </div>
-    <div [class]="containerClass" class="mt-5">
-        <div class="row bg-white py-5">
-            <h4>DANH SÁCH HÀNG HOÁ</h4>
-            <div class="primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
-                <p-table #dataTable sortMode="multiple" [value]="tempOrderItems"
-                    rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
-                    [tableStyle]="{'min-width': '50rem'}">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th>{{ 'STT' | localize }}</th>
-                            <th>{{ 'LOẠI HÀNG HOÁ' | localize }}</th>
-                            <th>{{ 'TÊN HÀNG (*)' | localize }}</th>
-                            <th>{{ 'ĐƠN VỊ (*)' | localize }}</th>
-                            <th>{{ 'DẢI SERIAL TỪ (*)' | localize }}</th>
-                            <th>{{ 'DẢI SERIAL ĐẾN (*)' | localize }}</th>
-                            <th>{{ 'SỐ LƯỢNG (*)' | localize }} </th>
-                            <th>{{ 'XOÁ' | localize }}</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-record="$implicit" let-rowIndex="rowIndex">
-                        <tr>
-                            <td>{{ rowIndex + 1 }}</td>
-                            <td>
-                                <select class="form-select" [(ngModel)]="productType" disabled>
-                                    <!-- <option [ngValue]="1" selected>SỐ</option> -->
-                                    <option [ngValue]="2">SERIAL</option>
-                                </select>
-                            </td>
-                            <td><input type="text" class="form-control" [(ngModel)]="record.orderName" /></td>
-                            <td>
-                                <select class="form-select" [(ngModel)]="record.telCo">
-                                    <option value="Bộ">Bộ</option>
-                                    <option value="Cái">Cái</option>
-                                </select>
-                            </td>
-                            <td><input type="text" pattern="^[0-9]*$" maxlength="25" class="form-control"
-                                    (keypress)="onKeyPress($event)" (input)="onInput($event, record)"
-                                    [(ngModel)]="record.fromRange" /></td>
-                            <td><input type="text" pattern="^[0-9]*$" maxlength="25" class="form-control"
-                                    (keypress)="onKeyPress($event)" (input)="onInput($event, record)"
-                                    [(ngModel)]="record.toRange" /></td>
-                            <td><input type="number" class="form-control" [(ngModel)]="record.quantity" /></td>
-                            <td><button class="btn btn-danger" (click)="removeRow(rowIndex)"
-                                    [disabled]="tempOrderItems.length == 1">Xóa</button></td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-            </div>
-            <div class="d-flex align-items-center">
-                <button class="btn btn-primary btn-sm mt-3" type="button" (click)="addRow()">THÊM HÀNG HOÁ</button>
-            </div>
-            <hr class="mt-5">
-            <div class="mt-5">
-                <h4>THÔNG TIN CHỨNG TỪ</h4>
-                <p-fileUpload customUpload="true" maxFileSize="10000000" auto="auto"
-                    accept=".csv,.xls,.xlsx,.pdf,.png,.jpg" chooseLabel="Tải file chứng từ"
-                    (onSelect)="onFileSelect($event)"></p-fileUpload>
-            </div>
-            <div class="d-flex justify-content-center mt-5 pt-5">
-                <button class="btn btn-success" type="button" (click)="createOrder()" *ngIf="!isLoading">GỬI YÊU
-                    CẦU</button>
-                <p-progressSpinner class="me-5" [style]="{width: '32px', height: '32px'}" strokeWidth="4"
-                    fill="var(--surface-ground)" animationDuration=".8s" *ngIf="isLoading"></p-progressSpinner>
+                <div class="mb-3 col-md-6">
+                    <label for="title" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Nhập tiêu đề"
+                        [(ngModel)]="title" #titleInput="ngModel" required [ngClass]="{
+                            'is-invalid': titleInput.touched && titleInput.invalid, 
+                            null : titleInput.touched && titleInput.valid
+                          }">
+                    <!-- <validation-messages [formCtrl]="titleInput"></validation-messages> -->
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="stockId" class="form-label">Chọn kho nhập hàng <span
+                            class="text-danger">(*)</span></label>
+                    <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStock"
+                        optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="false"
+                        placeholder="Chọn kho">
+                        <ng-template pTemplate="selectedStock">
+                            <div class="flex align-items-center gap-2" *ngIf="selectedStock">
+                                <div>{{ selectedStock.stockName }}</div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-stock pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ stock.stockName }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Ghi chú</label>
+                    <textarea class="form-control" id="description" name="description" rows="3"
+                        placeholder="Nhập nội dung ghi chú" [(ngModel)]="description"></textarea>
+                </div>
             </div>
         </div>
-    </div>
+        <div [class]="containerClass" class="mt-5">
+            <div class="row bg-white py-5">
+                <h4>DANH SÁCH HÀNG HOÁ</h4>
+                <div class="primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
+                    <p-table #dataTable sortMode="multiple" [value]="tempOrderItems"
+                        rows="{{ primengTableHelper.defaultRecordsCountPerPage }}" [paginator]="false" [lazy]="true"
+                        [tableStyle]="{'min-width': '50rem'}">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>{{ 'STT' | localize }}</th>
+                                <th>{{ 'LOẠI HÀNG HOÁ' | localize }}</th>
+                                <th>{{ 'TÊN HÀNG ' | localize }}<span class="text-danger">(*)</span></th>
+                                <th>{{ 'ĐƠN VỊ ' | localize }}<span class="text-danger">(*)</span></th>
+                                <th>{{ 'DẢI SERIAL TỪ ' | localize }}<span class="text-danger">(*)</span></th>
+                                <th>{{ 'DẢI SERIAL ĐẾN ' | localize }}<span class="text-danger">(*)</span></th>
+                                <th>{{ 'SỐ LƯỢNG ' | localize }}<span class="text-danger">(*)</span></th>
+                                <th>{{ 'XOÁ' | localize }}</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-record="$implicit" let-rowIndex="rowIndex">
+                            <tr>
+                                <td>{{ rowIndex + 1 }}</td>
+                                <td>
+                                    <select class="form-select" [(ngModel)]="productType" disabled
+                                        #productTypeInput="ngModel" required name="productType">
+                                        <option [ngValue]="2">SERIAL</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" [(ngModel)]="record.orderName"
+                                        #orderNameInput="ngModel" required name="orderName-{{rowIndex}}" [ngClass]="{
+                                            'is-invalid': orderNameInput.touched && orderNameInput.invalid, 
+                                            null : orderNameInput.touched && orderNameInput.valid
+                                          }" />
+                                </td>
+                                <td>
+                                    <select class="form-select" [(ngModel)]="record.telCo" #telCoInput="ngModel"
+                                        required name="telCo">
+                                        <option value="Bộ">Bộ</option>
+                                        <option value="Cái">Cái</option>
+                                    </select>
+                                    <validation-messages [formCtrl]="telCoInput"></validation-messages>
+                                </td>
+                                <td>
+                                    <input type="text" pattern="^[0-9]*$" maxlength="25" class="form-control"
+                                        (keypress)="onKeyPress($event)" (input)="onInput($event, record)"
+                                        [(ngModel)]="record.fromRange" #fromRangeInput="ngModel" required
+                                        name="fromRange-{{rowIndex}}" [ngClass]="{
+                                            'is-invalid': fromRangeInput.touched && fromRangeInput.invalid, 
+                                            null : fromRangeInput.touched && fromRangeInput.valid
+                                          }" />
+                                </td>
+                                <td>
+                                    <input type="text" pattern="^[0-9]*$" maxlength="25" class="form-control"
+                                        (keypress)="onKeyPress($event)" (input)="onInput($event, record)"
+                                        [(ngModel)]="record.toRange" #toRangeInput="ngModel" required
+                                        name="toRange-{{rowIndex}}" [ngClass]="{
+                                            'is-invalid': toRangeInput.touched && toRangeInput.invalid, 
+                                            null : toRangeInput.touched && toRangeInput.valid
+                                          }" />
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" [(ngModel)]="record.quantity"
+                                        #quantityInput="ngModel" required name="quantity-{{rowIndex}}" [ngClass]="{
+                                            'is-invalid': quantityInput.touched && quantityInput.invalid, 
+                                            null : quantityInput.touched && quantityInput.valid
+                                          }" />
+                                </td>
+                                <td><button class="btn btn-danger" (click)="removeRow(rowIndex)"
+                                        [disabled]="tempOrderItems.length == 1">Xóa</button></td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-primary btn-sm mt-3" type="button" (click)="addRow()">THÊM HÀNG HOÁ</button>
+                </div>
+                <hr class="mt-5">
+                <div class="mt-5">
+                    <h4>THÔNG TIN CHỨNG TỪ</h4>
+                    <p-fileUpload customUpload="true" maxFileSize="10000000" auto="auto"
+                        accept=".csv,.xls,.xlsx,.pdf,.png,.jpg" chooseLabel="Tải file chứng từ"
+                        (onSelect)="onFileSelect($event)"></p-fileUpload>
+                </div>
+                <div class="d-flex justify-content-center mt-5 pt-5">
+                    <button class="btn btn-success" type="button" (click)="createOrder()" *ngIf="!isLoading"
+                        [disabled]="!createImportForm.form.valid">
+                        GỬI YÊU CẦU
+                    </button>
+                    <p-progressSpinner class="me-5" [style]="{width: '32px', height: '32px'}" strokeWidth="4"
+                        fill="var(--surface-ground)" animationDuration=".8s" *ngIf="isLoading"></p-progressSpinner>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>

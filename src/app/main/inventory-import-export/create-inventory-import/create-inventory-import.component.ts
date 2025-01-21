@@ -210,10 +210,4 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
             console.warn('Không thể xóa.');
         }
     }
-
-    onBasicUploadAuto(event) {
-        console.log('Upload success');
-    }
-
-    onUpload(event) {}
 }
