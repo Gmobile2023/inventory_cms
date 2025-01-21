@@ -20,7 +20,7 @@
                             class="text-danger">(*)</span></label>
                     <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStock"
                         optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="false"
-                        placeholder="Chọn kho">
+                        placeholder="Chọn kho" name="selectedStock">
                         <ng-template pTemplate="selectedStock">
                             <div class="flex align-items-center gap-2" *ngIf="selectedStock">
                                 <div>{{ selectedStock.stockName }}</div>
