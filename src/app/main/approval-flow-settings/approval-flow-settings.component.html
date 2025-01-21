@@ -174,7 +174,7 @@
                         </p-dropdown>
                     </div>
                     <div class="col-md-4 mb-5">
-                        <p-dropdown [style]="{width: '100%'}" [options]="stockList" [(ngModel)]="selectedStock"
+                        <p-dropdown [style]="{width: '100%'}" [options]="listStockParent" [(ngModel)]="selectedStock"
                             optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
                             placeholder="Chọn kho">
                             <ng-template pTemplate="selectedStock">
@@ -267,8 +267,19 @@
                         <label class="form-label">
                             {{ 'Kho' | localize }}
                         </label>
-                        <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="stockList"
-                            optionLabel="stockName" [optionValue]="approvalFlowData.stockId" class="w-100">
+                        <p-dropdown [style]="{width: '100%'}" [options]="listStockParent" [(ngModel)]="selectedStock"
+                            optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
+                            placeholder="Chọn kho">
+                            <ng-template pTemplate="selectedStock">
+                                <div class="flex align-items-center gap-2" *ngIf="selectedStock">
+                                    <div>{{ selectedStock.stockName }}</div>
+                                </div>
+                            </ng-template>
+                            <ng-template let-stock pTemplate="item">
+                                <div class="flex align-items-center gap-2">
+                                    <div>{{ stock.stockName }}</div>
+                                </div>
+                            </ng-template>
                         </p-dropdown>
                         <i>* Trường hợp xét riêng luồng duyệt cho kho</i>
                     </div>
