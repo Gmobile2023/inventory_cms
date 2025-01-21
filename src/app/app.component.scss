@@ -74,6 +74,6 @@
   width: initial !important;
 }
 
-::ng-deep .p-element.p-inputwrapper.ng-valid .p-dropdown-clearable {
+::ng-deep .p-element.p-inputwrapper.is-invalid .p-dropdown-clearable {
   border-color: #f1416c !important;
 }

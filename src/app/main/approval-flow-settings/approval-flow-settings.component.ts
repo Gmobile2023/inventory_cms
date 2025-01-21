@@ -100,6 +100,7 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
     public dateRange: DateTime[] = [this._dateTimeService.getStartOfMonth(), this._dateTimeService.getEndOfMonth()];
     selectedStock: any;
     selectedStockFilter: any;
+    isChecked: boolean = false;
 
     ngOnInit() {
         this.items = [
@@ -187,8 +188,18 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
         this._inventoryServiceProxy
             .getListSuggestStockParent(undefined, stockLevel, undefined, undefined, 0, 100)
             .subscribe((result) => {
-                this.stockList = result.items;
+                this.listStockParent = result.items;
             });
+    }
+
+    isOrderValid(data: { order: number }[]): boolean {
+        for (let i = 1; i < data.length; i++) {
+            if (data[i].order <= data[i - 1].order) {
+                this.message.error(this.l('Vui lòng kiểm tra lại độ ưu tiên!'));
+                return false;
+            }
+        }
+        return true;
     }
 
     createOrEditApprovalFlow() {
@@ -205,16 +216,18 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
                 return ApprovalFlowDetailDto.fromJS(item);
             });
         }
-        this._inventoryServiceProxy.createOrEditApprovalFlow(body).subscribe(() => {
-            this.isEdit = false;
-            this.selectedStock = undefined;
-            this.tempApprovalItems = [];
-            this.addUserRow();
-            this.approvalFlowData = {};
-            this.getListApprovalFlow();
-            this.closeModal();
-            this.notify.info(this.l('SavedSuccessfully'));
-        });
+        if (this.isOrderValid(body.items)) {
+            this._inventoryServiceProxy.createOrEditApprovalFlow(body).subscribe(() => {
+                this.isEdit = false;
+                this.selectedStock = undefined;
+                this.tempApprovalItems = [];
+                this.addUserRow();
+                this.approvalFlowData = {};
+                this.getListApprovalFlow();
+                this.closeModal();
+                this.notify.info(this.l('SavedSuccessfully'));
+            });
+        }
     }
 
     openApprovalView(id: number, elModal: TemplateRef<any>, type?: string) {
@@ -246,7 +259,7 @@ export class ApprovalFlowSettingsComponent extends AppComponentBase {
             }
             setTimeout(() => {
                 const stockId = result.approvalFlow.stockId;
-                this.selectedStock = this.stockList.find((stock) => stock.id === stockId) || null;
+                this.selectedStock = this.listStockParent.find((stock) => stock.id === stockId) || null;
             }, 150);
         });
     }
