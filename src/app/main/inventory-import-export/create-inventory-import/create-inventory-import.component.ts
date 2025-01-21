@@ -93,6 +93,7 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
         if (this.selectedStock) {
             body.stockId = this.selectedStock.id;
         }
+        console.log(this.selectedStock);
         body.title = this.title;
         body.description = this.description;
         body.productType = this.productType;
