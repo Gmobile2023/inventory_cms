@@ -149,12 +149,13 @@
                         </select>
                     </div>
                 </div>
-                <div class="d-flex align-items-center mb-5">
+                <!-- <div class="d-flex align-items-center mb-5">
                     <label for="" class="form-label ms-5" style="width: 35%;">Tìm kiếm theo file excel</label>
                     <input type="file" class="form-control" id="">
-                </div>
+                </div> -->
                 <div class="d-flex align-items-center justify-content-end">
-                    <button class="btn btn-secondary btn-sm me-3" type="button">CHỌN LẠI</button>
+                    <button class="btn btn-secondary btn-sm me-3" type="button" (click)="resetSearch()">CHỌN
+                        LẠI</button>
                     <button class="btn btn-primary btn-sm" type="button" (click)="onLazyLoad($event)">TÌM KIẾM</button>
                 </div>
             </div>

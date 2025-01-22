@@ -46,8 +46,8 @@ export class SimDetailModalComponent extends AppComponentBase {
                 undefined,
                 undefined,
                 this.productType,
-                undefined,
-                undefined,
+                this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
+                this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
                 this.stockCode,
                 this.status,
                 undefined,
@@ -77,12 +77,14 @@ export class SimDetailModalComponent extends AppComponentBase {
             });
     }
 
-    show(orderType: number, stockCode: string, stockId: number) {
+    show(orderType: number, stockCode: string, stockId: number, fromDate: DateTime, toDate: DateTime) {
         this.active = true;
         this.modal.show();
         this.orderType = orderType;
         this.stockCode = stockCode;
         this.stockId = stockId;
+        if (fromDate) this.fromDate = fromDate;
+        if (toDate) this.toDate = toDate;
         this.getOrdersImport();
     }
     close() {

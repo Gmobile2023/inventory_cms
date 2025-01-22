@@ -152,7 +152,7 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         });
     }
 
-    onRangeRuleChange(event: Event) {
+    onRangeRuleChange() {
         this.isRangeRule = !this.isRangeRule;
         if (!this.isRangeRule) {
             this.objectType = ObjectType.List;

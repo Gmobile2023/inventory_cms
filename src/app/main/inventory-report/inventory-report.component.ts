@@ -100,8 +100,15 @@ export class InventoryReportComponent extends AppComponentBase {
             });
     }
 
+    resetSearch() {
+        this.stockCode = undefined;
+        this.stockName = undefined;
+        this.fromDate = undefined;
+        this.toDate = undefined;
+    }
+
     openModalOrders(orderType: number, stockCode: string, stockId: number): void {
-        this.simDetailModal.show(orderType, stockCode, stockId);
+        this.simDetailModal.show(orderType, stockCode, stockId, this.fromDate, this.toDate);
     }
 
     openModal(template: TemplateRef<any>) {
