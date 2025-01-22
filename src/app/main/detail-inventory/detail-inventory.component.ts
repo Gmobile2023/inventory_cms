@@ -346,6 +346,14 @@ export class DetailInventoryComponent extends AppComponentBase {
         });
     }
 
+    resetSearch() {
+        this.mobile = undefined;
+        this.serial = undefined;
+        this.kitingStatus = 99;
+        this.attribute = undefined;
+        this.status = undefined;
+    }
+
     createKitting(): void {
         this.uploadFileWithKitting(this.stockId, this.type, this.uploadedFile);
     }

@@ -132,8 +132,13 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
         });
     }
 
-    onRangeRuleChange(event: Event) {
+    onRangeRuleChange() {
         this.isRangeRule = !this.isRangeRule;
+        if (!this.isRangeRule) {
+            this.objectType = ObjectType.List;
+        } else {
+            this.objectType = ObjectType.All;
+        }
     }
 
     onChangeProductType(event: Event) {
