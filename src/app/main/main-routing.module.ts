@@ -128,6 +128,14 @@ import { RouterModule } from '@angular/router';
                         data: { permission: '' },
                     },
                     {
+                        path: 'recovery-inventory/order-list',
+                        loadChildren: () =>
+                            import('./order-list/order-list.module').then(
+                                (m) => m.OrderListModule
+                            ),
+                        data: { permission: '' },
+                    },
+                    {
                         path: 'recovery-inventory/detail-reuse-number',
                         loadChildren: () =>
                             import('./detail-reuse-number/detail-reuse-number.module').then(
