@@ -11,11 +11,11 @@ import { Paginator } from 'primeng/paginator';
 import { DateTimeService } from '@app/shared/common/timing/date-time.service';
 
 @Component({
-    templateUrl: './order-list.component.html',
+    templateUrl: './order-detail.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [appModuleAnimation()],
 })
-export class OrderListComponent extends AppComponentBase {
+export class OrderDetailComponent extends AppComponentBase {
     @ViewChild('dataTable', { static: true }) dataTable: Table;
     @ViewChild('paginator', { static: true }) paginator: Paginator;
     constructor(
@@ -44,10 +44,18 @@ export class OrderListComponent extends AppComponentBase {
     stockList = [];
     public dateRange: DateTime[] = [this._dateTimeService.getStartOfMonth(), this._dateTimeService.getEndOfMonth()];
     selectedStock: any;
+    events: any[];
+
 
     ngOnInit() {
         this.items = [{ label: 'SIM SỐ' }, { label: 'Danh sách đơn hàng' }];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
+        this.events = [
+            { status: 'Ordered', date: '15/10/2020 10:30', icon: 'pi pi-shopping-cart', color: '#9C27B0', image: 'game-controller.jpg' },
+            { status: 'Processing', date: '15/10/2020 14:00', icon: 'pi pi-cog', color: '#673AB7' },
+            { status: 'Shipped', date: '15/10/2020 16:15', icon: 'pi pi-shopping-cart', color: '#FF9800' },
+            { status: 'Delivered', date: '16/10/2020 10:00', icon: 'pi pi-check', color: '#607D8B' }
+        ];
         this.getListStock();
     }
 

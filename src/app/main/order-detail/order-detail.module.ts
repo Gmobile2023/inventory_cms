@@ -5,16 +5,16 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TagModule } from 'primeng/tag';
-import { OrderListRoutingModule } from './order-list-routing.module';
-import { OrderListComponent } from './order-list.component';
+import { OrderDetailRoutingModule } from './order-detail-routing.module';
+import { OrderDetailComponent } from './order-detail.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TimelineModule } from 'primeng/timeline';
 
 @NgModule({
-    declarations: [OrderListComponent],
+    declarations: [OrderDetailComponent],
     imports: [
         AppSharedModule,
-        OrderListRoutingModule,
+        OrderDetailRoutingModule,
         BreadcrumbModule,
         FileUploadModule,
         ToastModule,
@@ -24,4 +24,4 @@ import { TimelineModule } from 'primeng/timeline';
         TimelineModule
     ],
 })
-export class OrderListModule { }
+export class OrderDetailModule { }
