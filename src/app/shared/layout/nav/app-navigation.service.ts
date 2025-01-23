@@ -26,7 +26,7 @@ export class AppNavigationService {
             new AppMenuItem(
                 'Quản lý Kho',
                 'Pages.Inventories',
-                'flaticon-app',
+                'flaticon-open-box',
                 '',
                 [],
                 [
@@ -39,31 +39,31 @@ export class AppNavigationService {
                     new AppMenuItem(
                         'Xuất nhập kho',
                         'Pages.Inventories.Orders',
-                        'flaticon-app',
+                        'flaticon-folder-1',
                         '/app/main/inventory-import-export'
                     ),
                     new AppMenuItem(
                         'Báo cáo tồn kho',
                         'Pages.Inventories.Reports.ImEx',
-                        'flaticon-app',
+                        'flaticon-statistics',
                         '/app/main/inventory-report'
                     ),
                     new AppMenuItem(
                         'Lịch sử thao tác',
                         'Pages.Inventories.Historys',
-                        'flaticon-app',
+                        'flaticon-clock-1',
                         '/app/main/action-history'
                     ),
                     new AppMenuItem(
                         'Cài đặt luồng duyệt',
                         'Pages.Inventories.ApprovalFlow',
-                        'flaticon-app',
+                        'flaticon-cogwheel-1',
                         '/app/main/approval-flow-settings'
                     ),
                     new AppMenuItem(
                         'Cấu hình nhóm telegram nhận thông báo',
                         'Pages.Inventories.TelegramGroup',
-                        'flaticon-app',
+                        'flaticon-paper-plane',
                         '/app/main/groups-setting'
                     ),
                 ]
@@ -71,16 +71,16 @@ export class AppNavigationService {
             new AppMenuItem(
                 'Quản lý Kho thu hồi',
                 '',
-                'flaticon-app',
+                'flaticon-interface-3',
                 '',
                 [],
                 [
-                    new AppMenuItem('Danh sách thuê bao', '', 'flaticon-app', '/app/main/recovery-inventory'),
-                    new AppMenuItem('Danh sách yêu cầu tái sử dụng TB', '', 'flaticon-app', '/app/main/reuse-number'),
+                    new AppMenuItem('Danh sách thuê bao', '', 'flaticon-list-2', '/app/main/recovery-inventory'),
+                    new AppMenuItem('Danh sách yêu cầu tái sử dụng TB', '', 'flaticon-list-1', '/app/main/reuse-number'),
                     new AppMenuItem(
                         'Cấu hình thời gian lưu số trong kho',
                         '',
-                        'flaticon-app',
+                        'flaticon-pie-chart',
                         '/app/main/setting-recovery'
                     ),
                 ]
@@ -88,14 +88,14 @@ export class AppNavigationService {
             new AppMenuItem(
                 'Địa giới hành chính',
                 '',
-                'flaticon-app',
+                'flaticon-map-location',
                 '',
                 [],
                 [
-                    new AppMenuItem('Quản lý Quốc Gia', '', 'flaticon-app', '/app/main/countries'),
-                    new AppMenuItem('Quản lý Tỉnh/Thành Phố', '', 'flaticon-app', '/app/main/cities'),
-                    new AppMenuItem('Quản lý Quận/Huyện', '', 'flaticon-app', '/app/main/districts'),
-                    new AppMenuItem('Quản lý Phường/Xã', '', 'flaticon-app', '/app/main/wards'),
+                    new AppMenuItem('Quản lý Quốc Gia', '', 'flaticon-placeholder-2', '/app/main/countries'),
+                    new AppMenuItem('Quản lý Tỉnh/Thành Phố', '', 'flaticon-placeholder', '/app/main/cities'),
+                    new AppMenuItem('Quản lý Quận/Huyện', '', 'flaticon-location', '/app/main/districts'),
+                    new AppMenuItem('Quản lý Phường/Xã', '', 'flaticon-placeholder-3', '/app/main/wards'),
                 ]
             ),
             new AppMenuItem(
