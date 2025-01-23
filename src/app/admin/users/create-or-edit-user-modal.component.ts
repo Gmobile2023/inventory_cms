@@ -49,7 +49,11 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
     allOrganizationUnits: OrganizationUnitDto[];
     memberedOrganizationUnits: string[];
     userPasswordRepeat = '';
-
+    accountTypes = [
+        { value: 0, name: 'System' },
+        { value: 1, name: 'Agent' },
+        { value: 2, name: 'End User' }
+      ];
     constructor(
         injector: Injector,
         private _userService: UserServiceProxy,
