@@ -9943,6 +9943,107 @@ export class InventoryServiceProxy {
     }
 
     /**
+     * @param stockId (optional) 
+     * @param type (optional) 
+     * @param productType (optional) 
+     * @param fromDate (optional) 
+     * @param toDate (optional) 
+     * @param maxResultCount (optional) 
+     * @param skipCount (optional) 
+     * @param searchType (optional) 
+     * @param rowMax (optional) 
+     * @param filter (optional) 
+     * @return Success
+     */
+    getListOrderByStock(stockId: number | undefined, type: OrderStockType | undefined, productType: ProductType | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, maxResultCount: number | undefined, skipCount: number | undefined, searchType: SearchType | undefined, rowMax: number | undefined, filter: string | undefined): Observable<PagedResultDtoOfStockOrderDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListOrderByStock?";
+        if (stockId === null)
+            throw new Error("The parameter 'stockId' cannot be null.");
+        else if (stockId !== undefined)
+            url_ += "StockId=" + encodeURIComponent("" + stockId) + "&";
+        if (type === null)
+            throw new Error("The parameter 'type' cannot be null.");
+        else if (type !== undefined)
+            url_ += "Type=" + encodeURIComponent("" + type) + "&";
+        if (productType === null)
+            throw new Error("The parameter 'productType' cannot be null.");
+        else if (productType !== undefined)
+            url_ += "ProductType=" + encodeURIComponent("" + productType) + "&";
+        if (fromDate === null)
+            throw new Error("The parameter 'fromDate' cannot be null.");
+        else if (fromDate !== undefined)
+            url_ += "FromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toString() : "") + "&";
+        if (toDate === null)
+            throw new Error("The parameter 'toDate' cannot be null.");
+        else if (toDate !== undefined)
+            url_ += "ToDate=" + encodeURIComponent(toDate ? "" + toDate.toString() : "") + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (searchType === null)
+            throw new Error("The parameter 'searchType' cannot be null.");
+        else if (searchType !== undefined)
+            url_ += "SearchType=" + encodeURIComponent("" + searchType) + "&";
+        if (rowMax === null)
+            throw new Error("The parameter 'rowMax' cannot be null.");
+        else if (rowMax !== undefined)
+            url_ += "RowMax=" + encodeURIComponent("" + rowMax) + "&";
+        if (filter === null)
+            throw new Error("The parameter 'filter' cannot be null.");
+        else if (filter !== undefined)
+            url_ += "Filter=" + encodeURIComponent("" + filter) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListOrderByStock(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListOrderByStock(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagedResultDtoOfStockOrderDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagedResultDtoOfStockOrderDto>;
+        }));
+    }
+
+    protected processGetListOrderByStock(response: HttpResponseBase): Observable<PagedResultDtoOfStockOrderDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfStockOrderDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param updatePrice (optional) 
      * @return Success
      */
@@ -21678,6 +21779,12 @@ export class AcceptFriendshipRequestInput implements IAcceptFriendshipRequestInp
 export interface IAcceptFriendshipRequestInput {
     userId: number;
     tenantId: number | undefined;
+}
+
+export enum AccountType {
+    System = 0,
+    Agent = 1,
+    EndUser = 2,
 }
 
 export class ActivateEmailInput implements IActivateEmailInput {
@@ -35573,6 +35680,54 @@ export interface IPagedResultDtoOfSimTypeDto {
     items: SimTypeDto[] | undefined;
 }
 
+export class PagedResultDtoOfStockOrderDto implements IPagedResultDtoOfStockOrderDto {
+    totalCount!: number;
+    items!: StockOrderDto[] | undefined;
+
+    constructor(data?: IPagedResultDtoOfStockOrderDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(StockOrderDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfStockOrderDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultDtoOfStockOrderDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IPagedResultDtoOfStockOrderDto {
+    totalCount: number;
+    items: StockOrderDto[] | undefined;
+}
+
 export class PagedResultDtoOfSubscriptionPaymentListDto implements IPagedResultDtoOfSubscriptionPaymentListDto {
     totalCount!: number;
     items!: SubscriptionPaymentListDto[] | undefined;
@@ -37164,6 +37319,11 @@ export interface ISavePageInput {
     pages: Page[] | undefined;
 }
 
+export enum SearchType {
+    Search = 1,
+    Export = 2,
+}
+
 export class SecuritySettingsEditDto implements ISecuritySettingsEditDto {
     allowOneConcurrentLoginPerUser!: boolean;
     useDefaultPasswordComplexitySettings!: boolean;
@@ -37865,6 +38025,90 @@ export interface IStockGroupDto {
     stockId: number;
     stockName: string | undefined;
     stockCode: string | undefined;
+}
+
+export class StockOrderDto implements IStockOrderDto {
+    id!: number | undefined;
+    orderTitle!: string | undefined;
+    description!: string | undefined;
+    expectedQuantity!: number | undefined;
+    orderCode!: string | undefined;
+    orderType!: OrderTypeValue;
+    userConfirm!: string | undefined;
+    createdDate!: DateTime;
+    confirmDate!: DateTime | undefined;
+    quantity!: number;
+    costPrice!: number;
+    salePrice!: number;
+    status!: OrderStatus;
+
+    constructor(data?: IStockOrderDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.orderTitle = _data["orderTitle"];
+            this.description = _data["description"];
+            this.expectedQuantity = _data["expectedQuantity"];
+            this.orderCode = _data["orderCode"];
+            this.orderType = _data["orderType"];
+            this.userConfirm = _data["userConfirm"];
+            this.createdDate = _data["createdDate"] ? DateTime.fromISO(_data["createdDate"].toString()) : <any>undefined;
+            this.confirmDate = _data["confirmDate"] ? DateTime.fromISO(_data["confirmDate"].toString()) : <any>undefined;
+            this.quantity = _data["quantity"];
+            this.costPrice = _data["costPrice"];
+            this.salePrice = _data["salePrice"];
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): StockOrderDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StockOrderDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["orderTitle"] = this.orderTitle;
+        data["description"] = this.description;
+        data["expectedQuantity"] = this.expectedQuantity;
+        data["orderCode"] = this.orderCode;
+        data["orderType"] = this.orderType;
+        data["userConfirm"] = this.userConfirm;
+        data["createdDate"] = this.createdDate ? this.createdDate.toString() : <any>undefined;
+        data["confirmDate"] = this.confirmDate ? this.confirmDate.toString() : <any>undefined;
+        data["quantity"] = this.quantity;
+        data["costPrice"] = this.costPrice;
+        data["salePrice"] = this.salePrice;
+        data["status"] = this.status;
+        return data;
+    }
+}
+
+export interface IStockOrderDto {
+    id: number | undefined;
+    orderTitle: string | undefined;
+    description: string | undefined;
+    expectedQuantity: number | undefined;
+    orderCode: string | undefined;
+    orderType: OrderTypeValue;
+    userConfirm: string | undefined;
+    createdDate: DateTime;
+    confirmDate: DateTime | undefined;
+    quantity: number;
+    costPrice: number;
+    salePrice: number;
+    status: OrderStatus;
 }
 
 export class StringOutput implements IStringOutput {
@@ -40437,6 +40681,7 @@ export class UserEditDto implements IUserEditDto {
     phoneNumber!: string | undefined;
     password!: string | undefined;
     isActive!: boolean;
+    accountType!: AccountType;
     shouldChangePasswordOnNextLogin!: boolean;
     isTwoFactorEnabled!: boolean;
     isLockoutEnabled!: boolean;
@@ -40460,6 +40705,7 @@ export class UserEditDto implements IUserEditDto {
             this.phoneNumber = _data["phoneNumber"];
             this.password = _data["password"];
             this.isActive = _data["isActive"];
+            this.accountType = _data["accountType"];
             this.shouldChangePasswordOnNextLogin = _data["shouldChangePasswordOnNextLogin"];
             this.isTwoFactorEnabled = _data["isTwoFactorEnabled"];
             this.isLockoutEnabled = _data["isLockoutEnabled"];
@@ -40483,6 +40729,7 @@ export class UserEditDto implements IUserEditDto {
         data["phoneNumber"] = this.phoneNumber;
         data["password"] = this.password;
         data["isActive"] = this.isActive;
+        data["accountType"] = this.accountType;
         data["shouldChangePasswordOnNextLogin"] = this.shouldChangePasswordOnNextLogin;
         data["isTwoFactorEnabled"] = this.isTwoFactorEnabled;
         data["isLockoutEnabled"] = this.isLockoutEnabled;
@@ -40499,6 +40746,7 @@ export interface IUserEditDto {
     phoneNumber: string | undefined;
     password: string | undefined;
     isActive: boolean;
+    accountType: AccountType;
     shouldChangePasswordOnNextLogin: boolean;
     isTwoFactorEnabled: boolean;
     isLockoutEnabled: boolean;

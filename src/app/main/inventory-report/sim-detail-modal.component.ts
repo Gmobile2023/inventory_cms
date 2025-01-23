@@ -2,7 +2,7 @@ import { Component, Injector, Input, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { InventoryServiceProxy, ProductType } from '@shared/service-proxies/service-proxies';
+import { InventoryServiceProxy, OrderStockType, ProductType } from '@shared/service-proxies/service-proxies';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { LazyLoadEvent } from 'primeng/api';
@@ -37,22 +37,22 @@ export class SimDetailModalComponent extends AppComponentBase {
     fromDate: DateTime;
     toDate: DateTime;
     stockId: number;
+    type: OrderStockType;
     // productType: ProductType = ProductType.Mobile;
 
     getOrdersImport(event?: LazyLoadEvent) {
         this._inventoryServiceProxy
-            .getListOrder(
-                this.orderType,
-                undefined,
-                undefined,
+            .getListOrderByStock(
+                this.stockId,
+                this.type,
                 this.productType,
                 this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
                 this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
-                this.stockCode,
-                this.status,
-                undefined,
+                event == undefined ? 10 : event.rows,
                 event == undefined ? 0 : event.first,
-                event == undefined ? 10 : event.rows
+                undefined,
+                undefined,
+                undefined
             )
             .subscribe((result) => {
                 this.primengTableHelper.records = result.items;
@@ -79,13 +79,13 @@ export class SimDetailModalComponent extends AppComponentBase {
 
     show(orderType: number, stockCode: string, stockId: number, fromDate: DateTime, toDate: DateTime) {
         this.active = true;
-        this.modal.show();
-        this.orderType = orderType;
-        this.stockCode = stockCode;
+        if (orderType == 1) this.type = OrderStockType.Import;
+        if (orderType == 2) this.type = OrderStockType.Export;
         this.stockId = stockId;
         if (fromDate) this.fromDate = fromDate;
         if (toDate) this.toDate = toDate;
         this.getOrdersImport();
+        this.modal.show();
     }
     close() {
         this.fromDate = undefined;
