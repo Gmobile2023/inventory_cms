@@ -1,54 +1,105 @@
-import { Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { DateTime } from '@node_modules/@types/luxon';
-import { InventoryServiceProxy } from '@shared/service-proxies/service-proxies';
-import { finalize, map, Observable } from 'rxjs';
+import {
+    CreateTransferDto,
+    InventoryServiceProxy,
+    IOrderExportItemDto,
+    IOrderItem,
+    ObjectType,
+    OrderExportDto,
+    OrderExportItemDto,
+    OrderItem,
+    ProductType,
+} from '@shared/service-proxies/service-proxies';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
-import { DateTimeService } from '@app/shared/common/timing/date-time.service';
-
+import { catchError, finalize } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AppConsts } from '@shared/AppConsts';
+import { HttpClient } from '@angular/common/http';
 @Component({
     templateUrl: './order-detail.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [appModuleAnimation()],
 })
-export class OrderDetailComponent extends AppComponentBase {
+export class OrderDetailComponent extends AppComponentBase implements OnInit {
     @ViewChild('dataTable', { static: true }) dataTable: Table;
     @ViewChild('paginator', { static: true }) paginator: Paginator;
     constructor(
         injector: Injector,
-        private modalService: BsModalService,
         private _inventoryServiceProxy: InventoryServiceProxy,
-        private _dateTimeService: DateTimeService
+        private router: Router,
+        private _httpClient: HttpClient,
+        private route: ActivatedRoute
     ) {
         super(injector);
     }
-
-    modalRef?: BsModalRef | null;
+    uploadedFiles: any[] = [];
     items: MenuItem[];
     home: MenuItem;
-    fromDate: DateTime;
-    toDate: DateTime;
-    status: number = 99;
-    description: string;
-    name: string;
-    isEdit: boolean = false;
-    statusOption = [
-        { label: 'Chờ phê duyệt', value: 1 },
-        { label: 'Đã duyệt', value: 2 },
-        { label: 'Từ chối', value: 2 },
-    ];
-    stockList = [];
-    public dateRange: DateTime[] = [this._dateTimeService.getStartOfMonth(), this._dateTimeService.getEndOfMonth()];
-    selectedStock: any;
+    value: number = 0;
+    selectedRecordsTo: any[] = [];
+    selectedRecordsFrom: any[] = [];
+    rowsPerPage = 10;
+    currentPage = 0;
+    currentDataFrom: any[] = [];
+    listStock: any[] = [];
+    title: string | undefined;
+    description: string | undefined;
+    srcStockId: number;
+    desStockId: number;
+    userCreated: string | undefined;
+    productType: ProductType = ProductType.Mobile;
+    objectType: ObjectType = ObjectType.All;
+    rangeRule: OrderItem;
+    rangeItems: any[] = [];
+    isRangeRule: boolean = true;
+    orderName: string = '';
+    tempOrderItems: IOrderItem = {
+        orderName: '',
+        unit: '',
+        attribute: '',
+        telCo: '',
+        fromRange: '',
+        toRange: '',
+        quantity: 0,
+    };
+    orderItems: IOrderExportItemDto = {
+        items: [],
+        fromRange: '',
+        toRange: '',
+        quantity: 0,
+        productType: ProductType.Mobile,
+    };
+    ProductType = ProductType;
+    ObjectType = ObjectType;
+    listSimSrcStock: any[] = [];
+    stockId: number;
+    stockIdParam: number = null;
+    selectedStockFrom: any;
+    selectedStockTo: any;
+    productAttribute: any[] = [];
+    simTypes: any[] = [];
+    product: string;
+    attribute: string;
+    isAllChecked: boolean = false;
+    simType: string;
+    fromRange: string;
+    toRange: string;
+    mobile: string;
+    serial: string;
+    expectedQuantity: number;
+    uploadedFile: File | null = null;
+    remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
+    isLoading: boolean = false;
+    orderData: any = {};
+    periodName: string;
     events: any[];
 
-
     ngOnInit() {
-        this.items = [{ label: 'SIM SỐ' }, { label: 'Danh sách đơn hàng' }];
+        this.items = [{ label: 'SIM SỐ' }, { label: 'Chi tiết đơn hàng' }];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.events = [
             { status: 'Ordered', date: '15/10/2020 10:30', icon: 'pi pi-shopping-cart', color: '#9C27B0', image: 'game-controller.jpg' },
@@ -57,30 +108,16 @@ export class OrderDetailComponent extends AppComponentBase {
             { status: 'Delivered', date: '16/10/2020 10:00', icon: 'pi pi-check', color: '#607D8B' }
         ];
         this.getListStock();
-    }
-
-    getListOrder(event?: LazyLoadEvent) {
-        this.primengTableHelper.showLoadingIndicator();
-        this._inventoryServiceProxy
-            .getListOrder(
-                6,
-                undefined,
-                undefined,
-                undefined,
-                this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
-                this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
-                this.selectedStock ? this.selectedStock.stockCode : undefined,
-                this.status == null ? undefined : this.status,
-                this.primengTableHelper.getSorting(this.dataTable),
-                this.primengTableHelper.getSkipCount(this.paginator, event),
-                this.primengTableHelper.getMaxResultCount(this.paginator, event)
-            )
-            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
-            .subscribe((result) => {
-                this.primengTableHelper.records = result.items;
-                this.primengTableHelper.totalRecordsCount = result.totalCount;
-                this.primengTableHelper.hideLoadingIndicator();
-            });
+        if (this.route.snapshot.queryParamMap.get('id')!) {
+            this.stockIdParam = parseInt(this.route.snapshot.queryParamMap.get('id')!);
+        }
+        if (this.stockIdParam) {
+            setTimeout(() => {
+                this.getOrderForView(this.stockIdParam);
+            }, 100);
+        }
+        this.getProductAttributes();
+        this.getSimsTypes();
     }
 
     getListStock() {
@@ -100,30 +137,314 @@ export class OrderDetailComponent extends AppComponentBase {
                 99
             )
             .subscribe((result) => {
-                this.stockList = result.items;
+                this.listStock = result.items;
             });
     }
 
-    resetFilter() {
-        this.fromDate = undefined;
-        this.toDate = undefined;
-        this.status = undefined;
-        this.selectedStock = undefined;
+    getOrderForView(id: number) {
+        this._inventoryServiceProxy.getOrderForView(id, true).subscribe((result) => {
+            this.orderData = result.order;
+            this.selectedStockTo = this.listStock.find((stock) => stock.stockCode === this.orderData.desStockCode);
+            this.selectedStockFrom = this.listStock.find((stock) => stock.stockCode === this.orderData.srcStockCode);
+            this.getOrderPendingSims();
+            if (this.orderData.items[0].categoryCode === 'MOBILE') {
+                this.productType = ProductType.Mobile;
+            } else {
+                this.productType = ProductType.Serial;
+            }
+        });
     }
 
-    openModal(template: TemplateRef<any>) {
-        this.modalRef = this.modalService.show(template, { id: 1, class: 'modal-xl' });
+    onRangeRuleChange() {
+        this.isRangeRule = !this.isRangeRule;
+        if (!this.isRangeRule) {
+            this.objectType = ObjectType.List;
+        } else {
+            this.objectType = ObjectType.All;
+        }
     }
 
-    closeModal(modalId?: number) {
-        this.modalService.hide(modalId);
+    getProductAttributes() {
+        this._inventoryServiceProxy
+            .getProductAttributes(this.productType.toString(), undefined, 0, 10)
+            .subscribe((result) => {
+                this.productAttribute = result.items;
+            });
     }
 
-    statusData = [
-        { value: '12,689', label: 'Thành công', icon: 'fa fa-check' },
-        { value: '25', label: 'Chưa có thông tin vận chuyển', icon: 'fa fa-times' },
-        { value: '124', label: 'Đã giao đơn vị vận chuyển', icon: 'fa fa-truck' },
-        { value: '32', label: 'Lưu nháp', icon: 'fa fa-info-circle' }
-      ];
-      
+    getSimsTypes() {
+        this._inventoryServiceProxy.getSimsTypes(this.productType.toString(), undefined, 0, 10).subscribe((result) => {
+            this.simTypes = result.items;
+        });
+    }
+
+    onChangeProductType(event: Event) {
+        this.productType = (event.target as HTMLSelectElement).value as unknown as ProductType;
+        this.getProductAttributes();
+        this.getSimsTypes();
+        if (this.stockId) {
+            this.getListSimSrcStock();
+        }
+    }
+
+    onChangeStock(event: { value: any }) {
+        const stockId = event.value.id;
+        this.stockId = stockId;
+        this.getListSimSrcStock();
+    }
+
+    getListSimSrcStock(event?: LazyLoadEvent) {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getListSimsTransfers(
+                this.stockId,
+                this.productType,
+                this.attribute,
+                this.productType == ProductType.Mobile ? this.product : undefined,
+                this.productType == ProductType.Serial ? this.product : undefined,
+                this.simType,
+                undefined,
+                this.fromRange,
+                this.toRange,
+                false,
+                undefined,
+                this.primengTableHelper.getSkipCount(this.paginator, event),
+                this.primengTableHelper.getMaxResultCount(this.paginator, event)
+            )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this.listSimSrcStock = result.items;
+                this.primengTableHelper.totalRecordsCount = result.totalCount;
+                this.primengTableHelper.hideLoadingIndicator();
+                this.isAllChecked = false;
+            });
+    }
+
+    getOrderPendingSims(event?: LazyLoadEvent) {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getOrderPendingSims(
+                this.selectedStockFrom?.id,
+                this.orderData.orderCode,
+                this.productType,
+                this.productType == ProductType.Mobile ? this.product : undefined,
+                this.productType == ProductType.Serial ? this.product : undefined,
+                undefined,
+                undefined,
+                this.simType,
+                this.fromRange,
+                this.toRange,
+                undefined,
+                this.primengTableHelper.getSkipCount(this.paginator, event),
+                this.primengTableHelper.getMaxResultCount(this.paginator, event)
+            )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this.listSimSrcStock = result.items;
+                this.primengTableHelper.totalRecordsCount = result.totalCount;
+                this.primengTableHelper.hideLoadingIndicator();
+                this.isAllChecked = false;
+            });
+    }
+
+    calculateQuantity(): void {
+        if (this.tempOrderItems.fromRange && this.tempOrderItems.toRange) {
+            const from = parseInt(this.tempOrderItems.fromRange, 10);
+            const to = parseInt(this.tempOrderItems.toRange, 10);
+
+            if (!isNaN(from) && !isNaN(to) && to >= from) {
+                this.tempOrderItems.quantity = to - from + 1; // Tính số lượng
+            } else {
+                this.tempOrderItems.quantity = 0; // Nếu giá trị không hợp lệ
+            }
+        } else {
+            this.tempOrderItems.quantity = 0; // Nếu chưa nhập đủ
+        }
+    }
+
+    async createTransfer() {
+        this.isLoading = true;
+        const body = new CreateTransferDto();
+        body.title = this.title;
+        body.description = this.description;
+        if (this.selectedStockFrom) body.srcStockId = this.selectedStockFrom.id;
+        if (this.selectedStockTo) body.desStockId = this.selectedStockTo.id;
+        body.productType = this.productType;
+        body.objectType = this.objectType;
+        body.expectedQuantity = this.expectedQuantity;
+        if (this.isRangeRule) {
+            body.rangeRule = OrderItem.fromJS(this.tempOrderItems);
+        }
+        if (this.rangeItems.length > 0) {
+            const data = [];
+            this.rangeItems.forEach((item) => {
+                if (this.productType == 1) {
+                    data.push(item.mobile);
+                } else {
+                    data.push(item.serial);
+                }
+            });
+            body.rangeItems = data;
+        }
+
+        if (this.uploadedFile) {
+            this.isLoading = true;
+            this._inventoryServiceProxy
+                .createTransfer(body)
+                .pipe(
+                    catchError((err) => {
+                        this.isLoading = false;
+                        throw err;
+                    })
+                )
+                .subscribe({
+                    next: (result) => {
+                        this.isLoading = false;
+                        if (result.results.orderCode) {
+                            this.uploadOrderDocument(result.results.orderCode, this.uploadedFile);
+                        }
+                    },
+                    error: (err) => {
+                        console.log(err);
+                        this.isLoading = false;
+                    },
+                });
+        } else {
+            this.isLoading = false;
+            this.message.error(this.l('Vui lòng tải lên thông tin chứng từ!'));
+        }
+    }
+
+    createOrderExport() {
+        this.isLoading = true;
+        const body = new OrderExportDto();
+        body.periodName = this.periodName;
+        body.orderCode = this.orderData.orderCode;
+        body.exportItems = [];
+        body.exportItems.push(OrderExportItemDto.fromJS(this.orderItems));
+        if (this.rangeItems.length > 0) {
+            const data = [];
+            this.rangeItems.forEach((item) => {
+                if (this.productType == 1) {
+                    data.push(item.mobile);
+                } else {
+                    data.push(item.serial);
+                }
+            });
+            body.exportItems[0].items = data;
+        }
+        body.exportItems[0].quantity = this.tempOrderItems.quantity;
+        body.exportItems[0].productType = this.productType;
+        if (this.tempOrderItems.fromRange) body.exportItems[0].fromRange = this.tempOrderItems.fromRange;
+        if (this.tempOrderItems.toRange) body.exportItems[0].toRange = this.tempOrderItems.toRange;
+
+        this._inventoryServiceProxy
+            .orderExport(body)
+            .pipe(
+                catchError((err) => {
+                    this.isLoading = false;
+                    throw err;
+                })
+            )
+            .subscribe({
+                next: (result) => {
+                    this.isLoading = false;
+                    this.router.navigate(['/app/main/inventory-import-export/detail-inventory-export'], {
+                        queryParams: { id: this.orderData.id },
+                    });
+                    this.notify.info(this.l('Xuất kho thành công!'));
+                },
+                error: (err) => {
+                    this.isLoading = false;
+                },
+            });
+    }
+
+    onFileSelect(event: any): void {
+        const file = event.files && event.files[0];
+        if (file) {
+            this.uploadedFile = file;
+        }
+    }
+
+    uploadOrderDocument(orderCode: string, file: File) {
+        const uploadUrl = `${this.remoteServiceBaseUrl}/api/services/app/Inventory/UploadOrderDocument`;
+        const formData = new FormData();
+        formData.append('orderCode', orderCode);
+        formData.append('file', file);
+        this._httpClient.post<any>(uploadUrl, formData).subscribe({
+            next: (response) => {
+                if (response.success) {
+                    this.router.navigate(['/app/main/inventory-import-export']);
+                    this.notify.info(this.l('Tạo yêu cầu xuất kho thành công!'));
+                }
+            },
+            error: (err) => {
+                this.message.error(this.l(err.error.error?.message));
+            },
+        });
+    }
+
+    onPageFrom(event: any) {
+        this.currentPage = event.page;
+        this.updateCurrentDataFrom();
+    }
+
+    moveSelectedRecords() {
+        const duplicateRecord = this.selectedRecordsTo.find((record) =>
+            this.rangeItems.some((item) => JSON.stringify(item) === JSON.stringify(record))
+        );
+
+        if (duplicateRecord) {
+            // Hiển thị thông báo lỗi cho bản ghi đầu tiên bị trùng
+            if (this.productType === ProductType.Mobile) {
+                this.message.error(`Bản ghi ${duplicateRecord.mobile} đã tồn tại`);
+            } else {
+                this.message.error(`Bản ghi ${duplicateRecord.serial} đã tồn tại`);
+            }
+        } else {
+            // Không có bản ghi nào bị trùng, thêm tất cả vào rangeItems
+            this.rangeItems.push(...this.selectedRecordsTo);
+        }
+
+        // Làm trống selectedRecordsTo sau khi xử lý
+        this.selectedRecordsTo = [];
+        this.updateCurrentDataFrom();
+    }
+
+    moveBackSelectedRecords() {
+        // Di chuyển từng phần tử từ dataFakeFrom về dataFakeTo
+        this.selectedRecordsFrom.forEach((record) => {
+            const index = this.rangeItems.indexOf(record);
+            if (index > -1) {
+                this.rangeItems.splice(index, 1);
+            }
+        });
+        this.selectedRecordsFrom = []; // Xóa danh sách các phần tử đã chọn
+        this.updateCurrentDataFrom();
+    }
+
+    updateCurrentDataFrom() {
+        const start = this.currentPage * this.rowsPerPage;
+        const end = start + this.rowsPerPage;
+        this.currentDataFrom = this.rangeItems.slice(start, end);
+    }
+
+    onHeaderCheckboxToggle(event: { checked: boolean }): void {
+        if (event.checked) {
+            // Chỉ chọn những item không bị disabled
+            this.selectedRecordsTo = this.listSimSrcStock.filter(
+                (record) => !this.isRecordInTable2(record) && !this.isRangeRule
+            );
+        } else {
+            // Bỏ chọn tất cả
+            this.selectedRecordsTo = [];
+        }
+    }
+
+    isRecordInTable2(record: any): boolean {
+        return this.currentDataFrom.some((item) => JSON.stringify(item) === JSON.stringify(record));
+    }
+
+    onUpload(event) {}
 }
