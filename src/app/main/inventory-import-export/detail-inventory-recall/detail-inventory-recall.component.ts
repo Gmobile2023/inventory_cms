@@ -45,7 +45,7 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
     mobile: string;
     serial: string;
     remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
-    uploadedFile: File | null = null;
+    uploadedFiles: File[] = [];
     convertedUrl: string;
     isAction: boolean = false;
     isAdmin: boolean = false;
@@ -151,14 +151,13 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
     }
 
     onFileSelect(event: any): void {
-        const file = event.files && event.files[0];
-        if (file) {
-            this.uploadedFile = file;
+        if (event.files && event.files.length > 0) {
+            this.uploadedFiles.push(...event.files); // Lưu tệp vào mảng
         }
     }
 
     onSubmitUpload() {
-        this.uploadOrderDocument(this.data.orderCode, this.uploadedFile);
+        this.uploadOrderDocument(this.data.orderCode, this.uploadedFiles);
     }
 
     convertUrl(url: string): void {
@@ -168,11 +167,13 @@ export class DetailInventoryRecallComponent extends AppComponentBase implements 
         this.convertedUrl = `${hiddenPath}/${fileName}`;
     }
 
-    uploadOrderDocument(orderCode: string, file: File) {
+    uploadOrderDocument(orderCode: string, files: File[]) {
         const uploadUrl = `${this.remoteServiceBaseUrl}/api/services/app/Inventory/UploadOrderDocument`;
         const formData = new FormData();
         formData.append('orderCode', orderCode);
-        formData.append('file', file);
+        files.forEach((file, index) => {
+            formData.append(`files[${index}]`, file);
+        });
         this._httpClient.post<any>(uploadUrl, formData).subscribe({
             next: (response) => {
                 if (response.success) {

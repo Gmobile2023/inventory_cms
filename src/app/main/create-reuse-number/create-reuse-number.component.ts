@@ -33,7 +33,7 @@ export class CreateReuseNumberComponent extends AppComponentBase implements OnIn
     ) {
         super(injector);
     }
-    uploadedFiles: any[] = [];
+    uploadedFiles: File[] = [];
     items: MenuItem[];
     home: MenuItem;
     value: number = 0;
@@ -170,7 +170,7 @@ export class CreateReuseNumberComponent extends AppComponentBase implements OnIn
                 next: (result) => {
                     this.isLoading = false;
                     if (result.results.orderCode) {
-                        this.uploadOrderDocument(result.results.orderCode, this.uploadedFile);
+                        this.uploadOrderDocument(result.results.orderCode, this.uploadedFiles);
                     }
                 },
                 error: (err) => {
@@ -184,17 +184,18 @@ export class CreateReuseNumberComponent extends AppComponentBase implements OnIn
     }
 
     onFileSelect(event: any): void {
-        const file = event.files && event.files[0];
-        if (file) {
-            this.uploadedFile = file;
+        if (event.files && event.files.length > 0) {
+            this.uploadedFiles.push(...event.files); // Lưu tệp vào mảng
         }
     }
 
-    uploadOrderDocument(orderCode: string, file: File) {
+    uploadOrderDocument(orderCode: string, files: File[]) {
         const uploadUrl = `${this.remoteServiceBaseUrl}/api/services/app/Inventory/UploadOrderDocument`;
         const formData = new FormData();
         formData.append('orderCode', orderCode);
-        formData.append('file', file);
+        files.forEach((file, index) => {
+            formData.append(`files[${index}]`, file);
+        });
         this._httpClient.post<any>(uploadUrl, formData).subscribe({
             next: (response) => {
                 if (response.success) {
