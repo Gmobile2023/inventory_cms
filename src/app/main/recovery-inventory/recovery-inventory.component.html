@@ -4,31 +4,37 @@
         <div class="row bg-white pt-5 ps-3">
             <h4 class="mb-4">BỘ LỌC TÌM KIẾM</h4>
             <div class="col-md-4 mb-3">
+                <label for="" class="form-label">Số thuê bao</label>
                 <input type="text" class="form-control" placeholder="Nhập số điện thoại" [(ngModel)]="mobile">
             </div>
             <div class="col-md-4 mb-3">
+                <label for="" class="form-label">Thời gian thu hồi từ</label>
                 <input id="fromDate" type="text" name="fromDate" class="form-control" bsDatepicker
                     datePickerLuxonModifier [(date)]="fromDate" [bsConfig]="{ adaptivePosition: true }"
-                    placeholder="Thời gian thu hồi từ" />
+                    placeholder="Chọn thời gian" />
             </div>
             <div class="col-md-4 mb-3">
+                <label for="" class="form-label">Thời gian thu hồi đến</label>
                 <input id="toDate" type="text" name="toDate" class="form-control" bsDatepicker datePickerLuxonModifier
-                    [(date)]="toDate" [bsConfig]="{ adaptivePosition: true }" placeholder="Thời gian thu hồi đến" />
+                    [(date)]="toDate" [bsConfig]="{ adaptivePosition: true }" placeholder="Chọn thời gian" />
             </div>
             <div class="col-md-4 mb-3">
+                <label for="" class="form-label">Nhà mạng</label>
                 <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="network" [(ngModel)]="telCo"
                     optionLabel="label" optionValue="value" placeholder="Nhà mạng" class="w-100">
                 </p-dropdown>
             </div>
             <div class="col-md-4 mb-3">
+                <label for="" class="form-label">Trạng thái nhà mạng</label>
                 <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="statusNetwork"
-                    [(ngModel)]="statusProvider" optionLabel="label" optionValue="value"
-                    placeholder="Trạng thái nhà mạng" class="w-100">
+                    [(ngModel)]="statusProvider" optionLabel="label" optionValue="value" placeholder="Chọn trạng thái"
+                    class="w-100">
                 </p-dropdown>
             </div>
             <div class="col-md-4 mb-3">
+                <label for="" class="form-label">Trạng thái Gmobile</label>
                 <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="statusGmobile"
-                    [(ngModel)]="status" optionLabel="label" optionValue="value" placeholder="Trạng thái Gmobile"
+                    [(ngModel)]="status" optionLabel="label" optionValue="value" placeholder="Chọn trạng thái"
                     class="w-100">
                 </p-dropdown>
             </div>
