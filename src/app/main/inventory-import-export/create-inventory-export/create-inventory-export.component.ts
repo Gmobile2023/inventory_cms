@@ -284,7 +284,7 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
             body.rangeItems = data;
         }
 
-        if (this.uploadedFile) {
+        if (this.uploadedFiles.length > 0) {
             this.isLoading = true;
             this._inventoryServiceProxy
                 .createTransfer(body)
