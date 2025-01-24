@@ -47,15 +47,17 @@ export class RecoveryInventoryComponent extends AppComponentBase {
         { label: 'Tất cả', value: SimRecoveryStatus.Default },
         { label: 'Khoá 1 chiều', value: SimRecoveryStatus.OneWayLock },
         { label: 'Khoá 2 chiều', value: SimRecoveryStatus.TwoWayLock },
-        { label: 'Huỷ', value: SimRecoveryStatus.Default },
+        // { label: 'Huỷ', value: SimRecoveryStatus.Default },
         { label: 'Thu hồi', value: SimRecoveryStatus.Revoked },
     ];
     statusGmobile = [
         { label: 'Tất cả', value: SimRecoveryStatus.Default },
         { label: 'Thu hồi', value: SimRecoveryStatus.Revoked },
         { label: 'Chờ tái sử dụng', value: SimRecoveryStatus.Waiting },
-        { label: 'Không tái sử dụng', value: SimRecoveryStatus.Default },
-        { label: 'Đã cấp phát', value: SimRecoveryStatus.Default },
+        { label: 'Đã xuất kho', value: 0 },
+        { label: 'Khoá 1 chiều', value: SimRecoveryStatus.OneWayLock },
+        { label: 'Khoá 2 chiều', value: SimRecoveryStatus.TwoWayLock },
+        { label: 'Hoạt động', value: SimRecoveryStatus.Activity },
     ];
 
     public dateRange: DateTime[] = [this._dateTimeService.getStartOfMonth(), this._dateTimeService.getEndOfMonth()];

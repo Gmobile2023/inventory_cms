@@ -3,10 +3,13 @@
     <div [class]="containerClass">
         <div class="row bg-white pt-5 ps-3">
             <h4 class="mb-4">BỘ LỌC TÌM KIẾM</h4>
-            <div class="col-md-6 mb-3">
-                <input type="text" class="form-control" placeholder="Tìm kiếm">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" placeholder="Nhập tiêu đề..." [(ngModel)]="orderTitle">
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" placeholder="Nhập mã đơn hàng.." [(ngModel)]="orderCode">
+            </div>
+            <div class="col-md-4 mb-3">
                 <p-dropdown [style]="{width: '100%'}" [options]="stockList" [(ngModel)]="selectedStock"
                     optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
                     placeholder="Kho cấu hình">
@@ -37,7 +40,7 @@
                 </p-dropdown>
             </div>
             <div class="col-12 mt-3 mb-5">
-                <div class="d-flex align-items-center justify-content-start">
+                <div class="d-flex align-items-center justify-content-end">
                     <button class="btn btn-secondary btn-sm me-3" type="button" (click)="resetFilter()">ĐẶT LẠI</button>
                     <button class="btn btn-primary btn-sm" type="button" (click)="getListOrder($event)">TÌM
                         KIẾM</button>

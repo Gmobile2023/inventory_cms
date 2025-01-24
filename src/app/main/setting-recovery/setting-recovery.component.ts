@@ -52,17 +52,12 @@ export class SettingRecoveryComponent extends AppComponentBase {
 
     statusSetting = [
         { label: 'Chờ tái sử dụng', value: 1 },
-        { label: 'Đã xuất kho', value: 2 },
+        // { label: 'Đã xuất kho', value: 2 },
     ];
 
     settingStatus = [
         {
             status: 1,
-            day: 0,
-            content: '',
-        },
-        {
-            status: 2,
             day: 0,
             content: '',
         },
@@ -176,11 +171,6 @@ export class SettingRecoveryComponent extends AppComponentBase {
                 day: 0,
                 content: '',
             },
-            {
-                status: 2,
-                day: 0,
-                content: '',
-            },
         ];
     }
 
@@ -214,12 +204,14 @@ export class SettingRecoveryComponent extends AppComponentBase {
     }
 
     openModal(template: TemplateRef<any>) {
-        this.modalRef = this.modalService.show(template, { id: 1, class: 'modal-xl' });
-        this.configData = {};
+        this.resetData();
         this.configData.status = 1;
+        this.modalRef = this.modalService.show(template, { id: 1, class: 'modal-xl' });
     }
 
     closeModal(modalId?: number) {
+        this.isEdit = false;
+        this.resetData();
         this.modalService.hide(modalId);
     }
 }
