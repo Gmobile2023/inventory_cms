@@ -165,7 +165,7 @@ export class CreateReuseNumberComponent extends AppComponentBase implements OnIn
             });
             body.items = data;
         }
-        if (this.uploadedFile) {
+        if (this.uploadedFiles.length > 0) {
             this._inventoryServiceProxy.createSimRecall(body).subscribe({
                 next: (result) => {
                     this.isLoading = false;
