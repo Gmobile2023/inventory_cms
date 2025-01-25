@@ -21,140 +21,94 @@
             <button class="btn btn-danger btn-sm px-4">Hủy đơn hàng</button>
         </div>
 
+        <div class="row d-flex justify-content-between">
+            <div class="col-8">
+                <div class="table1 border">
+                    <p-table #dataTable [value]="listSimSrcStock" [(selection)]="selectedRecordsTo"
+                        [rows]="primengTableHelper.defaultRecordsCountPerPage" [paginator]="false" [lazy]="true"
+                        [tableStyle]="{'min-width': '50rem'}" class="table-custom"
+                        (onHeaderCheckboxToggle)="onHeaderCheckboxToggle($event)">
+                        <ng-template pTemplate="caption">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h4 class="mb-0">Chi tiết đơn hàng</h4>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 4rem">
+                                    <p-tableHeaderCheckbox [disabled]="isRangeRule" />
+                                </th>
+                                <th>{{ 'SẢN PHẨM' | localize }}</th>
+                                <th>{{ 'GIÁ SỐ' | localize }}</th>
+                                <th>{{ 'GÓI CƯỚC' | localize }}</th>
+                                <th>{{ 'PHÍ HOÀ MẠNG' | localize }}</th>
+                                <th>{{ 'TIỀN SIM' | localize }}</th>
+                                <th>{{ 'TỔNG GIÁ' | localize }}</th>
 
-        <div class="d-flex justify-content-between gap-5 mt-5">
-            <div class="table1 border">
-                <p-table #dataTable [value]="listSimSrcStock" [(selection)]="selectedRecordsTo"
-                    [rows]="primengTableHelper.defaultRecordsCountPerPage" [paginator]="false" [lazy]="true"
-                    [tableStyle]="{'min-width': '50rem'}" class="table-custom"
-                    (onHeaderCheckboxToggle)="onHeaderCheckboxToggle($event)">
-                    <ng-template pTemplate="caption">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <h4 class="mb-0">Chi tiết đơn hàng</h4>
-                        </div>
-                    </ng-template>
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th style="width: 4rem">
-                                <p-tableHeaderCheckbox [disabled]="isRangeRule" />
-                            </th>
-                            <th>{{ 'SẢN PHẨM' | localize }}</th>
-                            <th>{{ 'GIÁ SỐ' | localize }}</th>
-                            <th>{{ 'GÓI CƯỚC' | localize }}</th>
-                            <th>{{ 'PHÍ HOÀ MẠNG' | localize }}</th>
-                            <th>{{ 'TIỀN SIM' | localize }}</th>
-                            <th>{{ 'TỔNG GIÁ' | localize }}</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-record="$implicit">
+                            <tr>
+                                <td>
+                                    <p-tableCheckbox [value]="record"
+                                        [disabled]="isRecordInTable2(record) || isRangeRule" />
+                                </td>
+                                <td>{{productType == 1 ? record.mobile : record.serial}}</td>
+                                <td>{{record.attribute}}</td>
+                                <td>{{record.salePrice}}</td>
+                                <td>{{productType == 1 ? record.mobile : record.serial}}</td>
+                                <td>{{record.attribute}}</td>
+                                <td>{{record.salePrice}}</td>
 
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-record="$implicit">
-                        <tr>
-                            <td>
-                                <p-tableCheckbox [value]="record"
-                                    [disabled]="isRecordInTable2(record) || isRangeRule" />
-                            </td>
-                            <td>{{productType == 1 ? record.mobile : record.serial}}</td>
-                            <td>{{record.attribute}}</td>
-                            <td>{{record.salePrice}}</td>
-                            <td>{{productType == 1 ? record.mobile : record.serial}}</td>
-                            <td>{{record.attribute}}</td>
-                            <td>{{record.salePrice}}</td>
-
-                        </tr>
-                    </ng-template>
-                </p-table>
-                <div class="primeng-no-data text-center" *ngIf="primengTableHelper.totalRecordsCount == 0">
-                    {{ 'NoData' | localize }}
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <div class="primeng-no-data text-center" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                        {{ 'NoData' | localize }}
+                    </div>
+                    <div class="primeng-paging-container">
+                        <p-paginator (onPageChange)="getListSimSrcStock($event)"
+                            [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
+                            [totalRecords]="primengTableHelper.totalRecordsCount"
+                            [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                            [showCurrentPageReport]="true" [currentPageReportTemplate]="
+                                'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount
+                            "></p-paginator>
+                    </div>
                 </div>
-                <div class="primeng-paging-container">
-                    <p-paginator (onPageChange)="getListSimSrcStock($event)"
-                        [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
-                        [totalRecords]="primengTableHelper.totalRecordsCount"
-                        [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
-                        [showCurrentPageReport]="true" [currentPageReportTemplate]="
-                            'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount
-                        "></p-paginator>
+                <div class="mt-5">
+                    <div class="card p-3">
+                        <h4 class="mb-3">Hoạt động đơn hàng</h4>
+                        <p-timeline [value]="events">
+                            <ng-template pTemplate="content" let-event>
+                                <small class="p-text-secondary">{{ event.date }}</small>
+                            </ng-template>
+                            <ng-template pTemplate="opposite" let-event>
+                                {{ event.status }}
+                            </ng-template>
+                        </p-timeline>
+                    </div>
                 </div>
-            </div>
-            <!-- <div class="action d-flex flex-column justify-content-start align-items-center">
-                <button class="btn btn-primary btn-sm" (click)="moveSelectedRecords()"
-                    [disabled]="selectedRecordsFrom.length > 0 || selectedRecordsTo.length == 0">THÊM</button>
-                <button class="btn btn-danger btn-sm mt-3 w-100" (click)="moveBackSelectedRecords()"
-                    [disabled]="selectedRecordsTo.length > 0 || selectedRecordsFrom.length == 0">BỎ</button>
-            </div>
 
-            <div class="table2 border">
-                <p-table #dataTable2 [value]="currentDataFrom" [(selection)]="selectedRecordsFrom" [rows]="rowsPerPage"
-                    [paginator]="true" [lazy]="true" [tableStyle]="{'min-width': '50rem'}" class="table-custom">
-                    <ng-template pTemplate="caption">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <h4 class="mb-0">Danh sách đã chọn</h4>
-                        </div>
-                    </ng-template>
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th style="width: 4rem"><p-tableHeaderCheckbox [disabled]="selectedRecordsTo.length > 0" />
-                            </th>
-                            <th>{{ 'SĐT/SERIAL' | localize }}</th>
-                            <th>{{ 'HẠNG SỐ' | localize }}</th>
-                            <th>{{ 'ĐỊNH GIÁ' | localize }}</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-record="$implicit">
-                        <tr>
-                            <td>
-                                <p-tableCheckbox [value]="record" [disabled]="selectedRecordsTo.length > 0" />
-                            </td>
-                            <td>{{productType == 1 ? record.mobile : record.serial}}</td>
-                            <td>{{record.attribute}}</td>
-                            <td>{{record.salePrice}}</td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-                <div class="primeng-no-data text-center" *ngIf="rangeItems.length == 0">
-                    {{ 'NoData' | localize }}
+            </div>
+            <div class="col-4">
+                <div class="card p-4 mb-10">
+                    <h4 class="mb-3">Thông tin khách hàng</h4>
+                    <p><strong>Nguyễn Văn A</strong></p>
+                    <p>Địa chỉ: 123 Đường ABC, Hà Nội</p>
+                    <p>Số lương : 2 đơn hàng</p> 
+                    <p>Email: examplemail.com</p>
+                    <p>SĐT: 0123456789</p>
+                    <button class="btn btn-primary btn-sm">Cập nhật</button>
                 </div>
-                <div class="primeng-paging-container">
-                    <p-paginator [rows]="rowsPerPage" #paginator2 [totalRecords]="rangeItems.length"
-                        [showCurrentPageReport]="true" (onPageChange)="onPageFrom($event)" [currentPageReportTemplate]="
-                            'TotalRecordsCount' | localize: rangeItems.length
-                        "></p-paginator>
+
+                <div class="card p-4 mt-2">
+                    <h4 class="mb-3">Thông tin vận chuyển</h4>
+                    <p><strong>Nguyễn Văn A</strong></p>
+                    <p>Địa chỉ: 123 Đường ABC, Hà Nội</p>
+                    <p>SĐT: 0123456789</p>
+                    <button class="btn btn-primary btn-sm">Cập nhật</button>
                 </div>
-            </div> -->
-
-            <div class="card p-4">
-                <h4 class="mb-3">Thông tin khách hàng</h4>
-                <p><strong>Nguyễn Văn A</strong></p>
-                <p>Địa chỉ: 123 Đường ABC, Hà Nội</p>
-                <p>Email: exampleemail.com</p>
-                <p>SĐT: 0123456789</p>
-                <button class="btn btn-primary btn-sm">Cập nhật</button>
-            </div>
-
-            <div class="card p-4">
-                <h4 class="mb-3">Thông tin vận chuyển</h4>
-                <p><strong>Nguyễn Văn A</strong></p>
-                <p>Địa chỉ: 123 Đường ABC, Hà Nội</p>
-                <p>Email: exampleemail.com</p>
-                <p>SĐT: 0123456789</p>
-                <button class="btn btn-primary btn-sm">Cập nhật</button>
-            </div>
-        </div>
-
-
-
-        <!-- Order Timeline -->
-        <div class="mt-5">
-            <div class="card p-3">
-                <h4 class="mb-3">Hoạt động đơn hàng</h4>
-                <p-timeline [value]="events">
-                    <ng-template pTemplate="content" let-event>
-                        <small class="p-text-secondary">{{ event.date }}</small>
-                    </ng-template>
-                    <ng-template pTemplate="opposite" let-event>
-                        {{ event.status }}
-                    </ng-template>
-                </p-timeline>
             </div>
         </div>
 
