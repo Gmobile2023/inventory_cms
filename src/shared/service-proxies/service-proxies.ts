@@ -19361,11 +19361,12 @@ export class UserServiceProxy {
      * @param filter (optional) 
      * @param permissions (optional) 
      * @param role (optional) 
+     * @param accountType (optional) 
      * @param onlyLockedUsers (optional) 
      * @param sorting (optional) 
      * @return Success
      */
-    getUsersToExcel(filter: string | undefined, permissions: string[] | undefined, role: number | undefined, onlyLockedUsers: boolean | undefined, sorting: string | undefined): Observable<FileDto> {
+    getUsersToExcel(filter: string | undefined, permissions: string[] | undefined, role: number | undefined, accountType: AccountType | undefined, onlyLockedUsers: boolean | undefined, sorting: string | undefined): Observable<FileDto> {
         let url_ = this.baseUrl + "/api/services/app/User/GetUsersToExcel?";
         if (filter === null)
             throw new Error("The parameter 'filter' cannot be null.");
@@ -19379,6 +19380,10 @@ export class UserServiceProxy {
             throw new Error("The parameter 'role' cannot be null.");
         else if (role !== undefined)
             url_ += "Role=" + encodeURIComponent("" + role) + "&";
+        if (accountType === null)
+            throw new Error("The parameter 'accountType' cannot be null.");
+        else if (accountType !== undefined)
+            url_ += "AccountType=" + encodeURIComponent("" + accountType) + "&";
         if (onlyLockedUsers === null)
             throw new Error("The parameter 'onlyLockedUsers' cannot be null.");
         else if (onlyLockedUsers !== undefined)
@@ -29799,6 +29804,7 @@ export class GetUsersInput implements IGetUsersInput {
     filter!: string | undefined;
     permissions!: string[] | undefined;
     role!: number | undefined;
+    accountType!: AccountType;
     onlyLockedUsers!: boolean;
     sorting!: string | undefined;
     maxResultCount!: number;
@@ -29822,6 +29828,7 @@ export class GetUsersInput implements IGetUsersInput {
                     this.permissions!.push(item);
             }
             this.role = _data["role"];
+            this.accountType = _data["accountType"];
             this.onlyLockedUsers = _data["onlyLockedUsers"];
             this.sorting = _data["sorting"];
             this.maxResultCount = _data["maxResultCount"];
@@ -29845,6 +29852,7 @@ export class GetUsersInput implements IGetUsersInput {
                 data["permissions"].push(item);
         }
         data["role"] = this.role;
+        data["accountType"] = this.accountType;
         data["onlyLockedUsers"] = this.onlyLockedUsers;
         data["sorting"] = this.sorting;
         data["maxResultCount"] = this.maxResultCount;
@@ -29857,6 +29865,7 @@ export interface IGetUsersInput {
     filter: string | undefined;
     permissions: string[] | undefined;
     role: number | undefined;
+    accountType: AccountType;
     onlyLockedUsers: boolean;
     sorting: string | undefined;
     maxResultCount: number;
@@ -40812,6 +40821,7 @@ export class UserListDto implements IUserListDto {
     name!: string | undefined;
     surname!: string | undefined;
     userName!: string | undefined;
+    accountType!: AccountType;
     emailAddress!: string | undefined;
     lockoutEndDateUtc!: DateTime | undefined;
     phoneNumber!: string | undefined;
@@ -40836,6 +40846,7 @@ export class UserListDto implements IUserListDto {
             this.name = _data["name"];
             this.surname = _data["surname"];
             this.userName = _data["userName"];
+            this.accountType = _data["accountType"];
             this.emailAddress = _data["emailAddress"];
             this.lockoutEndDateUtc = _data["lockoutEndDateUtc"] ? DateTime.fromISO(_data["lockoutEndDateUtc"].toString()) : <any>undefined;
             this.phoneNumber = _data["phoneNumber"];
@@ -40864,6 +40875,7 @@ export class UserListDto implements IUserListDto {
         data["name"] = this.name;
         data["surname"] = this.surname;
         data["userName"] = this.userName;
+        data["accountType"] = this.accountType;
         data["emailAddress"] = this.emailAddress;
         data["lockoutEndDateUtc"] = this.lockoutEndDateUtc ? this.lockoutEndDateUtc.toString() : <any>undefined;
         data["phoneNumber"] = this.phoneNumber;
@@ -40885,6 +40897,7 @@ export interface IUserListDto {
     name: string | undefined;
     surname: string | undefined;
     userName: string | undefined;
+    accountType: AccountType;
     emailAddress: string | undefined;
     lockoutEndDateUtc: DateTime | undefined;
     phoneNumber: string | undefined;
