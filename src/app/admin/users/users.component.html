@@ -91,6 +91,17 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
+                            <select 
+                                    id="accountType" 
+                                    class="form-select" 
+                                    [(ngModel)]="accountType" 
+                                    name="accountType">
+                                    <option [ngValue]="null">-- Lọc theo loại tài khoản --</option>
+                                    <option *ngFor="let type of accountTypes" [value]="type.value">{{ type.name }}</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6">
                                 <label class="form-check form-check-custom form-check-solid form-switch py-1">
                                     <input id="UsersTable_OnlyLockedUsers" type="checkbox" name="OnlyLockedUsers"
                                         [(ngModel)]="onlyLockedUsers" class="form-check-input" />
@@ -165,6 +176,9 @@
                                     </th>
                                     <th style="min-width: 150px">
                                         {{ 'Roles' | localize }}
+                                    </th>
+                                    <th style="min-width: 150px">
+                                        {{ 'AccountType' | localize }}
                                     </th>
                                     <th style="min-width: 250px" pSortableColumn="emailAddress">
                                         {{ 'EmailAddress' | localize }}
@@ -286,6 +300,10 @@
                                     <td style="min-width: 150px">
                                         <span class="p-column-title">{{ 'Roles' | localize }}</span>
                                         {{ getRolesAsString(record.roles) }}
+                                    </td>
+                                    <td style="min-width: 150px">
+                                        <span class="p-column-title">{{ 'AccountType' | localize }}</span>
+                                        {{ getAccountTypeAsString(record.accountType) | localize }}
                                     </td>
                                     <td style="min-width: 250px">
                                         <span class="p-column-title">{{ 'EmailAddress' | localize }}</span>

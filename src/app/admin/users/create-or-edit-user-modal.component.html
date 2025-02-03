@@ -96,10 +96,16 @@
 
                             <div class="form-group mb-5">
                                 <label class="control-label">{{ 'Account Type' | localize }} *</label>
-                                <!-- <select [(ngModel)]="user.accountType" class="form-control">
-                                    <option *ngFor="let accountType of accountTypes" [value]="accountType.value">{{ accountType.name }}</option>
-                                  </select> -->
-                              </div>
+                                <select 
+                                    id="accountType" 
+                                    class="form-control" 
+                                    [(ngModel)]="selectedAccountType" 
+                                    name="accountType" [disabled]="isCreatingNewUser">
+                                    <option *ngFor="let type of accountTypes" [value]="type.value">{{ type.name }}</option>
+                                </select>
+                                <p *ngIf="selectedAccountType">Selected Account Type: {{ selectedAccountType }}</p>
+                            </div>
+                            
                             
 
                             <div class="mb-5">
