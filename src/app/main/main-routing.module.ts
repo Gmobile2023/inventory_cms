@@ -144,6 +144,14 @@ import { RouterModule } from '@angular/router';
                         data: { permission: '' },
                     },
                     {
+                        path: 'sim-so/add-order',
+                        loadChildren: () =>
+                            import('./add-order/add-order.module').then(
+                                (m) => m.AddOrderModule
+                            ),
+                        data: { permission: '' },
+                    },
+                    {
                         path: 'recovery-inventory/detail-reuse-number',
                         loadChildren: () =>
                             import('./detail-reuse-number/detail-reuse-number.module').then(

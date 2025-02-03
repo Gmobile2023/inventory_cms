@@ -32,6 +32,8 @@ export class AppNavigationService {
                 [
                     new AppMenuItem('Danh sách đơn hàng', '', 'flaticon-list-2', '/app/main/sim-so/order-list'),
                     new AppMenuItem('Chi tiết đơn hàng', '', 'flaticon-visible', '/app/main/sim-so/order-detail'),
+                    new AppMenuItem('Thêm mới đơn hàng', '', 'flaticon-add-circular-button', '/app/main/sim-so/add-order'),
+
                 ]
             ),
             new AppMenuItem(
