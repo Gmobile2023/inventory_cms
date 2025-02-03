@@ -9,8 +9,8 @@
             </div>
             <div class="col-md-4 mb-3">
                 <label for="" class="form-label">Kho cấu hình</label>
-                <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStockFrom"
-                    optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
+                <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStockTo"
+                    optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="false"
                     placeholder="Chọn kho">
                     <ng-template pTemplate="selectedStockTo">
                         <div class="flex align-items-center gap-2" *ngIf="selectedStockTo">
@@ -26,12 +26,12 @@
             </div>
             <div class="col-md-4 mb-3">
                 <label for="" class="form-label">Kho tiếp nhận</label>
-                <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStockTo"
-                    optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
+                <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStockFrom"
+                    optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="false"
                     placeholder="Chọn kho">
                     <ng-template pTemplate="selectedStockTo">
-                        <div class="flex align-items-center gap-2" *ngIf="selectedStockTo">
-                            <div>{{ selectedStockTo.stockName }}</div>
+                        <div class="flex align-items-center gap-2" *ngIf="selectedStockFrom">
+                            <div>{{ selectedStockFrom.stockName }}</div>
                         </div>
                     </ng-template>
                     <ng-template let-stock pTemplate="item">

@@ -4,6 +4,7 @@ import { AppConsts } from '@shared/AppConsts';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
+    AccountType,
     EntityDtoOfInt64,
     GetRolesInput,
     GetUsersInput,
@@ -49,6 +50,7 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
     filterText = '';
     role = '';
     onlyLockedUsers = false;
+    accountType: AccountType = AccountType.System;
 
     constructor(
         injector: Injector,
@@ -86,6 +88,7 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
                     filter: this.filterText,
                     permissions: this.permissionFilterTreeModal.getSelectedPermissions(),
                     role: this.role !== '' ? parseInt(this.role) : undefined,
+                    // accountType: undefined,
                     onlyLockedUsers: this.onlyLockedUsers,
                     sorting: 'creationTime DESC',
                     maxResultCount: this.primengTableHelper.getMaxResultCount(this.paginator, event),
@@ -132,6 +135,7 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
                 this.filterText,
                 this.permissionFilterTreeModal.getSelectedPermissions(),
                 this.role !== '' ? parseInt(this.role) : undefined,
+                // this.accountType,
                 this.onlyLockedUsers,
                 this.primengTableHelper.getSorting(this.dataTable)
             )

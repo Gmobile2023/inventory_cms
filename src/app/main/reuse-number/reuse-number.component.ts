@@ -39,9 +39,9 @@ export class ReuseNumberComponent extends AppComponentBase {
     orderCode: string;
     orderTitle: string;
     statusOption = [
-        { label: 'Chờ phê duyệt', value: 1 },
-        { label: 'Đã duyệt', value: 2 },
-        { label: 'Từ chối', value: 2 },
+        { label: 'Chờ phê duyệt', value: 0 },
+        { label: 'Đã duyệt', value: 1 },
+        { label: 'Từ chối', value: 7 },
     ];
     stockList = [];
     public dateRange: DateTime[] = [this._dateTimeService.getStartOfMonth(), this._dateTimeService.getEndOfMonth()];
