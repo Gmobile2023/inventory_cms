@@ -19,10 +19,14 @@ import { catchError, finalize } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppConsts } from '@shared/AppConsts';
 import { HttpClient } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
+
 @Component({
     templateUrl: './add-order.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [appModuleAnimation()],
+    providers: [MessageService]
+
 })
 export class AddOrderComponent extends AppComponentBase implements OnInit {
     @ViewChild('dataTable', { static: true }) dataTable: Table;
@@ -38,6 +42,8 @@ export class AddOrderComponent extends AppComponentBase implements OnInit {
     }
     uploadedFiles: any[] = [];
     items: MenuItem[];
+    itemsMenu: MenuItem[];
+
     home: MenuItem;
     value: number = 0;
     selectedRecordsTo: any[] = [];
@@ -97,9 +103,33 @@ export class AddOrderComponent extends AppComponentBase implements OnInit {
     orderData: any = {};
     periodName: string;
     events: any[];
+    currentStep: number = 1;
+    activeIndex: number = 0;
+
+    onActiveIndexChange(event: number) {
+        this.activeIndex = event;
+        this.currentStep = event + 1; // Đồng bộ currentStep với activeIndex
+    }
+    
 
     ngOnInit() {
-        this.items = [{ label: 'SIM SỐ' }, { label: 'Chi tiết đơn hàng' }];
+        this.items = [{ label: 'SIM SỐ' }, { label: 'Thêm mới đơn hàng' }];
+        this.itemsMenu = [
+            {
+                label: 'CHỌN SỐ ĐIỆN THOẠI',
+                command: () => this.nextStep(1)
+            },
+            {
+                label: 'CHỌN GÓI CƯỚC',
+                command: () => this.nextStep(2)
+            },
+            {
+                label: 'THANH TOÁN',
+                command: () => this.nextStep(3)
+            }
+        ];
+        
+
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.events = [
             { status: 'Ordered', date: '15/10/2020 10:30', icon: 'pi pi-shopping-cart', color: '#9C27B0', image: 'game-controller.jpg' },
@@ -155,6 +185,26 @@ export class AddOrderComponent extends AppComponentBase implements OnInit {
         });
     }
 
+    nextStep(step: number) {
+        this.currentStep = step;
+        this.activeIndex = step - 1; // Vì activeIndex bắt đầu từ 0
+    }
+    
+
+    back() {
+        if (this.currentStep > 1) {
+            this.currentStep--;
+            this.activeIndex = this.currentStep - 1;
+        }
+    }
+    
+    next() {
+        if (this.currentStep < 3) {
+            this.currentStep++;
+            this.activeIndex = this.currentStep - 1;
+        }
+    }
+    
     onRangeRuleChange() {
         this.isRangeRule = !this.isRangeRule;
         if (!this.isRangeRule) {

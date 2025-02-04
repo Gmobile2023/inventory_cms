@@ -9,6 +9,8 @@ import { AddOrderRoutingModule } from './add-order-routing.module';
 import { AddOrderComponent } from './add-order.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TimelineModule } from 'primeng/timeline';
+import { StepsModule } from 'primeng/steps';
+
 
 @NgModule({
     declarations: [AddOrderComponent],
@@ -21,7 +23,8 @@ import { TimelineModule } from 'primeng/timeline';
         ProgressBarModule,
         TagModule,
         ProgressSpinnerModule,
-        TimelineModule
+        TimelineModule,
+        StepsModule
     ],
 })
 export class AddOrderModule { }
