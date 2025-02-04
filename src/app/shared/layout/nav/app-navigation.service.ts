@@ -24,6 +24,19 @@ export class AppNavigationService {
             new AppMenuItem('Tenants', 'Pages.Tenants', 'flaticon-list-3', '/app/admin/tenants'),
             new AppMenuItem('Editions', 'Pages.Editions', 'flaticon-app', '/app/admin/editions'),
             new AppMenuItem(
+                'SIM SỐ',
+                '',
+                'flaticon-graphic',
+                '',
+                [],
+                [
+                    new AppMenuItem('Danh sách đơn hàng', '', 'flaticon-list-2', '/app/main/sim-so/order-list'),
+                    new AppMenuItem('Chi tiết đơn hàng', '', 'flaticon-visible', '/app/main/sim-so/order-detail'),
+                    new AppMenuItem('Thêm mới đơn hàng', '', 'flaticon-add-circular-button', '/app/main/sim-so/add-order'),
+
+                ]
+            ),
+            new AppMenuItem(
                 'Quản lý Kho',
                 'Pages.Inventories',
                 'flaticon-open-box',
