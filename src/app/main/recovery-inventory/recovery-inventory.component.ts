@@ -4,7 +4,11 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DateTime } from '@node_modules/@types/luxon';
-import { InventoryServiceProxy, SimRecoveryStatus } from '@shared/service-proxies/service-proxies';
+import {
+    InventoryServiceProxy,
+    SimRecoveryProviderStatus,
+    SimRecoveryStatus,
+} from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
@@ -35,7 +39,7 @@ export class RecoveryInventoryComponent extends AppComponentBase {
     fromDate: DateTime;
     toDate: DateTime;
     status: SimRecoveryStatus = SimRecoveryStatus.Default;
-    statusProvider: SimRecoveryStatus = SimRecoveryStatus.Default;
+    statusProvider: SimRecoveryProviderStatus = SimRecoveryProviderStatus.Default;
     network = [
         { label: 'Tất cả', value: 0 },
         { label: 'Vinaphone', value: 1 },
@@ -44,18 +48,20 @@ export class RecoveryInventoryComponent extends AppComponentBase {
         { label: 'Gsim', value: 1 },
     ];
     statusNetwork = [
-        { label: 'Tất cả', value: SimRecoveryStatus.Default },
-        { label: 'Khoá 1 chiều', value: SimRecoveryStatus.OneWayLock },
-        { label: 'Khoá 2 chiều', value: SimRecoveryStatus.TwoWayLock },
-        { label: 'Huỷ', value: SimRecoveryStatus.Default },
-        { label: 'Thu hồi', value: SimRecoveryStatus.Revoked },
+        { label: 'Tất cả', value: SimRecoveryProviderStatus.Default },
+        { label: 'Khoá 1 chiều', value: SimRecoveryProviderStatus.OneWayLock },
+        { label: 'Khoá 2 chiều', value: SimRecoveryProviderStatus.TwoWayLock },
+        // { label: 'Huỷ', value: SimRecoveryProviderStatus.Default },
+        { label: 'Thu hồi', value: SimRecoveryProviderStatus.Revoked },
     ];
     statusGmobile = [
         { label: 'Tất cả', value: SimRecoveryStatus.Default },
         { label: 'Thu hồi', value: SimRecoveryStatus.Revoked },
         { label: 'Chờ tái sử dụng', value: SimRecoveryStatus.Waiting },
-        { label: 'Không tái sử dụng', value: SimRecoveryStatus.Default },
-        { label: 'Đã cấp phát', value: SimRecoveryStatus.Default },
+        { label: 'Đã xuất kho', value: 0 },
+        { label: 'Khoá 1 chiều', value: SimRecoveryStatus.OneWayLock },
+        { label: 'Khoá 2 chiều', value: SimRecoveryStatus.TwoWayLock },
+        { label: 'Hoạt động', value: SimRecoveryStatus.Activity },
     ];
 
     public dateRange: DateTime[] = [this._dateTimeService.getStartOfMonth(), this._dateTimeService.getEndOfMonth()];

@@ -36,10 +36,12 @@ export class ReuseNumberComponent extends AppComponentBase {
     description: string;
     name: string;
     isEdit: boolean = false;
+    orderCode: string;
+    orderTitle: string;
     statusOption = [
-        { label: 'Chờ phê duyệt', value: 1 },
-        { label: 'Đã duyệt', value: 2 },
-        { label: 'Từ chối', value: 2 },
+        { label: 'Chờ phê duyệt', value: 0 },
+        { label: 'Đã duyệt', value: 1 },
+        { label: 'Từ chối', value: 7 },
     ];
     stockList = [];
     public dateRange: DateTime[] = [this._dateTimeService.getStartOfMonth(), this._dateTimeService.getEndOfMonth()];
@@ -56,8 +58,8 @@ export class ReuseNumberComponent extends AppComponentBase {
         this._inventoryServiceProxy
             .getListOrder(
                 6,
-                undefined,
-                undefined,
+                this.orderCode,
+                this.orderTitle,
                 undefined,
                 this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
                 this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
@@ -101,6 +103,8 @@ export class ReuseNumberComponent extends AppComponentBase {
         this.toDate = undefined;
         this.status = undefined;
         this.selectedStock = undefined;
+        this.orderCode = undefined;
+        this.orderTitle = undefined;
     }
 
     openModal(template: TemplateRef<any>) {

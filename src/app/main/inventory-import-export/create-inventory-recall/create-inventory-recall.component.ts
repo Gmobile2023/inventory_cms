@@ -34,7 +34,7 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
     ) {
         super(injector);
     }
-    uploadedFiles: any[] = [];
+    uploadedFiles: File[] = [];
     selectedRecords: [];
     items: MenuItem[];
     home: MenuItem;
@@ -235,7 +235,7 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
             });
             body.rangeItems = data;
         }
-        if (this.uploadedFile) {
+        if (this.uploadedFiles.length > 0) {
             this._inventoryServiceProxy
                 .createRecovery(body)
                 .pipe(
@@ -248,7 +248,7 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
                     next: (result) => {
                         this.isLoading = false;
                         if (result.results.orderCode) {
-                            this.uploadOrderDocument(result.results.orderCode, this.uploadedFile);
+                            this.uploadOrderDocument(result.results.orderCode, this.uploadedFiles);
                         }
                     },
                     error: (err) => {
@@ -262,17 +262,18 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
     }
 
     onFileSelect(event: any): void {
-        const file = event.files && event.files[0];
-        if (file) {
-            this.uploadedFile = file;
+        if (event.files && event.files.length > 0) {
+            this.uploadedFiles.push(...event.files); // Lưu tệp vào mảng
         }
     }
 
-    uploadOrderDocument(orderCode: string, file: File) {
+    uploadOrderDocument(orderCode: string, files: File[]) {
         const uploadUrl = `${this.remoteServiceBaseUrl}/api/services/app/Inventory/UploadOrderDocument`;
         const formData = new FormData();
         formData.append('orderCode', orderCode);
-        formData.append('file', file);
+        files.forEach((file, index) => {
+            formData.append(`files[${index}]`, file);
+        });
         this._httpClient.post<any>(uploadUrl, formData).subscribe({
             next: (response) => {
                 if (response.success) {

@@ -1,7 +1,9 @@
 ﻿import { Component, EventEmitter, Injector, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppConsts } from '@shared/AppConsts';
 import { AppComponentBase } from '@shared/common/app-component-base';
+
 import {
+    AccountType,
     CreateOrUpdateUserInput,
     OrganizationUnitDto,
     PasswordComplexitySetting,
@@ -29,7 +31,7 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
     @ViewChild('organizationUnitTree') organizationUnitTree: OrganizationUnitsTreeComponent;
 
     @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
-
+    isCreatingNewUser: boolean = true;
     active = false;
     saving = false;
     canChangeUserName = true;
@@ -49,7 +51,12 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
     allOrganizationUnits: OrganizationUnitDto[];
     memberedOrganizationUnits: string[];
     userPasswordRepeat = '';
-
+    selectedAccountType: AccountType = AccountType.System; // Default value (adjust as needed)
+    accountTypes = [
+        { value: 0, name: 'System' },
+        { value: 1, name: 'Agent' },
+        { value: 2, name: 'End User' }
+      ];
     constructor(
         injector: Injector,
         private _userService: UserServiceProxy,
@@ -63,6 +70,7 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
             this.active = true;
             this.setRandomPassword = true;
             this.sendActivationEmail = true;
+            this.isCreatingNewUser = false;
         }
 
         this._userService.getUserForEdit(userId).subscribe((userResult) => {
@@ -75,7 +83,7 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
 
             this.allOrganizationUnits = userResult.allOrganizationUnits;
             this.memberedOrganizationUnits = userResult.memberedOrganizationUnits;
-
+            this.selectedAccountType = this.user.accountType; 
             this.getProfilePicture(userId);
 
             if (userId) {
@@ -153,6 +161,7 @@ export class CreateOrEditUserModalComponent extends AppComponentBase {
         let input = new CreateOrUpdateUserInput();
 
         input.user = this.user;
+        input.user.accountType = this.selectedAccountType;
         input.setRandomPassword = this.setRandomPassword;
         input.sendActivationEmail = this.sendActivationEmail;
         input.assignedRoleNames = _map(

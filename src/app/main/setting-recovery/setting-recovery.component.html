@@ -4,28 +4,14 @@
         <div class="row bg-white pt-5 ps-3">
             <h4 class="mb-4">BỘ LỌC TÌM KIẾM</h4>
             <div class="col-md-4 mb-3">
+                <label for="" class="form-label">Tìm kiếm</label>
                 <input type="text" class="form-control" placeholder="Tìm kiếm">
             </div>
             <div class="col-md-4 mb-3">
-                <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStockFrom"
-                    optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
-                    placeholder="Kho cấu hình">
-                    <ng-template pTemplate="selectedStockTo">
-                        <div class="flex align-items-center gap-2" *ngIf="selectedStockTo">
-                            <div>{{ selectedStockTo.stockName }}</div>
-                        </div>
-                    </ng-template>
-                    <ng-template let-stock pTemplate="item">
-                        <div class="flex align-items-center gap-2">
-                            <div>{{ stock.stockName }}</div>
-                        </div>
-                    </ng-template>
-                </p-dropdown>
-            </div>
-            <div class="col-md-4 mb-3">
+                <label for="" class="form-label">Kho cấu hình</label>
                 <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStockTo"
-                    optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
-                    placeholder="Kho tiếp nhận">
+                    optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="false"
+                    placeholder="Chọn kho">
                     <ng-template pTemplate="selectedStockTo">
                         <div class="flex align-items-center gap-2" *ngIf="selectedStockTo">
                             <div>{{ selectedStockTo.stockName }}</div>
@@ -39,16 +25,41 @@
                 </p-dropdown>
             </div>
             <div class="col-md-4 mb-3">
-                <input id="fromDate" type="text" name="fromDate" class="form-control" bsDaterangepicker
-                    dateRangePickerLuxonModifier [(date)]="fromDate" [bsConfig]="{ adaptivePosition: true }"
-                    placeholder="Thời gian từ - đến" />
-            </div>
-            <div class="col-md-4 mb-3">
-                <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="statusOption" optionLabel="label"
-                    [(ngModel)]="status" optionValue="value" placeholder="Trạng thái" class="w-100">
+                <label for="" class="form-label">Kho tiếp nhận</label>
+                <p-dropdown [style]="{width: '100%'}" [options]="listStock" [(ngModel)]="selectedStockFrom"
+                    optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="false"
+                    placeholder="Chọn kho">
+                    <ng-template pTemplate="selectedStockTo">
+                        <div class="flex align-items-center gap-2" *ngIf="selectedStockFrom">
+                            <div>{{ selectedStockFrom.stockName }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-stock pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ stock.stockName }}</div>
+                        </div>
+                    </ng-template>
                 </p-dropdown>
             </div>
-            <div class="col-md-4 mb-3">
+            <div class="col-md-3 mb-3">
+                <label for="" class="form-label">Thời gian tạo từ</label>
+                <input id="fromDate" type="text" name="fromDate" class="form-control" bsDatepicker
+                    datePickerLuxonModifier [(date)]="fromDate" [bsConfig]="{ adaptivePosition: true }"
+                    placeholder="Chọn thời gian" />
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="" class="form-label">Thời gian tạo đến</label>
+                <input id="toDate" type="text" name="toDate" class="form-control" bsDatepicker datePickerLuxonModifier
+                    [(date)]="toDate" [bsConfig]="{ adaptivePosition: true }" placeholder="Chọn thời gian" />
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="" class="form-label">Trạng thái</label>
+                <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="statusOption" optionLabel="label"
+                    [(ngModel)]="status" optionValue="value" placeholder="Chọn trạng thái" class="w-100">
+                </p-dropdown>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="" class="form-label">Người tác động</label>
                 <div class="input-group">
                     <p-autoComplete [style]="{'text-align': 'left', width: '100%'}" [suggestions]="filteredUsers"
                         (completeMethod)="filterUsers($event)" field="userName" value="userName"
@@ -250,7 +261,8 @@
                         </p-dropdown>
                     </div>
                     <div class="col-md-3 mb-5">
-                        <label for="" class="form-label">Thời gian (ngày) <span class="text-danger">(*)</span></label>
+                        <label for="" class="form-label">Thời gian giữ số thu hồi (ngày) <span
+                                class="text-danger">(*)</span></label>
                         <input type="number" class="form-control" placeholder="Nhập thời gian (ngày)"
                             [(ngModel)]="configData.day" />
                     </div>
@@ -265,7 +277,7 @@
                         <div class="row" *ngFor="let item of settingStatus; let i = index">
                             <!-- Cột Trạng thái -->
                             <div class="col-md-4 mb-3">
-                                <label for="" class="form-label">Trạng thái {{ i + 1 }}</label>
+                                <label for="" class="form-label">Trạng thái</label>
                                 <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="statusSetting"
                                     [(ngModel)]="item.status" optionLabel="label" optionValue="value"
                                     placeholder="Trạng thái" class="w-100">
