@@ -46,7 +46,6 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
     uploadUrl: string;
     accountType: AccountType | null = null;
 
-
     //Filters
     advancedFiltersAreShown = false;
     filterText = '';
@@ -55,8 +54,8 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
     accountTypes = [
         { value: 0, name: 'System' },
         { value: 1, name: 'Agent' },
-        { value: 2, name: 'End User' }
-      ];
+        { value: 2, name: 'End User' },
+    ];
     constructor(
         injector: Injector,
         public _impersonationService: ImpersonationService,
@@ -118,7 +117,7 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
 
     getRolesAsString(roles): string {
         let roleNames = '';
-     
+
         for (let j = 0; j < roles.length; j++) {
             if (roleNames.length) {
                 roleNames = roleNames + ', ';
@@ -132,7 +131,7 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
 
     getAccountTypeAsString(accountType): string {
         let accountTypeNames = '';
-        accountTypeNames = "AccountType_" + accountType
+        accountTypeNames = 'AccountType_' + accountType;
 
         return accountTypeNames;
     }

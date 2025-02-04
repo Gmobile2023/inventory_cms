@@ -9547,6 +9547,97 @@ export class InventoryServiceProxy {
     }
 
     /**
+     * @param orderType (optional) 
+     * @param orderCode (optional) 
+     * @param orderTitle (optional) 
+     * @param productType (optional) 
+     * @param fromDate (optional) 
+     * @param toDate (optional) 
+     * @param stockCode (optional) 
+     * @param status (optional) 
+     * @return Success
+     */
+    getListOrderToExcel(orderType: number | undefined, orderCode: string | undefined, orderTitle: string | undefined, productType: ProductType | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, stockCode: string | undefined, status: number | undefined): Observable<FileDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListOrderToExcel?";
+        if (orderType === null)
+            throw new Error("The parameter 'orderType' cannot be null.");
+        else if (orderType !== undefined)
+            url_ += "OrderType=" + encodeURIComponent("" + orderType) + "&";
+        if (orderCode === null)
+            throw new Error("The parameter 'orderCode' cannot be null.");
+        else if (orderCode !== undefined)
+            url_ += "OrderCode=" + encodeURIComponent("" + orderCode) + "&";
+        if (orderTitle === null)
+            throw new Error("The parameter 'orderTitle' cannot be null.");
+        else if (orderTitle !== undefined)
+            url_ += "OrderTitle=" + encodeURIComponent("" + orderTitle) + "&";
+        if (productType === null)
+            throw new Error("The parameter 'productType' cannot be null.");
+        else if (productType !== undefined)
+            url_ += "ProductType=" + encodeURIComponent("" + productType) + "&";
+        if (fromDate === null)
+            throw new Error("The parameter 'fromDate' cannot be null.");
+        else if (fromDate !== undefined)
+            url_ += "FromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toString() : "") + "&";
+        if (toDate === null)
+            throw new Error("The parameter 'toDate' cannot be null.");
+        else if (toDate !== undefined)
+            url_ += "ToDate=" + encodeURIComponent(toDate ? "" + toDate.toString() : "") + "&";
+        if (stockCode === null)
+            throw new Error("The parameter 'stockCode' cannot be null.");
+        else if (stockCode !== undefined)
+            url_ += "StockCode=" + encodeURIComponent("" + stockCode) + "&";
+        if (status === null)
+            throw new Error("The parameter 'status' cannot be null.");
+        else if (status !== undefined)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListOrderToExcel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListOrderToExcel(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileDto>;
+        }));
+    }
+
+    protected processGetListOrderToExcel(response: HttpResponseBase): Observable<FileDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FileDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -10167,7 +10258,7 @@ export class InventoryServiceProxy {
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getListSimRecalls(mobile: string | undefined, telCo: string | undefined, batchCode: string | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, status: SimRecoveryStatus | undefined, statusProvider: SimRecoveryStatus | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimRecallDto> {
+    getListSimRecalls(mobile: string | undefined, telCo: string | undefined, batchCode: string | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, status: SimRecoveryStatus | undefined, statusProvider: SimRecoveryProviderStatus | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimRecallDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSimRecalls?";
         if (mobile === null)
             throw new Error("The parameter 'mobile' cannot be null.");
@@ -10245,6 +10336,92 @@ export class InventoryServiceProxy {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PagedResultDtoOfSimRecallDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param mobile (optional) 
+     * @param telCo (optional) 
+     * @param batchCode (optional) 
+     * @param fromDate (optional) 
+     * @param toDate (optional) 
+     * @param status (optional) 
+     * @param statusProvider (optional) 
+     * @return Success
+     */
+    getListSimRecallsToExcel(mobile: string | undefined, telCo: string | undefined, batchCode: string | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, status: SimRecoveryStatus | undefined, statusProvider: SimRecoveryProviderStatus | undefined): Observable<FileDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSimRecallsToExcel?";
+        if (mobile === null)
+            throw new Error("The parameter 'mobile' cannot be null.");
+        else if (mobile !== undefined)
+            url_ += "Mobile=" + encodeURIComponent("" + mobile) + "&";
+        if (telCo === null)
+            throw new Error("The parameter 'telCo' cannot be null.");
+        else if (telCo !== undefined)
+            url_ += "TelCo=" + encodeURIComponent("" + telCo) + "&";
+        if (batchCode === null)
+            throw new Error("The parameter 'batchCode' cannot be null.");
+        else if (batchCode !== undefined)
+            url_ += "BatchCode=" + encodeURIComponent("" + batchCode) + "&";
+        if (fromDate === null)
+            throw new Error("The parameter 'fromDate' cannot be null.");
+        else if (fromDate !== undefined)
+            url_ += "FromDate=" + encodeURIComponent(fromDate ? "" + fromDate.toString() : "") + "&";
+        if (toDate === null)
+            throw new Error("The parameter 'toDate' cannot be null.");
+        else if (toDate !== undefined)
+            url_ += "ToDate=" + encodeURIComponent(toDate ? "" + toDate.toString() : "") + "&";
+        if (status === null)
+            throw new Error("The parameter 'status' cannot be null.");
+        else if (status !== undefined)
+            url_ += "Status=" + encodeURIComponent("" + status) + "&";
+        if (statusProvider === null)
+            throw new Error("The parameter 'statusProvider' cannot be null.");
+        else if (statusProvider !== undefined)
+            url_ += "StatusProvider=" + encodeURIComponent("" + statusProvider) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListSimRecallsToExcel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListSimRecallsToExcel(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileDto>;
+        }));
+    }
+
+    protected processGetListSimRecallsToExcel(response: HttpResponseBase): Observable<FileDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FileDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -37867,7 +38044,7 @@ export class SimRecallDto implements ISimRecallDto {
     providerCode!: string | undefined;
     telCo!: string | undefined;
     status!: SimRecoveryStatus;
-    statusProvider!: SimRecoveryStatus;
+    statusProvider!: SimRecoveryProviderStatus;
     statusName!: string | undefined;
     statusProviderName!: string | undefined;
     createdDate!: DateTime | undefined;
@@ -37935,12 +38112,21 @@ export interface ISimRecallDto {
     providerCode: string | undefined;
     telCo: string | undefined;
     status: SimRecoveryStatus;
-    statusProvider: SimRecoveryStatus;
+    statusProvider: SimRecoveryProviderStatus;
     statusName: string | undefined;
     statusProviderName: string | undefined;
     createdDate: DateTime | undefined;
     content: string | undefined;
     description: string | undefined;
+}
+
+export enum SimRecoveryProviderStatus {
+    OneWayLock = 1,
+    TwoWayLock = 2,
+    Revoked = 3,
+    Waiting = 5,
+    Activity = 6,
+    Default = 99,
 }
 
 export enum SimRecoveryStatus {
