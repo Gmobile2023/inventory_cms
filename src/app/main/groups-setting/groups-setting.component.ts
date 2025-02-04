@@ -149,23 +149,20 @@ export class GroupsSettingComponent extends AppComponentBase {
         });
     }
 
-    exportToExcel(): void {
-        // this.primengTableHelper.showLoadingIndicator();
-        // this._inventoryServiceProxy
-        //     .getHistoriesToExcel(
-        //         this.stockCode,
-        //         this.stockName,
-        //         this.orderCode,
-        //         this.mobile,
-        //         this.serial,
-        //         this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
-        //         this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
-        //         this.userProcess
-        //     )
-        //     .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
-        //     .subscribe((result) => {
-        //         this._fileDownloadService.downloadTempFile(result);
-        //     });
+    getListTelegramGroupToExcel() {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getListTelegramGroupToExcel(
+                this.groupName,
+                this.chatId,
+                this.status,
+                this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
+                this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined
+            )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this._fileDownloadService.downloadTempFile(result);
+            });
     }
 
     resetSearch() {

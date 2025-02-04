@@ -4,11 +4,12 @@ import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DateTime } from '@node_modules/@types/luxon';
-import { InventoryServiceProxy } from '@shared/service-proxies/service-proxies';
+import { InventoryServiceProxy, ProductType } from '@shared/service-proxies/service-proxies';
 import { finalize, map, Observable } from 'rxjs';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { DateTimeService } from '@app/shared/common/timing/date-time.service';
+import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
     templateUrl: './reuse-number.component.html',
@@ -22,7 +23,8 @@ export class ReuseNumberComponent extends AppComponentBase {
         injector: Injector,
         private modalService: BsModalService,
         private _inventoryServiceProxy: InventoryServiceProxy,
-        private _dateTimeService: DateTimeService
+        private _dateTimeService: DateTimeService,
+        private _fileDownloadService: FileDownloadService
     ) {
         super(injector);
     }
@@ -46,6 +48,14 @@ export class ReuseNumberComponent extends AppComponentBase {
     stockList = [];
     public dateRange: DateTime[] = [this._dateTimeService.getStartOfMonth(), this._dateTimeService.getEndOfMonth()];
     selectedStock: any;
+    orderId: number;
+    mobileExcel: string;
+    serialExcel: string;
+    orderType: number = 6;
+    // orderCode: string;
+    // orderTitle: string;
+    stockCode: string;
+    productType: ProductType = ProductType.Mobile;
 
     ngOnInit() {
         this.items = [{ label: 'Quản lý kho thu hồi' }, { label: 'Danh sách yêu cầu tái sử dụng thuê bao' }];
@@ -57,7 +67,7 @@ export class ReuseNumberComponent extends AppComponentBase {
         this.primengTableHelper.showLoadingIndicator();
         this._inventoryServiceProxy
             .getListOrder(
-                6,
+                this.orderType,
                 this.orderCode,
                 this.orderTitle,
                 undefined,
@@ -95,6 +105,25 @@ export class ReuseNumberComponent extends AppComponentBase {
             )
             .subscribe((result) => {
                 this.stockList = result.items;
+            });
+    }
+
+    getListOrderToExcel() {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getListOrderToExcel(
+                this.orderType,
+                this.orderCode,
+                this.orderTitle,
+                this.productType,
+                this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
+                this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
+                this.stockCode,
+                this.status
+            )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this._fileDownloadService.downloadTempFile(result);
             });
     }
 

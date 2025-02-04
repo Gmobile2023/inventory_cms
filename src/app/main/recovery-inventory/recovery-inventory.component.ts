@@ -13,6 +13,7 @@ import { finalize } from 'rxjs';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
 import { DateTimeService } from '@app/shared/common/timing/date-time.service';
+import { FileDownloadService } from '@shared/utils/file-download.service';
 
 @Component({
     templateUrl: './recovery-inventory.component.html',
@@ -25,7 +26,8 @@ export class RecoveryInventoryComponent extends AppComponentBase {
     constructor(
         injector: Injector,
         private _inventoryServiceProxy: InventoryServiceProxy,
-        private _dateTimeService: DateTimeService
+        private _dateTimeService: DateTimeService,
+        private _fileDownloadService: FileDownloadService
     ) {
         super(injector);
     }
@@ -64,6 +66,14 @@ export class RecoveryInventoryComponent extends AppComponentBase {
         { label: 'Hoạt động', value: SimRecoveryStatus.Activity },
     ];
 
+    orderId: number;
+    mobileExcel: string;
+    serialExcel: string;
+    orderType: number;
+    orderCode: string;
+    orderTitle: string;
+    stockCode: string;
+
     public dateRange: DateTime[] = [this._dateTimeService.getStartOfMonth(), this._dateTimeService.getEndOfMonth()];
 
     ngOnInit() {
@@ -91,6 +101,24 @@ export class RecoveryInventoryComponent extends AppComponentBase {
                 this.primengTableHelper.records = result.items;
                 this.primengTableHelper.totalRecordsCount = result.totalCount;
                 this.primengTableHelper.hideLoadingIndicator();
+            });
+    }
+
+    getListSimRecallsToExcel() {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getListSimRecallsToExcel(
+                this.mobile,
+                this.telCo,
+                this.batchCode,
+                this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
+                this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
+                this.status,
+                this.statusProvider
+            )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this._fileDownloadService.downloadTempFile(result);
             });
     }
 
