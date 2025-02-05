@@ -62,7 +62,7 @@
                 <label for="" class="form-label">Người tác động</label>
                 <div class="input-group">
                     <p-autoComplete [style]="{'text-align': 'left', width: '100%'}" [suggestions]="filteredUsers"
-                        (completeMethod)="filterUsers($event)" field="userName" value="userName"
+                        (completeMethod)="filterUsers($event)" field="userName" value="accountCode"
                         placeholder="Người tác động" [minLength]="1" name="userCreateOrder" id="userCreateOrder"
                         [multiple]="true" styleClass="w-100"></p-autoComplete>
                 </div>
