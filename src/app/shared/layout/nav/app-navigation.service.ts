@@ -76,10 +76,15 @@ export class AppNavigationService {
                 [],
                 [
                     new AppMenuItem('Danh sách thuê bao', '', 'flaticon-list-2', '/app/main/recovery-inventory'),
-                    new AppMenuItem('Danh sách yêu cầu tái sử dụng TB', '', 'flaticon-list-1', '/app/main/reuse-number'),
+                    new AppMenuItem(
+                        'Danh sách yêu cầu tái sử dụng TB',
+                        '',
+                        'flaticon-list-1',
+                        '/app/main/reuse-number'
+                    ),
                     new AppMenuItem(
                         'Cấu hình thời gian lưu số trong kho',
-                        '',
+                        'Pages.Inventories.ConfigureNumberReclaimSchedule',
                         'flaticon-pie-chart',
                         '/app/main/setting-recovery'
                     ),
