@@ -201,9 +201,8 @@
                                     class="w-100">
                                 </p-dropdown>
                                 <p-dropdown [style]="{'text-align': 'left', width: '100%'}"
-                                    [options]="item.userList || []" [(ngModel)]="item.accountCode"
-                                    optionLabel="userName" optionValue="accountCode" placeholder="Tài khoản duyệt"
-                                    class="w-100">
+                                    [options]="item.userList || []" [(ngModel)]="item.userName" optionLabel="userName"
+                                    optionValue="userName" placeholder="Tài khoản duyệt" class="w-100">
                                 </p-dropdown>
                                 <input type="hidden" class="form-control" [(ngModel)]="item.officeName">
                                 <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="importantlist"

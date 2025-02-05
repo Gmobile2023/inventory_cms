@@ -8900,13 +8900,14 @@ export class InventoryServiceProxy {
     /**
      * @param productType (optional) 
      * @param stockCode (optional) 
+     * @param stockName (optional) 
      * @param fromDate (optional) 
      * @param toDate (optional) 
      * @param parentId (optional) 
      * @param stockId (optional) 
      * @return Success
      */
-    getListInventoryReportToExcel(productType: ProductType | undefined, stockCode: string | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, parentId: number | undefined, stockId: number | undefined): Observable<FileDto> {
+    getListInventoryReportToExcel(productType: ProductType | undefined, stockCode: string | undefined, stockName: string | undefined, fromDate: DateTime | undefined, toDate: DateTime | undefined, parentId: number | undefined, stockId: number | undefined): Observable<FileDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetListInventoryReportToExcel?";
         if (productType === null)
             throw new Error("The parameter 'productType' cannot be null.");
@@ -8916,6 +8917,10 @@ export class InventoryServiceProxy {
             throw new Error("The parameter 'stockCode' cannot be null.");
         else if (stockCode !== undefined)
             url_ += "StockCode=" + encodeURIComponent("" + stockCode) + "&";
+        if (stockName === null)
+            throw new Error("The parameter 'stockName' cannot be null.");
+        else if (stockName !== undefined)
+            url_ += "StockName=" + encodeURIComponent("" + stockName) + "&";
         if (fromDate === null)
             throw new Error("The parameter 'fromDate' cannot be null.");
         else if (fromDate !== undefined)
@@ -9694,6 +9699,137 @@ export class InventoryServiceProxy {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param stockId (optional) 
+     * @param productType (optional) 
+     * @param mobile (optional) 
+     * @param serial (optional) 
+     * @param attribute (optional) 
+     * @param format (optional) 
+     * @param simType (optional) 
+     * @param fromRange (optional) 
+     * @param toRange (optional) 
+     * @param accountAssign (optional) 
+     * @param userQuery (optional) 
+     * @param maxResultCount (optional) 
+     * @param skipCount (optional) 
+     * @param searchType (optional) 
+     * @param rowMax (optional) 
+     * @param filter (optional) 
+     * @return Success
+     */
+    getListSimSuggestAssignments(stockId: number | undefined, productType: ProductType | undefined, mobile: string | undefined, serial: string | undefined, attribute: string | undefined, format: string | undefined, simType: string | undefined, fromRange: string | undefined, toRange: string | undefined, accountAssign: string | undefined, userQuery: string | undefined, maxResultCount: number | undefined, skipCount: number | undefined, searchType: SearchType | undefined, rowMax: number | undefined, filter: string | undefined): Observable<PagedResultDtoOfSimNumberDto> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSimSuggestAssignments?";
+        if (stockId === null)
+            throw new Error("The parameter 'stockId' cannot be null.");
+        else if (stockId !== undefined)
+            url_ += "StockId=" + encodeURIComponent("" + stockId) + "&";
+        if (productType === null)
+            throw new Error("The parameter 'productType' cannot be null.");
+        else if (productType !== undefined)
+            url_ += "ProductType=" + encodeURIComponent("" + productType) + "&";
+        if (mobile === null)
+            throw new Error("The parameter 'mobile' cannot be null.");
+        else if (mobile !== undefined)
+            url_ += "Mobile=" + encodeURIComponent("" + mobile) + "&";
+        if (serial === null)
+            throw new Error("The parameter 'serial' cannot be null.");
+        else if (serial !== undefined)
+            url_ += "Serial=" + encodeURIComponent("" + serial) + "&";
+        if (attribute === null)
+            throw new Error("The parameter 'attribute' cannot be null.");
+        else if (attribute !== undefined)
+            url_ += "Attribute=" + encodeURIComponent("" + attribute) + "&";
+        if (format === null)
+            throw new Error("The parameter 'format' cannot be null.");
+        else if (format !== undefined)
+            url_ += "Format=" + encodeURIComponent("" + format) + "&";
+        if (simType === null)
+            throw new Error("The parameter 'simType' cannot be null.");
+        else if (simType !== undefined)
+            url_ += "SimType=" + encodeURIComponent("" + simType) + "&";
+        if (fromRange === null)
+            throw new Error("The parameter 'fromRange' cannot be null.");
+        else if (fromRange !== undefined)
+            url_ += "FromRange=" + encodeURIComponent("" + fromRange) + "&";
+        if (toRange === null)
+            throw new Error("The parameter 'toRange' cannot be null.");
+        else if (toRange !== undefined)
+            url_ += "ToRange=" + encodeURIComponent("" + toRange) + "&";
+        if (accountAssign === null)
+            throw new Error("The parameter 'accountAssign' cannot be null.");
+        else if (accountAssign !== undefined)
+            url_ += "AccountAssign=" + encodeURIComponent("" + accountAssign) + "&";
+        if (userQuery === null)
+            throw new Error("The parameter 'userQuery' cannot be null.");
+        else if (userQuery !== undefined)
+            url_ += "UserQuery=" + encodeURIComponent("" + userQuery) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (searchType === null)
+            throw new Error("The parameter 'searchType' cannot be null.");
+        else if (searchType !== undefined)
+            url_ += "SearchType=" + encodeURIComponent("" + searchType) + "&";
+        if (rowMax === null)
+            throw new Error("The parameter 'rowMax' cannot be null.");
+        else if (rowMax !== undefined)
+            url_ += "RowMax=" + encodeURIComponent("" + rowMax) + "&";
+        if (filter === null)
+            throw new Error("The parameter 'filter' cannot be null.");
+        else if (filter !== undefined)
+            url_ += "Filter=" + encodeURIComponent("" + filter) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListSimSuggestAssignments(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListSimSuggestAssignments(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagedResultDtoOfSimNumberDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagedResultDtoOfSimNumberDto>;
+        }));
+    }
+
+    protected processGetListSimSuggestAssignments(response: HttpResponseBase): Observable<PagedResultDtoOfSimNumberDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagedResultDtoOfSimNumberDto.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -38011,12 +38147,16 @@ export class SimNumberDto implements ISimNumberDto {
     stockCode!: string | undefined;
     stockCurrentCode!: string | undefined;
     telCo!: string | undefined;
-    status!: ProductStatus;
+    status!: ProductRecordStatus;
+    statusName!: string | undefined;
     kitingStatus!: number;
+    transCode!: string | undefined;
     costPrice!: number;
     salePrice!: number;
-    createdDate!: DateTime;
     attribute!: string | undefined;
+    format!: string | undefined;
+    simType!: string | undefined;
+    createdDate!: DateTime;
     importDate!: DateTime | undefined;
     exportDate!: DateTime | undefined;
     desStockId!: number | undefined;
@@ -38043,11 +38183,15 @@ export class SimNumberDto implements ISimNumberDto {
             this.stockCurrentCode = _data["stockCurrentCode"];
             this.telCo = _data["telCo"];
             this.status = _data["status"];
+            this.statusName = _data["statusName"];
             this.kitingStatus = _data["kitingStatus"];
+            this.transCode = _data["transCode"];
             this.costPrice = _data["costPrice"];
             this.salePrice = _data["salePrice"];
-            this.createdDate = _data["createdDate"] ? DateTime.fromISO(_data["createdDate"].toString()) : <any>undefined;
             this.attribute = _data["attribute"];
+            this.format = _data["format"];
+            this.simType = _data["simType"];
+            this.createdDate = _data["createdDate"] ? DateTime.fromISO(_data["createdDate"].toString()) : <any>undefined;
             this.importDate = _data["importDate"] ? DateTime.fromISO(_data["importDate"].toString()) : <any>undefined;
             this.exportDate = _data["exportDate"] ? DateTime.fromISO(_data["exportDate"].toString()) : <any>undefined;
             this.desStockId = _data["desStockId"];
@@ -38074,11 +38218,15 @@ export class SimNumberDto implements ISimNumberDto {
         data["stockCurrentCode"] = this.stockCurrentCode;
         data["telCo"] = this.telCo;
         data["status"] = this.status;
+        data["statusName"] = this.statusName;
         data["kitingStatus"] = this.kitingStatus;
+        data["transCode"] = this.transCode;
         data["costPrice"] = this.costPrice;
         data["salePrice"] = this.salePrice;
-        data["createdDate"] = this.createdDate ? this.createdDate.toString() : <any>undefined;
         data["attribute"] = this.attribute;
+        data["format"] = this.format;
+        data["simType"] = this.simType;
+        data["createdDate"] = this.createdDate ? this.createdDate.toString() : <any>undefined;
         data["importDate"] = this.importDate ? this.importDate.toString() : <any>undefined;
         data["exportDate"] = this.exportDate ? this.exportDate.toString() : <any>undefined;
         data["desStockId"] = this.desStockId;
@@ -38097,12 +38245,16 @@ export interface ISimNumberDto {
     stockCode: string | undefined;
     stockCurrentCode: string | undefined;
     telCo: string | undefined;
-    status: ProductStatus;
+    status: ProductRecordStatus;
+    statusName: string | undefined;
     kitingStatus: number;
+    transCode: string | undefined;
     costPrice: number;
     salePrice: number;
-    createdDate: DateTime;
     attribute: string | undefined;
+    format: string | undefined;
+    simType: string | undefined;
+    createdDate: DateTime;
     importDate: DateTime | undefined;
     exportDate: DateTime | undefined;
     desStockId: number | undefined;
@@ -41025,6 +41177,7 @@ export interface IUserEditDto {
 
 export class UserInfoDto implements IUserInfoDto {
     id!: number;
+    accountCode!: string | undefined;
     userName!: string | undefined;
     fullName!: string | undefined;
     surname!: string | undefined;
@@ -41043,6 +41196,7 @@ export class UserInfoDto implements IUserInfoDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.accountCode = _data["accountCode"];
             this.userName = _data["userName"];
             this.fullName = _data["fullName"];
             this.surname = _data["surname"];
@@ -41061,6 +41215,7 @@ export class UserInfoDto implements IUserInfoDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["accountCode"] = this.accountCode;
         data["userName"] = this.userName;
         data["fullName"] = this.fullName;
         data["surname"] = this.surname;
@@ -41072,6 +41227,7 @@ export class UserInfoDto implements IUserInfoDto {
 
 export interface IUserInfoDto {
     id: number;
+    accountCode: string | undefined;
     userName: string | undefined;
     fullName: string | undefined;
     surname: string | undefined;

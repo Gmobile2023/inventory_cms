@@ -89,6 +89,7 @@ export class InventoryReportComponent extends AppComponentBase {
             .getListInventoryReportToExcel(
                 this.productType,
                 this.stockCode,
+                this.stockName,
                 this._dateTimeService.getStartOfDayForDate(this.fromDate) ?? undefined,
                 this._dateTimeService.getEndOfDayForDate(this.toDate) ?? undefined,
                 this.parentId,

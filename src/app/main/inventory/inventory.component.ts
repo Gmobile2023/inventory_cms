@@ -70,7 +70,12 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     districts: any[] = [];
     wards: any[] = [];
     idAction: number;
-    inventoryData: any = {};
+    inventoryData: any = {
+        userManager: new Array<UserInfoDto>(),
+        userCreate: new Array<UserInfoDto>(),
+        userViewMobile: new Array<UserInfoDto>(),
+        userViewSerial: new Array<UserInfoDto>(),
+    };
     isEdit = false;
     listStock: any[] = [];
     inventoryId: number;
@@ -211,6 +216,12 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
         });
     }
 
+    getInfoUser(userName: any): void {
+        this._commonLookupServiceProxy.getListUserSearch(userName).subscribe((users) => {
+            return users;
+        });
+    }
+
     exportToExcel(): void {
         this.primengTableHelper.showLoadingIndicator();
         this._inventoryServiceProxy
@@ -324,7 +335,6 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
         body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.userName) || [];
         body.userViewMobile = this.inventoryData.userViewMobile?.map((user) => user.userName) || [];
         body.userViewSerial = this.inventoryData.userViewSerial?.map((user) => user.userName) || [];
-
         this._inventoryServiceProxy.createOrEditStock(body).subscribe(() => {
             this.notify.info(this.l('SavedSuccessfully'));
             this.resetSearch();
