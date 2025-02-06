@@ -82,8 +82,7 @@
             <div class="d-flex justify-content-between">
                 <h4 class="mb-4"></h4>
                 <div class="d-flex align-items-center justify-content-end">
-                    <button class="btn btn-primary btn-sm ms-3" type="button" (click)="openModal(addFlow)"
-                        *ngIf="'Pages.Inventories.ConfigureNumberReclaimSchedule.Create' | permission">
+                    <button class="btn btn-primary btn-sm ms-3" type="button" (click)="openModal(addFlow)">
                         THÊM MỚI CẤU HÌNH
                     </button>
                     <button class="btn btn-success btn-sm ms-3" type="button">
@@ -147,15 +146,13 @@
                                         </li>
                                         <li>
                                             <a href="javascript:;" class="dropdown-item"
-                                                (click)="openConfigureForView(record.id, addFlow, 'edit')"
-                                                *ngIf="'Pages.Inventories.ConfigureNumberReclaimSchedule.Edit' | permission">
+                                                (click)="openConfigureForView(record.id, addFlow, 'edit')">
                                                 {{ 'Chỉnh sửa' | localize }}
                                             </a>
                                         </li>
                                         <li>
                                             <a href="javascript:;" class="dropdown-item"
-                                                (click)="openFormDelete(record.id,  deleteSetting)"
-                                                *ngIf="'Pages.Inventories.ConfigureNumberReclaimSchedule.Delete' | permission">
+                                                (click)="openFormDelete(record.id,  deleteSetting)">
                                                 {{ 'Xoá' | localize }}
                                             </a>
                                         </li>

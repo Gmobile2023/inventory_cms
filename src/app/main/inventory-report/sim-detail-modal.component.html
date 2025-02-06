@@ -60,7 +60,7 @@
                                                     <button type="button" class="btn btn-primary btn-sm"
                                                         [routerLink]="record.orderType == '1' 
                                                     ? '/app/main/inventory-import-export/detail-inventory-import' 
-                                                    : record.orderType == '2' ? '/app/main/inventory-import-export/detail-inventory-export' : record.orderType == '3' ? '/app/main/inventory-import-export/detail-inventory-recall' : null"
+                                                    : record.orderType == '2' ? '/app/main/inventory-import-export/detail-inventory-export' : null "
                                                         [queryParams]="{ id: record.id }">
                                                         {{ 'Xem chi tiết' | localize }}
                                                     </button>

@@ -172,12 +172,6 @@ import { RouterModule } from '@angular/router';
                         data: { permission: '' },
                     },
                     {
-                        path: 'sim-assignments',
-                        loadChildren: () =>
-                            import('./sim-assignments/sim-assignments.module').then((m) => m.SimAssignmentsModule),
-                        data: { permission: '' },
-                    },
-                    {
                         path: 'countries',
                         loadChildren: () => import('./countries/countries.module').then((m) => m.CountriesModule),
                         data: { permission: '' },

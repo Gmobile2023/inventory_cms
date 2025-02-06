@@ -60,14 +60,10 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
         orderName: '',
         unit: '',
         attribute: '',
-        format: '',
-        simType: '',
         telCo: '',
         fromRange: '',
         toRange: '',
         quantity: 0,
-        items: [],
-        productType: ProductType.Mobile,
     };
     ProductType = ProductType;
     ObjectType = ObjectType;

@@ -58,14 +58,10 @@ export class CreateReuseNumberComponent extends AppComponentBase implements OnIn
         orderName: '',
         unit: '',
         attribute: '',
-        format: '',
-        simType: '',
         telCo: '',
         fromRange: '',
         toRange: '',
         quantity: 0,
-        items: [],
-        productType: ProductType.Mobile,
     };
     ProductType = ProductType;
     ObjectType = ObjectType;

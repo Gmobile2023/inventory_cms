@@ -2,13 +2,7 @@ import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angu
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { MenuItem } from 'primeng/api';
-import {
-    CreateOrderDto,
-    InventoryServiceProxy,
-    IOrderItem,
-    OrderItem,
-    ProductType,
-} from '@shared/service-proxies/service-proxies';
+import { CreateOrderDto, InventoryServiceProxy, IOrderItem, OrderItem } from '@shared/service-proxies/service-proxies';
 import { Router } from '@angular/router';
 import { AppConsts } from '@shared/AppConsts';
 import { HttpClient } from '@angular/common/http';
@@ -43,14 +37,10 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
             orderName: '',
             unit: '',
             attribute: '',
-            format: '',
-            simType: '',
             telCo: 'Bộ',
             fromRange: '',
             toRange: '',
             quantity: 0,
-            items: [],
-            productType: ProductType.Mobile,
         },
     ];
     selectedStock: any;
@@ -160,14 +150,10 @@ export class CreateInventoryImportComponent extends AppComponentBase implements 
             orderName: '',
             unit: '',
             attribute: '',
-            format: '',
-            simType: '',
             telCo: 'Bộ',
             fromRange: '',
             toRange: '',
             quantity: 0,
-            items: [],
-            productType: ProductType.Mobile,
         });
     }
 
