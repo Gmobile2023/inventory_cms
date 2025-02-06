@@ -208,7 +208,8 @@ export class DetailInventoryComponent extends AppComponentBase {
         body.parentStockId = this.inventoryData.id;
         body.userManager = this.createData.userManager?.map((user) => user.userName) || [];
         body.userCreateOrder = this.createData.userCreateOrder?.map((user) => user.userName) || [];
-        // console.log(body);
+        body.userViewMobile = this.inventoryData.userViewMobile?.map((user) => user.userName) || [];
+        body.userViewSerial = this.inventoryData.userViewSerial?.map((user) => user.userName) || [];
         this._inventoryServiceProxy.createOrEditStock(body).subscribe(() => {
             this.router.navigate(['/app/main/inventory-manager']);
             this.notify.info(this.l('SavedSuccessfully'));
