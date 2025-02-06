@@ -52,6 +52,7 @@
                             <option value="1">Nhập kho</option>
                             <option value="2">Xuất kho</option>
                             <option value="3">Thu hồi về kho cha</option>
+                            <option value="8">Gán số nhân viên</option>
                         </select>
                     </div>
                 </div>
@@ -93,6 +94,8 @@
                         type="button" routerLink="/app/main/inventory-import-export/create-inventory-recall">THU HỒI VỀ
                         KHO
                         CHA</button>
+                    <button class="btn btn-primary btn-sm ms-3" type="button" routerLink="/app/main/sim-assignments">GÁN
+                        SỐ NHÂN VIÊN</button>
                 </div>
             </div>
         </div>
@@ -172,8 +175,15 @@
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.orderType == "1" ? 'Nhập kho' : record.orderType == "2" ? 'Xuất kho' :
-                                record.orderType == "3" ? 'Thu hồi về kho cha' : 'Bán hàng' }}
+                                {{
+                                record.orderType == "1"
+                                ? 'Nhập kho'
+                                : record.orderType == "2"
+                                ? 'Xuất kho'
+                                :record.orderType == "3"
+                                ? 'Thu hồi về kho cha'
+                                : record.orderType == "8"
+                                ? 'Gán số nhân viên' : null }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>

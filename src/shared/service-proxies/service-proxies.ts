@@ -9840,6 +9840,62 @@ export class InventoryServiceProxy {
     }
 
     /**
+     * @param body (optional) 
+     * @return Success
+     */
+    orderCreatedAssign(body: OrderCreatedAssignInput | undefined): Observable<ResponseMessageBaseOfOrderMessage> {
+        let url_ = this.baseUrl + "/api/services/app/Inventory/OrderCreatedAssign";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processOrderCreatedAssign(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processOrderCreatedAssign(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ResponseMessageBaseOfOrderMessage>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ResponseMessageBaseOfOrderMessage>;
+        }));
+    }
+
+    protected processOrderCreatedAssign(response: HttpResponseBase): Observable<ResponseMessageBaseOfOrderMessage> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ResponseMessageBaseOfOrderMessage.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param orderType (optional) 
      * @param orderCode (optional) 
      * @param orderTitle (optional) 
@@ -33772,6 +33828,78 @@ export interface IOrderActionResponse {
     fileName: string | undefined;
 }
 
+export class OrderCreatedAssignInput implements IOrderCreatedAssignInput {
+    title!: string | undefined;
+    description!: string | undefined;
+    stockId!: number;
+    userCreated!: string | undefined;
+    productType!: ProductType;
+    items!: OrderItem[] | undefined;
+    assignAccount!: string | undefined;
+    document!: string | undefined;
+
+    constructor(data?: IOrderCreatedAssignInput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.title = _data["title"];
+            this.description = _data["description"];
+            this.stockId = _data["stockId"];
+            this.userCreated = _data["userCreated"];
+            this.productType = _data["productType"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(OrderItem.fromJS(item));
+            }
+            this.assignAccount = _data["assignAccount"];
+            this.document = _data["document"];
+        }
+    }
+
+    static fromJS(data: any): OrderCreatedAssignInput {
+        data = typeof data === 'object' ? data : {};
+        let result = new OrderCreatedAssignInput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["title"] = this.title;
+        data["description"] = this.description;
+        data["stockId"] = this.stockId;
+        data["userCreated"] = this.userCreated;
+        data["productType"] = this.productType;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["assignAccount"] = this.assignAccount;
+        data["document"] = this.document;
+        return data;
+    }
+}
+
+export interface IOrderCreatedAssignInput {
+    title: string | undefined;
+    description: string | undefined;
+    stockId: number;
+    userCreated: string | undefined;
+    productType: ProductType;
+    items: OrderItem[] | undefined;
+    assignAccount: string | undefined;
+    document: string | undefined;
+}
+
 export class OrderDetailDto implements IOrderDetailDto {
     id!: number | undefined;
     orderId!: number;
@@ -34300,10 +34428,14 @@ export class OrderItem implements IOrderItem {
     orderName!: string | undefined;
     unit!: string | undefined;
     attribute!: string | undefined;
+    format!: string | undefined;
+    simType!: string | undefined;
     telCo!: string | undefined;
     fromRange!: string | undefined;
     toRange!: string | undefined;
     quantity!: number;
+    items!: string[] | undefined;
+    productType!: ProductType;
 
     constructor(data?: IOrderItem) {
         if (data) {
@@ -34319,10 +34451,18 @@ export class OrderItem implements IOrderItem {
             this.orderName = _data["orderName"];
             this.unit = _data["unit"];
             this.attribute = _data["attribute"];
+            this.format = _data["format"];
+            this.simType = _data["simType"];
             this.telCo = _data["telCo"];
             this.fromRange = _data["fromRange"];
             this.toRange = _data["toRange"];
             this.quantity = _data["quantity"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(item);
+            }
+            this.productType = _data["productType"];
         }
     }
 
@@ -34338,10 +34478,18 @@ export class OrderItem implements IOrderItem {
         data["orderName"] = this.orderName;
         data["unit"] = this.unit;
         data["attribute"] = this.attribute;
+        data["format"] = this.format;
+        data["simType"] = this.simType;
         data["telCo"] = this.telCo;
         data["fromRange"] = this.fromRange;
         data["toRange"] = this.toRange;
         data["quantity"] = this.quantity;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item);
+        }
+        data["productType"] = this.productType;
         return data;
     }
 }
@@ -34350,10 +34498,90 @@ export interface IOrderItem {
     orderName: string | undefined;
     unit: string | undefined;
     attribute: string | undefined;
+    format: string | undefined;
+    simType: string | undefined;
     telCo: string | undefined;
     fromRange: string | undefined;
     toRange: string | undefined;
     quantity: number;
+    items: string[] | undefined;
+    productType: ProductType;
+}
+
+export class OrderMessage implements IOrderMessage {
+    orderCode!: string | undefined;
+    quantity!: number;
+    costPrice!: number;
+    salePrice!: number;
+    orderId!: number;
+    productType!: ProductType;
+    orderType!: OrderTypeValue;
+    status!: OrderStatus;
+    detailIds!: number[] | undefined;
+
+    constructor(data?: IOrderMessage) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.orderCode = _data["orderCode"];
+            this.quantity = _data["quantity"];
+            this.costPrice = _data["costPrice"];
+            this.salePrice = _data["salePrice"];
+            this.orderId = _data["orderId"];
+            this.productType = _data["productType"];
+            this.orderType = _data["orderType"];
+            this.status = _data["status"];
+            if (Array.isArray(_data["detailIds"])) {
+                this.detailIds = [] as any;
+                for (let item of _data["detailIds"])
+                    this.detailIds!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): OrderMessage {
+        data = typeof data === 'object' ? data : {};
+        let result = new OrderMessage();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["orderCode"] = this.orderCode;
+        data["quantity"] = this.quantity;
+        data["costPrice"] = this.costPrice;
+        data["salePrice"] = this.salePrice;
+        data["orderId"] = this.orderId;
+        data["productType"] = this.productType;
+        data["orderType"] = this.orderType;
+        data["status"] = this.status;
+        if (Array.isArray(this.detailIds)) {
+            data["detailIds"] = [];
+            for (let item of this.detailIds)
+                data["detailIds"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface IOrderMessage {
+    orderCode: string | undefined;
+    quantity: number;
+    costPrice: number;
+    salePrice: number;
+    orderId: number;
+    productType: ProductType;
+    orderType: OrderTypeValue;
+    status: OrderStatus;
+    detailIds: number[] | undefined;
 }
 
 export enum OrderStatus {
@@ -37463,6 +37691,50 @@ export class ResponseMessageBaseOfOrderActionResponse implements IResponseMessag
 
 export interface IResponseMessageBaseOfOrderActionResponse {
     results: OrderActionResponse;
+    responseStatus: ResStatus;
+    signature: string | undefined;
+}
+
+export class ResponseMessageBaseOfOrderMessage implements IResponseMessageBaseOfOrderMessage {
+    results!: OrderMessage;
+    responseStatus!: ResStatus;
+    signature!: string | undefined;
+
+    constructor(data?: IResponseMessageBaseOfOrderMessage) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.results = _data["results"] ? OrderMessage.fromJS(_data["results"]) : <any>undefined;
+            this.responseStatus = _data["responseStatus"] ? ResStatus.fromJS(_data["responseStatus"]) : <any>undefined;
+            this.signature = _data["signature"];
+        }
+    }
+
+    static fromJS(data: any): ResponseMessageBaseOfOrderMessage {
+        data = typeof data === 'object' ? data : {};
+        let result = new ResponseMessageBaseOfOrderMessage();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["results"] = this.results ? this.results.toJSON() : <any>undefined;
+        data["responseStatus"] = this.responseStatus ? this.responseStatus.toJSON() : <any>undefined;
+        data["signature"] = this.signature;
+        return data;
+    }
+}
+
+export interface IResponseMessageBaseOfOrderMessage {
+    results: OrderMessage;
     responseStatus: ResStatus;
     signature: string | undefined;
 }
