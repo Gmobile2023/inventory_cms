@@ -2,52 +2,85 @@
     <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
     <div [class]="containerClass">
         <div class="row bg-white pt-5 ps-3">
-            <h4 class="mb-4">BỘ LỌC TÌM KIẾM</h4>
             <div class="col-md-4 mb-3">
+                <label for="SubmissionTime" class="form-label">Thời gian gửi hồ sơ</label>
                 <input id="fromDate" type="text" name="fromDate" class="form-control" bsDatepicker
                     datePickerLuxonModifier [(date)]="fromDate" [bsConfig]="{ adaptivePosition: true }"
                     placeholder="Thời gian" />
             </div>
             <div class="col-md-4 mb-3">
-                <p-dropdown [style]="{width: '100%'}" [options]="stockList" [(ngModel)]="selectedStockFilter"
-                    optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
-                    placeholder="Chọn kho">
-                    <ng-template pTemplate="selectedStockFilter">
-                        <div class="flex align-items-center gap-2" *ngIf="selectedStockFilter">
-                            <div>{{ selectedStockFilter.stockName }}</div>
-                        </div>
-                    </ng-template>
-                    <ng-template let-stock pTemplate="item">
-                        <div class="flex align-items-center gap-2">
-                            <div>{{ stock.stockName }}</div>
-                        </div>
-                    </ng-template>
-                </p-dropdown>
+                <label for="BatchCode" class="form-label">Số thuê bao</label>
+                <input type="text" class="form-control" name="batchCode" id="BatchCode" placeholder="Số thuê bao">
             </div>
             <div class="col-md-4 mb-3">
+                <label for="BatchCode" class="form-label">Số serial</label>
+                <input type="text" class="form-control" name="batchCode" id="BatchCode" placeholder="Số serial">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="BatchCode" class="form-label">Mã lô</label>
+                <input type="text" class="form-control" name="batchCode" id="BatchCode" placeholder="Mã lô">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="StatusFilter" class="form-label">Trạng thái đẩy hồ sơ
+                </label>
                 <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="statusOption"
                     [(ngModel)]="status" optionLabel="label" optionValue="value" placeholder="Trạng thái" class="w-100">
                 </p-dropdown>
             </div>
-            <div class="col-12 mt-3 mb-5">
+
+            <div class="col-md-4 mb-3">
+                <label for="StatusFilter" class="form-label">Trạng thái nhà mạng
+                </label>
+                <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="statusOption"
+                    [(ngModel)]="status" optionLabel="label" optionValue="value" placeholder="Trạng thái" class="w-100">
+                </p-dropdown>
+            </div>
+
+            <div class="col-md-12 mt-3 mb-5 d-flex justify-content-between">
+                <div class="group-left">
+                    <button type="button" id="ResetBatchRegistersButton" (click)="resetFilter()"
+                        class="btn btn-secondary btn-sm me-3">
+                        <i class="fa fa-sync btn-md-icon"></i>
+                        <span class="d-none d-md-inline-block">ĐẶT LẠI</span>
+                    </button>
+
+                    <button type="button" id="RefreshBatchRegisterButton" (click)="getListApprovalFlow($event)"
+                        class="btn btn-primary btn-sm">
+                        <i class="fa fa-search btn-md-icon"></i>
+                        <span class="d-none d-md-inline-block">TÌM KIẾM</span>
+                    </button>
+                </div>
+                <div class="group-right">
+                    <button type="button" id="ExportSimCardsButton" class="btn btn-success btn-sm">
+                        <i class="fa fa-download btn-md-icon"></i>
+                        <span class="d-none d-md-inline-block">EXPORT</span>
+                    </button>
+                    <!-- <button type="button" id="RegisterButton" class="btn btn-success btn-sm"
+                        onclick="location.href='/App/SimCard/RegisterSubscriberInfo'">
+                        <span class="d-none d-md-inline-block">ĐĂNG KÝ TTTB</span>
+                    </button> -->
+                </div>
+            </div>
+
+            <!-- <div class="col-12 mt-3 mb-5">
                 <div class="d-flex align-items-center justify-content-start">
                     <button class="btn btn-secondary btn-sm me-3" type="button" (click)="resetFilter()">ĐẶT LẠI</button>
                     <button class="btn btn-primary btn-sm" type="button" (click)="getListApprovalFlow($event)">TÌM
                         KIẾM</button>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     <div [class]="containerClass" class="mt-5">
         <div class="row bg-white py-5 ps-3 column-gap-5">
-            <div class="d-flex justify-content-between">
+            <!-- <div class="d-flex justify-content-between">
                 <h4 class="mb-4">DANH SÁCH CẤU HÌNH</h4>
                 <div class="d-flex align-items-center justify-content-end">
                     <button class="btn btn-primary btn-sm ms-3" type="button" (click)="openModal(addFlow)">
                         THÊM MỚI CẤU HÌNH
                     </button>
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="row align-items-center">
             <div class="col primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
@@ -58,22 +91,25 @@
                         <tr>
                             <th style="width: 130px">{{ 'HÀNH ĐỘNG' | localize }}</th>
                             <th>
-                                {{ 'CẤP KHO' | localize }}
+                                {{ 'ID' | localize }}
                             </th>
                             <th>
-                                {{ 'TÊN KHO' | localize }}
+                                {{ 'SỐ THUÊ BAO' | localize }}
                             </th>
                             <th>
-                                {{ 'SẢN PHẨM' | localize }}
+                                {{ 'SERIAL' | localize }}
                             </th>
                             <th>
-                                {{ 'SỐ CẤP DUYỆT' | localize }}
+                                {{ 'TRẠNG THÁI ĐẨY HỒ SƠ' | localize }}
                             </th>
                             <th>
-                                {{ 'TRẠNG THÁI' | localize }}
+                                {{ 'TRẠNG THÁI NHÀ MẠNG' | localize }}
                             </th>
                             <th>
-                                {{ 'NGÀY TẠO' | localize }}
+                                {{ 'NỘI DUNG LỖI' | localize }}
+                            </th>
+                            <th>
+                                {{ 'THỜI GIAN THỰC HIỆN' | localize }}
                             </th>
                         </tr>
                     </ng-template>
@@ -111,11 +147,7 @@
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.stockName == null ? 'Tất cả' : record.stockName }}
-                            </td>
-                            <td>
-                                <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.productType == 1 ? 'SỐ' : record.productType == 2 ? 'SIM' : 'SIM, SỐ' }}
+                                {{ record.numberLevel }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
@@ -129,6 +161,24 @@
                                 <span *ngIf="record.status == 2" class="badge badge-secondary badge-inline">
                                     {{ 'Khoá' | localize }}
                                 </span>
+                            </td>
+                            <!-- <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.productType == 1 ? 'SỐ' : record.productType == 2 ? 'SIM' : 'SIM, SỐ' }}
+                            </td>  -->
+                        
+                            <td>
+                                <span class="p-column-title">{{ 'Status' | localize }}</span>
+                                <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
+                                    {{ 'Hoạt động' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 2" class="badge badge-secondary badge-inline">
+                                    {{ 'Khoá' | localize }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.numberLevel }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ 'Date' | localize }}</span>

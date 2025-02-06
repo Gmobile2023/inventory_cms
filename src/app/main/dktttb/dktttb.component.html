@@ -1,54 +1,85 @@
 <div [@routerTransition]>
     <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
-    <div [class]="containerClass">
-        <div class="row bg-white pt-5 ps-3">
-            <h4 class="mb-4">BỘ LỌC TÌM KIẾM</h4>
-            <div class="col-md-4 mb-3">
-                <input id="fromDate" type="text" name="fromDate" class="form-control" bsDatepicker
-                    datePickerLuxonModifier [(date)]="fromDate" [bsConfig]="{ adaptivePosition: true }"
-                    placeholder="Thời gian" />
+
+    <div [class]="containerClass" class="mt-5">
+        <div class="row bg-white py-5 ps-3 justify-content-center align-items-center">
+            <div class="col-md-4">
+                <div class="mb-5">
+                    <label for="PhoneNumber" class="form-label required">Số điện thoại ĐK TTTB</label>
+                    <input type="text" class="form-control only-number-input" name="phoneNumber" id="PhoneNumber"
+                        placeholder="Số điện thoại ĐK TTTB" maxlength="10">
+                </div>
+                <div class="mb-5">
+                    <label for="SerialNumber" class="form-label required">Số serial</label>
+                    <input type="text" class="form-control" name="serial" id="SerialNumber" placeholder="Số serial"
+                        maxlength="50">
+                </div>
             </div>
-            <div class="col-md-4 mb-3">
-                <p-dropdown [style]="{width: '100%'}" [options]="stockList" [(ngModel)]="selectedStockFilter"
-                    optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
-                    placeholder="Chọn kho">
-                    <ng-template pTemplate="selectedStockFilter">
-                        <div class="flex align-items-center gap-2" *ngIf="selectedStockFilter">
-                            <div>{{ selectedStockFilter.stockName }}</div>
+            <div class="col-md-4">
+                <div class="row justify-content-center align-items-center">
+                    Hoặc
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-md-6">
+                        <div class="mb-5">
+                            <div class="file-picker text-center">
+                                <label for="subscriber-file-input"
+                                    class="btn btn-primary d-flex align-items-center gap-2">
+                                    <i class="bi bi-upload"></i> Import từ file
+                                </label>
+                                <input type="file" id="subscriber-file-input" class="d-none">
+                                <span id="subscriber-file-name" class="file-name">Không có tập tin nào được chọn</span>
+                            </div>
                         </div>
-                    </ng-template>
-                    <ng-template let-stock pTemplate="item">
-                        <div class="flex align-items-center gap-2">
-                            <div>{{ stock.stockName }}</div>
-                        </div>
-                    </ng-template>
-                </p-dropdown>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/assets/SampleFiles/ImportSimSampleFile.xlsx" class="btn btn-link text-primary"><i
+                                class="bi bi-download"></i> Tải file mẫu</a>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-4 mb-3">
-                <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="statusOption"
-                    [(ngModel)]="status" optionLabel="label" optionValue="value" placeholder="Trạng thái" class="w-100">
-                </p-dropdown>
+        </div>
+
+        <div class="row bg-white py-5 ps-3 justify-content-center align-items-center">
+            <div class="col-md-6">
+                <div class="mb-5">
+                    <label for="" class="form-label">Tải ảnh hồ sơ (ảnh CCCD, ảnh khuôn mặt)</label>
+                    <div class="file-picker align-items-start">
+                        <label for="images-file-input" class="btn btn-primary d-flex align-items-center gap-2 col-md-4">
+                            <i class="bi bi-upload"></i> Import từ file
+                        </label>
+                        <input type="file" id="images-file-input" class="d-none" webkitdirectory="" multiple="">
+                        <span id="images-file-name" class="file-name">Không có tập tin nào được chọn</span>
+                    </div>
+                </div>
             </div>
-            <div class="col-12 mt-3 mb-5">
-                <div class="d-flex align-items-center justify-content-start">
-                    <button class="btn btn-secondary btn-sm me-3" type="button" (click)="resetFilter()">ĐẶT LẠI</button>
-                    <button class="btn btn-primary btn-sm" type="button" (click)="getListApprovalFlow($event)">TÌM
-                        KIẾM</button>
+            <div class="col-md-6">
+                <div class="mb-5">
+                    <label class="form-check form-check-custom form-check-solid">
+                        <input type="checkbox" id="shareInfoCheckbox" name="shareInfo" class="form-check-input"
+                            value="true">
+                        <span class="form-check-label">
+                            Tôi đồng ý chia sẻ thông tin cá nhân với nhà mạng Gmobile để hoàn thiện thông tin thuê bao
+                        </span>
+                    </label>
+                </div>
+                <div>
+                    <label class="form-check form-check-custom form-check-solid">
+                        <input type="checkbox" id="termsCheckbox" name="agreeTerms" class="form-check-input"
+                            value="true">
+                        <span class="form-check-label">
+                            Tôi đồng ý với Điều khoản dịch vụ để sử dụng sản phẩm, dịch vụ của Gmobile
+                        </span>
+                    </label>
                 </div>
             </div>
         </div>
     </div>
+
     <div [class]="containerClass" class="mt-5">
-        <div class="row bg-white py-5 ps-3 column-gap-5">
-            <div class="d-flex justify-content-between">
-                <h4 class="mb-4">DANH SÁCH CẤU HÌNH</h4>
-                <div class="d-flex align-items-center justify-content-end">
-                    <button class="btn btn-primary btn-sm ms-3" type="button" (click)="openModal(addFlow)">
-                        THÊM MỚI CẤU HÌNH
-                    </button>
-                </div>
-            </div>
-        </div>
+
         <div class="row align-items-center">
             <div class="col primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
                 <p-table #dataTable sortMode="multiple" (onLazyLoad)="getListApprovalFlow($event)"
@@ -58,23 +89,12 @@
                         <tr>
                             <th style="width: 130px">{{ 'HÀNH ĐỘNG' | localize }}</th>
                             <th>
-                                {{ 'CẤP KHO' | localize }}
+                                {{ 'SỐ THUÊ BAO' | localize }}
                             </th>
                             <th>
-                                {{ 'TÊN KHO' | localize }}
+                                {{ 'SERIAL' | localize }}
                             </th>
-                            <th>
-                                {{ 'SẢN PHẨM' | localize }}
-                            </th>
-                            <th>
-                                {{ 'SỐ CẤP DUYỆT' | localize }}
-                            </th>
-                            <th>
-                                {{ 'TRẠNG THÁI' | localize }}
-                            </th>
-                            <th>
-                                {{ 'NGÀY TẠO' | localize }}
-                            </th>
+
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-record="$implicit">
@@ -113,27 +133,7 @@
                                 <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.stockName == null ? 'Tất cả' : record.stockName }}
                             </td>
-                            <td>
-                                <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.productType == 1 ? 'SỐ' : record.productType == 2 ? 'SIM' : 'SIM, SỐ' }}
-                            </td>
-                            <td>
-                                <span class="p-column-title">{{ '' | localize }}</span>
-                                {{ record.numberLevel }}
-                            </td>
-                            <td>
-                                <span class="p-column-title">{{ 'Status' | localize }}</span>
-                                <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
-                                    {{ 'Hoạt động' | localize }}
-                                </span>
-                                <span *ngIf="record.status == 2" class="badge badge-secondary badge-inline">
-                                    {{ 'Khoá' | localize }}
-                                </span>
-                            </td>
-                            <td>
-                                <span class="p-column-title">{{ 'Date' | localize }}</span>
-                                {{ record.createdDate | luxonFormat: 'F' }}
-                            </td>
+                
                         </tr>
                     </ng-template>
                 </p-table>

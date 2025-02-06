@@ -37,7 +37,7 @@ export class AppNavigationService {
                 ]
             ),
             new AppMenuItem(
-                'SIM SỐ - ĐKTTTB',
+                'ĐKTTTB',
                 '',
                 'flaticon-graphic',
                 '',

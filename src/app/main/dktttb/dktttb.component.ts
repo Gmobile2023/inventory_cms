@@ -104,8 +104,8 @@ export class RegistrationTTTBComponent extends AppComponentBase {
 
     ngOnInit() {
         this.items = [
-            { label: 'Quản lý kho', routerLink: '/app/main/inventory-manager' },
-            { label: 'Cài đặt luồng duyệt' },
+            { label: 'SIM-SỐ', routerLink: '/app/main/inventory-manager' },
+            { label: 'Đăng ký TTTB' },
         ];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.getTreeDataFromServer();
