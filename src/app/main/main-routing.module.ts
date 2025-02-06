@@ -152,6 +152,30 @@ import { RouterModule } from '@angular/router';
                         data: { permission: '' },
                     },
                     {
+                        path: 'sim-so/dktttb',
+                        loadChildren: () =>
+                            import('./dktttb/dktttb.module').then(
+                                (m) => m.RegistrationTTTBModule
+                            ),
+                        data: { permission: '' },
+                    },
+                    {
+                        path: 'sim-so/list-tttb-lots',
+                        loadChildren: () =>
+                            import('./list-tttb-lots/list-lots.module').then(
+                                (m) => m.ListTTTBLotsModule
+                            ),
+                        data: { permission: '' },
+                    },
+                    {
+                        path: 'sim-so/list-tttb-numbers',
+                        loadChildren: () =>
+                            import('./list-tttb-numbers/list-numbers.module').then(
+                                (m) => m.ListTTTBNumbersModule
+                            ),
+                        data: { permission: '' },
+                    },
+                    {
                         path: 'recovery-inventory/detail-reuse-number',
                         loadChildren: () =>
                             import('./detail-reuse-number/detail-reuse-number.module').then(

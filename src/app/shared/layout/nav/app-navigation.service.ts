@@ -10,7 +10,7 @@ export class AppNavigationService {
     constructor(
         private _permissionCheckerService: PermissionCheckerService,
         private _appSessionService: AppSessionService
-    ) {}
+    ) { }
 
     getMenu(): AppMenu {
         return new AppMenu('MainMenu', 'MainMenu', [
@@ -33,6 +33,19 @@ export class AppNavigationService {
                     new AppMenuItem('Danh sách đơn hàng', '', 'flaticon-list-2', '/app/main/sim-so/order-list'),
                     new AppMenuItem('Chi tiết đơn hàng', '', 'flaticon-visible', '/app/main/sim-so/order-detail'),
                     new AppMenuItem('Thêm mới đơn hàng', '', 'flaticon-add-circular-button', '/app/main/sim-so/add-order'),
+
+                ]
+            ),
+            new AppMenuItem(
+                'SIM SỐ - ĐKTTTB',
+                '',
+                'flaticon-graphic',
+                '',
+                [],
+                [
+                    new AppMenuItem('Đăng ký TTTB', '', 'flaticon-list-2', '/app/main/sim-so/dktttb'),
+                    new AppMenuItem('Danh sách lô Đăng ký TTTB', '', 'flaticon-visible', '/app/main/sim-so/list-tttb-lots'),
+                    new AppMenuItem('Danh sách số đăng ký TTTB', '', 'flaticon-add-circular-button', '/app/main/sim-so/list-tttb-numbers'),
 
                 ]
             ),
