@@ -1,41 +1,46 @@
-import { Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { LazyLoadEvent, MenuItem } from 'primeng/api';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import {
-    CreateRecoveryDto,
+    CommonLookupServiceProxy,
+    CreateTransferDto,
     InventoryServiceProxy,
+    IOrderExportItemDto,
     IOrderItem,
     ObjectType,
+    OrderCreatedAssignInput,
+    OrderExportDto,
+    OrderExportItemDto,
     OrderItem,
     ProductType,
+    UserInfoDto,
 } from '@shared/service-proxies/service-proxies';
-import { Router } from '@angular/router';
-import { catchError, finalize } from 'rxjs';
 import { Table } from 'primeng/table';
 import { Paginator } from 'primeng/paginator';
+import { catchError, finalize } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppConsts } from '@shared/AppConsts';
 import { HttpClient } from '@angular/common/http';
-
 @Component({
-    templateUrl: './create-inventory-recall.component.html',
+    templateUrl: './sim-assignments.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [appModuleAnimation()],
 })
-export class CreateInventoryRecallComponent extends AppComponentBase implements OnInit {
+export class SimAssignmentsComponent extends AppComponentBase implements OnInit {
     @ViewChild('dataTable', { static: true }) dataTable: Table;
     @ViewChild('paginator', { static: true }) paginator: Paginator;
     constructor(
         injector: Injector,
         private _inventoryServiceProxy: InventoryServiceProxy,
         private router: Router,
-        private _httpClient: HttpClient
+        private _httpClient: HttpClient,
+        private route: ActivatedRoute,
+        private _commonLookupServiceProxy: CommonLookupServiceProxy
     ) {
         super(injector);
     }
     uploadedFiles: File[] = [];
-    selectedRecords: [];
     items: MenuItem[];
     home: MenuItem;
     value: number = 0;
@@ -53,47 +58,63 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
     productType: ProductType = ProductType.Mobile;
     objectType: ObjectType = ObjectType.All;
     rangeRule: OrderItem;
-    rangeItems: string[] | undefined = [];
+    rangeItems: any[] = [];
     isRangeRule: boolean = true;
     orderName: string = '';
-    tempOrderItems: IOrderItem = {
-        orderName: '',
-        unit: '',
-        attribute: '',
-        format: '',
-        simType: '',
-        telCo: '',
+    tempOrderItems: IOrderItem[] = [
+        {
+            orderName: '',
+            unit: '',
+            attribute: '',
+            format: '',
+            simType: '',
+            telCo: '',
+            fromRange: '',
+            toRange: '',
+            quantity: 0,
+            items: [],
+            productType: ProductType.Mobile,
+        },
+    ];
+    orderItems: IOrderExportItemDto = {
+        items: [],
         fromRange: '',
         toRange: '',
         quantity: 0,
-        items: [],
         productType: ProductType.Mobile,
     };
     ProductType = ProductType;
     ObjectType = ObjectType;
     listSimSrcStock: any[] = [];
     stockId: number;
-    isRecover: boolean | undefined = true;
+    stockIdParam: number = null;
     selectedStockFrom: any;
     selectedStockTo: any;
     productAttribute: any[] = [];
     simTypes: any[] = [];
     product: string;
     attribute: string;
+    isAllChecked: boolean = false;
     simType: string;
     fromRange: string;
     toRange: string;
     mobile: string;
     serial: string;
+    expectedQuantity: number;
     uploadedFile: File | null = null;
     remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
     isLoading: boolean = false;
+    orderData: any = {};
+    periodName: string;
+    assignAccount: string;
+    users: any[] = [];
+    filteredUsers: UserInfoDto[] = new Array<UserInfoDto>();
 
     ngOnInit() {
         this.items = [
             { label: 'Quản lý kho', routerLink: '/app/main/inventory-manager' },
-            { label: 'Xuất/Nhập kho', routerLink: '/app/main/inventory-import-export' },
-            { label: 'Tạo mới yêu cầu thu hồi về kho' },
+            // { label: 'Xuất/Nhập kho', routerLink: '/app/main/inventory-import-export' },
+            { label: 'Gán dải số cho nhân viên' },
         ];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.getListStock();
@@ -122,6 +143,29 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
             });
     }
 
+    getOrderForView(id: number) {
+        this._inventoryServiceProxy.getOrderForView(id, true).subscribe((result) => {
+            this.orderData = result.order;
+            this.selectedStockTo = this.listStock.find((stock) => stock.stockCode === this.orderData.desStockCode);
+            this.selectedStockFrom = this.listStock.find((stock) => stock.stockCode === this.orderData.srcStockCode);
+            this.getOrderPendingSims();
+            if (this.orderData.items[0].categoryCode === 'MOBILE') {
+                this.productType = ProductType.Mobile;
+            } else {
+                this.productType = ProductType.Serial;
+            }
+        });
+    }
+
+    onRangeRuleChange() {
+        this.isRangeRule = !this.isRangeRule;
+        if (!this.isRangeRule) {
+            this.objectType = ObjectType.List;
+        } else {
+            this.objectType = ObjectType.All;
+        }
+    }
+
     getProductAttributes() {
         this._inventoryServiceProxy
             .getProductAttributes(this.productType.toString(), undefined, 0, 10)
@@ -136,73 +180,72 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
         });
     }
 
-    onRangeRuleChange() {
-        this.isRangeRule = !this.isRangeRule;
-        if (!this.isRangeRule) {
-            this.objectType = ObjectType.List;
-        } else {
-            this.objectType = ObjectType.All;
-        }
-    }
-
     onChangeProductType(event: Event) {
         this.productType = (event.target as HTMLSelectElement).value as unknown as ProductType;
         this.getProductAttributes();
         this.getSimsTypes();
         if (this.stockId) {
-            this.getListSimsTransfers();
+            this.getListSimSuggestAssignments();
         }
     }
 
     onChangeStock(event: { value: any }) {
         const stockId = event.value.id;
         this.stockId = stockId;
-        this.getListSimsTransfers();
+        this.getListSimSuggestAssignments();
     }
 
-    calculateQuantity(event: Event): void {
-        const input = event.target as HTMLInputElement;
-        input.value = input.value.replace(/[^0-9]/g, ''); // Loại bỏ ký tự không hợp lệ
-        if (this.tempOrderItems.fromRange && this.tempOrderItems.toRange) {
-            const from = parseInt(this.tempOrderItems.fromRange, 10);
-            const to = parseInt(this.tempOrderItems.toRange, 10);
-
-            if (!isNaN(from) && !isNaN(to) && to >= from) {
-                this.tempOrderItems.quantity = to - from + 1; // Tính số lượng
-            } else {
-                this.tempOrderItems.quantity = 0; // Nếu giá trị không hợp lệ
-            }
-        } else {
-            this.tempOrderItems.quantity = 0; // Nếu chưa nhập đủ
-        }
+    filterUsers(event: any): void {
+        const query = event.query;
+        this._commonLookupServiceProxy.getListUserSearch(query).subscribe((users) => {
+            this.filteredUsers = users;
+        });
     }
 
-    onKeyPress(event: KeyboardEvent): void {
-        const regex = /^[0-9]*$/; // Chỉ cho phép nhập số
-        if (!regex.test(event.key)) {
-            event.preventDefault(); // Chặn ký tự không hợp lệ
-        }
-    }
-
-    onInput(event: Event): void {
-        const input = event.target as HTMLInputElement;
-        input.value = input.value.replace(/[^0-9]/g, ''); // Loại bỏ ký tự không hợp lệ
-    }
-
-    getListSimsTransfers(event?: LazyLoadEvent) {
+    getListSimSuggestAssignments(event?: LazyLoadEvent) {
         this.primengTableHelper.showLoadingIndicator();
         this._inventoryServiceProxy
-            .getListSimsTransfers(
+            .getListSimSuggestAssignments(
                 this.stockId,
                 this.productType,
-                this.attribute,
                 this.productType == ProductType.Mobile ? this.product : undefined,
                 this.productType == ProductType.Serial ? this.product : undefined,
-                this.simType,
+                this.attribute,
                 undefined,
+                this.simType,
                 this.fromRange,
                 this.toRange,
-                false,
+                undefined,
+                undefined,
+                this.primengTableHelper.getSkipCount(this.paginator, event),
+                this.primengTableHelper.getMaxResultCount(this.paginator, event),
+                undefined,
+                undefined,
+                undefined
+            )
+            .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
+            .subscribe((result) => {
+                this.listSimSrcStock = result.items;
+                this.primengTableHelper.totalRecordsCount = result.totalCount;
+                this.primengTableHelper.hideLoadingIndicator();
+                this.isAllChecked = false;
+            });
+    }
+
+    getOrderPendingSims(event?: LazyLoadEvent) {
+        this.primengTableHelper.showLoadingIndicator();
+        this._inventoryServiceProxy
+            .getOrderPendingSims(
+                this.selectedStockFrom?.id,
+                this.orderData.orderCode,
+                this.productType,
+                this.productType == ProductType.Mobile ? this.product : undefined,
+                this.productType == ProductType.Serial ? this.product : undefined,
+                undefined,
+                undefined,
+                this.simType,
+                this.fromRange,
+                this.toRange,
                 undefined,
                 this.primengTableHelper.getSkipCount(this.paginator, event),
                 this.primengTableHelper.getMaxResultCount(this.paginator, event)
@@ -212,57 +255,70 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
                 this.listSimSrcStock = result.items;
                 this.primengTableHelper.totalRecordsCount = result.totalCount;
                 this.primengTableHelper.hideLoadingIndicator();
+                this.isAllChecked = false;
             });
     }
 
-    createRecovery() {
+    calculateQuantity(): void {
+        if (this.tempOrderItems[0].fromRange && this.tempOrderItems[0].toRange) {
+            const from = parseInt(this.tempOrderItems[0].fromRange, 10);
+            const to = parseInt(this.tempOrderItems[0].toRange, 10);
+
+            if (!isNaN(from) && !isNaN(to) && to >= from) {
+                this.tempOrderItems[0].quantity = to - from + 1; // Tính số lượng
+            } else {
+                this.tempOrderItems[0].quantity = 0; // Nếu giá trị không hợp lệ
+            }
+        } else {
+            this.tempOrderItems[0].quantity = 0; // Nếu chưa nhập đủ
+        }
+    }
+
+    async createTransfer() {
         this.isLoading = true;
-        const body = new CreateRecoveryDto();
+        const body = new OrderCreatedAssignInput();
         body.title = this.title;
         body.description = this.description;
-        if (this.selectedStockFrom) body.srcStockId = this.selectedStockFrom.id;
-        if (this.selectedStockTo) body.desStockId = this.selectedStockTo.id;
-        body.desStockId = this.selectedStockTo.id;
+        if (this.selectedStockFrom) body.stockId = this.selectedStockFrom.id;
         body.productType = this.productType;
-        body.objectType = this.objectType;
-        if (this.isRangeRule) {
-            body.rangeRule = OrderItem.fromJS(this.tempOrderItems);
-        }
-        if (this.currentDataFrom.length > 0) {
+        let data = this.users?.map((user) => user.userName);
+        body.assignAccount = data[0];
+        this.tempOrderItems[0].productType = this.productType;
+        body.items = this.tempOrderItems.map((item) => {
+            return OrderItem.fromJS(item);
+        });
+        if (this.rangeItems.length > 0) {
             const data = [];
-            this.currentDataFrom.forEach((item) => {
+            this.rangeItems.forEach((item) => {
                 if (this.productType == 1) {
                     data.push(item.mobile);
                 } else {
                     data.push(item.serial);
                 }
             });
-            body.rangeItems = data;
+            body.items[0].items = data;
         }
-        if (this.uploadedFiles.length > 0) {
-            this._inventoryServiceProxy
-                .createRecovery(body)
-                .pipe(
-                    catchError((err) => {
-                        this.isLoading = false;
-                        throw err;
-                    })
-                )
-                .subscribe({
-                    next: (result) => {
-                        this.isLoading = false;
-                        if (result.results.orderCode) {
-                            this.uploadOrderDocument(result.results.orderCode, this.uploadedFiles);
-                        }
-                    },
-                    error: (err) => {
-                        this.isLoading = false;
-                    },
-                });
-        } else {
-            this.isLoading = false;
-            this.message.error(this.l('Vui lòng tải lên thông tin chứng từ!'));
-        }
+
+        this.isLoading = true;
+        this._inventoryServiceProxy
+            .orderCreatedAssign(body)
+            .pipe(
+                catchError((err) => {
+                    this.isLoading = false;
+                    throw err;
+                })
+            )
+            .subscribe({
+                next: (result) => {
+                    this.isLoading = false;
+                    this.router.navigate(['/app/main/inventory-import-export']);
+                    this.notify.info(this.l('Gán số nhân viên thành công!'));
+                },
+                error: (err) => {
+                    console.log(err);
+                    this.isLoading = false;
+                },
+            });
     }
 
     onFileSelect(event: any): void {
@@ -282,7 +338,7 @@ export class CreateInventoryRecallComponent extends AppComponentBase implements 
             next: (response) => {
                 if (response.success) {
                     this.router.navigate(['/app/main/inventory-import-export']);
-                    this.notify.info(this.l('Tạo yêu cầu thu hồi thành công!'));
+                    this.notify.info(this.l('Tạo yêu cầu xuất kho thành công!'));
                 }
             },
             error: (err) => {

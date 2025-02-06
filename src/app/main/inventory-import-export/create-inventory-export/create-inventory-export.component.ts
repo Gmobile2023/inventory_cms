@@ -61,10 +61,14 @@ export class CreateInventoryExportComponent extends AppComponentBase implements 
         orderName: '',
         unit: '',
         attribute: '',
+        format: '',
+        simType: '',
         telCo: '',
         fromRange: '',
         toRange: '',
         quantity: 0,
+        items: [],
+        productType: ProductType.Mobile,
     };
     orderItems: IOrderExportItemDto = {
         items: [],
