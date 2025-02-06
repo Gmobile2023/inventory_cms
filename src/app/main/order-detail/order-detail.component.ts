@@ -57,22 +57,21 @@ export class OrderDetailComponent extends AppComponentBase implements OnInit {
     rangeItems: any[] = [];
     isRangeRule: boolean = true;
     orderName: string = '';
-    tempOrderItems: IOrderItem = {
-        orderName: '',
-        unit: '',
-        attribute: '',
-        telCo: '',
-        fromRange: '',
-        toRange: '',
-        quantity: 0,
-    };
-    orderItems: IOrderExportItemDto = {
-        items: [],
-        fromRange: '',
-        toRange: '',
-        quantity: 0,
-        productType: ProductType.Mobile,
-    };
+    tempOrderItems: IOrderItem[] = [
+        {
+            orderName: '',
+            unit: '',
+            attribute: '',
+            format: '',
+            simType: '',
+            telCo: '',
+            fromRange: '',
+            toRange: '',
+            quantity: 0,
+            items: [],
+            productType: ProductType.Mobile,
+        },
+    ];
     ProductType = ProductType;
     ObjectType = ObjectType;
     listSimSrcStock: any[] = [];
@@ -248,18 +247,18 @@ export class OrderDetailComponent extends AppComponentBase implements OnInit {
     }
 
     calculateQuantity(): void {
-        if (this.tempOrderItems.fromRange && this.tempOrderItems.toRange) {
-            const from = parseInt(this.tempOrderItems.fromRange, 10);
-            const to = parseInt(this.tempOrderItems.toRange, 10);
+        // if (this.tempOrderItems.fromRange && this.tempOrderItems.toRange) {
+        //     const from = parseInt(this.tempOrderItems.fromRange, 10);
+        //     const to = parseInt(this.tempOrderItems.toRange, 10);
 
-            if (!isNaN(from) && !isNaN(to) && to >= from) {
-                this.tempOrderItems.quantity = to - from + 1; // Tính số lượng
-            } else {
-                this.tempOrderItems.quantity = 0; // Nếu giá trị không hợp lệ
-            }
-        } else {
-            this.tempOrderItems.quantity = 0; // Nếu chưa nhập đủ
-        }
+        //     if (!isNaN(from) && !isNaN(to) && to >= from) {
+        //         this.tempOrderItems.quantity = to - from + 1; // Tính số lượng
+        //     } else {
+        //         this.tempOrderItems.quantity = 0; // Nếu giá trị không hợp lệ
+        //     }
+        // } else {
+        //     this.tempOrderItems.quantity = 0; // Nếu chưa nhập đủ
+        // }
     }
 
     async createTransfer() {
@@ -321,7 +320,7 @@ export class OrderDetailComponent extends AppComponentBase implements OnInit {
         body.periodName = this.periodName;
         body.orderCode = this.orderData.orderCode;
         body.exportItems = [];
-        body.exportItems.push(OrderExportItemDto.fromJS(this.orderItems));
+        // body.exportItems.push(OrderExportItemDto.fromJS(this.orderItems));
         if (this.rangeItems.length > 0) {
             const data = [];
             this.rangeItems.forEach((item) => {
@@ -333,10 +332,10 @@ export class OrderDetailComponent extends AppComponentBase implements OnInit {
             });
             body.exportItems[0].items = data;
         }
-        body.exportItems[0].quantity = this.tempOrderItems.quantity;
+        // body.exportItems[0].quantity = this.tempOrderItems.quantity;
         body.exportItems[0].productType = this.productType;
-        if (this.tempOrderItems.fromRange) body.exportItems[0].fromRange = this.tempOrderItems.fromRange;
-        if (this.tempOrderItems.toRange) body.exportItems[0].toRange = this.tempOrderItems.toRange;
+        // if (this.tempOrderItems.fromRange) body.exportItems[0].fromRange = this.tempOrderItems.fromRange;
+        // if (this.tempOrderItems.toRange) body.exportItems[0].toRange = this.tempOrderItems.toRange;
 
         this._inventoryServiceProxy
             .orderExport(body)
