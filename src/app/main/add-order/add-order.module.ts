@@ -10,6 +10,8 @@ import { AddOrderComponent } from './add-order.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TimelineModule } from 'primeng/timeline';
 import { StepsModule } from 'primeng/steps';
+import { RadioButton } from 'primeng/radiobutton';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 
 @NgModule({
@@ -24,7 +26,8 @@ import { StepsModule } from 'primeng/steps';
         TagModule,
         ProgressSpinnerModule,
         TimelineModule,
-        StepsModule
+        StepsModule, 
+        RadioButtonModule
     ],
 })
 export class AddOrderModule { }

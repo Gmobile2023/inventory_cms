@@ -20,7 +20,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AppConsts } from '@shared/AppConsts';
 import { HttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
-
+import { DateTimeService } from '@app/shared/common/timing/date-time.service';
+import { DateTime } from '@node_modules/@types/luxon';
+import { RadioButton } from 'primeng/radiobutton';
+import { RadioButtonModule } from 'primeng/radiobutton';
 @Component({
     templateUrl: './add-order.component.html',
     encapsulation: ViewEncapsulation.None,
@@ -106,12 +109,48 @@ export class AddOrderComponent extends AppComponentBase implements OnInit {
     currentStep: number = 1;
     activeIndex: number = 0;
 
+    address: string | undefined;
+    cities: any[] = [];
+    districts: any[] = [];
+    wards: any[] = [];
+    cityId: number | undefined;
+    districtId: number | undefined;
+    wardId: number | undefined;
+    fromDate: DateTime | undefined;
+    toDate: DateTime | undefined;
+    parentId: number | undefined;
+    status: number | undefined;
+    stockLevel: number;
+    parentStockId: number | undefined;
+    selectedCity: any;
+    selectedDistrict: any;
+    selectedWard: any;
+
+    ingredient!: string;
+
+
     onActiveIndexChange(event: number) {
         this.activeIndex = event;
         this.currentStep = event + 1; // Đồng bộ currentStep với activeIndex
     }
-    
 
+    onCityChange(event: { value: any }): void {
+        const selectedCityId = event.value;
+        const selectedCity = this.cities.find((city) => city.id === selectedCityId);
+        // if (selectedCity) {
+        //     this.inventoryData.cityName = selectedCity.cityName;
+        // }
+        // this.getDistrictByCity(selectedCityId);
+    }
+
+    onDistrictChange(event: { value: any }): void {
+        const selectedDistrictId = event.value;
+        const selectedDistrict = this.districts.find((district) => district.id === selectedDistrictId);
+        // if (selectedDistrict) {
+        //     this.inventoryData.districtName = selectedDistrict.displayName;
+        // }
+        // this.getWardByDistrict(selectedDistrictId);
+    }
     ngOnInit() {
         this.items = [{ label: 'SIM SỐ' }, { label: 'Thêm mới đơn hàng' }];
         this.itemsMenu = [
@@ -128,7 +167,7 @@ export class AddOrderComponent extends AppComponentBase implements OnInit {
                 command: () => this.nextStep(3)
             }
         ];
-        
+
 
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.events = [
@@ -189,7 +228,7 @@ export class AddOrderComponent extends AppComponentBase implements OnInit {
         this.currentStep = step;
         this.activeIndex = step - 1; // Vì activeIndex bắt đầu từ 0
     }
-    
+
 
     back() {
         if (this.currentStep > 1) {
@@ -197,14 +236,14 @@ export class AddOrderComponent extends AppComponentBase implements OnInit {
             this.activeIndex = this.currentStep - 1;
         }
     }
-    
+
     next() {
         if (this.currentStep < 3) {
             this.currentStep++;
             this.activeIndex = this.currentStep - 1;
         }
     }
-    
+
     onRangeRuleChange() {
         this.isRangeRule = !this.isRangeRule;
         if (!this.isRangeRule) {
@@ -496,5 +535,5 @@ export class AddOrderComponent extends AppComponentBase implements OnInit {
         return this.currentDataFrom.some((item) => JSON.stringify(item) === JSON.stringify(record));
     }
 
-    onUpload(event) {}
+    onUpload(event) { }
 }
