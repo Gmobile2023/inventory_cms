@@ -28,8 +28,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     templateUrl: './add-order.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: [appModuleAnimation()],
-    providers: [MessageService]
-
+    providers: [MessageService],
 })
 export class AddOrderComponent extends AppComponentBase implements OnInit {
     @ViewChild('dataTable', { static: true }) dataTable: Table;
@@ -66,22 +65,21 @@ export class AddOrderComponent extends AppComponentBase implements OnInit {
     rangeItems: any[] = [];
     isRangeRule: boolean = true;
     orderName: string = '';
-    tempOrderItems: IOrderItem = {
-        orderName: '',
-        unit: '',
-        attribute: '',
-        telCo: '',
-        fromRange: '',
-        toRange: '',
-        quantity: 0,
-    };
-    orderItems: IOrderExportItemDto = {
-        items: [],
-        fromRange: '',
-        toRange: '',
-        quantity: 0,
-        productType: ProductType.Mobile,
-    };
+    tempOrderItems: IOrderItem[] = [
+        {
+            orderName: '',
+            unit: '',
+            attribute: '',
+            format: '',
+            simType: '',
+            telCo: '',
+            fromRange: '',
+            toRange: '',
+            quantity: 0,
+            items: [],
+            productType: ProductType.Mobile,
+        },
+    ];
     ProductType = ProductType;
     ObjectType = ObjectType;
     listSimSrcStock: any[] = [];
@@ -128,7 +126,6 @@ export class AddOrderComponent extends AppComponentBase implements OnInit {
 
     ingredient!: string;
 
-
     onActiveIndexChange(event: number) {
         this.activeIndex = event;
         this.currentStep = event + 1; // Đồng bộ currentStep với activeIndex
@@ -156,25 +153,30 @@ export class AddOrderComponent extends AppComponentBase implements OnInit {
         this.itemsMenu = [
             {
                 label: 'CHỌN SỐ ĐIỆN THOẠI',
-                command: () => this.nextStep(1)
+                command: () => this.nextStep(1),
             },
             {
                 label: 'CHỌN GÓI CƯỚC',
-                command: () => this.nextStep(2)
+                command: () => this.nextStep(2),
             },
             {
                 label: 'THANH TOÁN',
-                command: () => this.nextStep(3)
-            }
+                command: () => this.nextStep(3),
+            },
         ];
-
 
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.events = [
-            { status: 'Ordered', date: '15/10/2020 10:30', icon: 'pi pi-shopping-cart', color: '#9C27B0', image: 'game-controller.jpg' },
+            {
+                status: 'Ordered',
+                date: '15/10/2020 10:30',
+                icon: 'pi pi-shopping-cart',
+                color: '#9C27B0',
+                image: 'game-controller.jpg',
+            },
             { status: 'Processing', date: '15/10/2020 14:00', icon: 'pi pi-cog', color: '#673AB7' },
             { status: 'Shipped', date: '15/10/2020 16:15', icon: 'pi pi-shopping-cart', color: '#FF9800' },
-            { status: 'Delivered', date: '16/10/2020 10:00', icon: 'pi pi-check', color: '#607D8B' }
+            { status: 'Delivered', date: '16/10/2020 10:00', icon: 'pi pi-check', color: '#607D8B' },
         ];
         this.getListStock();
         if (this.route.snapshot.queryParamMap.get('id')!) {
@@ -228,7 +230,6 @@ export class AddOrderComponent extends AppComponentBase implements OnInit {
         this.currentStep = step;
         this.activeIndex = step - 1; // Vì activeIndex bắt đầu từ 0
     }
-
 
     back() {
         if (this.currentStep > 1) {
@@ -337,18 +338,17 @@ export class AddOrderComponent extends AppComponentBase implements OnInit {
     }
 
     calculateQuantity(): void {
-        if (this.tempOrderItems.fromRange && this.tempOrderItems.toRange) {
-            const from = parseInt(this.tempOrderItems.fromRange, 10);
-            const to = parseInt(this.tempOrderItems.toRange, 10);
-
-            if (!isNaN(from) && !isNaN(to) && to >= from) {
-                this.tempOrderItems.quantity = to - from + 1; // Tính số lượng
-            } else {
-                this.tempOrderItems.quantity = 0; // Nếu giá trị không hợp lệ
-            }
-        } else {
-            this.tempOrderItems.quantity = 0; // Nếu chưa nhập đủ
-        }
+        // if (this.tempOrderItems.fromRange && this.tempOrderItems.toRange) {
+        //     const from = parseInt(this.tempOrderItems.fromRange, 10);
+        //     const to = parseInt(this.tempOrderItems.toRange, 10);
+        //     if (!isNaN(from) && !isNaN(to) && to >= from) {
+        //         this.tempOrderItems.quantity = to - from + 1; // Tính số lượng
+        //     } else {
+        //         this.tempOrderItems.quantity = 0; // Nếu giá trị không hợp lệ
+        //     }
+        // } else {
+        //     this.tempOrderItems.quantity = 0; // Nếu chưa nhập đủ
+        // }
     }
 
     async createTransfer() {
@@ -410,7 +410,7 @@ export class AddOrderComponent extends AppComponentBase implements OnInit {
         body.periodName = this.periodName;
         body.orderCode = this.orderData.orderCode;
         body.exportItems = [];
-        body.exportItems.push(OrderExportItemDto.fromJS(this.orderItems));
+        // body.exportItems.push(OrderExportItemDto.fromJS(this.orderItems));
         if (this.rangeItems.length > 0) {
             const data = [];
             this.rangeItems.forEach((item) => {
@@ -422,10 +422,10 @@ export class AddOrderComponent extends AppComponentBase implements OnInit {
             });
             body.exportItems[0].items = data;
         }
-        body.exportItems[0].quantity = this.tempOrderItems.quantity;
+        // body.exportItems[0].quantity = this.tempOrderItems.quantity;
         body.exportItems[0].productType = this.productType;
-        if (this.tempOrderItems.fromRange) body.exportItems[0].fromRange = this.tempOrderItems.fromRange;
-        if (this.tempOrderItems.toRange) body.exportItems[0].toRange = this.tempOrderItems.toRange;
+        // if (this.tempOrderItems.fromRange) body.exportItems[0].fromRange = this.tempOrderItems.fromRange;
+        // if (this.tempOrderItems.toRange) body.exportItems[0].toRange = this.tempOrderItems.toRange;
 
         this._inventoryServiceProxy
             .orderExport(body)
@@ -535,5 +535,5 @@ export class AddOrderComponent extends AppComponentBase implements OnInit {
         return this.currentDataFrom.some((item) => JSON.stringify(item) === JSON.stringify(record));
     }
 
-    onUpload(event) { }
+    onUpload(event) {}
 }

@@ -7,18 +7,15 @@
                     <h4>THÔNG TIN CHUNG</h4>
                     <button class="btn btn-success btn-sm" (click)="createTransfer()" *ngIf="!isLoading"
                         [disabled]="!createExportForm.form.valid">
-                        GỬI YÊU CẦU
+                        XÁC NHẬN
                     </button>
                     <p-progressSpinner class="me-5" [style]="{width: '32px', height: '32px'}" strokeWidth="4"
                         fill="var(--surface-ground)" animationDuration=".8s" *ngIf="isLoading"></p-progressSpinner>
                 </div>
                 <div class="col-md-12 mb-3">
-                    <label for="title" class="form-label">Tiêu đề <span class="text-danger">(*)</span></label>
+                    <label for="title" class="form-label">Tiêu đề</label>
                     <input type="text" class="form-control" id="title" placeholder="Nhập tiêu đề" [(ngModel)]="title"
-                        name="title" #titleInput="ngModel" required [ngClass]="{
-                            'is-invalid': titleInput.touched && titleInput.invalid, 
-                            null : titleInput.touched && titleInput.valid
-                          }">
+                        name="title">
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="productType" class="form-label">Loại sản phẩm</label>
@@ -71,23 +68,19 @@
                 <div class="col-md-4 mb-3">
                     <label for="title" class="form-label">Số lượng dự kiến <span class="text-danger">(*)</span></label>
                     <input type="number" class="form-control" id="title" placeholder="Nhập số lượng dự kiến"
-                        [(ngModel)]="expectedQuantity" [disabled]="stockIdParam" name="expectedQuantity"
-                        #expectedQuantityInput="ngModel" required [ngClass]="{
-                            'is-invalid': expectedQuantityInput.touched && expectedQuantityInput.invalid, 
-                            null : expectedQuantityInput.touched && expectedQuantityInput.valid
-                          }">
+                        [(ngModel)]="expectedQuantity" name="expectedQuantity" disabled>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="" class="form-label">Cách thức xuất</label>
+                    <label for="" class="form-label">Cách thức gán</label>
                     <div class="input-group">
                         <select id="" name="" class="form-select" (change)="onRangeRuleChange()">
-                            <option [ngValue]="true">Xuất theo dải</option>
-                            <option [ngValue]="false">Xuất theo tuỳ chọn</option>
+                            <option [ngValue]="true">Gán theo dải</option>
+                            <option [ngValue]="false">Gán theo tuỳ chọn</option>
                         </select>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label for="objectType" class="form-label">Xuất theo</label>
+                    <label for="objectType" class="form-label">Gán theo</label>
                     <div class="input-group">
                         <select id="objectType" name="objectType" class="form-select" [(ngModel)]="objectType">
                             <option [value]="ObjectType.All">Tất cả</option>

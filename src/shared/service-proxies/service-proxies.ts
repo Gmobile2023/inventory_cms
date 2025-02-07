@@ -11094,12 +11094,16 @@ export class InventoryServiceProxy {
      * @param transCode (optional) 
      * @param status (optional) 
      * @param kitingStatus (optional) 
-     * @param sorting (optional) 
-     * @param skipCount (optional) 
+     * @param userQuery (optional) 
+     * @param assignAccount (optional) 
      * @param maxResultCount (optional) 
+     * @param skipCount (optional) 
+     * @param searchType (optional) 
+     * @param rowMax (optional) 
+     * @param filter (optional) 
      * @return Success
      */
-    getListSims(stockId: number | undefined, productType: ProductType | undefined, mobile: string | undefined, serial: string | undefined, attribute: string | undefined, transCode: string | undefined, status: ProductRecordStatus | undefined, kitingStatus: number | undefined, sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<PagedResultDtoOfSimNumberDto> {
+    getListSims(stockId: number | undefined, productType: ProductType | undefined, mobile: string | undefined, serial: string | undefined, attribute: string | undefined, transCode: string | undefined, status: ProductRecordStatus | undefined, kitingStatus: number | undefined, userQuery: string | undefined, assignAccount: string | undefined, maxResultCount: number | undefined, skipCount: number | undefined, searchType: SearchType | undefined, rowMax: number | undefined, filter: string | undefined): Observable<PagedResultDtoOfSimNumberDto> {
         let url_ = this.baseUrl + "/api/services/app/Inventory/GetListSims?";
         if (stockId === null)
             throw new Error("The parameter 'stockId' cannot be null.");
@@ -11133,18 +11137,34 @@ export class InventoryServiceProxy {
             throw new Error("The parameter 'kitingStatus' cannot be null.");
         else if (kitingStatus !== undefined)
             url_ += "KitingStatus=" + encodeURIComponent("" + kitingStatus) + "&";
-        if (sorting === null)
-            throw new Error("The parameter 'sorting' cannot be null.");
-        else if (sorting !== undefined)
-            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
-        if (skipCount === null)
-            throw new Error("The parameter 'skipCount' cannot be null.");
-        else if (skipCount !== undefined)
-            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (userQuery === null)
+            throw new Error("The parameter 'userQuery' cannot be null.");
+        else if (userQuery !== undefined)
+            url_ += "UserQuery=" + encodeURIComponent("" + userQuery) + "&";
+        if (assignAccount === null)
+            throw new Error("The parameter 'assignAccount' cannot be null.");
+        else if (assignAccount !== undefined)
+            url_ += "AssignAccount=" + encodeURIComponent("" + assignAccount) + "&";
         if (maxResultCount === null)
             throw new Error("The parameter 'maxResultCount' cannot be null.");
         else if (maxResultCount !== undefined)
             url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (searchType === null)
+            throw new Error("The parameter 'searchType' cannot be null.");
+        else if (searchType !== undefined)
+            url_ += "SearchType=" + encodeURIComponent("" + searchType) + "&";
+        if (rowMax === null)
+            throw new Error("The parameter 'rowMax' cannot be null.");
+        else if (rowMax !== undefined)
+            url_ += "RowMax=" + encodeURIComponent("" + rowMax) + "&";
+        if (filter === null)
+            throw new Error("The parameter 'filter' cannot be null.");
+        else if (filter !== undefined)
+            url_ += "Filter=" + encodeURIComponent("" + filter) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -38436,6 +38456,7 @@ export class SimNumberDto implements ISimNumberDto {
     desStockName!: string | undefined;
     desStockLevel!: number | undefined;
     contentReject!: string | undefined;
+    assignAccount!: string | undefined;
 
     constructor(data?: ISimNumberDto) {
         if (data) {
@@ -38471,6 +38492,7 @@ export class SimNumberDto implements ISimNumberDto {
             this.desStockName = _data["desStockName"];
             this.desStockLevel = _data["desStockLevel"];
             this.contentReject = _data["contentReject"];
+            this.assignAccount = _data["assignAccount"];
         }
     }
 
@@ -38506,6 +38528,7 @@ export class SimNumberDto implements ISimNumberDto {
         data["desStockName"] = this.desStockName;
         data["desStockLevel"] = this.desStockLevel;
         data["contentReject"] = this.contentReject;
+        data["assignAccount"] = this.assignAccount;
         return data;
     }
 }
@@ -38534,6 +38557,7 @@ export interface ISimNumberDto {
     desStockName: string | undefined;
     desStockLevel: number | undefined;
     contentReject: string | undefined;
+    assignAccount: string | undefined;
 }
 
 export class SimRecallDto implements ISimRecallDto {
