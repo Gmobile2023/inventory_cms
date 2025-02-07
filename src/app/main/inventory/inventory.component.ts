@@ -331,10 +331,10 @@ export class InventoryComponent extends AppComponentBase implements OnInit {
     createOrEditStock() {
         let body = new CreateOrEditStockDto();
         body = { ...this.inventoryData };
-        body.userManager = this.inventoryData.userManager?.map((user) => user.accountCode) || [];
-        body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.accountCode) || [];
-        body.userViewMobile = this.inventoryData.userViewMobile?.map((user) => user.accountCode) || [];
-        body.userViewSerial = this.inventoryData.userViewSerial?.map((user) => user.accountCode) || [];
+        body.userManager = this.inventoryData.userManager?.map((user) => user.userName) || [];
+        body.userCreateOrder = this.inventoryData.userCreate?.map((user) => user.userName) || [];
+        body.userViewMobile = this.inventoryData.userViewMobile?.map((user) => user.userName) || [];
+        body.userViewSerial = this.inventoryData.userViewSerial?.map((user) => user.userName) || [];
         this._inventoryServiceProxy.createOrEditStock(body).subscribe(() => {
             this.notify.info(this.l('SavedSuccessfully'));
             this.resetSearch();

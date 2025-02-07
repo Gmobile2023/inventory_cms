@@ -94,6 +94,8 @@ export class DetailInventoryComponent extends AppComponentBase {
     listStock: any[] = [];
     batchOption = [];
     transCode: string;
+    users: any[] = [];
+    assignAccount: string;
 
     ngOnInit() {
         this.items = [
@@ -218,10 +220,15 @@ export class DetailInventoryComponent extends AppComponentBase {
     }
 
     getListSims(event?: LazyLoadEvent) {
+        let userName = '';
         if (this.productType == ProductType.Serial) {
             this.isSerial = true;
         } else {
             this.isSerial = false;
+        }
+        if (this.users.length > 0) {
+            let data = this.users.map((user) => user.userName);
+            userName = data[0];
         }
         this._inventoryServiceProxy
             .getListSims(
@@ -233,9 +240,14 @@ export class DetailInventoryComponent extends AppComponentBase {
                 this.transCode,
                 this.status,
                 this.kitingStatus,
-                this.primengTableHelper.getSorting(this.dataTable),
+                undefined,
+                userName,
+                // this.primengTableHelper.getSorting(this.dataTable),
+                this.primengTableHelper.getMaxResultCount(this.paginator, event),
                 this.primengTableHelper.getSkipCount(this.paginator, event),
-                this.primengTableHelper.getMaxResultCount(this.paginator, event)
+                undefined,
+                undefined,
+                undefined
             )
             .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
             .subscribe((result) => {

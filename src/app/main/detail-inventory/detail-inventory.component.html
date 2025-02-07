@@ -107,9 +107,8 @@
                 </div>
                 <div class="d-flex align-items-center mb-5">
                     <label for="" class="form-label ms-5" style="width: 35%;">Lô xuất/nhập</label>
-                    <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="batchOption"
-                        optionLabel="label" optionValue="value" placeholder="Chọn lô xuất/nhập" class="w-100">
-                    </p-dropdown>
+                    <input id="serial" name="serial" class="form-control" placeholder="{{ 'Nhập mã lô' | localize }}"
+                        type="text" [(ngModel)]="transCode" />
                 </div>
             </div>
             <div class="col-md-6 mb-5">
@@ -157,10 +156,15 @@
                         </select>
                     </div>
                 </div>
-                <!-- <div class="d-flex align-items-center mb-5">
-                    <label for="" class="form-label ms-5" style="width: 35%;">Tìm kiếm theo file excel</label>
-                    <input type="file" class="form-control" id="">
-                </div> -->
+                <div class="d-flex align-items-center mb-5">
+                    <label for="" class="form-label ms-5" style="width: 35%;">Nhân viên</label>
+                    <div class="input-group">
+                        <p-autoComplete [style]="{'text-align': 'left', width: '100%'}" [(ngModel)]="users"
+                            [suggestions]="filteredUsers" (completeMethod)="filterUsers($event)" field="userName"
+                            value="userName" placeholder="Tìm kiếm và chọn" [minLength]="1" name="assignAccount"
+                            id="assignAccount" [multiple]="true" styleClass="w-100"></p-autoComplete>
+                    </div>
+                </div>
                 <div class="d-flex align-items-center justify-content-end">
                     <button class="btn btn-secondary btn-sm me-3" type="button" (click)="resetSearch()">CHỌN
                         LẠI</button>
@@ -178,6 +182,8 @@
                     <button *ngIf="'Pages.Inventories.Stock.Create' | permission" class="btn btn-secondary btn-sm"
                         type="button" (click)="openModal(createStock, 'modal-xl')">TẠO KHO
                         CON</button>
+                    <button class="btn btn-primary btn-sm ms-3" type="button" routerLink="/app/main/sim-assignments">GÁN
+                        SỐ NHÂN VIÊN</button>
                     <button *ngIf="'Pages.Inventories.Stock.Kitting' | permission" class="btn btn-primary btn-sm ms-3"
                         type="button" (click)="openModal(kitting, 'modal-md')">ĐÓNG KIT</button>
                     <button *ngIf="'Pages.Inventories.Stock.AddSale' | permission" class="btn btn-primary btn-sm ms-3"
@@ -216,6 +222,9 @@
                             </th>
                             <th>
                                 {{ 'ĐỊNH GIÁ' | localize }}
+                            </th>
+                            <th>
+                                {{ 'NHÂN VIÊN' | localize }}
                             </th>
                             <th *ngIf="!isSerial">
                                 {{ 'THUỘC TÍNH' | localize }}
@@ -276,10 +285,15 @@
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.transCode }}
                             </td>
                             <td>
                                 <span class="p-column-title">{{ '' | localize }}</span>
                                 {{ record.salePrice }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.assignAccount }}
                             </td>
                             <td *ngIf="!isSerial">
                                 <span class="p-column-title">{{ '' | localize }}</span>
@@ -320,7 +334,6 @@
                         </tr>
                     </ng-template>
                 </p-table>
-
                 <div class="primeng-no-data text-center mt-5" *ngIf="primengTableHelper.totalRecordsCount == 0">
                     {{ 'NoData' | localize }}
                 </div>

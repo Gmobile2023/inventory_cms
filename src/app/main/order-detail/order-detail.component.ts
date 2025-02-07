@@ -101,10 +101,16 @@ export class OrderDetailComponent extends AppComponentBase implements OnInit {
         this.items = [{ label: 'SIM SỐ' }, { label: 'Chi tiết đơn hàng' }];
         this.home = { icon: 'pi pi-home', routerLink: '/dashbroad' };
         this.events = [
-            { status: 'Ordered', date: '15/10/2020 10:30', icon: 'pi pi-shopping-cart', color: '#9C27B0', image: 'game-controller.jpg' },
+            {
+                status: 'Ordered',
+                date: '15/10/2020 10:30',
+                icon: 'pi pi-shopping-cart',
+                color: '#9C27B0',
+                image: 'game-controller.jpg',
+            },
             { status: 'Processing', date: '15/10/2020 14:00', icon: 'pi pi-cog', color: '#673AB7' },
             { status: 'Shipped', date: '15/10/2020 16:15', icon: 'pi pi-shopping-cart', color: '#FF9800' },
-            { status: 'Delivered', date: '16/10/2020 10:00', icon: 'pi pi-check', color: '#607D8B' }
+            { status: 'Delivered', date: '16/10/2020 10:00', icon: 'pi pi-check', color: '#607D8B' },
         ];
         this.getListStock();
         if (this.route.snapshot.queryParamMap.get('id')!) {
@@ -250,7 +256,6 @@ export class OrderDetailComponent extends AppComponentBase implements OnInit {
         // if (this.tempOrderItems.fromRange && this.tempOrderItems.toRange) {
         //     const from = parseInt(this.tempOrderItems.fromRange, 10);
         //     const to = parseInt(this.tempOrderItems.toRange, 10);
-
         //     if (!isNaN(from) && !isNaN(to) && to >= from) {
         //         this.tempOrderItems.quantity = to - from + 1; // Tính số lượng
         //     } else {

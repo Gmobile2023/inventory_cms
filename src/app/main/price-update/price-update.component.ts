@@ -85,9 +85,14 @@ export class PriceUpdateComponent extends AppComponentBase implements OnInit {
                 undefined,
                 undefined,
                 undefined,
-                this.primengTableHelper.getSorting(this.dataTable),
+                undefined,
+                undefined,
+                // this.primengTableHelper.getSorting(this.dataTable),
+                this.primengTableHelper.getMaxResultCount(this.paginator, event),
                 this.primengTableHelper.getSkipCount(this.paginator, event),
-                this.primengTableHelper.getMaxResultCount(this.paginator, event)
+                undefined,
+                undefined,
+                undefined
             )
             .pipe(finalize(() => this.primengTableHelper.hideLoadingIndicator()))
             .subscribe((result) => {

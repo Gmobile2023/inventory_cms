@@ -311,7 +311,9 @@ export class SimAssignmentsComponent extends AppComponentBase implements OnInit 
             .subscribe({
                 next: (result) => {
                     this.isLoading = false;
-                    this.router.navigate(['/app/main/inventory-import-export']);
+                    this.router.navigate(['/app/main/inventory-manager/detail-inventory'], {
+                        queryParams: { id: this.selectedStockFrom.id },
+                    });
                     this.notify.info(this.l('Gán số nhân viên thành công!'));
                 },
                 error: (err) => {
@@ -337,7 +339,9 @@ export class SimAssignmentsComponent extends AppComponentBase implements OnInit 
         this._httpClient.post<any>(uploadUrl, formData).subscribe({
             next: (response) => {
                 if (response.success) {
-                    this.router.navigate(['/app/main/inventory-import-export']);
+                    this.router.navigate(['/app/main/inventory-manager/detail-inventory'], {
+                        queryParams: { id: this.selectedStockFrom.id },
+                    });
                     this.notify.info(this.l('Tạo yêu cầu xuất kho thành công!'));
                 }
             },
