@@ -24,7 +24,16 @@
             <div class="col-md-4 mb-3">
                 <input type="text" class="form-control" placeholder="Tìm kiếm đơn hàng/ khách hàng">
             </div>
-            <!-- <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
+                <input id="toDate" type="text" name="toDate" class="form-control" bsDatepicker datePickerLuxonModifier
+                    [(date)]="toDate" [bsConfig]="{ adaptivePosition: true }" placeholder="Thời gian đến" />
+            </div>
+            <div class="col-md-4 mb-3">
+                <input id="fromDate" type="text" name="fromDate" class="form-control" bsDatepicker
+                    datePickerLuxonModifier [(date)]="fromDate" [bsConfig]="{ adaptivePosition: true }"
+                    placeholder="Thời gian tạo" />
+            </div>
+            <div class="col-md-4 mb-3">
                 <p-dropdown [style]="{width: '100%'}" [options]="stockList" [(ngModel)]="selectedStock"
                     optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
                     placeholder="Kho cấu hình">
@@ -39,16 +48,7 @@
                         </div>
                     </ng-template>
                 </p-dropdown>
-            </div> -->
-            <div class="col-md-4 mb-3">
-                <input id="fromDate" type="text" name="fromDate" class="form-control" bsDatepicker
-                    datePickerLuxonModifier [(date)]="fromDate" [bsConfig]="{ adaptivePosition: true }"
-                    placeholder="Thời gian tạo" />
             </div>
-            <!-- <div class="col-md-4 mb-3">
-                <input id="toDate" type="text" name="toDate" class="form-control" bsDatepicker datePickerLuxonModifier
-                    [(date)]="toDate" [bsConfig]="{ adaptivePosition: true }" placeholder="Thời gian tạo yêu cầu đến" />
-            </div> -->
             <div class="col-md-4 mb-3">
                 <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="statusOption"
                     [(ngModel)]="status" optionLabel="label" optionValue="value" placeholder="Thanh toán" class="w-100">
@@ -73,7 +73,7 @@
                 <div class="d-flex align-items-center justify-content-end">
                     <button class="btn btn-primary btn-sm ms-3" type="button"
                         routerLink="/app/main/recovery-inventory/create-reuse-number">
-                        TẠO YÊU CẦU TÁI SỬ DỤNG TB
+                        THÊM ĐƠN HÀNG MỚI
                     </button>
                     <button class="btn btn-success btn-sm ms-3" type="button">
                         XUẤT EXCEL
@@ -99,7 +99,7 @@
                                 {{ 'KHÁCH HÀNG' | localize }}
                             </th>
                             <th>
-                                {{ 'THANH TOÁN' | localize }}
+                                {{ 'HÌNH THỨC THANH TOÁN' | localize }}
                             </th>
                             <th>
                                 {{ 'TRẠNG THÁI' | localize }}

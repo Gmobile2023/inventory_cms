@@ -3,21 +3,6 @@
 
     <div [class]="containerClass">
 
-        <!-- <div class="order-header d-flex justify-content-between align-items-center p-3 border-bottom bg-light">
-            <div class="order-info">
-                <h2 class="mb-1">Đơn hàng #32543</h2>
-                <small>17/12/2024 15:30 PM</small>
-                <span class="badge bg-success text-white px-3 py-2 ms-2">Đã thanh toán</span>
-                <span class="badge bg-info text-white px-3 py-2 ms-2">Chờ đơn vị vận chuyển</span>
-
-            </div>
-
-            <div class="order-status d-flex gap-2">
-            </div>
-
-            <button class="btn btn-danger btn-sm px-4">Hủy đơn hàng</button>
-        </div> -->
-
 
         <div class="card">
             <p-toast />
@@ -27,14 +12,53 @@
         <div>
             <div *ngIf="currentStep === 1" class="py-3">
                 <div class="table1 border bg-white">
+                    <div [class]="containerClass" class="mt-5">
+                        <div class="row bg-white ">
+                            <h4 class="mb-4 ">BỘ LỌC TÌM KIẾM</h4>
+                            <div class="col-md-4 mb-3">
+                                <input type="text" class="form-control" placeholder="Tìm kiếm đơn hàng/ khách hàng">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <p-dropdown [style]="{width: '100%'}" optionLabel="stockName" [filter]="true"
+                                    filterBy="stockName" [showClear]="true" placeholder="Kho cấu hình">
+                                    <ng-template pTemplate="selectedStockTo">
+                                        <div class="flex align-items-center gap-2">
+                                        </div>
+                                    </ng-template>
+                                    <ng-template let-stock pTemplate="item">
+                                        <div class="flex align-items-center gap-2">
+                                            <div>{{ stock.stockName }}</div>
+                                        </div>
+                                    </ng-template>
+                                </p-dropdown>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [(ngModel)]="status"
+                                    optionLabel="label" optionValue="value" placeholder="Thanh toán" class="w-100">
+                                </p-dropdown>
+                            </div>
+
+                            <div class="col-12 mt-3 mb-5">
+                                <div class="d-flex align-items-center justify-content-start">
+                                    <button class="btn btn-secondary btn-sm me-3" type="button">ĐẶT
+                                        LẠI</button>
+                                    <button class="btn btn-primary btn-sm" type="button">TÌM
+                                        KIẾM</button>
+                                    <button class="btn btn-success btn-sm ms-3" type="button">
+                                        XUẤT EXCEL
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <p-table #dataTable [value]="listSimSrcStock" [(selection)]="selectedRecordsTo"
                         [rows]="primengTableHelper.defaultRecordsCountPerPage" [paginator]="false" [lazy]="true"
                         [tableStyle]="{'min-width': '50rem'}" class="table-custom"
                         (onHeaderCheckboxToggle)="onHeaderCheckboxToggle($event)">
                         <ng-template pTemplate="caption">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <h4 class="mb-0">Chọn số điện thoại</h4>
-                            </div>
+
                         </ng-template>
                         <ng-template pTemplate="header">
                             <tr>

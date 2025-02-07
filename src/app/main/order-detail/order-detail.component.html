@@ -29,15 +29,17 @@
                         [tableStyle]="{'min-width': '50rem'}" class="table-custom"
                         (onHeaderCheckboxToggle)="onHeaderCheckboxToggle($event)">
                         <ng-template pTemplate="caption">
-                            <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center justify-content-between align-items-center py-3">
                                 <h4 class="mb-0">Chi tiết đơn hàng</h4>
+                                <span class="badge bg-primary text-white px-3 py-2 ms-2">CẬP NHẬT</span>
                             </div>
+
                         </ng-template>
                         <ng-template pTemplate="header">
                             <tr>
-                                <th style="width: 4rem">
+                                <!-- <th style="width: 4rem">
                                     <p-tableHeaderCheckbox [disabled]="isRangeRule" />
-                                </th>
+                                </th> -->
                                 <th>{{ 'SẢN PHẨM' | localize }}</th>
                                 <th>{{ 'GIÁ SỐ' | localize }}</th>
                                 <th>{{ 'GÓI CƯỚC' | localize }}</th>
@@ -96,7 +98,7 @@
                     <h4 class="mb-3">Thông tin khách hàng</h4>
                     <p><strong>Nguyễn Văn A</strong></p>
                     <p>Địa chỉ: 123 Đường ABC, Hà Nội</p>
-                    <p>Số lương : 2 đơn hàng</p> 
+                    <p>Số lương : 2 đơn hàng</p>
                     <p>Email: examplemail.com</p>
                     <p>SĐT: 0123456789</p>
                     <button class="btn btn-primary btn-sm">Cập nhật</button>
