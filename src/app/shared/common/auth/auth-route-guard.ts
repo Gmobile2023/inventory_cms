@@ -96,6 +96,6 @@ export class AppRouteGuard implements CanActivate, CanActivateChild, CanLoad {
             return '/app/admin/users';
         }
 
-        return '/app/notifications';
+        return '/app/main/inventory-manager';
     }
 }

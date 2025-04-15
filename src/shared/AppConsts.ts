@@ -8,6 +8,7 @@
     static appBaseUrlFormat: string;
     static recaptchaSiteKey: string;
     static subscriptionExpireNootifyDayCount: number;
+    static apiGatewayUrl: string;
 
     static localeMappings: any = [];
 
@@ -16,7 +17,7 @@
     };
 
     static readonly localization = {
-        defaultLocalizationSourceName: 'AbpZeroTemplate',
+        defaultLocalizationSourceName: 'Inventory',
     };
 
     static readonly authorization = {

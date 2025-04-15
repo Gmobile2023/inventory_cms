@@ -1,0 +1,276 @@
+<div [@routerTransition]>
+    <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
+
+    <div [class]="containerClass">
+        <div class="row bg-white pt-5 ps-3">
+
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="status-item d-flex align-items-lg-start shadow-sm p-3 mb-4" *ngFor="let item of statusData">
+                    <div class="status-info">
+                        <h3>{{ item.value }}</h3>
+                        <p>{{ item.label }}</p>
+                    </div>
+                    <div class="status-icon me-4 ms-4">
+                        <i [class]="item.icon" class="fs-2"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div [class]="containerClass" class="mt-5">
+        <div class="row bg-white pt-5 ps-3">
+            <h4 class="mb-4 mt-4">BỘ LỌC TÌM KIẾM</h4>
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" placeholder="Tìm kiếm đơn hàng/ khách hàng">
+            </div>
+            <!-- <div class="col-md-6 mb-3">
+                <p-dropdown [style]="{width: '100%'}" [options]="stockList" [(ngModel)]="selectedStock"
+                    optionLabel="stockName" [filter]="true" filterBy="stockName" [showClear]="true"
+                    placeholder="Kho cấu hình">
+                    <ng-template pTemplate="selectedStockTo">
+                        <div class="flex align-items-center gap-2" *ngIf="selectedStock">
+                            <div>{{ selectedStock.stockName }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-stock pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ stock.stockName }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+            </div> -->
+            <div class="col-md-4 mb-3">
+                <input id="fromDate" type="text" name="fromDate" class="form-control" bsDatepicker
+                    datePickerLuxonModifier [(date)]="fromDate" [bsConfig]="{ adaptivePosition: true }"
+                    placeholder="Thời gian tạo" />
+            </div>
+            <!-- <div class="col-md-4 mb-3">
+                <input id="toDate" type="text" name="toDate" class="form-control" bsDatepicker datePickerLuxonModifier
+                    [(date)]="toDate" [bsConfig]="{ adaptivePosition: true }" placeholder="Thời gian tạo yêu cầu đến" />
+            </div> -->
+            <div class="col-md-4 mb-3">
+                <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="statusOption"
+                    [(ngModel)]="status" optionLabel="label" optionValue="value" placeholder="Thanh toán" class="w-100">
+                </p-dropdown>
+            </div>
+
+            <div class="col-12 mt-3 mb-5">
+                <div class="d-flex align-items-center justify-content-start">
+                    <button class="btn btn-secondary btn-sm me-3" type="button" (click)="resetFilter()">ĐẶT
+                        LẠI</button>
+                    <button class="btn btn-primary btn-sm" type="button" (click)="getListOrder($event)">TÌM
+                        KIẾM</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div [class]="containerClass" class="mt-5">
+        <div class="row bg-white py-5 ps-3 column-gap-5">
+            <div class="d-flex justify-content-between">
+                <h4 class="mb-4"></h4>
+                <div class="d-flex align-items-center justify-content-end">
+                    <button class="btn btn-primary btn-sm ms-3" type="button"
+                        routerLink="/app/main/recovery-inventory/create-reuse-number">
+                        TẠO YÊU CẦU TÁI SỬ DỤNG TB
+                    </button>
+                    <button class="btn btn-success btn-sm ms-3" type="button">
+                        XUẤT EXCEL
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row align-items-center">
+            <div class="col primeng-datatable-container bg-white" [busyIf]="primengTableHelper.isLoading">
+                <p-table #dataTable sortMode="multiple" (onLazyLoad)="getListOrder($event)"
+                    [value]="primengTableHelper.records" rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                    [paginator]="false" [lazy]="true" [tableStyle]="{'min-width': '50rem'}">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 130px">{{ 'HÀNH ĐỘNG' | localize }}</th>
+                            <th>
+                                {{ 'MÃ ĐƠN HÀNG' | localize }}
+                            </th>
+                            <th>
+                                {{ 'THỜI GIAN TẠO' | localize }}
+                            </th>
+                            <th>
+                                {{ 'KHÁCH HÀNG' | localize }}
+                            </th>
+                            <th>
+                                {{ 'THANH TOÁN' | localize }}
+                            </th>
+                            <th>
+                                {{ 'TRẠNG THÁI' | localize }}
+                            </th>
+                            <!-- <th>
+                                {{ 'GHI CHÚ' | localize }}
+                            </th> -->
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-record="$implicit">
+                        <tr>
+                            <td style="width: 130px">
+                                <div class="btn-group" dropdown placement="bottom left" container="body">
+                                    <button id="dropdownButton" type="button"
+                                        class="btn btn-primary btn-sm dropdown-toggle" dropdownToggle
+                                        aria-controls="dropdownMenu">
+                                        <i class="fa fa-cog"></i>
+                                        <span class="caret"></span>
+                                        {{ 'Hành động' | localize }}
+                                    </button>
+                                    <ul id="dropdownMenu" class="dropdown-menu" role="menu" *dropdownMenu
+                                        aria-labelledby="dropdownButton">
+                                        <li>
+                                            <a href="javascript:;" class="dropdown-item"
+                                                [routerLink]="'/app/main/recovery-inventory/detail-reuse-number'"
+                                                [queryParams]="{ id: record.id }">
+                                                {{ 'Xem chi tiết' | localize }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.orderCode }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.createdDate | luxonFormat: 'F'}}
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.orderTitle }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.desStockName }}
+                            </td>
+                            <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                <span *ngIf="record.status == 0" class="badge badge-warning badge-inline">
+                                    {{ 'Chờ phê duyệt' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 1" class="badge badge-success badge-inline">
+                                    {{ 'Đã phê duyệt' | localize }}
+                                </span>
+                                <span *ngIf="record.status == 7" class="badge badge-danger badge-inline">
+                                    {{ 'Từ chối' | localize }}
+                                </span>
+                            </td>
+                            <!-- <td>
+                                <span class="p-column-title">{{ '' | localize }}</span>
+                                {{ record.description }}
+                            </td> -->
+                        </tr>
+                    </ng-template>
+                </p-table>
+                <div class="primeng-no-data text-center mt-5" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                    {{ 'NoData' | localize }}
+                </div>
+                <div class="primeng-paging-container">
+                    <p-paginator (onPageChange)="getListOrder($event)"
+                        [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
+                        [totalRecords]="primengTableHelper.totalRecordsCount"
+                        [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                        [showCurrentPageReport]="true" [currentPageReportTemplate]="
+                            'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount
+                        "></p-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #view>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Xem chi tiết thiết lập</h3>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <!-- <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4 mb-5">
+                        <label class="form-label">
+                            {{ 'Cấp độ kho' | localize }}
+                        </label>
+                        <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="stockLevels"
+                            optionLabel="label" [optionValue]="approvalFlowData.numberLevel" class="w-100">
+                        </p-dropdown>
+                    </div>
+                    <div class="col-md-4 mb-5">
+                        <label class="form-label">
+                            {{ 'Loại sản phẩm' | localize }}
+                        </label>
+                        <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="productTypes"
+                            optionLabel="label" [optionValue]="approvalFlowData.productType" class="w-100">
+                        </p-dropdown>
+                    </div>
+                    <div class="col-md-4 mb-5" *ngIf="approvalFlowData.stockId">
+                        <label class="form-label">
+                            {{ 'Kho' | localize }}
+                        </label>
+                        <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="stockList"
+                            optionLabel="stockName" [optionValue]="approvalFlowData.stockId" class="w-100">
+                        </p-dropdown>
+                        <i>* Trường hợp xét riêng luồng duyệt cho kho</i>
+                    </div>
+                    <div class="col-12 mb-5">
+                        <div class="border p-3">
+                            <div class="d-flex align-items-center justify-content-between column-gap-4 mb-4"
+                                *ngFor="let item of approvalFlowData.items; let i = index">
+                                <div class="w-100">
+                                    <label for="value" class="form-label">
+                                        {{ 'Phòng ban' | localize }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input class="form-control" [value]="item.officeName" />
+                                    </div>
+                                </div>
+                                <div class="w-100">
+                                    <label for="value" class="form-label">
+                                        {{ 'Tài khoản duyệt' | localize }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input class="form-control" [value]="item.userName" />
+                                    </div>
+                                </div>
+                                <div class="w-100">
+                                    <label for="value" class="form-label">
+                                        {{ 'Độ ưu tiên' | localize }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input class="form-control" [value]="item.order" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-5">
+                        <label class="form-label">
+                            {{ 'Trạng thái' | localize }}
+                        </label>
+                        <p-dropdown [style]="{'text-align': 'left', width: '100%'}" [options]="statusOption"
+                            optionLabel="label" [optionValue]="approvalFlowData.status" class="w-100">
+                        </p-dropdown>
+                    </div>
+                    <div class="col-md-6 mb-5">
+                        <label class="form-label">
+                            {{ 'Ghi chú' | localize }}
+                        </label>
+                        <input type="text" class="form-control" placeholder="Nhập ghi chú"
+                            [value]="approvalFlowData.description" />
+                    </div>
+
+                </div>
+            </div> -->
+            <div class="modal-footer">
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm me-3" (click)="closeModal()">ĐÓNG</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>

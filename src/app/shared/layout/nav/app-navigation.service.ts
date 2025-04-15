@@ -10,7 +10,7 @@ export class AppNavigationService {
     constructor(
         private _permissionCheckerService: PermissionCheckerService,
         private _appSessionService: AppSessionService
-    ) { }
+    ) {}
 
     getMenu(): AppMenu {
         return new AppMenu('MainMenu', 'MainMenu', [
@@ -23,6 +23,104 @@ export class AppNavigationService {
             new AppMenuItem('Dashboard', 'Pages.Tenant.Dashboard', 'flaticon-line-graph', '/app/main/dashboard'),
             new AppMenuItem('Tenants', 'Pages.Tenants', 'flaticon-list-3', '/app/admin/tenants'),
             new AppMenuItem('Editions', 'Pages.Editions', 'flaticon-app', '/app/admin/editions'),
+            new AppMenuItem(
+                'SIM SỐ',
+                '',
+                'flaticon-graphic',
+                '',
+                [],
+                [
+                    new AppMenuItem('Danh sách đơn hàng', '', 'flaticon-list-2', '/app/main/sim-so/order-list'),
+                    new AppMenuItem('Chi tiết đơn hàng', '', 'flaticon-visible', '/app/main/sim-so/order-detail'),
+                    new AppMenuItem('Thêm mới đơn hàng', '', 'flaticon-add-circular-button', '/app/main/sim-so/add-order'),
+
+                ]
+            ),
+            new AppMenuItem(
+                'Quản lý Kho',
+                'Pages.Inventories',
+                'flaticon-open-box',
+                '',
+                [],
+                [
+                    new AppMenuItem(
+                        'Danh sách kho',
+                        'Pages.Inventories.Stock',
+                        'flaticon-list',
+                        '/app/main/inventory-manager'
+                    ),
+                    new AppMenuItem(
+                        'Xuất nhập kho',
+                        'Pages.Inventories.Orders',
+                        'flaticon-folder-1',
+                        '/app/main/inventory-import-export'
+                    ),
+                    new AppMenuItem(
+                        'Báo cáo tồn kho',
+                        'Pages.Inventories.Reports.ImEx',
+                        'flaticon-statistics',
+                        '/app/main/inventory-report'
+                    ),
+                    new AppMenuItem(
+                        'Lịch sử thao tác',
+                        'Pages.Inventories.Historys',
+                        'flaticon-clock-1',
+                        '/app/main/action-history'
+                    ),
+                    new AppMenuItem(
+                        'Cài đặt luồng duyệt',
+                        'Pages.Inventories.ApprovalFlow',
+                        'flaticon-cogwheel-1',
+                        '/app/main/approval-flow-settings'
+                    ),
+                    new AppMenuItem(
+                        'Cấu hình nhóm telegram nhận thông báo',
+                        'Pages.Inventories.TelegramGroup',
+                        'flaticon-paper-plane',
+                        '/app/main/groups-setting'
+                    ),
+                ]
+            ),
+            new AppMenuItem(
+                'Quản lý Kho thu hồi',
+                '',
+                'flaticon-interface-3',
+                '',
+                [],
+                [
+                    new AppMenuItem(
+                        'Danh sách thuê bao',
+                        'Pages.Inventories.Recall',
+                        'flaticon-list-2',
+                        '/app/main/recovery-inventory'
+                    ),
+                    new AppMenuItem(
+                        'Danh sách yêu cầu tái sử dụng TB',
+                        'Pages.Inventories.Orders',
+                        'flaticon-list-1',
+                        '/app/main/reuse-number'
+                    ),
+                    new AppMenuItem(
+                        'Cấu hình thời gian lưu số trong kho',
+                        'Pages.Inventories.ConfigureNumberReclaimSchedule',
+                        'flaticon-pie-chart',
+                        '/app/main/setting-recovery'
+                    ),
+                ]
+            ),
+            new AppMenuItem(
+                'Địa giới hành chính',
+                '',
+                'flaticon-map-location',
+                '',
+                [],
+                [
+                    new AppMenuItem('Quản lý Quốc Gia', '', 'flaticon-placeholder-2', '/app/main/countries'),
+                    new AppMenuItem('Quản lý Tỉnh/Thành Phố', '', 'flaticon-placeholder', '/app/main/cities'),
+                    new AppMenuItem('Quản lý Quận/Huyện', '', 'flaticon-location', '/app/main/districts'),
+                    new AppMenuItem('Quản lý Phường/Xã', '', 'flaticon-placeholder-3', '/app/main/wards'),
+                ]
+            ),
             new AppMenuItem(
                 'Administration',
                 '',
@@ -100,20 +198,15 @@ export class AppNavigationService {
                         '',
                         [],
                         [
-                            new AppMenuItem(
-                                'Inbox',
-                                '',
-                                'flaticon-mail-1',
-                                '/app/notifications'
-                            ),
+                            new AppMenuItem('Inbox', '', 'flaticon-mail-1', '/app/notifications'),
                             new AppMenuItem(
                                 'MassNotifications',
                                 'Pages.Administration.MassNotification',
                                 'flaticon-paper-plane',
                                 '/app/admin/mass-notifications'
-                            )
+                            ),
                         ]
-                    )
+                    ),
                 ]
             ),
             new AppMenuItem(
@@ -137,7 +230,7 @@ export class AppNavigationService {
                 if (!subMenuItem.hasFeatureDependency()) {
                     return true;
                 }
-                
+
                 if (subMenuItem.featureDependencySatisfied()) {
                     return true;
                 }

@@ -252,4 +252,12 @@ export class DateTimeService {
         var utcDate = this.changeTimeZone(jsDate, ianaTimezoneId);
         return DateTime.fromJSDate(utcDate);
     }
+
+    getStartOfMonth(): DateTime {
+        return this.getDate().startOf('month');
+    }
+    
+    getEndOfMonth(): DateTime {
+        return this.getDate().endOf('month');
+    }
 }

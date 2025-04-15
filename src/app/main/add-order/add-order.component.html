@@ -1,0 +1,242 @@
+<div [@routerTransition]>
+    <p-breadcrumb class="max-w-full" [model]="items" [home]="home"></p-breadcrumb>
+
+    <div [class]="containerClass">
+
+        <!-- <div class="order-header d-flex justify-content-between align-items-center p-3 border-bottom bg-light">
+            <div class="order-info">
+                <h2 class="mb-1">Đơn hàng #32543</h2>
+                <small>17/12/2024 15:30 PM</small>
+                <span class="badge bg-success text-white px-3 py-2 ms-2">Đã thanh toán</span>
+                <span class="badge bg-info text-white px-3 py-2 ms-2">Chờ đơn vị vận chuyển</span>
+
+            </div>
+
+            <div class="order-status d-flex gap-2">
+            </div>
+
+            <button class="btn btn-danger btn-sm px-4">Hủy đơn hàng</button>
+        </div> -->
+
+
+        <div class="card">
+            <p-toast />
+            <p-steps [model]="itemsMenu" [readonly]="false" [activeIndex]="activeIndex"
+                (activeIndexChange)="onActiveIndexChange($event)" />
+        </div>
+        <div>
+            <div *ngIf="currentStep === 1" class="py-3">
+                <div class="table1 border bg-white">
+                    <p-table #dataTable [value]="listSimSrcStock" [(selection)]="selectedRecordsTo"
+                        [rows]="primengTableHelper.defaultRecordsCountPerPage" [paginator]="false" [lazy]="true"
+                        [tableStyle]="{'min-width': '50rem'}" class="table-custom"
+                        (onHeaderCheckboxToggle)="onHeaderCheckboxToggle($event)">
+                        <ng-template pTemplate="caption">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h4 class="mb-0">Chọn số điện thoại</h4>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 4rem">
+                                    <p-tableHeaderCheckbox [disabled]="isRangeRule" />
+                                </th>
+                                <th>{{ 'SĐT/SERIAL' | localize }}</th>
+                                <th>{{ 'NHÀ MẠNG' | localize }}</th>
+                                <th>{{ 'GIÁ BÁN' | localize }}</th>
+                                <th>{{ 'KHO' | localize }}</th>
+                                <th>{{ 'TRẠNG THÁI' | localize }}</th>
+                                <th>{{ '' | localize }}</th>
+
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-record="$implicit">
+                            <tr>
+                                <td>
+                                    <p-tableCheckbox [value]="record"
+                                        [disabled]="isRecordInTable2(record) || isRangeRule" />
+                                </td>
+                                <td>{{productType == 1 ? record.mobile : record.serial}}</td>
+                                <td>{{record.attribute}}</td>
+                                <td>{{record.salePrice}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <div class="primeng-no-data text-center" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                        {{ 'NoData' | localize }}
+                    </div>
+                    <div class="primeng-paging-container">
+                        <p-paginator (onPageChange)="getListSimSrcStock($event)"
+                            [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
+                            [totalRecords]="primengTableHelper.totalRecordsCount"
+                            [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                            [showCurrentPageReport]="true" [currentPageReportTemplate]="
+                            'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount
+                        "></p-paginator>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="currentStep === 2" class="py-3">
+                <div class="table1 border bg-white">
+                    <p-table #dataTable [value]="listSimSrcStock" [(selection)]="selectedRecordsTo"
+                        [rows]="primengTableHelper.defaultRecordsCountPerPage" [paginator]="false" [lazy]="true"
+                        [tableStyle]="{'min-width': '50rem'}" class="table-custom"
+                        (onHeaderCheckboxToggle)="onHeaderCheckboxToggle($event)">
+                        <ng-template pTemplate="caption">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h4 class="mb-0">Chọn gói cước</h4>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 4rem">
+                                    <p-tableHeaderCheckbox [disabled]="isRangeRule" />
+                                </th>
+                                <th>{{ 'TÊN GÓI CƯỚC' | localize }}</th>
+                                <th>{{ 'NHÀ MẠNG' | localize }}</th>
+                                <th>{{ 'SỐ TIỀN' | localize }}</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-record="$implicit">
+                            <tr>
+                                <td>
+                                    <p-tableCheckbox [value]="record"
+                                        [disabled]="isRecordInTable2(record) || isRangeRule" />
+                                </td>
+                                <td>{{productType == 1 ? record.mobile : record.serial}}</td>
+                                <td>{{record.attribute}}</td>
+                                <td>{{record.salePrice}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <div class="primeng-no-data text-center" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                        {{ 'NoData' | localize }}
+                    </div>
+                    <div class="primeng-paging-container">
+                        <p-paginator (onPageChange)="getListSimSrcStock($event)"
+                            [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
+                            [totalRecords]="primengTableHelper.totalRecordsCount"
+                            [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                            [showCurrentPageReport]="true" [currentPageReportTemplate]="
+                            'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount
+                        "></p-paginator>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="currentStep === 3" class="py-3">
+                <div class="card">
+                    <div class="p-4">
+                        <h3>Thông tin nhận Sim</h3>
+                        <p class="text-muted">
+                            (*) Thông tin đơn hàng sẽ được gửi về Email, vui lòng nhập đúng thông tin
+                        </p>
+                        <div class="input-group">
+                            <input id="stockName" name="stockName" class="form-control"
+                                placeholder="{{ 'Họ và tên *' | localize }}" type="text" />
+                        </div>
+                        <div class="input-group">
+                            <input id="stockName" name="stockName" class="form-control"
+                                placeholder="{{ 'Số điện thoại *' | localize }}" type="text" />
+                        </div>
+                        <div class="input-group">
+                            <input id="stockName" name="stockName" class="form-control"
+                                placeholder="{{ 'Email *' | localize }}" type="text" />
+                        </div>
+                    </div>
+
+                    <div class="p-4">
+                        <h4>Địa chỉ</h4>
+
+                        <div class="input-group">
+                            <p-dropdown [style]="{width: '100%'}" [options]="cities" [(ngModel)]="cityId"
+                                optionLabel="cityName" optionValue="id" [filter]="true" filterBy="cityName"
+                                [showClear]="true" placeholder="Chọn Tỉnh/Thành phố" (onChange)="onCityChange($event)"
+                                class="w-100 mb-3">
+                                <ng-template pTemplate="selectedCity">
+                                    <div class="flex align-items-center gap-2" *ngIf="selectedCity">
+                                        <div>{{ selectedCity.cityName }}</div>
+                                    </div>
+                                </ng-template>
+                                <ng-template let-city pTemplate="item">
+                                    <div class="flex align-items-center gap-2">
+                                        <div>{{ city.cityName }}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                            <p-dropdown [style]="{width: '100%'}" [options]="districts" [(ngModel)]="districtId"
+                                optionLabel="displayName" optionValue="id" [filter]="true" filterBy="displayName"
+                                [showClear]="true" placeholder="Chọn Quận/Huyện" (onChange)="onDistrictChange($event)"
+                                class="w-100 mb-3">
+                                <ng-template pTemplate="selectedDistrict">
+                                    <div class="flex align-items-center gap-2" *ngIf="selectedDistrict">
+                                        <div>{{ selectedDistrict.displayName }}</div>
+                                    </div>
+                                </ng-template>
+                                <ng-template let-district pTemplate="item">
+                                    <div class="flex align-items-center gap-2">
+                                        <div>{{ district.displayName }}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                            <p-dropdown [style]="{width: '100%'}" [options]="wards" [(ngModel)]="wardId"
+                                optionLabel="displayName" optionValue="id" [filter]="true" filterBy="displayName"
+                                [showClear]="true" placeholder="Chọn Phường/Xã" class="w-100 mb-3">
+                                <ng-template pTemplate="selectedWard">
+                                    <div class="flex align-items-center gap-2" *ngIf="selectedWard">
+                                        <div>{{ selectedWard.displayName }}</div>
+                                    </div>
+                                </ng-template>
+                                <ng-template let-ward pTemplate="item">
+                                    <div class="flex align-items-center gap-2">
+                                        <div>{{ ward.displayName }}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                        </div>
+
+                        <div class="input-group">
+                            <input id="stockName" name="stockName" class="form-control"
+                                placeholder="{{ 'Chi tiết đường/tổ/thôn/xóm' | localize }}" type="text" />
+                        </div>
+                    </div>
+
+                    <div class="card p-4 mt-3">
+                        <label>Serial (*)</label>
+                        <div class="input-group">
+                            <input id="stockName" name="stockName" class="form-control"
+                                placeholder="{{ 'Nhập/Chọn serial *' | localize }}" type="text" />
+                        </div>
+                    </div>
+
+                    <div class="p-4">
+                        <h3>Hình thức thanh toán</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <div class="flex items-center">
+                                <p-radiobutton name="pizza" value="Cheese" [(ngModel)]="ingredient"
+                                    inputId="ingredient1" />
+                                <label for="ingredient1" class="ml-2">Thanh toán khi nhận hàng</label>
+                            </div>
+
+                            <div class="flex items-center">
+                                <p-radiobutton name="pizza" value="Mushroom" [(ngModel)]="ingredient"
+                                    inputId="ingredient2" />
+                                <label for="ingredient2" class="ml-2">Chuyển khoản</label>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+        <div class="d-flex justify-content-between mb-5">
+            <button class="btn btn-primary btn-sm" (click)="back()">Quay lại</button>
+            <button class="btn btn-primary btn-sm" (click)="next()">Tiếp tục</button>
+        </div>
+
+    </div>
+
+</div>

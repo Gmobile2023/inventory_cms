@@ -1,0 +1,46 @@
+name: CICD
+
+on:
+  workflow_dispatch:
+    inputs:
+      service:
+        options:
+          - cms
+        required: true
+        type: choice
+        description: Choose which service to run
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Login Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+        
+    - name: Setup Docker Buildx
+      uses: docker/setup-buildx-action@v1
+      id: buildx
+      
+    - name: Build and Push Inventory CMS
+      uses: docker/build-push-action@v5
+      id: docker_build_web
+      with:
+        context: ./
+        file: ./Dockerfile
+        builder: ${{ steps.buildx.outputs.name }}
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/gmobile:inventory_cms
+        #cache-from: type=local,src=/tmp/.buildx-cache
+        #cache-to: type=local,dest=/tmp/.buildx-cache 
+
+    # Verification step for API
+    - name: Verify CMS
+      run: echo ${{ steps.docker_build_api.outputs.digest }}_cms

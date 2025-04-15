@@ -4,6 +4,7 @@ import { AppConsts } from '@shared/AppConsts';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import {
+    AccountType,
     EntityDtoOfInt64,
     GetRolesInput,
     GetUsersInput,
@@ -43,13 +44,18 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
     dynamicEntityPropertyManager: DynamicEntityPropertyManagerComponent;
 
     uploadUrl: string;
+    accountType: AccountType | null = null;
 
     //Filters
     advancedFiltersAreShown = false;
     filterText = '';
     role = '';
     onlyLockedUsers = false;
-
+    accountTypes = [
+        { value: 0, name: 'System' },
+        { value: 1, name: 'Agent' },
+        { value: 2, name: 'End User' },
+    ];
     constructor(
         injector: Injector,
         public _impersonationService: ImpersonationService,
@@ -86,8 +92,9 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
                     filter: this.filterText,
                     permissions: this.permissionFilterTreeModal.getSelectedPermissions(),
                     role: this.role !== '' ? parseInt(this.role) : undefined,
+                    accountType: this.accountType,
                     onlyLockedUsers: this.onlyLockedUsers,
-                    sorting: this.primengTableHelper.getSorting(this.dataTable),
+                    sorting: 'creationTime DESC',
                     maxResultCount: this.primengTableHelper.getMaxResultCount(this.paginator, event),
                     skipCount: this.primengTableHelper.getSkipCount(this.paginator, event),
                 })
@@ -122,6 +129,13 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
         return roleNames;
     }
 
+    getAccountTypeAsString(accountType): string {
+        let accountTypeNames = '';
+        accountTypeNames = 'AccountType_' + accountType;
+
+        return accountTypeNames;
+    }
+
     reloadPage(): void {
         this.paginator.changePage(this.paginator.getPage());
     }
@@ -132,6 +146,7 @@ export class UsersComponent extends AppComponentBase implements AfterViewInit {
                 this.filterText,
                 this.permissionFilterTreeModal.getSelectedPermissions(),
                 this.role !== '' ? parseInt(this.role) : undefined,
+                this.accountType,
                 this.onlyLockedUsers,
                 this.primengTableHelper.getSorting(this.dataTable)
             )

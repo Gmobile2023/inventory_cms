@@ -1,0 +1,125 @@
+<div appBsModal #createModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createModal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <form #tenantCreateForm="ngForm" role="form" novalidate class="form-validation" *ngIf="active">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>{{ 'Danh sách xuất/nhập kho' | localize }}</span>
+                    </h5>
+                    <button type="button" class="btn-close" (click)="close()" [attr.aria-label]="l('Close')"
+                        [disabled]="saving">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div [class]="containerClass">
+                        <div class="row">
+                            <div class="border">
+                                <div class="d-flex align-items-center my-3">
+                                    <div class="input-group me-5" style="width: 40%;">
+                                        <input id="fromDate" type="text" name="fromDate" class="form-control"
+                                            bsDatepicker datePickerLuxonModifier [(date)]="fromDate"
+                                            [bsConfig]="{ adaptivePosition: true }" placeholder="Thời gian từ" />
+                                    </div>
+                                    <div class="input-group" style="width: 40%;">
+                                        <input id="toDate" type="text" name="toDate" class="form-control" bsDatepicker
+                                            datePickerLuxonModifier [(date)]="toDate"
+                                            [bsConfig]="{ adaptivePosition: true }" placeholder="Thời gian tới" />
+                                    </div>
+                                    <button class="btn btn-primary btn-sm ms-auto" type="button"
+                                        (click)="getListOrderInventory($event)">TÌM KIẾM</button>
+                                </div>
+                                <p-table #dataTable sortMode="multiple" [value]="primengTableHelper.records"
+                                    rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="false"
+                                    [lazy]="true" [tableStyle]="{'min-width': '50rem'}">
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th style="width: 160px">{{ 'HÀNH ĐỘNG' | localize }}</th>
+                                            <th>
+                                                {{ 'TIÊU ĐỀ' | localize }}
+                                            </th>
+                                            <th>
+                                                {{ 'LOẠI YÊU CẦU' | localize }}
+                                            </th>
+                                            <th>{{ 'NGÀY GỬI YÊU CẦU' | localize }}</th>
+                                            <th>
+                                                {{ 'SỐ LƯỢNG' | localize }}
+                                            </th>
+                                            <!-- <th>{{ 'TRẠNG THÁI' | localize }}</th>
+                                            <th>
+                                                {{ 'BƯỚC DUYỆT HIỆN TẠI' | localize }}
+                                            </th> -->
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-record="$implicit">
+                                        <tr>
+                                            <td style="width: 130px">
+                                                <div class="btn-group" dropdown placement="bottom left"
+                                                    container="body">
+                                                    <button type="button" class="btn btn-primary btn-sm"
+                                                        [routerLink]="record.orderType == '1' 
+                                                    ? '/app/main/inventory-import-export/detail-inventory-import' 
+                                                    : record.orderType == '2' ? '/app/main/inventory-import-export/detail-inventory-export' : record.orderType == '3' ? '/app/main/inventory-import-export/detail-inventory-recall' : null"
+                                                        [queryParams]="{ id: record.id }">
+                                                        {{ 'Xem chi tiết' | localize }}
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="p-column-title">{{ '' | localize }}</span>
+                                                {{ record.orderTitle }}
+                                            </td>
+                                            <td>
+                                                <span class="p-column-title">{{ '' | localize }}</span>
+                                                {{ record.orderType == "1" ? 'Nhập kho' : record.orderType == "2" ?
+                                                'Xuất kho' :
+                                                record.orderType == "3" ? 'Thu hồi về kho cha' : 'Bán hàng' }}
+                                            </td>
+                                            <td>
+                                                <span class="p-column-title">{{ '' | localize }}</span>
+                                                {{ record.createdDate | luxonFormat: 'F' }}
+                                            </td>
+                                            <td>
+                                                <span class="p-column-title">{{ '' | localize }}</span>
+                                                {{ record.quantity }}
+                                            </td>
+                                            <!-- <td>
+                                                <span class="p-column-title">{{ '' | localize }}</span>
+                                                <span class="badge badge-success badge-inline">{{ record.statusName
+                                                    }}</span>
+                                            </td>
+                                            <td>
+                                                <span class="p-column-title">{{ '' | localize }}</span>
+                                                <span class="badge badge-success badge-inline">{{
+                                                    record.statusCurrentName }}</span>
+                                            </td> -->
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                                <div class="primeng-no-data text-center mt-5"
+                                    *ngIf="primengTableHelper.totalRecordsCount == 0">
+                                    {{ 'NoData' | localize }}
+                                </div>
+                                <div class="primeng-paging-container">
+                                    <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                                        (onPageChange)="getOrdersImport($event)" #paginator
+                                        [totalRecords]="primengTableHelper.totalRecordsCount"
+                                        [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                                        [showCurrentPageReport]="true" [currentPageReportTemplate]="
+                                        'TotalRecordsCount' | localize: primengTableHelper.totalRecordsCount
+                                    "></p-paginator>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-secondary btn-sm me-3" (click)="close()">ĐÓNG</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

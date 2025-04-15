@@ -73,6 +73,8 @@ export class LoginComponent extends AppComponentBase implements OnInit, AfterVie
         let state = UrlHelper.getQueryParametersUsingHash().state;
         let queryParameters = UrlHelper.getQueryParameters();
 
+        console.log('Chay vao handleExternalLoginCallbacks')
+
         if (state && state.indexOf('openIdConnect') >= 0) {
             this.loginService.openIdConnectLoginCallback({});
         }
